@@ -396,32 +396,32 @@ def generate_html():
         </div>
       </div>
 
-      <!-- Company Mini KPI Cards (6 Cards) -->
+      <!-- Company Mini KPI Cards (6 Cards with Primas Emitidas & Variación de Reservas) -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-        <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
-          <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS DEVENGADAS</div>
-          <div id="ciaKpiPrimasDev" class="text-base font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Base 100%</div>
-        </div>
-        <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
-          <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTROS DEV.</div>
-          <div id="ciaKpiSiniestros" class="text-base font-bold font-mono text-rose-400 mt-1">...</div>
-          <div id="ciaKpiLossRatio" class="text-[10px] text-slate-400 mt-1">Loss Ratio: ...</div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-slate-400">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS EMITIDAS</div>
+          <div id="ciaKpiPrimasEmit" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Producción Bruta</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">VAR. RESERVAS / CT</div>
+          <div id="ciaKpiVarReservas" class="text-base font-bold font-mono text-amber-300 mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Compromisos Técnicos</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS DEVENGADAS</div>
+          <div id="ciaKpiPrimasDev" class="text-base font-bold font-mono text-brand-blue mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Base Devengada 100%</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
           <div class="text-[11px] font-semibold text-slate-400 uppercase">RATIO COMBINADO</div>
           <div id="ciaKpiCombined" class="text-base font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Técnico + Gastos</div>
+          <div class="text-[10px] text-slate-400 mt-1">Costo + Gastos</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
           <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO</div>
           <div id="ciaKpiResTec" class="text-base font-bold font-mono text-white mt-1">...</div>
           <div class="text-[10px] text-slate-400 mt-1">Margen Suscripción</div>
-        </div>
-        <div class="glass-card p-4 rounded-xl border-l-4 border-l-indigo-500">
-          <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO FINANCIERO</div>
-          <div id="ciaKpiResFin" class="text-base font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Renta + Tenencia</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
           <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO NETO</div>
@@ -437,7 +437,7 @@ def generate_html():
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-waterfall text-brand-blue"></i> Estado de Resultados: Cascada de Rentabilidad
             </h3>
-            <p class="text-xs text-slate-400">Evolución contable desde Primas y Recargos Devengados hasta Resultado Neto Final (SSN / Moneda Homogénea)</p>
+            <p class="text-xs text-slate-400">Evolución contable desde Primas Emitidas y Variación de Reservas Matemáticas / Riesgos en Curso hasta Resultado Neto (SSN Moneda Homogénea)</p>
           </div>
         </div>
         <div id="ciaWaterfallPlot" class="w-full h-96"></div>
@@ -631,7 +631,7 @@ def generate_html():
     let state = {{
       currentTab: 'vision-mercado',
       selectedSegment: 'Todos',
-      selectedCompanyCode: '0117',
+      selectedCompanyCode: '0436',
       highlightedCiaCode: null,
       ramosScope: 'cia'
     }};
@@ -686,13 +686,13 @@ def generate_html():
         document.getElementById('macroRetiroPct').innerText = ((mr.retiro / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
       }}
 
-      // Pick default high profile company (0117 or 0317 or 0726)
-      if (data.companies_by_code['0117']) {{
+      // Pick default high profile company (0436 or 0117 or 0317)
+      if (data.companies_by_code['0436']) {{
+        state.selectedCompanyCode = '0436';
+      }} else if (data.companies_by_code['0117']) {{
         state.selectedCompanyCode = '0117';
       }} else if (data.companies_by_code['0317']) {{
         state.selectedCompanyCode = '0317';
-      }} else if (data.companies_by_code['0726']) {{
-        state.selectedCompanyCode = '0726';
       }} else if (data.companies.length > 0) {{
         state.selectedCompanyCode = data.companies[0].cod_cia;
       }}
@@ -1075,10 +1075,8 @@ def generate_html():
             const ciaCode = data.points[0].customdata;
             if (ciaCode) {{
               if (state.highlightedCiaCode === ciaCode) {{
-                // If clicked again, go to deep dive
                 selectCompany(ciaCode);
               }} else {{
-                // Highlight
                 highlightScatterCompany(ciaCode);
               }}
             }}
@@ -1155,18 +1153,15 @@ def generate_html():
       document.getElementById('selectedCiaBadge').innerText = c.tipo_entidad;
       document.getElementById('selectedCiaCode').innerText = c.cod_cia;
 
+      document.getElementById('ciaKpiPrimasEmit').innerText = formatARS(c.primas_emitidas);
+      document.getElementById('ciaKpiVarReservas').innerText = formatARS(c.var_reservas);
       document.getElementById('ciaKpiPrimasDev').innerText = formatARS(c.primas_devengadas);
-      document.getElementById('ciaKpiSiniestros').innerText = formatARS(c.siniestros);
-      document.getElementById('ciaKpiLossRatio').innerText = `Loss Ratio: ${{formatPercent(c.loss_ratio)}}`;
 
       document.getElementById('ciaKpiCombined').innerText = formatPercent(c.combined_ratio);
       document.getElementById('ciaKpiCombined').className = `text-base font-bold font-mono mt-1 ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}`;
       
       document.getElementById('ciaKpiResTec').innerText = formatARS(c.resultado_tecnico);
       document.getElementById('ciaKpiResTec').className = `text-base font-bold font-mono mt-1 ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
-
-      document.getElementById('ciaKpiResFin').innerText = formatARS(c.resultado_financiero);
-      document.getElementById('ciaKpiResFin').className = `text-base font-bold font-mono mt-1 ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
 
       document.getElementById('ciaKpiResNeto').innerText = formatARS(c.resultado_neto);
       document.getElementById('ciaKpiResNeto').className = `text-base font-bold font-mono mt-1 ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
@@ -1196,8 +1191,8 @@ def generate_html():
       const layout = {{
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        margin: {{ l: 50, r: 30, t: 30, b: 60 }},
-        xaxis: {{ color: '#94A3B8', tickangle: -20 }},
+        margin: {{ l: 50, r: 30, t: 30, b: 80 }},
+        xaxis: {{ color: '#94A3B8', tickangle: -25, tickfont: {{ size: 10 }} }},
         yaxis: {{ title: 'Importe (ARS)', color: '#94A3B8', gridcolor: '#1E293B' }}
       }};
 
@@ -1393,7 +1388,7 @@ def generate_html():
     // Export to CSV
     function exportToCSV() {{
       const list = getFilteredCompanies();
-      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_devengadas', 'primas_emitidas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas'];
+      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_devengadas', 'primas_emitidas', 'var_reservas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas'];
       
       let csv = headers.join(',') + '\\n';
       list.forEach(c => {{
@@ -1403,6 +1398,7 @@ def generate_html():
           `"${{c.tipo_entidad}}"`,
           c.primas_devengadas || 0,
           c.primas_emitidas || 0,
+          c.var_reservas || 0,
           c.siniestros || 0,
           c.resultado_tecnico || 0,
           c.resultado_financiero || 0,
