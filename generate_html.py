@@ -162,10 +162,42 @@ def generate_html():
     <!-- ======================================================== -->
     <section id="tab-vision-mercado" class="space-y-6">
       
+      <!-- Macro Branches Summary Banner -->
+      <div class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
+        <div class="flex items-center justify-between mb-2.5">
+          <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-brand-blue"></i> Distribución de Primas por Gran Ramo de Negocio (Mercado Total)
+          </span>
+          <span class="text-[11px] font-mono text-slate-400">Total Producción: <b id="macroTotalVal" class="text-white">...</b></span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-slate-800/80">
+            <div class="text-[10px] text-slate-400 uppercase font-sans">Patrimoniales (Autos, Incendio...)</div>
+            <div id="macroPatrimVal" class="text-sm font-bold text-sky-400 mt-0.5">...</div>
+            <div id="macroPatrimPct" class="text-[10px] text-slate-400">...</div>
+          </div>
+          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-slate-800/80">
+            <div class="text-[10px] text-slate-400 uppercase font-sans">Riesgos del Trabajo (ART)</div>
+            <div id="macroArtVal" class="text-sm font-bold text-amber-400 mt-0.5">...</div>
+            <div id="macroArtPct" class="text-[10px] text-slate-400">...</div>
+          </div>
+          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-brand-red/30 bg-brand-red/5">
+            <div class="text-[10px] text-rose-300 uppercase font-sans font-bold">Personas y Vida (Vida, AP, Salud)</div>
+            <div id="macroPersonasVal" class="text-sm font-bold text-rose-400 mt-0.5">...</div>
+            <div id="macroPersonasPct" class="text-[10px] text-rose-300 font-semibold">...</div>
+          </div>
+          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-slate-800/80">
+            <div class="text-[10px] text-slate-400 uppercase font-sans">Retiro y Rentas</div>
+            <div id="macroRetiroVal" class="text-sm font-bold text-purple-400 mt-0.5">...</div>
+            <div id="macroRetiroPct" class="text-[10px] text-slate-400">...</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Segment Filter Pills -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-brand-red"></i> Segmento:</span>
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-brand-red"></i> Segmento de Compañías:</span>
           <div id="segmentPillsContainer" class="flex flex-wrap gap-1.5"></div>
         </div>
         <div class="text-xs text-slate-400">
@@ -580,6 +612,23 @@ def generate_html():
 
       document.getElementById('headerPeriodo').innerText = data.periodo || '2026-2';
       document.getElementById('headerTotalCias').innerText = data.total_entidades || '185';
+
+      // Set macro banner values
+      if (data.macro_ramos) {{
+        const mr = data.macro_ramos;
+        document.getElementById('macroTotalVal').innerText = formatARS(mr.total_mercado);
+        document.getElementById('macroPatrimVal').innerText = formatARS(mr.patrimoniales);
+        document.getElementById('macroPatrimPct').innerText = ((mr.patrimoniales / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+        
+        document.getElementById('macroArtVal').innerText = formatARS(mr.art);
+        document.getElementById('macroArtPct').innerText = ((mr.art / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+
+        document.getElementById('macroPersonasVal').innerText = formatARS(mr.personas_vida);
+        document.getElementById('macroPersonasPct').innerText = ((mr.personas_vida / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+
+        document.getElementById('macroRetiroVal').innerText = formatARS(mr.retiro);
+        document.getElementById('macroRetiroPct').innerText = ((mr.retiro / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+      }}
 
       // Pick default high profile company
       if (data.companies_by_code['0726']) {{
