@@ -207,57 +207,75 @@ def generate_html():
         </div>
       </div>
 
-      <!-- Interactive Strategic Matrix & Top Rankings -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Scatter Plot Matrix -->
-        <div class="lg:col-span-7 glass-card p-5 rounded-xl">
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-crosshairs text-brand-red"></i> Matriz Estratégica: Margen Técnico vs. Rendimiento Financiero
-              </h3>
-              <p class="text-xs text-slate-400">Burbuja = Volumen de Primas Devengadas | Ejes centrados en 0%</p>
-            </div>
-          </div>
-          <div id="marketScatterPlot" class="w-full h-96"></div>
-        </div>
-
-        <!-- Top Ranking Table -->
-        <div class="lg:col-span-5 glass-card p-5 rounded-xl flex flex-col">
-          <div class="flex items-center justify-between mb-3">
+      <!-- 1. FULL WIDTH: Interactive Strategic Scatter Plot Matrix -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-trophy text-amber-400"></i> Top Aseguradoras (Primas Devengadas)
+              <i class="fa-solid fa-crosshairs text-brand-red"></i> Matriz Estratégica: Margen Técnico vs. Rendimiento Financiero
             </h3>
-            <span class="text-xs text-slate-400">Top 10</span>
+            <p class="text-xs text-slate-400">Burbuja = Volumen de Primas Devengadas | Ejes centrados en 0% | Haz clic en cualquier punto para abrir su ficha</p>
           </div>
-          <div class="overflow-y-auto flex-1 max-h-96">
-            <table class="w-full text-left text-xs">
-              <thead class="text-slate-400 border-b border-slate-700 bg-slate-900/50 sticky top-0">
-                <tr>
-                  <th class="py-2 px-2">Aseguradora</th>
-                  <th class="py-2 px-2 text-right">Primas Dev.</th>
-                  <th class="py-2 px-2 text-right">Ratio Comb.</th>
-                  <th class="py-2 px-2 text-right">Res. Neto</th>
-                </tr>
-              </thead>
-              <tbody id="topRankingTableBody" class="divide-y divide-slate-800"></tbody>
-            </table>
+          <div class="flex items-center gap-3 text-xs">
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Ganadoras Integrales</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Dependencia Financiera</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> En Riesgo</span>
           </div>
+        </div>
+        <div id="marketScatterPlot" class="w-full h-[500px]"></div>
+      </div>
+
+      <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-trophy text-amber-400"></i> Ranking Top Aseguradoras del Segmento
+            </h3>
+            <p class="text-xs text-slate-400">Principales aseguradoras ordenadas por volumen de Primas Devengadas</p>
+          </div>
+          <span class="text-xs font-mono px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg font-bold">Top 15 Aseguradoras</span>
+        </div>
+        <div class="overflow-x-auto max-h-[480px]">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700">
+              <tr>
+                <th class="py-2.5 px-3 text-center">#</th>
+                <th class="py-2.5 px-3">Cód</th>
+                <th class="py-2.5 px-3">Razón Social</th>
+                <th class="py-2.5 px-3">Segmento</th>
+                <th class="py-2.5 px-3 text-right">Primas Devengadas</th>
+                <th class="py-2.5 px-3 text-right">Primas Emitidas</th>
+                <th class="py-2.5 px-3 text-right">Siniestros</th>
+                <th class="py-2.5 px-3 text-right">Loss Ratio</th>
+                <th class="py-2.5 px-3 text-right">Ratio Combinado</th>
+                <th class="py-2.5 px-3 text-right">Res. Técnico</th>
+                <th class="py-2.5 px-3 text-right">Res. Financiero</th>
+                <th class="py-2.5 px-3 text-right">Res. Neto</th>
+                <th class="py-2.5 px-3 text-right">Activo Total</th>
+                <th class="py-2.5 px-3 text-center">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="topRankingTableBody" class="divide-y divide-slate-800 font-mono"></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Comprehensive Market Table -->
-      <div class="glass-card p-5 rounded-xl">
+      <!-- 3. FULL WIDTH: Comprehensive Searchable Market Table -->
+      <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-table-list text-brand-blue"></i> Tabla Consolidada del Mercado Asegurador
-          </h3>
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-brand-blue"></i> Base Consolidada del Mercado Asegurador (185 Entidades)
+            </h3>
+            <p class="text-xs text-slate-400">Explora, filtra y compara todas las compañías registradas</p>
+          </div>
           <input type="text" id="marketTableFilter" oninput="renderMarketTable()" placeholder="Filtrar por nombre o código..." 
-                 class="px-3 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-blue">
+                 class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-blue w-64">
         </div>
-        <div class="overflow-x-auto max-h-[450px]">
+        <div class="overflow-x-auto max-h-[480px]">
           <table class="w-full text-left text-xs border-collapse">
-            <thead class="text-slate-400 bg-slate-900 sticky top-0 z-10 border-b border-slate-700">
+            <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700">
               <tr>
                 <th class="py-2.5 px-3">Cód</th>
                 <th class="py-2.5 px-3">Razón Social</th>
@@ -563,7 +581,7 @@ def generate_html():
       document.getElementById('headerPeriodo').innerText = data.periodo || '2026-2';
       document.getElementById('headerTotalCias').innerText = data.total_entidades || '185';
 
-      // Pick high-profile default company (e.g. Federación Patronal 0726 or La Segunda 0317)
+      // Pick default high profile company
       if (data.companies_by_code['0726']) {{
         state.selectedCompanyCode = '0726';
       }} else if (data.companies.length > 0) {{
@@ -718,18 +736,27 @@ def generate_html():
       document.getElementById('kpiCombinedRatio').innerText = formatPercent(combinedRatio);
       document.getElementById('kpiResNeto').innerText = formatARS(totNeto);
 
-      // Top 10 Ranking table
-      const sortedByPrimas = [...list].sort((a, b) => b.primas_devengadas - a.primas_devengadas).slice(0, 10);
+      // Top 15 Full Width Table
+      const sortedByPrimas = [...list].sort((a, b) => b.primas_devengadas - a.primas_devengadas).slice(0, 15);
       const rankingBody = document.getElementById('topRankingTableBody');
       rankingBody.innerHTML = sortedByPrimas.map((c, i) => `
-        <tr class="hover:bg-slate-800/60 cursor-pointer" onclick="selectCompany('${{c.cod_cia}}')">
-          <td class="py-2 px-2 font-medium text-white flex items-center gap-1.5">
-            <span class="text-slate-500 font-mono text-[10px] w-4">${{i+1}}.</span>
-            <span class="truncate max-w-[170px]" title="${{c.razon_social}}">${{c.razon_social}}</span>
+        <tr class="hover:bg-slate-800/60">
+          <td class="py-2.5 px-3 text-center text-slate-500 font-mono">${{i+1}}</td>
+          <td class="py-2.5 px-3 text-slate-400 font-mono">${{c.cod_cia}}</td>
+          <td class="py-2.5 px-3 font-semibold text-white truncate max-w-[220px]" title="${{c.razon_social}}">${{c.razon_social}}</td>
+          <td class="py-2.5 px-3 text-slate-400 text-[11px]">${{c.tipo_entidad}}</td>
+          <td class="py-2.5 px-3 text-right font-bold text-slate-100">${{formatARS(c.primas_devengadas)}}</td>
+          <td class="py-2.5 px-3 text-right text-slate-300">${{formatARS(c.primas_emitidas)}}</td>
+          <td class="py-2.5 px-3 text-right text-slate-300">${{formatARS(c.siniestros)}}</td>
+          <td class="py-2.5 px-3 text-right">${{formatPercent(c.loss_ratio)}}</td>
+          <td class="py-2.5 px-3 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
+          <td class="py-2.5 px-3 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
+          <td class="py-2.5 px-3 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
+          <td class="py-2.5 px-3 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
+          <td class="py-2.5 px-3 text-right text-slate-300">${{formatARS(c.activo)}}</td>
+          <td class="py-2.5 px-3 text-center">
+            <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-bold">Ver Ficha</button>
           </td>
-          <td class="py-2 px-2 text-right font-mono text-slate-200">${{formatARS(c.primas_devengadas)}}</td>
-          <td class="py-2 px-2 text-right font-mono ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
-          <td class="py-2 px-2 text-right font-mono ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
         </tr>
       `).join('');
 
@@ -743,13 +770,14 @@ def generate_html():
       const trace = {{
         x: valid.map(c => Math.max(-120, Math.min(150, c.margen_tecnico))),
         y: valid.map(c => Math.max(-40, Math.min(80, c.roi_inversiones))),
-        text: valid.map(c => `<b>${{c.razon_social}}</b><br>Primas Dev: ${{formatARS(c.primas_devengadas)}}<br>M. Técnico: ${{c.margen_tecnico.toFixed(1)}}%<br>ROI Inv: ${{c.roi_inversiones.toFixed(1)}}%<br>Ratio Comb: ${{c.combined_ratio.toFixed(1)}}%`),
+        text: valid.map(c => `<b>${{c.razon_social}}</b><br>Segmento: ${{c.tipo_entidad}}<br>Primas Dev: ${{formatARS(c.primas_devengadas)}}<br>M. Técnico: ${{c.margen_tecnico.toFixed(1)}}%<br>ROI Inv: ${{c.roi_inversiones.toFixed(1)}}%<br>Ratio Comb: ${{c.combined_ratio.toFixed(1)}}%`),
+        customdata: valid.map(c => c.cod_cia),
         mode: 'markers',
         marker: {{
-          size: valid.map(c => Math.max(8, Math.min(42, Math.sqrt(c.primas_devengadas / 1e8)))),
+          size: valid.map(c => Math.max(9, Math.min(48, Math.sqrt(c.primas_devengadas / 8e7)))),
           color: valid.map(c => c.margen_tecnico >= 0 && c.roi_inversiones >= 0 ? '#10B981' : (c.margen_tecnico < 0 && c.roi_inversiones >= 0 ? '#F59E0B' : '#E20039')),
           opacity: 0.85,
-          line: {{ color: '#FFFFFF', width: 1 }}
+          line: {{ color: '#FFFFFF', width: 1.2 }}
         }},
         type: 'scatter',
         hoverinfo: 'text'
@@ -758,29 +786,37 @@ def generate_html():
       const layout = {{
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        margin: {{ l: 45, r: 25, t: 20, b: 45 }},
+        margin: {{ l: 55, r: 35, t: 25, b: 55 }},
         xaxis: {{
-          title: 'Margen Técnico (%)',
+          title: 'Margen Técnico (%) = Resultado Técnico / Primas Devengadas',
           color: '#94A3B8',
           gridcolor: '#1E293B',
           zerolinecolor: '#475569',
-          zerolinewidth: 1.5
+          zerolinewidth: 2
         }},
         yaxis: {{
-          title: 'Rendimiento Inversiones (%)',
+          title: 'Rendimiento Financiero (%) = Res. Financiero / Inversiones',
           color: '#94A3B8',
           gridcolor: '#1E293B',
           zerolinecolor: '#475569',
-          zerolinewidth: 1.5
+          zerolinewidth: 2
         }},
         annotations: [
-          {{ x: 70, y: 55, text: '<b>Ganadoras Integrales</b>', showarrow: false, font: {{ color: '#10B981', size: 10 }} }},
-          {{ x: -60, y: 55, text: '<b>Dependencia Financiera</b>', showarrow: false, font: {{ color: '#F59E0B', size: 10 }} }},
-          {{ x: -60, y: -25, text: '<b>En Riesgo</b>', showarrow: false, font: {{ color: '#E20039', size: 10 }} }}
+          {{ x: 75, y: 55, text: '<b>Cuadrante 1: Ganadoras Integrales</b><br>(Margen Técnico + / Rendimiento Financiero +)', showarrow: false, font: {{ color: '#10B981', size: 11 }} }},
+          {{ x: -65, y: 55, text: '<b>Cuadrante 2: Dependencia Financiera</b><br>(Déficit Técnico / Rendimiento Financiero +)', showarrow: false, font: {{ color: '#F59E0B', size: 11 }} }},
+          {{ x: -65, y: -25, text: '<b>Cuadrante 4: En Riesgo Operativo</b><br>(Déficit Técnico y Financiero)', showarrow: false, font: {{ color: '#E20039', size: 11 }} }}
         ]
       }};
 
-      Plotly.newPlot('marketScatterPlot', [trace], layout, {{ responsive: true, displayModeBar: false }});
+      Plotly.newPlot('marketScatterPlot', [trace], layout, {{ responsive: true, displayModeBar: false }}).then(() => {{
+        const plotEl = document.getElementById('marketScatterPlot');
+        plotEl.on('plotly_click', (data) => {{
+          if (data && data.points && data.points.length > 0) {{
+            const ciaCode = data.points[0].customdata;
+            if (ciaCode) selectCompany(ciaCode);
+          }}
+        }});
+      }});
     }}
 
     function renderMarketTable() {{
@@ -804,7 +840,7 @@ def generate_html():
           <td class="py-2 px-3 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
           <td class="py-2 px-3 text-right text-slate-300">${{formatARS(c.activo)}}</td>
           <td class="py-2 px-3 text-center">
-            <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-semibold">Ver</button>
+            <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-semibold">Ver</button>
           </td>
         </tr>
       `).join('');
@@ -1097,7 +1133,7 @@ def generate_html():
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print(f"index.html generated successfully ({os.path.getsize(out_file):,} bytes)")
+    print(f"index.html updated successfully ({os.path.getsize(out_file):,} bytes)")
 
 if __name__ == '__main__':
     generate_html()
