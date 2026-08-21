@@ -162,16 +162,16 @@ def generate_html():
     <!-- ======================================================== -->
     <section id="tab-vision-mercado" class="space-y-6">
       
-      <!-- Macro Branches Summary Banner (Clickable & Mathematically Reconciled) -->
+      <!-- 1. BANNER: DISTRIBUCIÓN POR TIPO DE ASEGURADORA (185 ENTIDADES) -->
       <div class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <i class="fa-solid fa-layer-group text-brand-blue"></i> Distribución de Primas por Gran Ramo de Negocio (Mercado Total)
+            <i class="fa-solid fa-building-columns text-brand-blue"></i> 1. Clasificación Institucional por Tipo de Aseguradora
           </span>
-          <span class="text-[11px] font-mono text-slate-300">Total Producción Mercado: <b id="macroTotalVal" class="text-amber-400 font-bold">...</b></span>
+          <span class="text-[11px] font-mono text-slate-300">Total Producción Empresas: <b id="macroTotalVal" class="text-amber-400 font-bold">...</b></span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-          <!-- Patrimoniales -->
+          <!-- Patrimoniales y Mixtas -->
           <div onclick="setSegmentFilter('Patrimoniales y Mixtas')" 
                class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-sky-500/50 transition-all group">
             <div class="text-[10px] text-slate-400 group-hover:text-sky-300 uppercase font-sans font-semibold flex items-center justify-between">
@@ -193,18 +193,18 @@ def generate_html():
             <div id="macroArtSub" class="text-[10px] text-slate-400 mt-0.5">...</div>
           </div>
 
-          <!-- Personas -->
+          <!-- Seguros de Personas -->
           <div onclick="setSegmentFilter('Seguros de Personas')" 
                class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-rose-500/50 transition-all group">
             <div class="text-[10px] text-slate-400 group-hover:text-rose-300 uppercase font-sans font-semibold flex items-center justify-between">
-              <span>Seguros de Personas</span>
+              <span>Seguros de Personas (Monorramo)</span>
               <i class="fa-solid fa-arrow-right text-[9px] opacity-0 group-hover:opacity-100 transition-opacity text-rose-400"></i>
             </div>
             <div id="macroPersonasVal" class="text-sm font-bold text-rose-400 mt-0.5">...</div>
             <div id="macroPersonasSub" class="text-[10px] text-slate-400 mt-0.5">...</div>
           </div>
 
-          <!-- Retiro -->
+          <!-- Seguros de Retiro -->
           <div onclick="setSegmentFilter('Seguros de Retiro')" 
                class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-purple-500/50 transition-all group">
             <div class="text-[10px] text-slate-400 group-hover:text-purple-300 uppercase font-sans font-semibold flex items-center justify-between">
@@ -217,10 +217,66 @@ def generate_html():
         </div>
       </div>
 
+      <!-- 2. BANNER: DISTRIBUCIÓN POR CONJUNTO DE PRODUCTOS (SUBRAMOS REALES) -->
+      <div class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-boxes-stacked text-amber-400"></i> 2. Clasificación Técnica por Línea Real de Producto (Subramos)
+          </span>
+          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b>3.927 Ramos y Pólizas Operadas</b></span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+          <!-- Productos Patrimoniales -->
+          <div class="p-2.5 bg-slate-900/90 rounded-lg border border-sky-500/30">
+            <div class="text-[10px] text-sky-300 uppercase font-sans font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-car"></i> Productos Patrimoniales
+            </div>
+            <div id="prodPatrimPrimas" class="text-sm font-bold text-sky-400 mt-1">...</div>
+            <div id="prodPatrimDetails" class="text-[10px] text-slate-400 mt-0.5">...</div>
+          </div>
+
+          <!-- Productos ART -->
+          <div class="p-2.5 bg-slate-900/90 rounded-lg border border-amber-500/30">
+            <div class="text-[10px] text-amber-300 uppercase font-sans font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-helmet-safety"></i> Productos Riesgos Trabajo
+            </div>
+            <div id="prodArtPrimas" class="text-sm font-bold text-amber-400 mt-1">...</div>
+            <div id="prodArtDetails" class="text-[10px] text-slate-400 mt-0.5">...</div>
+          </div>
+
+          <!-- Productos Personas y Vida -->
+          <div class="p-2.5 bg-slate-900/90 rounded-lg border border-rose-500/40 bg-rose-500/5">
+            <div class="text-[10px] text-rose-300 uppercase font-sans font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-heart-pulse"></i> Productos Personas y Vida
+            </div>
+            <div id="prodPersonasPrimas" class="text-sm font-bold text-rose-400 mt-1">...</div>
+            <div id="prodPersonasDetails" class="text-[10px] text-rose-200 mt-0.5">...</div>
+          </div>
+
+          <!-- Productos Retiro y Rentas -->
+          <div class="p-2.5 bg-slate-900/90 rounded-lg border border-purple-500/30">
+            <div class="text-[10px] text-purple-300 uppercase font-sans font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-piggy-bank"></i> Productos Retiro y Rentas
+            </div>
+            <div id="prodRetiroPrimas" class="text-sm font-bold text-purple-400 mt-1">...</div>
+            <div id="prodRetiroDetails" class="text-[10px] text-slate-400 mt-0.5">...</div>
+          </div>
+        </div>
+
+        <!-- Personas Cross-Selling Insight Box -->
+        <div id="personasInsightBox" class="mt-2.5 p-2 bg-slate-900/80 rounded-lg border border-slate-800 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-rose-400"></i>
+            <span><b>Efecto Multirramo en Personas:</b> El <b>47.7% ($1.75 B)</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>50.3% ($1.85 B)</b> por Aseguradoras exclusivas de Personas.</span>
+          </div>
+          <span class="font-mono text-rose-300 font-bold">Total Ramo Personas: $3.67 B (12.4% del mercado)</span>
+        </div>
+      </div>
+
       <!-- Segment Filter Pills -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-brand-red"></i> Segmento de Compañías:</span>
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-brand-red"></i> Filtrar Aseguradoras por Segmento:</span>
           <div id="segmentPillsContainer" class="flex flex-wrap gap-1.5"></div>
         </div>
         <div class="text-xs text-slate-400">
@@ -692,29 +748,49 @@ def generate_html():
       document.getElementById('headerPeriodo').innerText = data.periodo || '2026-2';
       document.getElementById('headerTotalCias').innerText = data.total_entidades || '185';
 
-      // Set macro banner values mathematically consistent with segment totals
-      if (data.macro_ramos) {{
-        const mr = data.macro_ramos;
-        const totEmit = mr.total_mercado_emitidas;
-        const totDev = mr.total_mercado_devengadas;
+      // 1. Set macro entity values
+      const me = data.macro_entidades || data.macro_ramos;
+      if (me) {{
+        const totEmit = me.total_mercado_emitidas;
+        const totDev = me.total_mercado_devengadas;
 
         document.getElementById('macroTotalVal').innerText = `${{formatARS(totEmit)}} Emitidas (${{formatARS(totDev)}} Dev.)`;
 
         // Patrimoniales
-        document.getElementById('macroPatrimVal').innerText = formatARS(mr.patrimoniales_emitidas);
-        document.getElementById('macroPatrimSub').innerText = `Dev: ${{formatARS(mr.patrimoniales_devengadas)}} • ${{((mr.patrimoniales_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.patrimoniales_entidades}} Cías)`;
+        document.getElementById('macroPatrimVal').innerText = formatARS(me.patrimoniales_emitidas);
+        document.getElementById('macroPatrimSub').innerText = `Dev: ${{formatARS(me.patrimoniales_devengadas)}} • ${{((me.patrimoniales_emitidas / totEmit) * 100).toFixed(1)}}% (${{me.patrimoniales_entidades}} Cías)`;
 
         // ART
-        document.getElementById('macroArtVal').innerText = formatARS(mr.art_emitidas);
-        document.getElementById('macroArtSub').innerText = `Dev: ${{formatARS(mr.art_devengadas)}} • ${{((mr.art_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.art_entidades}} Cías)`;
+        document.getElementById('macroArtVal').innerText = formatARS(me.art_emitidas);
+        document.getElementById('macroArtSub').innerText = `Dev: ${{formatARS(me.art_devengadas)}} • ${{((me.art_emitidas / totEmit) * 100).toFixed(1)}}% (${{me.art_entidades}} Cías)`;
 
         // Personas
-        document.getElementById('macroPersonasVal').innerText = formatARS(mr.personas_emitidas);
-        document.getElementById('macroPersonasSub').innerText = `Dev: ${{formatARS(mr.personas_devengadas)}} • ${{((mr.personas_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.personas_entidades}} Cías)`;
+        document.getElementById('macroPersonasVal').innerText = formatARS(me.personas_emitidas);
+        document.getElementById('macroPersonasSub').innerText = `Dev: ${{formatARS(me.personas_devengadas)}} • ${{((me.personas_emitidas / totEmit) * 100).toFixed(1)}}% (${{me.personas_entidades}} Cías)`;
 
         // Retiro
-        document.getElementById('macroRetiroVal').innerText = formatARS(mr.retiro_emitidas);
-        document.getElementById('macroRetiroSub').innerText = `Dev: ${{formatARS(mr.retiro_devengadas)}} • ${{((mr.retiro_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.retiro_entidades}} Cías)`;
+        document.getElementById('macroRetiroVal').innerText = formatARS(me.retiro_emitidas);
+        document.getElementById('macroRetiroSub').innerText = `Dev: ${{formatARS(me.retiro_devengadas)}} • ${{((me.retiro_emitidas / totEmit) * 100).toFixed(1)}}% (${{me.retiro_entidades}} Cías)`;
+      }}
+
+      // 2. Set macro product line values
+      const mp = data.macro_productos;
+      if (mp) {{
+        // Patrimoniales
+        document.getElementById('prodPatrimPrimas').innerText = formatARS(mp.patrimoniales.primas);
+        document.getElementById('prodPatrimDetails').innerText = `${{mp.patrimoniales.participacion}}% Mercado • Sin: ${{mp.patrimoniales.siniestralidad}}% (Siniestros: ${{formatARS(mp.patrimoniales.siniestros)}})`;
+
+        // ART
+        document.getElementById('prodArtPrimas').innerText = formatARS(mp.art.primas);
+        document.getElementById('prodArtDetails').innerText = `${{mp.art.participacion}}% Mercado • Sin: ${{mp.art.siniestralidad}}% (Siniestros: ${{formatARS(mp.art.siniestros)}})`;
+
+        // Personas
+        document.getElementById('prodPersonasPrimas').innerText = formatARS(mp.personas.primas);
+        document.getElementById('prodPersonasDetails').innerText = `${{mp.personas.participacion}}% Mercado • Sin: ${{mp.personas.siniestralidad}}% (Siniestros: ${{formatARS(mp.personas.siniestros)}})`;
+
+        // Retiro
+        document.getElementById('prodRetiroPrimas').innerText = formatARS(mp.retiro.primas);
+        document.getElementById('prodRetiroDetails').innerText = `${{mp.retiro.participacion}}% Mercado • Sin: ${{mp.retiro.siniestralidad}}% (Siniestros: ${{formatARS(mp.retiro.siniestros)}})`;
       }}
 
       // Pick default high profile company (0436 or 0117 or 0317)
