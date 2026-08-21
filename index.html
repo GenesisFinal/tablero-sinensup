@@ -215,7 +215,7 @@
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-boxes-stacked text-amber-400"></i> 2. Clasificación Técnica por Línea Real de Producto (Subramos)
           </span>
-          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b>3.927 Ramos y Pólizas Operadas</b></span>
+          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b>Total Primas y Recargos Unificados ($29.91 B)</b></span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
           <!-- Productos Patrimoniales -->
@@ -259,16 +259,16 @@
         <div id="personasInsightBox" class="mt-2.5 p-2 bg-slate-900/80 rounded-lg border border-slate-800 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-circle-info text-rose-400"></i>
-            <span><b>Efecto Multirramo en Personas:</b> El <b>47.7% ($1.75 B)</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>50.3% ($1.85 B)</b> por Aseguradoras exclusivas de Personas.</span>
+            <span><b>Efecto Multirramo en Personas:</b> El <b>48.2% ($1.80 B)</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>50.0% ($1.87 B)</b> por Aseguradoras exclusivas de Personas.</span>
           </div>
-          <span class="font-mono text-rose-300 font-bold">Total Ramo Personas: $3.67 B (12.4% del mercado)</span>
+          <span class="font-mono text-rose-300 font-bold">Total Ramo Personas: $3.74 B (12.5% del mercado)</span>
         </div>
       </div>
 
       <!-- Segment Filter Pills -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-brand-red"></i> Filtrar Aseguradoras por Segmento:</span>
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-brand-red"></i> Filtrar Aseguradoras por Tipo:</span>
           <div id="segmentPillsContainer" class="flex flex-wrap gap-1.5"></div>
         </div>
         <div class="text-xs text-slate-400">
@@ -371,40 +371,39 @@
         <div id="marketScatterPlot" class="w-full h-[520px]"></div>
       </div>
 
-      <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table (with Grupo La Segunda Benchmark) -->
+      <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table (Por Primas Emitidas, sin scroll horizontal) -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-trophy text-amber-400"></i> Ranking Top Aseguradoras del Segmento
+              <i class="fa-solid fa-trophy text-amber-400"></i> Ranking Top Aseguradoras del Segmento (por Primas Emitidas)
             </h3>
-            <p class="text-xs text-slate-400">Principales aseguradoras ordenadas por volumen de Primas Devengadas (con inclusión fija de Grupo Asegurador La Segunda)</p>
+            <p class="text-xs text-slate-400">Principales aseguradoras ordenadas por volumen de Primas Emitidas (con inclusión fija de Grupo Asegurador La Segunda)</p>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-[11px] font-mono px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg font-bold">Top 15 + Grupo La Segunda</span>
           </div>
         </div>
-        <div class="overflow-x-auto max-h-[520px]">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700">
+        <div class="w-full overflow-hidden">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/90 border-b border-slate-700 text-[11px]">
               <tr>
-                <th class="py-2.5 px-3 text-center">#</th>
-                <th class="py-2.5 px-3">Cód</th>
-                <th class="py-2.5 px-3">Razón Social</th>
-                <th class="py-2.5 px-3">Segmento</th>
-                <th class="py-2.5 px-3 text-right">Primas Devengadas</th>
-                <th class="py-2.5 px-3 text-right">Primas Emitidas</th>
-                <th class="py-2.5 px-3 text-right">Siniestros</th>
-                <th class="py-2.5 px-3 text-right">Loss Ratio</th>
-                <th class="py-2.5 px-3 text-right">Ratio Combinado</th>
-                <th class="py-2.5 px-3 text-right">Res. Técnico</th>
-                <th class="py-2.5 px-3 text-right">Res. Financiero</th>
-                <th class="py-2.5 px-3 text-right">Res. Neto</th>
-                <th class="py-2.5 px-3 text-right">Activo Total</th>
-                <th class="py-2.5 px-3 text-center">Acción</th>
+                <th class="py-2.5 px-2 text-center w-8">#</th>
+                <th class="py-2.5 px-2">Razón Social</th>
+                <th class="py-2.5 px-2 text-center w-14">Tipo</th>
+                <th class="py-2.5 px-2 text-right">Primas Emitidas</th>
+                <th class="py-2.5 px-2 text-right">Primas Dev.</th>
+                <th class="py-2.5 px-2 text-right">Siniestros</th>
+                <th class="py-2.5 px-2 text-right">Loss Ratio</th>
+                <th class="py-2.5 px-2 text-right">Comb. Ratio</th>
+                <th class="py-2.5 px-2 text-right">Res. Técnico</th>
+                <th class="py-2.5 px-2 text-right">Res. Financiero</th>
+                <th class="py-2.5 px-2 text-right">Res. Neto</th>
+                <th class="py-2.5 px-2 text-right">Activo</th>
+                <th class="py-2.5 px-2 text-center w-14">Acción</th>
               </tr>
             </thead>
-            <tbody id="topRankingTableBody" class="divide-y divide-slate-800 font-mono"></tbody>
+            <tbody id="topRankingTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
           </table>
         </div>
       </div>
@@ -427,7 +426,8 @@
               <tr>
                 <th class="py-2.5 px-3">Cód</th>
                 <th class="py-2.5 px-3">Razón Social</th>
-                <th class="py-2.5 px-3">Segmento</th>
+                <th class="py-2.5 px-3 text-center">Tipo</th>
+                <th class="py-2.5 px-3 text-right">Primas Emitidas</th>
                 <th class="py-2.5 px-3 text-right">Primas Dev.</th>
                 <th class="py-2.5 px-3 text-right">Siniestros</th>
                 <th class="py-2.5 px-3 text-right">Loss Ratio</th>
@@ -662,7 +662,7 @@
             <thead class="text-slate-400 bg-slate-900 sticky top-0 border-b border-slate-700">
               <tr>
                 <th class="py-2.5 px-3">Aseguradora</th>
-                <th class="py-2.5 px-3">Segmento</th>
+                <th class="py-2.5 px-3 text-center">Tipo</th>
                 <th class="py-2.5 px-3 text-right">Cobertura (x)</th>
                 <th class="py-2.5 px-3 text-right">Ratio Combinado</th>
                 <th class="py-2.5 px-3 text-right">Apalancamiento</th>
@@ -60880,6 +60880,19 @@
       return val.toFixed(1) + '%';
     }
 
+    function getTipoBadge(tipo) {
+      if (tipo === 'Patrimoniales y Mixtas') {
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30" title="Patrimoniales y Mixtas">PM</span>';
+      } else if (tipo === 'Riesgos del Trabajo (ART)') {
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="Riesgos del Trabajo (ART)">ART</span>';
+      } else if (tipo === 'Seguros de Personas') {
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30" title="Seguros de Personas">SP</span>';
+      } else if (tipo === 'Seguros de Retiro') {
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30" title="Seguros de Retiro">SR</span>';
+      }
+      return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">${tipo}</span>`;
+    }
+
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {
       initDashboard();
@@ -61133,19 +61146,19 @@
       document.getElementById('kpiCombinedRatio').innerText = formatPercent(combinedRatio);
       document.getElementById('kpiResNeto').innerText = formatARS(totNeto);
 
-      // Top 15 Full Width Table with Pinned Grupo La Segunda Benchmark
-      const sortedByPrimas = [...list].sort((a, b) => b.primas_devengadas - a.primas_devengadas);
-      const top15 = sortedByPrimas.slice(0, 15);
+      // Top 15 Table SORTED BY PRIMAS EMITIDAS with Pinned Grupo La Segunda Benchmark
+      const sortedByEmitidas = [...list].sort((a, b) => b.primas_emitidas - a.primas_emitidas);
+      const top15 = sortedByEmitidas.slice(0, 15);
       const top15Codes = new Set(top15.map(c => c.cod_cia));
 
       // La Segunda identifier
       const isLaSegunda = c => ['0117', '0317', '0436', '0618'].includes(c.cod_cia) || c.razon_social.toUpperCase().includes('SEGUNDA');
 
       const allDataCompanies = window.DATA_SINENSUP.companies;
-      const allSorted = [...allDataCompanies].sort((a, b) => b.primas_devengadas - a.primas_devengadas);
+      const allSorted = [...allDataCompanies].sort((a, b) => b.primas_emitidas - a.primas_emitidas);
 
       // Extra La Segunda companies in current filter (or general market) not in Top 15
-      const extraLaSegundaInFilter = sortedByPrimas.filter(c => isLaSegunda(c) && !top15Codes.has(c.cod_cia));
+      const extraLaSegundaInFilter = sortedByEmitidas.filter(c => isLaSegunda(c) && !top15Codes.has(c.cod_cia));
       const extraLaSegundaAll = allSorted.filter(c => isLaSegunda(c) && !top15Codes.has(c.cod_cia));
       const extraToShow = extraLaSegundaInFilter.length > 0 ? extraLaSegundaInFilter : (state.selectedSegment === 'Todos' ? extraLaSegundaAll : extraLaSegundaInFilter);
 
@@ -61154,24 +61167,23 @@
         const isHL = state.highlightedCiaCode === c.cod_cia;
         return `
         <tr class="hover:bg-slate-800/60 ${isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')} cursor-pointer" onclick="highlightScatterCompany('${c.cod_cia}')">
-          <td class="py-2.5 px-3 text-center text-slate-500 font-mono">${i+1}</td>
-          <td class="py-2.5 px-3 text-slate-400 font-mono">${c.cod_cia}</td>
-          <td class="py-2.5 px-3 font-semibold text-white truncate max-w-[240px]" title="${c.razon_social}">
+          <td class="py-2 px-2 text-center text-slate-400 font-mono">${i+1}</td>
+          <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px]" title="${c.razon_social}">
             ${c.razon_social}
-            ${isLS ? '<span class="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>' : ''}
+            ${isLS ? '<span class="ml-1.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>' : ''}
           </td>
-          <td class="py-2.5 px-3 text-slate-400 text-[11px]">${c.tipo_entidad}</td>
-          <td class="py-2.5 px-3 text-right font-bold text-slate-100">${formatARS(c.primas_devengadas)}</td>
-          <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.primas_emitidas)}</td>
-          <td class="py-2.5 px-3 text-right text-rose-300 font-bold">${formatARS(c.siniestros)}</td>
-          <td class="py-2.5 px-3 text-right">${formatPercent(c.loss_ratio)}</td>
-          <td class="py-2.5 px-3 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
-          <td class="py-2.5 px-3 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
-          <td class="py-2.5 px-3 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
-          <td class="py-2.5 px-3 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
-          <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.activo)}</td>
-          <td class="py-2.5 px-3 text-center" onclick="event.stopPropagation()">
-            <button onclick="selectCompany('${c.cod_cia}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-bold">Ver Ficha</button>
+          <td class="py-2 px-2 text-center">${getTipoBadge(c.tipo_entidad)}</td>
+          <td class="py-2 px-2 text-right font-bold text-white">${formatARS(c.primas_emitidas)}</td>
+          <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.primas_devengadas)}</td>
+          <td class="py-2 px-2 text-right text-rose-300">${formatARS(c.siniestros)}</td>
+          <td class="py-2 px-2 text-right">${formatPercent(c.loss_ratio)}</td>
+          <td class="py-2 px-2 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
+          <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
+          <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
+          <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
+          <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.activo)}</td>
+          <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+            <button onclick="selectCompany('${c.cod_cia}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
           </td>
         </tr>
       `}).join('');
@@ -61179,10 +61191,10 @@
       if (extraToShow.length > 0) {
         rowsHtml += `
         <tr class="bg-slate-900/95 border-y-2 border-amber-500/40">
-          <td colspan="14" class="py-2 px-3 text-xs font-bold text-amber-300">
+          <td colspan="13" class="py-1.5 px-2 text-[11px] font-bold text-amber-300">
             <div class="flex items-center justify-between">
-              <span class="flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> Empresas de Grupo Asegurador La Segunda (Benchmark / Fuera de Top 15)</span>
-              <span class="text-[10px] text-slate-400 font-normal">Fijadas permanentemente para seguimiento corporativo</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400 text-xs"></i> Grupo Asegurador La Segunda (Benchmark / Fuera de Top 15)</span>
+              <span class="text-[9px] text-slate-400 font-normal">Fijadas permanentemente</span>
             </div>
           </td>
         </tr>
@@ -61191,24 +61203,23 @@
           const isHL = state.highlightedCiaCode === c.cod_cia;
           return `
           <tr class="hover:bg-amber-500/15 ${isHL ? 'bg-amber-500/25 border-l-4 border-l-amber-400 font-bold' : 'bg-amber-500/5 border-l-4 border-l-amber-400/80'} cursor-pointer" onclick="highlightScatterCompany('${c.cod_cia}')">
-            <td class="py-2.5 px-3 text-center text-amber-300 font-mono font-bold">#${overallRank}</td>
-            <td class="py-2.5 px-3 text-slate-400 font-mono">${c.cod_cia}</td>
-            <td class="py-2.5 px-3 font-semibold text-white truncate max-w-[240px]" title="${c.razon_social}">
+            <td class="py-2 px-2 text-center text-amber-300 font-mono font-bold">#${overallRank}</td>
+            <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px]" title="${c.razon_social}">
               ${c.razon_social}
-              <span class="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>
+              <span class="ml-1.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>
             </td>
-            <td class="py-2.5 px-3 text-slate-400 text-[11px]">${c.tipo_entidad}</td>
-            <td class="py-2.5 px-3 text-right font-bold text-slate-100">${formatARS(c.primas_devengadas)}</td>
-            <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.primas_emitidas)}</td>
-            <td class="py-2.5 px-3 text-right text-rose-300 font-bold">${formatARS(c.siniestros)}</td>
-            <td class="py-2.5 px-3 text-right">${formatPercent(c.loss_ratio)}</td>
-            <td class="py-2.5 px-3 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
-            <td class="py-2.5 px-3 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
-            <td class="py-2.5 px-3 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
-            <td class="py-2.5 px-3 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
-            <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.activo)}</td>
-            <td class="py-2.5 px-3 text-center" onclick="event.stopPropagation()">
-              <button onclick="selectCompany('${c.cod_cia}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-bold">Ver Ficha</button>
+            <td class="py-2 px-2 text-center">${getTipoBadge(c.tipo_entidad)}</td>
+            <td class="py-2 px-2 text-right font-bold text-white">${formatARS(c.primas_emitidas)}</td>
+            <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.primas_devengadas)}</td>
+            <td class="py-2 px-2 text-right text-rose-300">${formatARS(c.siniestros)}</td>
+            <td class="py-2 px-2 text-right">${formatPercent(c.loss_ratio)}</td>
+            <td class="py-2 px-2 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
+            <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
+            <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
+            <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
+            <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.activo)}</td>
+            <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+              <button onclick="selectCompany('${c.cod_cia}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
             </td>
           </tr>
         `}).join('');
@@ -61229,12 +61240,12 @@
       const trace = {
         x: valid.map(c => Math.max(-120, Math.min(150, c.margen_tecnico))),
         y: valid.map(c => Math.max(-40, Math.min(80, c.roi_inversiones))),
-        text: valid.map(c => `<b>${c.razon_social}</b><br>Cód SSN: ${c.cod_cia} • Segmento: ${c.tipo_entidad}<br>Primas Dev: ${formatARS(c.primas_devengadas)}<br>Siniestros: ${formatARS(c.siniestros)}<br>M. Técnico: ${c.margen_tecnico.toFixed(1)}%<br>ROI Inv: ${c.roi_inversiones.toFixed(1)}%<br>Ratio Comb: ${c.combined_ratio.toFixed(1)}%`),
+        text: valid.map(c => `<b>${c.razon_social}</b><br>Cód SSN: ${c.cod_cia} • Tipo: ${c.tipo_entidad}<br>Primas Emitidas: ${formatARS(c.primas_emitidas)}<br>Primas Devengadas: ${formatARS(c.primas_devengadas)}<br>Siniestros: ${formatARS(c.siniestros)}<br>M. Técnico: ${c.margen_tecnico.toFixed(1)}%<br>ROI Inv: ${c.roi_inversiones.toFixed(1)}%<br>Ratio Comb: ${c.combined_ratio.toFixed(1)}%`),
         customdata: valid.map(c => c.cod_cia),
         mode: 'markers',
         marker: {
           size: valid.map(c => {
-            const baseSize = Math.max(9, Math.min(46, Math.sqrt(c.primas_devengadas / 8e7)));
+            const baseSize = Math.max(9, Math.min(46, Math.sqrt(c.primas_emitidas / 8e7)));
             return (hasHighlight && c.cod_cia === hlCode) ? baseSize * 1.35 + 8 : baseSize;
           }),
           color: valid.map(c => {
@@ -61276,7 +61287,7 @@
           annotations.push({
             x: Math.max(-120, Math.min(150, target.margen_tecnico)),
             y: Math.max(-40, Math.min(80, target.roi_inversiones)),
-            text: `<b>📍 ${target.razon_social}</b><br>Primas Dev: ${formatARS(target.primas_devengadas)} | Margen Téc: ${target.margen_tecnico.toFixed(1)}% | ROI: ${target.roi_inversiones.toFixed(1)}%`,
+            text: `<b>📍 ${target.razon_social}</b><br>Primas Emit: ${formatARS(target.primas_emitidas)} | M. Téc: ${target.margen_tecnico.toFixed(1)}% | ROI: ${target.roi_inversiones.toFixed(1)}%`,
             showarrow: true,
             arrowhead: 2,
             arrowsize: 1.2,
@@ -61371,7 +61382,7 @@
       const q = (document.getElementById('marketTableFilter')?.value || '').toLowerCase().trim();
       const filtered = q ? list.filter(c => c.razon_social.toLowerCase().includes(q) || c.cod_cia.includes(q)) : list;
       
-      const sorted = [...filtered].sort((a, b) => b.primas_devengadas - a.primas_devengadas);
+      const sorted = [...filtered].sort((a, b) => b.primas_emitidas - a.primas_emitidas);
       const tbody = document.getElementById('marketFullTableBody');
       tbody.innerHTML = sorted.map(c => {
         const isHL = state.highlightedCiaCode === c.cod_cia;
@@ -61379,8 +61390,9 @@
         <tr class="hover:bg-slate-800/60 ${isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : ''} cursor-pointer" onclick="highlightScatterCompany('${c.cod_cia}')">
           <td class="py-2 px-3 text-slate-400 font-mono">${c.cod_cia}</td>
           <td class="py-2 px-3 font-medium text-white truncate max-w-[200px]" title="${c.razon_social}">${c.razon_social}</td>
-          <td class="py-2 px-3 text-slate-400 text-[11px]">${c.tipo_entidad}</td>
-          <td class="py-2 px-3 text-right text-slate-200 font-bold">${formatARS(c.primas_devengadas)}</td>
+          <td class="py-2 px-3 text-center">${getTipoBadge(c.tipo_entidad)}</td>
+          <td class="py-2 px-3 text-right font-bold text-white">${formatARS(c.primas_emitidas)}</td>
+          <td class="py-2 px-3 text-right text-slate-300 font-bold">${formatARS(c.primas_devengadas)}</td>
           <td class="py-2 px-3 text-right text-rose-300 font-bold">${formatARS(c.siniestros)}</td>
           <td class="py-2 px-3 text-right">${formatPercent(c.loss_ratio)}</td>
           <td class="py-2 px-3 text-right ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
@@ -61629,7 +61641,7 @@
       tbody.innerHTML = sortedSolv.map(item => `
         <tr class="hover:bg-slate-800/60 cursor-pointer" onclick="selectCompany('${item.cod_cia}')">
           <td class="py-2 px-3 font-medium text-white">${item.razon_social}</td>
-          <td class="py-2 px-3 text-slate-400">${item.tipo_entidad}</td>
+          <td class="py-2 px-3 text-center">${getTipoBadge(item.tipo_entidad)}</td>
           <td class="py-2 px-3 text-right font-bold ${item.cobertura_reservas >= 1.0 ? 'text-emerald-400' : 'text-rose-400'}">${item.cobertura_reservas.toFixed(2)}x</td>
           <td class="py-2 px-3 text-right ${item.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(item.combined_ratio)}</td>
           <td class="py-2 px-3 text-right text-slate-300">${item.apalancamiento.toFixed(2)}x</td>
@@ -61642,7 +61654,7 @@
     // Export to CSV
     function exportToCSV() {
       const list = getFilteredCompanies();
-      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_devengadas', 'primas_emitidas', 'var_reservas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas'];
+      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_emitidas', 'primas_devengadas', 'var_reservas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas'];
       
       let csv = headers.join(',') + '\n';
       list.forEach(c => {
@@ -61650,8 +61662,8 @@
           `"${c.cod_cia}"`,
           `"${c.razon_social.replace(/"/g, '""')}"`,
           `"${c.tipo_entidad}"`,
-          c.primas_devengadas || 0,
           c.primas_emitidas || 0,
+          c.primas_devengadas || 0,
           c.var_reservas || 0,
           c.siniestros || 0,
           c.resultado_tecnico || 0,
