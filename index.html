@@ -266,18 +266,20 @@
         <div id="marketScatterPlot" class="w-full h-[520px]"></div>
       </div>
 
-      <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table -->
+      <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table (with Grupo La Segunda Benchmark) -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-trophy text-amber-400"></i> Ranking Top Aseguradoras del Segmento
             </h3>
-            <p class="text-xs text-slate-400">Principales aseguradoras ordenadas por volumen de Primas Devengadas</p>
+            <p class="text-xs text-slate-400">Principales aseguradoras ordenadas por volumen de Primas Devengadas (con inclusión fija de Grupo Asegurador La Segunda)</p>
           </div>
-          <span class="text-xs font-mono px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg font-bold">Top 15 Aseguradoras</span>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-mono px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg font-bold">Top 15 + Grupo La Segunda</span>
+          </div>
         </div>
-        <div class="overflow-x-auto max-h-[480px]">
+        <div class="overflow-x-auto max-h-[520px]">
           <table class="w-full text-left text-xs border-collapse">
             <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700">
               <tr>
@@ -67334,9 +67336,11 @@
         document.getElementById('macroRetiroPct').innerText = ((mr.retiro / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
       }
 
-      // Pick default high profile company (0117 or 0726)
+      // Pick default high profile company (0117 or 0317 or 0726)
       if (data.companies_by_code['0117']) {
         state.selectedCompanyCode = '0117';
+      } else if (data.companies_by_code['0317']) {
+        state.selectedCompanyCode = '0317';
       } else if (data.companies_by_code['0726']) {
         state.selectedCompanyCode = '0726';
       } else if (data.companies.length > 0) {
@@ -67491,14 +67495,32 @@
       document.getElementById('kpiCombinedRatio').innerText = formatPercent(combinedRatio);
       document.getElementById('kpiResNeto').innerText = formatARS(totNeto);
 
-      // Top 15 Full Width Table
-      const sortedByPrimas = [...list].sort((a, b) => b.primas_devengadas - a.primas_devengadas).slice(0, 15);
-      const rankingBody = document.getElementById('topRankingTableBody');
-      rankingBody.innerHTML = sortedByPrimas.map((c, i) => `
-        <tr class="hover:bg-slate-800/60">
+      // Top 15 Full Width Table with Pinned Grupo La Segunda Benchmark
+      const sortedByPrimas = [...list].sort((a, b) => b.primas_devengadas - a.primas_devengadas);
+      const top15 = sortedByPrimas.slice(0, 15);
+      const top15Codes = new Set(top15.map(c => c.cod_cia));
+
+      // La Segunda identifier
+      const isLaSegunda = c => ['0117', '0317', '0436', '0618'].includes(c.cod_cia) || c.razon_social.toUpperCase().includes('SEGUNDA');
+
+      const allDataCompanies = window.DATA_SINENSUP.companies;
+      const allSorted = [...allDataCompanies].sort((a, b) => b.primas_devengadas - a.primas_devengadas);
+
+      // Extra La Segunda companies in current filter (or general market) not in Top 15
+      const extraLaSegundaInFilter = sortedByPrimas.filter(c => isLaSegunda(c) && !top15Codes.has(c.cod_cia));
+      const extraLaSegundaAll = allSorted.filter(c => isLaSegunda(c) && !top15Codes.has(c.cod_cia));
+      const extraToShow = extraLaSegundaInFilter.length > 0 ? extraLaSegundaInFilter : (state.selectedSegment === 'Todos' ? extraLaSegundaAll : extraLaSegundaInFilter);
+
+      let rowsHtml = top15.map((c, i) => {
+        const isLS = isLaSegunda(c);
+        return `
+        <tr class="hover:bg-slate-800/60 ${isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400' : ''}">
           <td class="py-2.5 px-3 text-center text-slate-500 font-mono">${i+1}</td>
           <td class="py-2.5 px-3 text-slate-400 font-mono">${c.cod_cia}</td>
-          <td class="py-2.5 px-3 font-semibold text-white truncate max-w-[220px]" title="${c.razon_social}">${c.razon_social}</td>
+          <td class="py-2.5 px-3 font-semibold text-white truncate max-w-[240px]" title="${c.razon_social}">
+            ${c.razon_social}
+            ${isLS ? '<span class="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>' : ''}
+          </td>
           <td class="py-2.5 px-3 text-slate-400 text-[11px]">${c.tipo_entidad}</td>
           <td class="py-2.5 px-3 text-right font-bold text-slate-100">${formatARS(c.primas_devengadas)}</td>
           <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.primas_emitidas)}</td>
@@ -67513,7 +67535,46 @@
             <button onclick="selectCompany('${c.cod_cia}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-bold">Ver Ficha</button>
           </td>
         </tr>
-      `).join('');
+      `}).join('');
+
+      if (extraToShow.length > 0) {
+        rowsHtml += `
+        <tr class="bg-slate-900/95 border-y-2 border-amber-500/40">
+          <td colspan="14" class="py-2 px-3 text-xs font-bold text-amber-300">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2"><i class="fa-solid fa-star text-amber-400"></i> Empresas de Grupo Asegurador La Segunda (Benchmark / Fuera de Top 15)</span>
+              <span class="text-[10px] text-slate-400 font-normal">Fijadas permanentemente para seguimiento corporativo</span>
+            </div>
+          </td>
+        </tr>
+        ` + extraToShow.map(c => {
+          const overallRank = allSorted.findIndex(x => x.cod_cia === c.cod_cia) + 1;
+          return `
+          <tr class="bg-amber-500/5 hover:bg-amber-500/15 border-l-4 border-l-amber-400">
+            <td class="py-2.5 px-3 text-center text-amber-300 font-mono font-bold">#${overallRank}</td>
+            <td class="py-2.5 px-3 text-slate-400 font-mono">${c.cod_cia}</td>
+            <td class="py-2.5 px-3 font-semibold text-white truncate max-w-[240px]" title="${c.razon_social}">
+              ${c.razon_social}
+              <span class="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>
+            </td>
+            <td class="py-2.5 px-3 text-slate-400 text-[11px]">${c.tipo_entidad}</td>
+            <td class="py-2.5 px-3 text-right font-bold text-slate-100">${formatARS(c.primas_devengadas)}</td>
+            <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.primas_emitidas)}</td>
+            <td class="py-2.5 px-3 text-right text-rose-300 font-bold">${formatARS(c.siniestros)}</td>
+            <td class="py-2.5 px-3 text-right">${formatPercent(c.loss_ratio)}</td>
+            <td class="py-2.5 px-3 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
+            <td class="py-2.5 px-3 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
+            <td class="py-2.5 px-3 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
+            <td class="py-2.5 px-3 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
+            <td class="py-2.5 px-3 text-right text-slate-300">${formatARS(c.activo)}</td>
+            <td class="py-2.5 px-3 text-center">
+              <button onclick="selectCompany('${c.cod_cia}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-bold">Ver Ficha</button>
+            </td>
+          </tr>
+        `}).join('');
+      }
+
+      document.getElementById('topRankingTableBody').innerHTML = rowsHtml;
 
       renderMarketScatterPlot(list);
       renderMarketTable();
@@ -67546,7 +67607,7 @@
       const layout = {
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        margin: { l: 55, r: 35, t: 25, b: 55 },
+        margin: { l: 50, r: 30, t: 25, b: 55 },
         xaxis: {
           title: 'Margen Técnico (%) = Resultado Técnico / Primas Devengadas',
           color: '#94A3B8',
