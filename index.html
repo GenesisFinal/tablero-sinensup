@@ -231,22 +231,39 @@
         </div>
       </div>
 
-      <!-- 1. FULL WIDTH: Interactive Strategic Scatter Plot Matrix -->
+      <!-- 1. FULL WIDTH: Interactive Strategic Scatter Plot Matrix with Zoom & 4 Quadrants -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-crosshairs text-brand-red"></i> Matriz Estratégica: Margen Técnico vs. Rendimiento Financiero
             </h3>
-            <p class="text-xs text-slate-400">Burbuja = Volumen de Primas Devengadas | Ejes centrados en 0% | Haz clic en cualquier punto para abrir su ficha</p>
+            <p class="text-xs text-slate-400">Burbuja = Volumen de Primas Devengadas | Ejes centrados en 0% | Usa la rueda del ratón o selecciona un recuadro para hacer zoom</p>
           </div>
-          <div class="flex items-center gap-3 text-xs">
-            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Ganadoras Integrales</span>
-            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Dependencia Financiera</span>
-            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> En Riesgo</span>
+          
+          <!-- Zoom & Reset Controls -->
+          <div class="flex items-center gap-2">
+            <button onclick="zoomScatterPlot(0.7)" title="Acercar Zoom" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-magnifying-glass-plus text-brand-blue"></i> Zoom +
+            </button>
+            <button onclick="zoomScatterPlot(1.4)" title="Alejar Zoom" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-magnifying-glass-minus text-brand-blue"></i> Zoom -
+            </button>
+            <button onclick="resetScatterPlotZoom()" title="Restablecer vista inicial" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-arrows-rotate text-emerald-400"></i> Centrar
+            </button>
           </div>
         </div>
-        <div id="marketScatterPlot" class="w-full h-[500px]"></div>
+
+        <!-- 4 Quadrants Legend Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3 text-[11px] font-semibold bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+          <div class="flex items-center gap-1.5 text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> <b>Q1: Ganadoras Integrales</b> (Téc + / Fin +)</div>
+          <div class="flex items-center gap-1.5 text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> <b>Q2: Dependencia Financiera</b> (Téc - / Fin +)</div>
+          <div class="flex items-center gap-1.5 text-sky-400"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> <b>Q3: Técnicas Puras</b> (Téc + / Fin -)</div>
+          <div class="flex items-center gap-1.5 text-rose-400"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> <b>Q4: En Riesgo Operativo</b> (Téc - / Fin -)</div>
+        </div>
+
+        <div id="marketScatterPlot" class="w-full h-[520px]"></div>
       </div>
 
       <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table -->
@@ -67193,8 +67210,13 @@
         mode: 'markers',
         marker: {
           size: valid.map(c => Math.max(9, Math.min(48, Math.sqrt(c.primas_devengadas / 8e7)))),
-          color: valid.map(c => c.margen_tecnico >= 0 && c.roi_inversiones >= 0 ? '#10B981' : (c.margen_tecnico < 0 && c.roi_inversiones >= 0 ? '#F59E0B' : '#E20039')),
-          opacity: 0.85,
+          color: valid.map(c => {
+            if (c.margen_tecnico >= 0 && c.roi_inversiones >= 0) return '#10B981'; // Q1
+            if (c.margen_tecnico < 0 && c.roi_inversiones >= 0) return '#F59E0B';  // Q2
+            if (c.margen_tecnico >= 0 && c.roi_inversiones < 0) return '#38BDF8';  // Q3
+            return '#E20039'; // Q4
+          }),
+          opacity: 0.88,
           line: { color: '#FFFFFF', width: 1.2 }
         },
         type: 'scatter',
@@ -67222,11 +67244,20 @@
         annotations: [
           { x: 75, y: 55, text: '<b>Cuadrante 1: Ganadoras Integrales</b><br>(Margen Técnico + / Rendimiento Financiero +)', showarrow: false, font: { color: '#10B981', size: 11 } },
           { x: -65, y: 55, text: '<b>Cuadrante 2: Dependencia Financiera</b><br>(Déficit Técnico / Rendimiento Financiero +)', showarrow: false, font: { color: '#F59E0B', size: 11 } },
-          { x: -65, y: -25, text: '<b>Cuadrante 4: En Riesgo Operativo</b><br>(Déficit Técnico y Financiero)', showarrow: false, font: { color: '#E20039', size: 11 } }
+          { x: 75, y: -25, text: '<b>Cuadrante 3: Técnicas Puras</b><br>(Margen Técnico + / Déficit Financiero -)', showarrow: false, font: { color: '#38BDF8', size: 11 } },
+          { x: -65, y: -25, text: '<b>Cuadrante 4: En Riesgo Operativo</b><br>(Déficit Técnico y Financiero -)', showarrow: false, font: { color: '#E20039', size: 11 } }
         ]
       };
 
-      Plotly.newPlot('marketScatterPlot', [trace], layout, { responsive: true, displayModeBar: false }).then(() => {
+      const config = {
+        responsive: true,
+        displayModeBar: true,
+        scrollZoom: true,
+        displaylogo: false,
+        modeBarButtonsToRemove: ['lasso2d']
+      };
+
+      Plotly.newPlot('marketScatterPlot', [trace], layout, config).then(() => {
         const plotEl = document.getElementById('marketScatterPlot');
         plotEl.on('plotly_click', (data) => {
           if (data && data.points && data.points.length > 0) {
@@ -67235,6 +67266,33 @@
           }
         });
       });
+    }
+
+    // Zoom and Pan helper functions for the Scatter Plot
+    function zoomScatterPlot(factor) {
+      const plotEl = document.getElementById('marketScatterPlot');
+      if (!plotEl || !plotEl.layout) return;
+      const xRange = plotEl.layout.xaxis.range;
+      const yRange = plotEl.layout.yaxis.range;
+      if (!xRange || !yRange) return;
+      const xMid = (xRange[0] + xRange[1]) / 2;
+      const yMid = (yRange[0] + yRange[1]) / 2;
+      const xSpan = (xRange[1] - xRange[0]) * factor / 2;
+      const ySpan = (yRange[1] - yRange[0]) * factor / 2;
+      Plotly.relayout(plotEl, {
+        'xaxis.range': [xMid - xSpan, xMid + xSpan],
+        'yaxis.range': [yMid - ySpan, yMid + ySpan]
+      });
+    }
+
+    function resetScatterPlotZoom() {
+      const plotEl = document.getElementById('marketScatterPlot');
+      if (plotEl) {
+        Plotly.relayout(plotEl, {
+          'xaxis.autorange': true,
+          'yaxis.autorange': true
+        });
+      }
     }
 
     function renderMarketTable() {
