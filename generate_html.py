@@ -162,34 +162,57 @@ def generate_html():
     <!-- ======================================================== -->
     <section id="tab-vision-mercado" class="space-y-6">
       
-      <!-- Macro Branches Summary Banner -->
+      <!-- Macro Branches Summary Banner (Clickable & Mathematically Reconciled) -->
       <div class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
-        <div class="flex items-center justify-between mb-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-layer-group text-brand-blue"></i> Distribución de Primas por Gran Ramo de Negocio (Mercado Total)
           </span>
-          <span class="text-[11px] font-mono text-slate-400">Total Producción: <b id="macroTotalVal" class="text-white">...</b></span>
+          <span class="text-[11px] font-mono text-slate-300">Total Producción Mercado: <b id="macroTotalVal" class="text-amber-400 font-bold">...</b></span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-slate-800/80">
-            <div class="text-[10px] text-slate-400 uppercase font-sans">Patrimoniales (Autos, Incendio...)</div>
+          <!-- Patrimoniales -->
+          <div onclick="setSegmentFilter('Patrimoniales y Mixtas')" 
+               class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-sky-500/50 transition-all group">
+            <div class="text-[10px] text-slate-400 group-hover:text-sky-300 uppercase font-sans font-semibold flex items-center justify-between">
+              <span>Patrimoniales y Mixtas</span>
+              <i class="fa-solid fa-arrow-right text-[9px] opacity-0 group-hover:opacity-100 transition-opacity text-sky-400"></i>
+            </div>
             <div id="macroPatrimVal" class="text-sm font-bold text-sky-400 mt-0.5">...</div>
-            <div id="macroPatrimPct" class="text-[10px] text-slate-400">...</div>
+            <div id="macroPatrimSub" class="text-[10px] text-slate-400 mt-0.5">...</div>
           </div>
-          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-slate-800/80">
-            <div class="text-[10px] text-slate-400 uppercase font-sans">Riesgos del Trabajo (ART)</div>
+
+          <!-- ART -->
+          <div onclick="setSegmentFilter('Riesgos del Trabajo (ART)')" 
+               class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-amber-500/50 transition-all group">
+            <div class="text-[10px] text-slate-400 group-hover:text-amber-300 uppercase font-sans font-semibold flex items-center justify-between">
+              <span>Riesgos del Trabajo (ART)</span>
+              <i class="fa-solid fa-arrow-right text-[9px] opacity-0 group-hover:opacity-100 transition-opacity text-amber-400"></i>
+            </div>
             <div id="macroArtVal" class="text-sm font-bold text-amber-400 mt-0.5">...</div>
-            <div id="macroArtPct" class="text-[10px] text-slate-400">...</div>
+            <div id="macroArtSub" class="text-[10px] text-slate-400 mt-0.5">...</div>
           </div>
-          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-brand-red/30 bg-brand-red/5">
-            <div class="text-[10px] text-rose-300 uppercase font-sans font-bold">Personas y Vida (Vida, AP, Salud)</div>
+
+          <!-- Personas -->
+          <div onclick="setSegmentFilter('Seguros de Personas')" 
+               class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-rose-500/50 transition-all group">
+            <div class="text-[10px] text-slate-400 group-hover:text-rose-300 uppercase font-sans font-semibold flex items-center justify-between">
+              <span>Seguros de Personas</span>
+              <i class="fa-solid fa-arrow-right text-[9px] opacity-0 group-hover:opacity-100 transition-opacity text-rose-400"></i>
+            </div>
             <div id="macroPersonasVal" class="text-sm font-bold text-rose-400 mt-0.5">...</div>
-            <div id="macroPersonasPct" class="text-[10px] text-rose-300 font-semibold">...</div>
+            <div id="macroPersonasSub" class="text-[10px] text-slate-400 mt-0.5">...</div>
           </div>
-          <div class="p-2.5 bg-slate-950/70 rounded-lg border border-slate-800/80">
-            <div class="text-[10px] text-slate-400 uppercase font-sans">Retiro y Rentas</div>
+
+          <!-- Retiro -->
+          <div onclick="setSegmentFilter('Seguros de Retiro')" 
+               class="p-2.5 bg-slate-950/80 hover:bg-slate-800/80 cursor-pointer rounded-lg border border-slate-800 hover:border-purple-500/50 transition-all group">
+            <div class="text-[10px] text-slate-400 group-hover:text-purple-300 uppercase font-sans font-semibold flex items-center justify-between">
+              <span>Seguros de Retiro</span>
+              <i class="fa-solid fa-arrow-right text-[9px] opacity-0 group-hover:opacity-100 transition-opacity text-purple-400"></i>
+            </div>
             <div id="macroRetiroVal" class="text-sm font-bold text-purple-400 mt-0.5">...</div>
-            <div id="macroRetiroPct" class="text-[10px] text-slate-400">...</div>
+            <div id="macroRetiroSub" class="text-[10px] text-slate-400 mt-0.5">...</div>
           </div>
         </div>
       </div>
@@ -201,7 +224,7 @@ def generate_html():
           <div id="segmentPillsContainer" class="flex flex-wrap gap-1.5"></div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades filtradas: <span id="filteredCiasCount" class="font-mono font-bold text-white">185</span>
+          Entidades en el segmento: <span id="filteredCiasCount" class="font-mono font-bold text-white">185</span>
         </div>
       </div>
 
@@ -212,7 +235,7 @@ def generate_html():
           <div id="kpiPrimasDev" class="text-lg font-bold font-mono text-white mt-1">...</div>
           <div class="text-[10px] text-slate-400 mt-1">Base Técnica 100%</div>
         </div>
-        <div class="glass-card p-4 rounded-xl border-l-4 border-l-slate-500">
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-slate-400">
           <div class="text-[11px] font-semibold uppercase text-slate-400">Primas Emitidas</div>
           <div id="kpiPrimasEmit" class="text-lg font-bold font-mono text-white mt-1">...</div>
           <div class="text-[10px] text-slate-400 mt-1">Emisión Bruta</div>
@@ -669,21 +692,29 @@ def generate_html():
       document.getElementById('headerPeriodo').innerText = data.periodo || '2026-2';
       document.getElementById('headerTotalCias').innerText = data.total_entidades || '185';
 
-      // Set macro banner values
+      // Set macro banner values mathematically consistent with segment totals
       if (data.macro_ramos) {{
         const mr = data.macro_ramos;
-        document.getElementById('macroTotalVal').innerText = formatARS(mr.total_mercado);
-        document.getElementById('macroPatrimVal').innerText = formatARS(mr.patrimoniales);
-        document.getElementById('macroPatrimPct').innerText = ((mr.patrimoniales / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
-        
-        document.getElementById('macroArtVal').innerText = formatARS(mr.art);
-        document.getElementById('macroArtPct').innerText = ((mr.art / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+        const totEmit = mr.total_mercado_emitidas;
+        const totDev = mr.total_mercado_devengadas;
 
-        document.getElementById('macroPersonasVal').innerText = formatARS(mr.personas_vida);
-        document.getElementById('macroPersonasPct').innerText = ((mr.personas_vida / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+        document.getElementById('macroTotalVal').innerText = `${{formatARS(totEmit)}} Emitidas (${{formatARS(totDev)}} Dev.)`;
 
-        document.getElementById('macroRetiroVal').innerText = formatARS(mr.retiro);
-        document.getElementById('macroRetiroPct').innerText = ((mr.retiro / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
+        // Patrimoniales
+        document.getElementById('macroPatrimVal').innerText = formatARS(mr.patrimoniales_emitidas);
+        document.getElementById('macroPatrimSub').innerText = `Dev: ${{formatARS(mr.patrimoniales_devengadas)}} • ${{((mr.patrimoniales_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.patrimoniales_entidades}} Cías)`;
+
+        // ART
+        document.getElementById('macroArtVal').innerText = formatARS(mr.art_emitidas);
+        document.getElementById('macroArtSub').innerText = `Dev: ${{formatARS(mr.art_devengadas)}} • ${{((mr.art_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.art_entidades}} Cías)`;
+
+        // Personas
+        document.getElementById('macroPersonasVal').innerText = formatARS(mr.personas_emitidas);
+        document.getElementById('macroPersonasSub').innerText = `Dev: ${{formatARS(mr.personas_devengadas)}} • ${{((mr.personas_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.personas_entidades}} Cías)`;
+
+        // Retiro
+        document.getElementById('macroRetiroVal').innerText = formatARS(mr.retiro_emitidas);
+        document.getElementById('macroRetiroSub').innerText = `Dev: ${{formatARS(mr.retiro_devengadas)}} • ${{((mr.retiro_emitidas / totEmit) * 100).toFixed(1)}}% (${{mr.retiro_entidades}} Cías)`;
       }}
 
       // Pick default high profile company (0436 or 0117 or 0317)
@@ -704,6 +735,13 @@ def generate_html():
       renderAll();
     }}
 
+    function setSegmentFilter(seg) {{
+      state.selectedSegment = seg;
+      buildSegmentPills();
+      buildScatterCompanySelect();
+      renderAll();
+    }}
+
     function buildSegmentPills() {{
       const data = window.DATA_SINENSUP;
       const container = document.getElementById('segmentPillsContainer');
@@ -716,12 +754,7 @@ def generate_html():
           state.selectedSegment === seg ? 'bg-brand-red text-white shadow-md shadow-brand-red/30' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
         }}`;
         btn.innerText = seg;
-        btn.onclick = () => {{
-          state.selectedSegment = seg;
-          buildSegmentPills();
-          buildScatterCompanySelect();
-          renderAll();
-        }};
+        btn.onclick = () => setSegmentFilter(seg);
         container.appendChild(btn);
       }});
     }}
@@ -864,7 +897,7 @@ def generate_html():
         totPrimasDev += c.primas_devengadas || 0;
         totPrimasEmit += c.primas_emitidas || 0;
         totActivo += c.activo || 0;
-        totSiniestros += c.siniestros || 0;
+        totSiniestros += (c.siniestros || 0) + (c.rescates || 0);
         totGastos += c.gtos_operativos || ((c.gtos_produccion || 0) + (c.gtos_explotacion || 0));
         totNeto += c.resultado_neto || 0;
       }});
