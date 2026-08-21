@@ -16,7 +16,7 @@ def build_complete_dataset():
     print("Computing company summary...")
     df_summary = compute_all_companies_summary(df_raw)
 
-    # Market-wide subramos
+    # Market-wide subramos (unified full emission)
     market_subramos_list = get_company_subramos(df_raw)
 
     # 1. Macro Branch Totals BY ENTITY TYPE
@@ -53,9 +53,15 @@ def build_complete_dataset():
         "retiro_entidades": retiro_ent['entidades']
     }
 
-    # 2. Macro Branch Totals BY REAL PRODUCT LINE (Subramos)
-    primas_sub = df_raw[df_raw['cod_cuenta'].str.startswith('5.01.01.01.01.01') & (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())]
-    sin_sub = df_raw[df_raw['cod_cuenta'].str.startswith('4.01.01.01.01.01') & (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())]
+    # 2. Macro Branch Totals BY REAL PRODUCT LINE (Unified with Directas + Derechos + Recargos + Reaseguros)
+    accounts_primas = (
+        '5.01.01.01.01.01.01', '5.01.01.01.01.01.99',
+        '5.01.01.01.01.02.01', '5.01.01.01.01.02.99',
+        '5.01.01.01.01.03.02', '5.01.01.01.01.03.99',
+        '5.01.01.01.01.04.01', '5.01.01.01.01.04.99'
+    )
+    primas_sub = df_raw[df_raw['cod_cuenta'].str.startswith(accounts_primas) & (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())]
+    sin_sub = df_raw[df_raw['cod_cuenta'].str.startswith(('4.01.01.01.01.01', '4.01.01.01.01.99', '4.01.01.01.02.01', '4.01.01.01.02.99', '4.01.01.01.03.01', '4.01.01.01.03.99', '4.01.01.01.04.01', '4.01.01.01.04.99', '4.01.02.01', '4.01.02.02', '4.01.02.03')) & (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())]
 
     def get_macro_product(cod_sub):
         cod_str = str(cod_sub).strip()
