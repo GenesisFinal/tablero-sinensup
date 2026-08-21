@@ -395,9 +395,9 @@ def generate_html():
           <table class="w-full text-left text-xs border-collapse table-auto">
             <thead class="text-slate-400 bg-slate-900/90 border-b border-slate-700 text-[11px]">
               <tr>
-                <th class="py-2.5 px-2 text-center w-8">#</th>
-                <th class="py-2.5 px-2 whitespace-nowrap">Razón Social</th>
-                <th class="py-2.5 px-2 text-center w-14">Tipo</th>
+                <th class="py-2 px-2 text-center w-8">#</th>
+                <th class="py-2 px-2 whitespace-nowrap text-left w-48 max-w-[200px]">Razón Social</th>
+                <th class="py-2 px-2 text-center w-12">Tipo</th>
                 <th class="py-2.5 px-2 text-right">Primas Emitidas</th>
                 <th class="py-2.5 px-2 text-right">Primas Dev.</th>
                 <th class="py-2.5 px-2 text-right">Siniestros</th>
@@ -431,8 +431,8 @@ def generate_html():
           <table class="w-full text-left text-xs border-collapse table-auto">
             <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700 text-[11px]">
               <tr>
-                <th class="py-2.5 px-2 whitespace-nowrap">Razón Social</th>
-                <th class="py-2.5 px-2 text-center w-14">Tipo</th>
+                <th class="py-2 px-2 whitespace-nowrap text-left w-48 max-w-[200px]">Razón Social</th>
+                <th class="py-2 px-2 text-center w-12">Tipo</th>
                 <th class="py-2.5 px-2 text-right">Primas Emitidas</th>
                 <th class="py-2.5 px-2 text-right">Primas Dev.</th>
                 <th class="py-2.5 px-2 text-right">Siniestros</th>
@@ -1030,22 +1030,22 @@ def generate_html():
         const isHL = state.highlightedCiaCode === c.cod_cia;
         return `
         <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="highlightScatterCompany('${{c.cod_cia}}')">
-          <td class="py-2 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
-          <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px] whitespace-nowrap" title="${{c.razon_social}}">
+          <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
+          <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">
             ${{c.razon_social}}
-            ${{isLS ? '<span class="ml-1.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>' : ''}}
+            ${{isLS ? '<span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
           </td>
-          <td class="py-2 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
-          <td class="py-2 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
-          <td class="py-2 px-2 text-right text-slate-300">${{formatARS(c.primas_devengadas)}}</td>
-          <td class="py-2 px-2 text-right text-rose-300">${{formatARS(c.siniestros)}}</td>
-          <td class="py-2 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
-          <td class="py-2 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
-          <td class="py-2 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
-          <td class="py-2 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
-          <td class="py-2 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
-          <td class="py-2 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
-          <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+          <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.primas_devengadas)}}</td>
+          <td class="py-1.5 px-2 text-right text-rose-300">${{formatARS(c.siniestros)}}</td>
+          <td class="py-1.5 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
+          <td class="py-1.5 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
+          <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
             <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
           </td>
         </tr>
@@ -1066,22 +1066,22 @@ def generate_html():
           const isHL = state.highlightedCiaCode === c.cod_cia;
           return `
           <tr class="hover:bg-amber-500/15 ${{isHL ? 'bg-amber-500/25 border-l-4 border-l-amber-400 font-bold' : 'bg-amber-500/5 border-l-4 border-l-amber-400/80'}} cursor-pointer" onclick="highlightScatterCompany('${{c.cod_cia}}')">
-            <td class="py-2 px-2 text-center text-amber-300 font-mono font-bold">#${{overallRank}}</td>
-            <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px] whitespace-nowrap" title="${{c.razon_social}}">
+            <td class="py-1.5 px-2 text-center text-amber-300 font-mono font-bold">#${{overallRank}}</td>
+            <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">
               ${{c.razon_social}}
-              <span class="ml-1.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>
+              <span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>
             </td>
-            <td class="py-2 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
-            <td class="py-2 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
-            <td class="py-2 px-2 text-right text-slate-300">${{formatARS(c.primas_devengadas)}}</td>
-            <td class="py-2 px-2 text-right text-rose-300">${{formatARS(c.siniestros)}}</td>
-            <td class="py-2 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
-            <td class="py-2 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
-            <td class="py-2 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
-            <td class="py-2 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
-            <td class="py-2 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
-            <td class="py-2 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
-            <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+            <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
+            <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.primas_devengadas)}}</td>
+            <td class="py-1.5 px-2 text-right text-rose-300">${{formatARS(c.siniestros)}}</td>
+            <td class="py-1.5 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
+            <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
+            <td class="py-1.5 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
+            <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
+            <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
               <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
             </td>
           </tr>
@@ -1248,18 +1248,18 @@ def generate_html():
         const isHL = state.highlightedCiaCode === c.cod_cia;
         return `
         <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : ''}} cursor-pointer" onclick="highlightScatterCompany('${{c.cod_cia}}')">
-          <td class="py-2 px-2 font-medium text-white truncate max-w-[210px] whitespace-nowrap" title="${{c.razon_social}}">${{c.razon_social}}</td>
-          <td class="py-2 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
-          <td class="py-2 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
-          <td class="py-2 px-2 text-right text-slate-300 font-bold">${{formatARS(c.primas_devengadas)}}</td>
-          <td class="py-2 px-2 text-right text-rose-300 font-bold">${{formatARS(c.siniestros)}}</td>
-          <td class="py-2 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
-          <td class="py-2 px-2 text-right ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
-          <td class="py-2 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
-          <td class="py-2 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
-          <td class="py-2 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
-          <td class="py-2 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
-          <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+          <td class="py-1.5 px-2 font-medium text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">${{c.razon_social}}</td>
+          <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300 font-bold">${{formatARS(c.primas_devengadas)}}</td>
+          <td class="py-1.5 px-2 text-right text-rose-300 font-bold">${{formatARS(c.siniestros)}}</td>
+          <td class="py-1.5 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
+          <td class="py-1.5 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
+          <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
             <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-semibold">Ver</button>
           </td>
         </tr>
