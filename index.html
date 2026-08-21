@@ -215,7 +215,7 @@
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-boxes-stacked text-amber-400"></i> 2. Clasificación Técnica por Línea Real de Producto (Subramos)
           </span>
-          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b>Total Primas y Recargos Unificados ($29.91 Billones)</b></span>
+          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b>Total Primas y Recargos Unificados ($29.91 B)</b></span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
           <!-- Productos Patrimoniales -->
@@ -259,9 +259,9 @@
         <div id="personasInsightBox" class="mt-2.5 p-2 bg-slate-900/80 rounded-lg border border-slate-800 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-circle-info text-rose-400"></i>
-            <span><b>Efecto Multirramo en Personas:</b> El <b>48.2% ($1.80 Billones)</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>50.0% ($1.87 Billones)</b> por Aseguradoras exclusivas de Personas.</span>
+            <span><b>Efecto Multirramo en Personas:</b> El <b>48.2% ($1.80 B)</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>50.0% ($1.87 B)</b> por Aseguradoras exclusivas de Personas.</span>
           </div>
-          <span class="font-mono text-rose-300 font-bold">Total Ramo Personas: $3.74 Billones (12.5% del mercado)</span>
+          <span class="font-mono text-rose-300 font-bold">Total Ramo Personas: $3.74 B (12.5% del mercado)</span>
         </div>
       </div>
 
@@ -388,7 +388,7 @@
             <thead class="text-slate-400 bg-slate-900/90 border-b border-slate-700 text-[11px]">
               <tr>
                 <th class="py-2.5 px-2 text-center w-8">#</th>
-                <th class="py-2.5 px-2">Razón Social</th>
+                <th class="py-2.5 px-2 whitespace-nowrap">Razón Social</th>
                 <th class="py-2.5 px-2 text-center w-14">Tipo</th>
                 <th class="py-2.5 px-2 text-right">Primas Emitidas</th>
                 <th class="py-2.5 px-2 text-right">Primas Dev.</th>
@@ -407,7 +407,7 @@
         </div>
       </div>
 
-      <!-- 3. FULL WIDTH: Comprehensive Searchable Market Table -->
+      <!-- 3. FULL WIDTH: Base Consolidada del Mercado Asegurador (185 Entidades) -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
@@ -416,29 +416,28 @@
             </h3>
             <p class="text-xs text-slate-400">Explora, filtra y compara todas las compañías registradas</p>
           </div>
-          <input type="text" id="marketTableFilter" oninput="renderMarketTable()" placeholder="Filtrar por nombre o código..." 
+          <input type="text" id="marketTableFilter" oninput="renderMarketTable()" placeholder="Filtrar por nombre..." 
                  class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-brand-blue w-64">
         </div>
-        <div class="overflow-x-auto max-h-[480px]">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700">
+        <div class="w-full overflow-x-auto max-h-[480px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/90 sticky top-0 z-10 border-b border-slate-700 text-[11px]">
               <tr>
-                <th class="py-2.5 px-3">Cód</th>
-                <th class="py-2.5 px-3">Razón Social</th>
-                <th class="py-2.5 px-3 text-center">Tipo</th>
-                <th class="py-2.5 px-3 text-right">Primas Emitidas</th>
-                <th class="py-2.5 px-3 text-right">Primas Dev.</th>
-                <th class="py-2.5 px-3 text-right">Siniestros</th>
-                <th class="py-2.5 px-3 text-right">Loss Ratio</th>
-                <th class="py-2.5 px-3 text-right">Comb. Ratio</th>
-                <th class="py-2.5 px-3 text-right">Res. Técnico</th>
-                <th class="py-2.5 px-3 text-right">Res. Financiero</th>
-                <th class="py-2.5 px-3 text-right">Res. Neto</th>
-                <th class="py-2.5 px-3 text-right">Activo</th>
-                <th class="py-2.5 px-3 text-center">Acción</th>
+                <th class="py-2.5 px-2 whitespace-nowrap">Razón Social</th>
+                <th class="py-2.5 px-2 text-center w-14">Tipo</th>
+                <th class="py-2.5 px-2 text-right">Primas Emitidas</th>
+                <th class="py-2.5 px-2 text-right">Primas Dev.</th>
+                <th class="py-2.5 px-2 text-right">Siniestros</th>
+                <th class="py-2.5 px-2 text-right">Loss Ratio</th>
+                <th class="py-2.5 px-2 text-right">Comb. Ratio</th>
+                <th class="py-2.5 px-2 text-right">Res. Técnico</th>
+                <th class="py-2.5 px-2 text-right">Res. Financiero</th>
+                <th class="py-2.5 px-2 text-right">Res. Neto</th>
+                <th class="py-2.5 px-2 text-right">Activo</th>
+                <th class="py-2.5 px-2 text-center w-14">Acción</th>
               </tr>
             </thead>
-            <tbody id="marketFullTableBody" class="divide-y divide-slate-800 font-mono"></tbody>
+            <tbody id="marketFullTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
           </table>
         </div>
       </div>
@@ -535,14 +534,14 @@
     <!-- ======================================================== -->
     <!-- TAB 3: RAMOS Y SUSCRIPCIÓN -->
     <!-- ======================================================== -->
-    <section id="tab-ramos-suscripcion" class="space-y-6">
+    <section id="tab-ramos-suscripcion" class="hidden space-y-6">
       <div class="glass-card p-5 rounded-xl">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-shield-virus text-brand-red"></i> Distribución de Producción y Siniestralidad por Ramo
             </h3>
-            <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS en Escala Argentina) | Línea y Etiquetas = Siniestralidad Devengada (%)</p>
+            <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS) | Línea y Etiquetas = Siniestralidad Devengada (%)</p>
           </div>
           <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs">
             <button onclick="setRamosScope('cia')" id="ramosScopeCiaBtn" class="px-3 py-1 rounded bg-brand-red text-white font-semibold">Aseguradora Seleccionada</button>
@@ -61309,41 +61308,30 @@
       ramosScope: 'cia'
     };
 
-    // Explicit Hispanic/Latin Financial Formatter
-    // 10^12: Billones (escala larga, 1 millón de millones)
-    // 10^9:  Mil Millones (1.000 millones)
-    // 10^6:  Millones
-    // 10^3:  Miles
+    // Standardized Financial Notation:
+    // B = Billones (10^12)
+    // MM = Miles de Millones (10^9)
+    // M = Millones (10^6)
+    // K = Miles (10^3)
     function formatARS(val) {
       if (val === undefined || val === null || isNaN(val)) return '$0';
       const absVal = Math.abs(val);
       const sign = val < 0 ? '-' : '';
       if (absVal >= 1e12) {
-        return sign + '$' + (absVal / 1e12).toFixed(2) + ' Billones';
+        return sign + '$' + (absVal / 1e12).toFixed(2) + ' B';
       } else if (absVal >= 1e9) {
-        return sign + '$' + (absVal / 1e9).toFixed(2) + ' Mil Millones';
+        return sign + '$' + (absVal / 1e9).toFixed(2) + ' MM';
       } else if (absVal >= 1e6) {
-        return sign + '$' + (absVal / 1e6).toFixed(2) + ' Millones';
+        return sign + '$' + (absVal / 1e6).toFixed(2) + ' M';
       } else if (absVal >= 1e3) {
-        return sign + '$' + (absVal / 1e3).toFixed(1) + ' Mil';
+        return sign + '$' + (absVal / 1e3).toFixed(1) + ' K';
       } else {
         return sign + '$' + absVal.toLocaleString('es-AR', { maximumFractionDigits: 0 });
       }
     }
 
     function formatARSCompact(val) {
-      if (val === undefined || val === null || isNaN(val)) return '$0';
-      const absVal = Math.abs(val);
-      const sign = val < 0 ? '-' : '';
-      if (absVal >= 1e12) {
-        return sign + '$' + (absVal / 1e12).toFixed(2) + ' Billones';
-      } else if (absVal >= 1e9) {
-        return sign + '$' + (absVal / 1e9).toFixed(2) + ' Mil M.';
-      } else if (absVal >= 1e6) {
-        return sign + '$' + (absVal / 1e6).toFixed(2) + ' Millones';
-      } else {
-        return sign + '$' + absVal.toLocaleString('es-AR', { maximumFractionDigits: 0 });
-      }
+      return formatARS(val);
     }
 
     function formatPercent(val) {
@@ -61638,20 +61626,20 @@
         return `
         <tr class="hover:bg-slate-800/60 ${isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')} cursor-pointer" onclick="highlightScatterCompany('${c.cod_cia}')">
           <td class="py-2 px-2 text-center text-slate-400 font-mono">${i+1}</td>
-          <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px]" title="${c.razon_social}">
+          <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px] whitespace-nowrap" title="${c.razon_social}">
             ${c.razon_social}
             ${isLS ? '<span class="ml-1.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>' : ''}
           </td>
           <td class="py-2 px-2 text-center">${getTipoBadge(c.tipo_entidad)}</td>
-          <td class="py-2 px-2 text-right font-bold text-white">${formatARSCompact(c.primas_emitidas)}</td>
-          <td class="py-2 px-2 text-right text-slate-300">${formatARSCompact(c.primas_devengadas)}</td>
-          <td class="py-2 px-2 text-right text-rose-300">${formatARSCompact(c.siniestros)}</td>
+          <td class="py-2 px-2 text-right font-bold text-white">${formatARS(c.primas_emitidas)}</td>
+          <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.primas_devengadas)}</td>
+          <td class="py-2 px-2 text-right text-rose-300">${formatARS(c.siniestros)}</td>
           <td class="py-2 px-2 text-right">${formatPercent(c.loss_ratio)}</td>
           <td class="py-2 px-2 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
-          <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_tecnico)}</td>
-          <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_financiero)}</td>
-          <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_neto)}</td>
-          <td class="py-2 px-2 text-right text-slate-300">${formatARSCompact(c.activo)}</td>
+          <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
+          <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
+          <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
+          <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.activo)}</td>
           <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
             <button onclick="selectCompany('${c.cod_cia}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
           </td>
@@ -61674,20 +61662,20 @@
           return `
           <tr class="hover:bg-amber-500/15 ${isHL ? 'bg-amber-500/25 border-l-4 border-l-amber-400 font-bold' : 'bg-amber-500/5 border-l-4 border-l-amber-400/80'} cursor-pointer" onclick="highlightScatterCompany('${c.cod_cia}')">
             <td class="py-2 px-2 text-center text-amber-300 font-mono font-bold">#${overallRank}</td>
-            <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px]" title="${c.razon_social}">
+            <td class="py-2 px-2 font-semibold text-white truncate max-w-[220px] whitespace-nowrap" title="${c.razon_social}">
               ${c.razon_social}
               <span class="ml-1.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ La Segunda</span>
             </td>
             <td class="py-2 px-2 text-center">${getTipoBadge(c.tipo_entidad)}</td>
-            <td class="py-2 px-2 text-right font-bold text-white">${formatARSCompact(c.primas_emitidas)}</td>
-            <td class="py-2 px-2 text-right text-slate-300">${formatARSCompact(c.primas_devengadas)}</td>
-            <td class="py-2 px-2 text-right text-rose-300">${formatARSCompact(c.siniestros)}</td>
+            <td class="py-2 px-2 text-right font-bold text-white">${formatARS(c.primas_emitidas)}</td>
+            <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.primas_devengadas)}</td>
+            <td class="py-2 px-2 text-right text-rose-300">${formatARS(c.siniestros)}</td>
             <td class="py-2 px-2 text-right">${formatPercent(c.loss_ratio)}</td>
             <td class="py-2 px-2 text-right font-bold ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
-            <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_tecnico)}</td>
-            <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_financiero)}</td>
-            <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_neto)}</td>
-            <td class="py-2 px-2 text-right text-slate-300">${formatARSCompact(c.activo)}</td>
+            <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
+            <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
+            <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
+            <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.activo)}</td>
             <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
               <button onclick="selectCompany('${c.cod_cia}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
             </td>
@@ -61855,20 +61843,19 @@
         const isHL = state.highlightedCiaCode === c.cod_cia;
         return `
         <tr class="hover:bg-slate-800/60 ${isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : ''} cursor-pointer" onclick="highlightScatterCompany('${c.cod_cia}')">
-          <td class="py-2 px-3 text-slate-400 font-mono">${c.cod_cia}</td>
-          <td class="py-2 px-3 font-medium text-white truncate max-w-[200px]" title="${c.razon_social}">${c.razon_social}</td>
-          <td class="py-2 px-3 text-center">${getTipoBadge(c.tipo_entidad)}</td>
-          <td class="py-2 px-3 text-right font-bold text-white">${formatARSCompact(c.primas_emitidas)}</td>
-          <td class="py-2 px-3 text-right text-slate-300 font-bold">${formatARSCompact(c.primas_devengadas)}</td>
-          <td class="py-2 px-3 text-right text-rose-300 font-bold">${formatARSCompact(c.siniestros)}</td>
-          <td class="py-2 px-3 text-right">${formatPercent(c.loss_ratio)}</td>
-          <td class="py-2 px-3 text-right ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
-          <td class="py-2 px-3 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_tecnico)}</td>
-          <td class="py-2 px-3 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_financiero)}</td>
-          <td class="py-2 px-3 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARSCompact(c.resultado_neto)}</td>
-          <td class="py-2 px-3 text-right text-slate-300">${formatARSCompact(c.activo)}</td>
-          <td class="py-2 px-3 text-center" onclick="event.stopPropagation()">
-            <button onclick="selectCompany('${c.cod_cia}')" class="px-2.5 py-1 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[10px] font-semibold">Ver</button>
+          <td class="py-2 px-2 font-medium text-white truncate max-w-[210px] whitespace-nowrap" title="${c.razon_social}">${c.razon_social}</td>
+          <td class="py-2 px-2 text-center">${getTipoBadge(c.tipo_entidad)}</td>
+          <td class="py-2 px-2 text-right font-bold text-white">${formatARS(c.primas_emitidas)}</td>
+          <td class="py-2 px-2 text-right text-slate-300 font-bold">${formatARS(c.primas_devengadas)}</td>
+          <td class="py-2 px-2 text-right text-rose-300 font-bold">${formatARS(c.siniestros)}</td>
+          <td class="py-2 px-2 text-right">${formatPercent(c.loss_ratio)}</td>
+          <td class="py-2 px-2 text-right ${c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}">${formatPercent(c.combined_ratio)}</td>
+          <td class="py-2 px-2 text-right ${c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_tecnico)}</td>
+          <td class="py-2 px-2 text-right ${c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_financiero)}</td>
+          <td class="py-2 px-2 text-right font-bold ${c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${formatARS(c.resultado_neto)}</td>
+          <td class="py-2 px-2 text-right text-slate-300">${formatARS(c.activo)}</td>
+          <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+            <button onclick="selectCompany('${c.cod_cia}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-semibold">Ver</button>
           </td>
         </tr>
       `}).join('');
@@ -62010,7 +61997,7 @@
       const maxPrimas = Math.max(...topSub.map(s => s.primas), 10);
       const maxSin = Math.max(...topSub.map(s => s['siniestralidad_%'] || 0), 10);
 
-      // Custom Y-axis ticks in exact Spanish currency format (no English '50B')
+      // Custom Y-axis ticks in exact standard format (B, MM, M, K)
       const tickCount = 5;
       const tickVals = [];
       const tickTexts = [];
@@ -62081,7 +62068,7 @@
 
       Plotly.newPlot('subramosBarChart', [tracePrimas, traceLoss], layout, { responsive: true, displayModeBar: false });
 
-      // Subramos table with unambiguous full numbers
+      // Subramos table
       const tbody = document.getElementById('subramosTableBody');
       tbody.innerHTML = topSub.map(s => `
         <tr class="hover:bg-slate-800/60">
