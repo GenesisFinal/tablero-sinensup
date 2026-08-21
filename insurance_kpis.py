@@ -51,29 +51,33 @@ def compute_all_companies_summary(df):
         # Paso 1: Primas y Recargos Emitidos
         primas_emit = get_account_value(df_c, '5.01.01.00.00.00.00.00', exact=True)
 
-        # Paso 2: Cesiones y Anulaciones (si aplican)
+        # Paso 2: Cesiones y Anulaciones
         primas_cedidas = get_account_value(df_c, '4.01.03.00.00.00.00.00', exact=True)
         anulaciones = get_account_value(df_c, '4.01.04.00.00.00.00.00', exact=True)
         cesiones_anul = primas_cedidas + anulaciones
 
-        # Paso 3: Variación de Reservas Matemáticas (Retiro) o Riesgos en Curso (Otros)
+        # Paso 3: Variación Neta de Compromisos Técnicos / Reservas Matemáticas
         if is_retiro:
             var_reservas_cargo = get_account_value(df_c, '4.01.05.00.00.00.00.00', exact=True)
-            var_reservas_liberacion = get_account_value(df_c, '5.01.04.04.04.12.01.01', exact=True)
+            var_reservas_liberacion = get_account_value(df_c, '5.01.04.04.04.12.00.00', exact=True)
             var_comp_tec = var_reservas_cargo - var_reservas_liberacion
         else:
             var_riesgos_cargo = get_account_value(df_c, '4.01.05.00.00.00.00.00', exact=True)
             var_riesgos_lib = (
-                get_account_value(df_c, '5.01.04.04.04.11', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.12', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.13', exact=False)
+                get_account_value(df_c, '5.01.04.04.04.11.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.12.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.13.00.00', exact=True)
             )
+            if var_riesgos_lib == 0:
+                var_riesgos_lib = (
+                    get_account_value(df_c, '5.01.04.04.04.11', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.12', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.13', exact=False)
+                )
             var_comp_tec = var_riesgos_cargo - var_riesgos_lib
 
         # Primas Devengadas Técnicas
         primas_dev = primas_emit - cesiones_anul - var_comp_tec
-        if primas_dev <= 0 and primas_emit > 0:
-            primas_dev = primas_emit
 
         # Paso 4: Siniestros Devengados Netos
         if is_retiro:
@@ -81,18 +85,32 @@ def compute_all_companies_summary(df):
         else:
             siniestros_cargo = get_account_value(df_c, '4.01.01.00.00.00.00.00', exact=True)
             recup_sin = (
-                get_account_value(df_c, '5.01.04.04.04.01', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.06', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.07', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.08', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.09', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.10', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.14', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.15', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.16', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.17', exact=False) +
-                get_account_value(df_c, '5.01.04.04.04.20', exact=False)
+                get_account_value(df_c, '5.01.04.04.04.01.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.06.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.07.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.08.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.09.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.10.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.14.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.15.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.16.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.17.00.00', exact=True) +
+                get_account_value(df_c, '5.01.04.04.04.20.00.00', exact=True)
             )
+            if recup_sin == 0:
+                recup_sin = (
+                    get_account_value(df_c, '5.01.04.04.04.01', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.06', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.07', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.08', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.09', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.10', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.14', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.15', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.16', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.17', exact=False) +
+                    get_account_value(df_c, '5.01.04.04.04.20', exact=False)
+                )
             siniestros_dev = max(0.0, siniestros_cargo - recup_sin)
 
         # Paso 5: Rescates y Rentas
@@ -126,7 +144,6 @@ def compute_all_companies_summary(df):
         # ----------------------------------------------------
         base_primas = primas_dev if primas_dev > 0 else (primas_emit if primas_emit > 0 else 1.0)
         
-        # En seguros de Retiro / Personas, las prestaciones y rescates forman parte del costo técnico
         costo_prestacional = siniestros_dev + rescates
         loss_ratio = (costo_prestacional / base_primas) * 100.0 if base_primas > 0 else 0.0
         rescates_ratio = (rescates / base_primas) * 100.0 if base_primas > 0 else 0.0
@@ -205,19 +222,25 @@ def get_company_waterfall_data(df_cia):
     anulaciones = get_account_value(df_cia, '4.01.04.00.00.00.00.00', exact=True)
     cesiones_anul = primas_cedidas + anulaciones
 
-    # Paso 3: Variación Reservas Matemáticas / Riesgos en Curso
+    # Paso 3: Variación Neta de Reservas Matemáticas / Riesgos en Curso
     if is_retiro:
         var_reservas_cargo = get_account_value(df_cia, '4.01.05.00.00.00.00.00', exact=True)
-        var_reservas_liberacion = get_account_value(df_cia, '5.01.04.04.04.12.01.01', exact=True)
+        var_reservas_liberacion = get_account_value(df_cia, '5.01.04.04.04.12.00.00', exact=True)
         var_comp_tec = var_reservas_cargo - var_reservas_liberacion
         reserva_label = "Var. Reservas Matemáticas"
     else:
         var_riesgos_cargo = get_account_value(df_cia, '4.01.05.00.00.00.00.00', exact=True)
         var_riesgos_lib = (
-            get_account_value(df_cia, '5.01.04.04.04.11', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.12', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.13', exact=False)
+            get_account_value(df_cia, '5.01.04.04.04.11.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.12.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.13.00.00', exact=True)
         )
+        if var_riesgos_lib == 0:
+            var_riesgos_lib = (
+                get_account_value(df_cia, '5.01.04.04.04.11', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.12', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.13', exact=False)
+            )
         var_comp_tec = var_riesgos_cargo - var_riesgos_lib
         reserva_label = "Var. Riesgos en Curso / Reservas"
 
@@ -227,18 +250,32 @@ def get_company_waterfall_data(df_cia):
     else:
         siniestros_cargo = get_account_value(df_cia, '4.01.01.00.00.00.00.00', exact=True)
         recup_sin = (
-            get_account_value(df_cia, '5.01.04.04.04.01', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.06', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.07', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.08', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.09', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.10', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.14', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.15', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.16', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.17', exact=False) +
-            get_account_value(df_cia, '5.01.04.04.04.20', exact=False)
+            get_account_value(df_cia, '5.01.04.04.04.01.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.06.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.07.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.08.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.09.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.10.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.14.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.15.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.16.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.17.00.00', exact=True) +
+            get_account_value(df_cia, '5.01.04.04.04.20.00.00', exact=True)
         )
+        if recup_sin == 0:
+            recup_sin = (
+                get_account_value(df_cia, '5.01.04.04.04.01', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.06', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.07', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.08', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.09', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.10', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.14', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.15', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.16', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.17', exact=False) +
+                get_account_value(df_cia, '5.01.04.04.04.20', exact=False)
+            )
         siniestros_dev = max(0.0, siniestros_cargo - recup_sin)
 
     # Paso 5: Rescates y Rentas
@@ -252,7 +289,7 @@ def get_company_waterfall_data(df_cia):
     gtos_expl = get_account_value(df_cia, '4.01.07.00.00.00.00.00', exact=True)
     gtos_operativos = gtos_prod + gtos_expl
 
-    # Paso 7: Otros Ingresos Técnicos
+    # Paso 7: Otros Ingresos y Egresos Técnicos
     otros_ing_tec = get_account_value(df_cia, '5.01.05.00.00.00.00.00', exact=True)
     otros_egr_tec = get_account_value(df_cia, '4.01.50.00.00.00.00.00', exact=True)
 
@@ -310,16 +347,14 @@ def get_company_subramos(df, cod_cia=None):
     else:
         sub_df = df
 
-    # Unified accounts for full emitted premiums (Directas + Derechos + Recargos + Reaseguros)
     accounts_primas = (
         '5.01.01.01.01.01.01', '5.01.01.01.01.01.99',
         '5.01.01.01.01.02.01', '5.01.01.01.01.02.99',
         '5.01.01.01.01.03.02', '5.01.01.01.01.03.99',
-        '5.01.01.01.01.04.01', '5.01.01.01.01.04.99'
+        '5.01.01.01.01.04.01', '5.01.01.01.04.99'
     )
     primas_rows = sub_df[sub_df['cod_cuenta'].str.startswith(accounts_primas) & (sub_df['desc_subramo'] != '') & (sub_df['desc_subramo'].notna())]
 
-    # Siniestros accounts
     siniestros_rows = sub_df[sub_df['cod_cuenta'].str.startswith(('4.01.01.01.01.01', '4.01.01.01.01.99', '4.01.01.01.02.01', '4.01.01.01.02.99', '4.01.01.01.03.01', '4.01.01.01.03.99', '4.01.01.01.04.01', '4.01.01.01.04.99', '4.01.02.01', '4.01.02.02', '4.01.02.03')) & (sub_df['desc_subramo'] != '') & (sub_df['desc_subramo'].notna())]
 
     primas_by_sub = primas_rows.groupby(['cod_subramo', 'desc_subramo'])['importe'].sum().reset_index()
