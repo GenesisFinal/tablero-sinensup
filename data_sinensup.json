@@ -8,11 +8,20 @@
     "Seguros de Retiro"
   ],
   "macro_ramos": {
-    "patrimoniales": 31875416295885.0,
-    "art": 10854157661490.0,
-    "personas_vida": 7697911956270.0,
-    "retiro": 3961885257113.0,
-    "total_mercado": 54389371170758.0
+    "total_mercado_emitidas": 29914862583572.0,
+    "total_mercado_devengadas": 24711704373633.0,
+    "patrimoniales_emitidas": 21153940139995.0,
+    "patrimoniales_devengadas": 16110471758081.0,
+    "patrimoniales_entidades": 91,
+    "art_emitidas": 6192990644195.0,
+    "art_devengadas": 6111236274439.0,
+    "art_entidades": 19,
+    "personas_emitidas": 2187433503192.0,
+    "personas_devengadas": 2096701621030.0,
+    "personas_entidades": 60,
+    "retiro_emitidas": 380498296190.0,
+    "retiro_devengadas": 393294720083.0,
+    "retiro_entidades": 15
   },
   "market_subramos": [
     {
