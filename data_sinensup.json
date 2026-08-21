@@ -23,6 +23,60 @@
     "retiro_devengadas": 393294720083.0,
     "retiro_entidades": 15
   },
+  "macro_entidades": {
+    "total_mercado_emitidas": 29914862583572.0,
+    "total_mercado_devengadas": 24711704373633.0,
+    "patrimoniales_emitidas": 21153940139995.0,
+    "patrimoniales_devengadas": 16110471758081.0,
+    "patrimoniales_entidades": 91,
+    "art_emitidas": 6192990644195.0,
+    "art_devengadas": 6111236274439.0,
+    "art_entidades": 19,
+    "personas_emitidas": 2187433503192.0,
+    "personas_devengadas": 2096701621030.0,
+    "personas_entidades": 60,
+    "retiro_emitidas": 380498296190.0,
+    "retiro_devengadas": 393294720083.0,
+    "retiro_entidades": 15
+  },
+  "macro_productos": {
+    "patrimoniales": {
+      "primas": 19062270765837.0,
+      "siniestros": 6793718398102.0,
+      "siniestralidad": 35.6,
+      "participacion": 64.3
+    },
+    "art": {
+      "primas": 6579361443700.0,
+      "siniestros": 2127162958215.0,
+      "siniestralidad": 32.3,
+      "participacion": 22.2
+    },
+    "personas": {
+      "primas": 3666049268807.0,
+      "siniestros": 611260194586.0,
+      "siniestralidad": 16.7,
+      "participacion": 12.4
+    },
+    "retiro": {
+      "primas": 355667613446.0,
+      "siniestros": 349168124.0,
+      "siniestralidad": 0.1,
+      "participacion": 1.2
+    },
+    "personas_cross_selling": {
+      "en_mixtas": 1749836144543.0,
+      "en_personas": 1845847842646.0,
+      "en_art": 70364040649.0,
+      "pct_en_mixtas": 47.7,
+      "pct_en_personas": 50.3
+    },
+    "total": {
+      "primas": 29663349091790.0,
+      "siniestros": 9532490719027.0,
+      "siniestralidad": 32.1
+    }
+  },
   "market_subramos": [
     {
       "cod_subramo": "1.030.02",
