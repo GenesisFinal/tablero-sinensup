@@ -7,7 +7,7 @@ from insurance_kpis import (
     compute_all_companies_summary,
     get_company_waterfall_data,
     get_company_subramos,
-    get_company_investments
+    get_company_investments_breakdown
 )
 
 def build_complete_dataset():
@@ -17,8 +17,7 @@ def build_complete_dataset():
     df_summary = compute_all_companies_summary(df_raw)
 
     # Market-wide subramos
-    market_subramos = get_company_subramos(df_raw)
-    market_subramos_list = market_subramos.to_dict(orient='records')
+    market_subramos_list = get_company_subramos(df_raw)
 
     # Macro Branch Totals
     sub_valid = df_raw[(df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna()) & (df_raw['cod_cuenta'].str.startswith('5.01'))]
@@ -46,8 +45,8 @@ def build_complete_dataset():
         df_cia_raw = df_raw[df_raw['cod_cia'] == c_code]
 
         waterfall = get_company_waterfall_data(df_cia_raw)
-        subramos = get_company_subramos(df_raw, cod_cia=c_code).to_dict(orient='records')
-        investments = get_company_investments(df_cia_raw).to_dict(orient='records')
+        subramos = get_company_subramos(df_raw, cod_cia=c_code)
+        investments = get_company_investments_breakdown(df_cia_raw)
 
         c_data = row.to_dict()
         # Clean NaNs and infinite values
