@@ -68,20 +68,37 @@ def get_balance_data(force_reload=False):
     df['importe'] = pd.to_numeric(df['importe'], errors='coerce').fillna(0.0)
     df['nivel'] = pd.to_numeric(df['nivel'], errors='coerce').fillna(0).astype(int)
 
-    # Classify company segment
-    def classify_segment(name):
-        rs = str(name).upper()
-        if 'RETIRO' in rs:
-            return 'Seguros de Retiro'
-        elif 'RIESGOS DEL TRABAJO' in rs or ' ART' in rs or 'A.R.T.' in rs:
-            return 'Riesgos del Trabajo (ART)'
-        elif 'PERSONAS' in rs or 'VIDA' in rs or 'SALUD' in rs or 'SEPELIO' in rs:
-            return 'Seguros de Personas'
-        else:
-            return 'Patrimoniales y Mixtas'
+    # Actuarial classification by company production structure & license
+    cias = df[['cod_cia', 'razon_social']].drop_duplicates()
+    seg_map = {}
 
-    cia_names = df[['cod_cia', 'razon_social']].drop_duplicates()
-    seg_map = {row['cod_cia']: classify_segment(row['razon_social']) for _, row in cia_names.iterrows()}
+    for _, row in cias.iterrows():
+        c = row['cod_cia']
+        name = row['razon_social']
+        sub = df[df['cod_cia'] == c]
+        
+        # Production by subramo (cuentas 5.01)
+        sub_ramos = sub[(sub['desc_subramo'] != '') & (sub['desc_subramo'].notna()) & (sub['cod_cuenta'].str.startswith('5.01'))]
+        
+        patrim = sub_ramos[sub_ramos['cod_subramo'].str.startswith('1.') & (~sub_ramos['cod_subramo'].str.startswith('1.050'))]['importe'].sum()
+        art = sub_ramos[sub_ramos['cod_subramo'].str.startswith('1.050')]['importe'].sum()
+        personas = sub_ramos[sub_ramos['cod_subramo'].str.startswith('2.01') | sub_ramos['cod_subramo'].str.startswith('2.02') | sub_ramos['cod_subramo'].str.startswith('2.03') | sub_ramos['cod_subramo'].str.startswith('2.05')]['importe'].sum()
+        retiro = sub_ramos[sub_ramos['cod_subramo'].str.startswith('2.06') | sub_ramos['cod_subramo'].str.startswith('2.07')]['importe'].sum()
+        
+        tot_primas = patrim + art + personas + retiro
+        rs_upper = name.upper()
+
+        if 'RETIRO' in rs_upper or retiro > 0.5 * max(1, tot_primas):
+            seg = 'Seguros de Retiro'
+        elif 'RIESGOS DEL TRABAJO' in rs_upper or ' ART' in rs_upper or 'A.R.T.' in rs_upper or art > 0.5 * max(1, tot_primas):
+            seg = 'Riesgos del Trabajo (ART)'
+        elif personas > 0.5 * max(1, tot_primas) or any(w in rs_upper for w in ['PERSONAS', 'VIDA', 'LIFE', 'SALUD', 'SEPELIO', 'CARDIF', 'METLIFE', 'CNP', 'PRUDENTIAL', 'ZURICH INTERNATIONAL LIFE']):
+            seg = 'Seguros de Personas'
+        else:
+            seg = 'Patrimoniales y Mixtas'
+
+        seg_map[c] = seg
+
     df['tipo_entidad'] = df['cod_cia'].map(seg_map)
 
     # Save to Parquet cache for ultra-fast loading
