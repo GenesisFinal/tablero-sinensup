@@ -12,28 +12,45 @@ from insurance_kpis import (
 
 def build_complete_dataset():
     print("Loading balance raw data...")
-    df_raw = get_balance_data(force_reload=True)
+    df_raw = get_balance_data(force_reload=False)
     print("Computing company summary...")
     df_summary = compute_all_companies_summary(df_raw)
 
     # Market-wide subramos
     market_subramos_list = get_company_subramos(df_raw)
 
-    # Macro Branch Totals
-    sub_valid = df_raw[(df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna()) & (df_raw['cod_cuenta'].str.startswith('5.01'))]
-    
-    patrim_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('1.') & (~sub_valid['cod_subramo'].str.startswith('1.050'))]['importe'].sum())
-    art_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('1.050')]['importe'].sum())
-    personas_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('2.01') | sub_valid['cod_subramo'].str.startswith('2.02') | sub_valid['cod_subramo'].str.startswith('2.03') | sub_valid['cod_subramo'].str.startswith('2.05')]['importe'].sum())
-    retiro_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('2.06') | sub_valid['cod_subramo'].str.startswith('2.07')]['importe'].sum())
-    mercado_total = patrim_total + art_total + personas_total + retiro_total
+    # Macro Branch Totals - Calculated directly from summary to ensure 100% mathematical consistency
+    tot_emit = float(df_summary['primas_emitidas'].sum())
+    tot_dev = float(df_summary['primas_devengadas'].sum())
+
+    def get_seg_sums(seg_name):
+        sub = df_summary[df_summary['tipo_entidad'] == seg_name]
+        return {
+            'emitidas': float(sub['primas_emitidas'].sum()),
+            'devengadas': float(sub['primas_devengadas'].sum()),
+            'entidades': int(len(sub))
+        }
+
+    patrim = get_seg_sums('Patrimoniales y Mixtas')
+    art = get_seg_sums('Riesgos del Trabajo (ART)')
+    personas = get_seg_sums('Seguros de Personas')
+    retiro = get_seg_sums('Seguros de Retiro')
 
     macro_ramos = {
-        "patrimoniales": round(patrim_total, 2),
-        "art": round(art_total, 2),
-        "personas_vida": round(personas_total, 2),
-        "retiro": round(retiro_total, 2),
-        "total_mercado": round(mercado_total, 2)
+        "total_mercado_emitidas": round(tot_emit, 2),
+        "total_mercado_devengadas": round(tot_dev, 2),
+        "patrimoniales_emitidas": round(patrim['emitidas'], 2),
+        "patrimoniales_devengadas": round(patrim['devengadas'], 2),
+        "patrimoniales_entidades": patrim['entidades'],
+        "art_emitidas": round(art['emitidas'], 2),
+        "art_devengadas": round(art['devengadas'], 2),
+        "art_entidades": art['entidades'],
+        "personas_emitidas": round(personas['emitidas'], 2),
+        "personas_devengadas": round(personas['devengadas'], 2),
+        "personas_entidades": personas['entidades'],
+        "retiro_emitidas": round(retiro['emitidas'], 2),
+        "retiro_devengadas": round(retiro['devengadas'], 2),
+        "retiro_entidades": retiro['entidades']
     }
 
     # Convert summary to list of dicts with deep dive details
