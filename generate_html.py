@@ -368,27 +368,37 @@ def generate_html():
         </div>
       </div>
 
-      <!-- Company Mini KPI Cards -->
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
-        <div class="glass-card p-4 rounded-xl">
-          <div class="text-[11px] font-semibold text-slate-400">PRIMAS DEVENGADAS</div>
+      <!-- Company Mini KPI Cards (6 Cards) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS DEVENGADAS</div>
           <div id="ciaKpiPrimasDev" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Base 100%</div>
         </div>
-        <div class="glass-card p-4 rounded-xl">
-          <div class="text-[11px] font-semibold text-slate-400">RATIO COMBINADO</div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTROS DEV.</div>
+          <div id="ciaKpiSiniestros" class="text-base font-bold font-mono text-rose-400 mt-1">...</div>
+          <div id="ciaKpiLossRatio" class="text-[10px] text-slate-400 mt-1">Loss Ratio: ...</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">RATIO COMBINADO</div>
           <div id="ciaKpiCombined" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Técnico + Gastos</div>
         </div>
-        <div class="glass-card p-4 rounded-xl">
-          <div class="text-[11px] font-semibold text-slate-400">RESULTADO TÉCNICO</div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO</div>
           <div id="ciaKpiResTec" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Margen Suscripción</div>
         </div>
-        <div class="glass-card p-4 rounded-xl">
-          <div class="text-[11px] font-semibold text-slate-400">RESULTADO FINANCIERO</div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-indigo-500">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO FINANCIERO</div>
           <div id="ciaKpiResFin" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Renta + Tenencia</div>
         </div>
-        <div class="glass-card p-4 rounded-xl">
-          <div class="text-[11px] font-semibold text-slate-400">RESULTADO NETO</div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO NETO</div>
           <div id="ciaKpiResNeto" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Final del Período</div>
         </div>
       </div>
 
@@ -399,7 +409,7 @@ def generate_html():
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-waterfall text-brand-blue"></i> Estado de Resultados: Cascada de Rentabilidad
             </h3>
-            <p class="text-xs text-slate-400">Evolución contable desde Ingresos Técnicos Devengados hasta Resultado Neto</p>
+            <p class="text-xs text-slate-400">Evolución contable desde Primas y Recargos Devengados hasta Resultado Neto Final (SSN / Moneda Homogénea)</p>
           </div>
         </div>
         <div id="ciaWaterfallPlot" class="w-full h-96"></div>
@@ -647,8 +657,10 @@ def generate_html():
         document.getElementById('macroRetiroPct').innerText = ((mr.retiro / mr.total_mercado) * 100).toFixed(1) + '% del mercado';
       }}
 
-      // Pick default high profile company
-      if (data.companies_by_code['0726']) {{
+      // Pick default high profile company (0117 or 0726)
+      if (data.companies_by_code['0117']) {{
+        state.selectedCompanyCode = '0117';
+      }} else if (data.companies_by_code['0726']) {{
         state.selectedCompanyCode = '0726';
       }} else if (data.companies.length > 0) {{
         state.selectedCompanyCode = data.companies[0].cod_cia;
@@ -788,7 +800,7 @@ def generate_html():
         totPrimasEmit += c.primas_emitidas || 0;
         totActivo += c.activo || 0;
         totSiniestros += c.siniestros || 0;
-        totGastos += (c.gtos_produccion || 0) + (c.gtos_explotacion || 0);
+        totGastos += c.gtos_operativos || ((c.gtos_produccion || 0) + (c.gtos_explotacion || 0));
         totNeto += c.resultado_neto || 0;
       }});
 
@@ -813,7 +825,7 @@ def generate_html():
           <td class="py-2.5 px-3 text-slate-400 text-[11px]">${{c.tipo_entidad}}</td>
           <td class="py-2.5 px-3 text-right font-bold text-slate-100">${{formatARS(c.primas_devengadas)}}</td>
           <td class="py-2.5 px-3 text-right text-slate-300">${{formatARS(c.primas_emitidas)}}</td>
-          <td class="py-2.5 px-3 text-right text-slate-300">${{formatARS(c.siniestros)}}</td>
+          <td class="py-2.5 px-3 text-right text-rose-300 font-bold">${{formatARS(c.siniestros)}}</td>
           <td class="py-2.5 px-3 text-right">${{formatPercent(c.loss_ratio)}}</td>
           <td class="py-2.5 px-3 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
           <td class="py-2.5 px-3 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
@@ -836,7 +848,7 @@ def generate_html():
       const trace = {{
         x: valid.map(c => Math.max(-120, Math.min(150, c.margen_tecnico))),
         y: valid.map(c => Math.max(-40, Math.min(80, c.roi_inversiones))),
-        text: valid.map(c => `<b>${{c.razon_social}}</b><br>Segmento: ${{c.tipo_entidad}}<br>Primas Dev: ${{formatARS(c.primas_devengadas)}}<br>M. Técnico: ${{c.margen_tecnico.toFixed(1)}}%<br>ROI Inv: ${{c.roi_inversiones.toFixed(1)}}%<br>Ratio Comb: ${{c.combined_ratio.toFixed(1)}}%`),
+        text: valid.map(c => `<b>${{c.razon_social}}</b><br>Segmento: ${{c.tipo_entidad}}<br>Primas Dev: ${{formatARS(c.primas_devengadas)}}<br>Siniestros: ${{formatARS(c.siniestros)}}<br>M. Técnico: ${{c.margen_tecnico.toFixed(1)}}%<br>ROI Inv: ${{c.roi_inversiones.toFixed(1)}}%<br>Ratio Comb: ${{c.combined_ratio.toFixed(1)}}%`),
         customdata: valid.map(c => c.cod_cia),
         mode: 'markers',
         marker: {{
@@ -938,8 +950,8 @@ def generate_html():
           <td class="py-2 px-3 text-slate-400">${{c.cod_cia}}</td>
           <td class="py-2 px-3 font-medium text-white truncate max-w-[200px]" title="${{c.razon_social}}">${{c.razon_social}}</td>
           <td class="py-2 px-3 text-slate-400 text-[11px]">${{c.tipo_entidad}}</td>
-          <td class="py-2 px-3 text-right text-slate-200">${{formatARS(c.primas_devengadas)}}</td>
-          <td class="py-2 px-3 text-right text-slate-300">${{formatARS(c.siniestros)}}</td>
+          <td class="py-2 px-3 text-right text-slate-200 font-bold">${{formatARS(c.primas_devengadas)}}</td>
+          <td class="py-2 px-3 text-right text-rose-300 font-bold">${{formatARS(c.siniestros)}}</td>
           <td class="py-2 px-3 text-right">${{formatPercent(c.loss_ratio)}}</td>
           <td class="py-2 px-3 text-right ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
           <td class="py-2 px-3 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
@@ -966,6 +978,9 @@ def generate_html():
       document.getElementById('selectedCiaCode').innerText = c.cod_cia;
 
       document.getElementById('ciaKpiPrimasDev').innerText = formatARS(c.primas_devengadas);
+      document.getElementById('ciaKpiSiniestros').innerText = formatARS(c.siniestros);
+      document.getElementById('ciaKpiLossRatio').innerText = `Loss Ratio: ${{formatPercent(c.loss_ratio)}}`;
+
       document.getElementById('ciaKpiCombined').innerText = formatPercent(c.combined_ratio);
       document.getElementById('ciaKpiCombined').className = `text-base font-bold font-mono mt-1 ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}`;
       
