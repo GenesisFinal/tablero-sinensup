@@ -7,6 +7,13 @@
     "Seguros de Personas",
     "Seguros de Retiro"
   ],
+  "macro_ramos": {
+    "patrimoniales": 31875416295885.0,
+    "art": 10854157661490.0,
+    "personas_vida": 7697911956270.0,
+    "retiro": 3961885257113.0,
+    "total_mercado": 54389371170758.0
+  },
   "market_subramos": [
     {
       "cod_subramo": "1.050.99",
@@ -617,7 +624,7 @@
     {
       "cod_cia": "0006",
       "razon_social": "EL SURCO COMPAÑÍA DE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 51620738763.0,
       "disponibilidades": 61503902.0,
       "inversiones": 30473476993.0,
@@ -838,7 +845,7 @@
     {
       "cod_cia": "0007",
       "razon_social": "CAMINOS PROTEGIDOS  COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 20306035363.0,
       "disponibilidades": 1276357379.0,
       "inversiones": 7571022547.0,
@@ -2677,7 +2684,7 @@
     {
       "cod_cia": "0080",
       "razon_social": "EDIFICAR SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 41234196631.0,
       "disponibilidades": 851998842.0,
       "inversiones": 30478871981.0,
@@ -3574,7 +3581,7 @@
     {
       "cod_cia": "0136",
       "razon_social": "COMPAÑÍA MERCANTIL ASEGURADORA SOCIEDAD ANONIMA ARGENTINA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 5181536821.0,
       "disponibilidades": 186350011.0,
       "inversiones": 195294055.0,
@@ -6194,7 +6201,7 @@
     {
       "cod_cia": "0227",
       "razon_social": "COMPAÑIA DE SEGUROS EUROAMERICA S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 16269944643.0,
       "disponibilidades": 221032735.0,
       "inversiones": 4642195694.0,
@@ -6871,7 +6878,7 @@
     {
       "cod_cia": "0236",
       "razon_social": "EVOLUCIÓN SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 63484932538.0,
       "disponibilidades": 231254150.0,
       "inversiones": 1822623662.0,
@@ -8792,7 +8799,7 @@
     {
       "cod_cia": "0254",
       "razon_social": "INSTITUTO AUTÁRQUICO PROVINCIAL DEL SEGURO",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 367480546880.0,
       "disponibilidades": 1723781326.0,
       "inversiones": 173005634228.0,
@@ -9092,7 +9099,7 @@
     {
       "cod_cia": "0259",
       "razon_social": "CAJA POPULAR DE AHORROS DE LA PROVINCIA DE TUCUMAN",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 158085543010.0,
       "disponibilidades": 493980394.0,
       "inversiones": 14377250720.0,
@@ -9287,7 +9294,7 @@
     {
       "cod_cia": "0261",
       "razon_social": "HORIZONTE COMPAÑIA ARGENTINA DE SEGUROS GENERALES SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 147940334281.0,
       "disponibilidades": 1059494635.0,
       "inversiones": 98374963553.0,
@@ -10928,7 +10935,7 @@
     {
       "cod_cia": "0333",
       "razon_social": "HAMBURGO COMPAÑIA DE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 28109781530.0,
       "disponibilidades": 450560891.0,
       "inversiones": 21927846073.0,
@@ -12335,7 +12342,7 @@
     {
       "cod_cia": "0381",
       "razon_social": "INSTITUTO ASEGURADOR MERCANTIL COMPAÑIA ARGENTINA DE SEGUROS SOCIEDAD ANÓNIMA IAM",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 11456464891.0,
       "disponibilidades": 530477880.0,
       "inversiones": 3624140474.0,
@@ -13434,7 +13441,7 @@
     {
       "cod_cia": "0406",
       "razon_social": "CARUSO COMPAÑÍA ARGENTINA DE SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 107985217166.0,
       "disponibilidades": 556741936.0,
       "inversiones": 83262940845.0,
@@ -13683,7 +13690,7 @@
     {
       "cod_cia": "0409",
       "razon_social": "PREVINCA SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 11211171336.0,
       "disponibilidades": 57971057.0,
       "inversiones": 1751930834.0,
@@ -13848,7 +13855,7 @@
     {
       "cod_cia": "0412",
       "razon_social": "COMPAÑIA ARGENTINA DE SEGUROS LATITUD SUR SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 38777234533.0,
       "disponibilidades": 937028487.0,
       "inversiones": 16606752153.0,
@@ -14018,7 +14025,7 @@
     {
       "cod_cia": "0413",
       "razon_social": "SENTIR SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 7528997299.0,
       "disponibilidades": 14208420.0,
       "inversiones": 148673584.0,
@@ -14811,7 +14818,7 @@
     {
       "cod_cia": "0432",
       "razon_social": "COMPAÑÍA DE SEGUROS MAÑANA SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 5492811725.0,
       "disponibilidades": 207325292.0,
       "inversiones": 624416450.0,
@@ -15808,7 +15815,7 @@
     {
       "cod_cia": "0491",
       "razon_social": "CERTEZA COMPAÑIA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 6082955498.0,
       "disponibilidades": 374627873.0,
       "inversiones": 4021038349.0,
@@ -15943,7 +15950,7 @@
     {
       "cod_cia": "0498",
       "razon_social": "SANTA LUCÍA S.A. COMPAÑÍA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1991677033.0,
       "disponibilidades": 675890569.0,
       "inversiones": 10240429.0,
@@ -17063,7 +17070,7 @@
     {
       "cod_cia": "0516",
       "razon_social": "GGAL SEGUROS S.A.U.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 368658271020.0,
       "disponibilidades": 1684465132.0,
       "inversiones": 354055903243.0,
@@ -18233,7 +18240,7 @@
     {
       "cod_cia": "0541",
       "razon_social": "ZURICH INTERNATIONAL LIFE LIMITED SUCURSAL ARGENTINA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2077429973807.0,
       "disponibilidades": 25271329921.0,
       "inversiones": 1899552645925.0,
@@ -18368,7 +18375,7 @@
     {
       "cod_cia": "0546",
       "razon_social": "PLENARIA SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 3922277375.0,
       "disponibilidades": 32399726.0,
       "inversiones": 3162544369.0,
@@ -18498,7 +18505,7 @@
     {
       "cod_cia": "0553",
       "razon_social": "CRUZ SUIZA COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1033797252.0,
       "disponibilidades": 47970662.0,
       "inversiones": 709800225.0,
@@ -18630,7 +18637,7 @@
     {
       "cod_cia": "0555",
       "razon_social": "BENEFICIO S.A. COMPAÑIA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 6330135650.0,
       "disponibilidades": 80106769.0,
       "inversiones": 4669070703.0,
@@ -18916,7 +18923,7 @@
     {
       "cod_cia": "0574",
       "razon_social": "SOL NACIENTE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 27884195603.0,
       "disponibilidades": 322848440.0,
       "inversiones": 1693235179.0,
@@ -19317,7 +19324,7 @@
     {
       "cod_cia": "0576",
       "razon_social": "CNP ASSURANCES COMPAÑIA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 95199025421.0,
       "disponibilidades": 935481221.0,
       "inversiones": 72347136422.0,
@@ -20278,7 +20285,7 @@
     {
       "cod_cia": "0595",
       "razon_social": "SUPERVIELLE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 51352560429.0,
       "disponibilidades": 16905968.0,
       "inversiones": 27144308199.0,
@@ -21445,7 +21452,7 @@
     {
       "cod_cia": "0632",
       "razon_social": "MISTA SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 4761394244.0,
       "disponibilidades": 17663366.0,
       "inversiones": 4069628287.0,
@@ -21603,7 +21610,7 @@
     {
       "cod_cia": "0643",
       "razon_social": "PIEVE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2582745640.0,
       "disponibilidades": 8495420.0,
       "inversiones": 1875499446.0,
@@ -24284,7 +24291,7 @@
     {
       "cod_cia": "0721",
       "razon_social": "CAJA DE PREVISIÓN Y SEGURO MÉDICO DE LA PROVINCIA DE BS.AS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 29564572754.0,
       "disponibilidades": 758615214.0,
       "inversiones": 28251499088.0,
@@ -24815,7 +24822,7 @@
     {
       "cod_cia": "0728",
       "razon_social": "INSTITUTO DE SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 27905876017.0,
       "disponibilidades": 1117399847.0,
       "inversiones": 20989001713.0,
@@ -25297,7 +25304,7 @@
     {
       "cod_cia": "0747",
       "razon_social": "SMSV COMPAÑIA ARGENTINA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 46891962787.0,
       "disponibilidades": 156952520.0,
       "inversiones": 37208450902.0,
@@ -26371,7 +26378,7 @@
     {
       "cod_cia": "0820",
       "razon_social": "BIND SEGUROS S.A",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 23188252146.0,
       "disponibilidades": 441064878.0,
       "inversiones": 16086300299.0,
@@ -26534,7 +26541,7 @@
     {
       "cod_cia": "0821",
       "razon_social": "CONFLUENCIA COMPAÑIA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 13008423009.0,
       "disponibilidades": 31367829.0,
       "inversiones": 3191539071.0,
@@ -26935,7 +26942,7 @@
     {
       "cod_cia": "0822",
       "razon_social": "COMPAÑÍA DE SEGUROS DE JUJUY SOCIEDAD DEL ESTADO",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 12946665548.0,
       "disponibilidades": 828545497.0,
       "inversiones": 9550065326.0,
@@ -27438,7 +27445,7 @@
     {
       "cod_cia": "0844",
       "razon_social": "ANTICIPAR COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2475093621.0,
       "disponibilidades": 13983512.0,
       "inversiones": 131550247.0,
@@ -27575,7 +27582,7 @@
     {
       "cod_cia": "0845",
       "razon_social": "N.S.A. SEGUROS GENERALES S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1579545662.0,
       "disponibilidades": 4259565.0,
       "inversiones": 1549712639.0,
@@ -27681,7 +27688,7 @@
     {
       "cod_cia": "0847",
       "razon_social": "SAN GERMAN SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 4936043609.0,
       "disponibilidades": 3559895848.0,
       "inversiones": 10167782.0,
@@ -29762,7 +29769,7 @@
     {
       "cod_cia": "0879",
       "razon_social": "QUALIA COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 132665933326.0,
       "disponibilidades": 1908739330.0,
       "inversiones": 88640242155.0,
@@ -30349,7 +30356,7 @@
     {
       "cod_cia": "0888",
       "razon_social": "STELLANTIS INSURANCE COMPAÑIA DE SEGUROS S.A.U.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 89392042492.0,
       "disponibilidades": 1132428081.0,
       "inversiones": 75334595640.0,
@@ -30590,7 +30597,7 @@
     {
       "cod_cia": "0894",
       "razon_social": "OMINT S.A. COMPAÑÍA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2103940504.0,
       "disponibilidades": 12157976.0,
       "inversiones": 1689404484.0,
@@ -31227,7 +31234,7 @@
     {
       "cod_cia": "0926",
       "razon_social": "SAN MARINO COMPAÑÍA DE SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1999057503.0,
       "disponibilidades": 5194175.0,
       "inversiones": 1460201914.0,
@@ -31727,7 +31734,7 @@
     {
       "cod_cia": "0933",
       "razon_social": "ESENCIA SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1721956933.0,
       "disponibilidades": 663871.0,
       "inversiones": 1701183165.0,
@@ -31913,7 +31920,7 @@
     {
       "cod_cia": "0937",
       "razon_social": "ASEGURADORA DE BIENES Y SERVICIOS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1644329904.0,
       "disponibilidades": 4554790.0,
       "inversiones": 1306280271.0,
@@ -32211,7 +32218,7 @@
     {
       "cod_cia": "0962",
       "razon_social": "ART MUTUAL DE EMPLEADOS MECANICOS Y AFINES DEL TRANSPORTE AUTOMOTOR SAN FRANCISCO",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 17958037391.0,
       "disponibilidades": 72280358.0,
       "inversiones": 17003644115.0,
@@ -33071,7 +33078,7 @@
     {
       "cod_cia": "0979",
       "razon_social": "COMPAÑÍA DE SEGUROS GENERALES DE LA PROVINCIA DE SANTA CRUZ SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2637618417.0,
       "disponibilidades": 178967801.0,
       "inversiones": 904718239.0,
@@ -33618,7 +33625,7 @@
     "0006": {
       "cod_cia": "0006",
       "razon_social": "EL SURCO COMPAÑÍA DE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 51620738763.0,
       "disponibilidades": 61503902.0,
       "inversiones": 30473476993.0,
@@ -33839,7 +33846,7 @@
     "0007": {
       "cod_cia": "0007",
       "razon_social": "CAMINOS PROTEGIDOS  COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 20306035363.0,
       "disponibilidades": 1276357379.0,
       "inversiones": 7571022547.0,
@@ -35678,7 +35685,7 @@
     "0080": {
       "cod_cia": "0080",
       "razon_social": "EDIFICAR SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 41234196631.0,
       "disponibilidades": 851998842.0,
       "inversiones": 30478871981.0,
@@ -36575,7 +36582,7 @@
     "0136": {
       "cod_cia": "0136",
       "razon_social": "COMPAÑÍA MERCANTIL ASEGURADORA SOCIEDAD ANONIMA ARGENTINA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 5181536821.0,
       "disponibilidades": 186350011.0,
       "inversiones": 195294055.0,
@@ -39195,7 +39202,7 @@
     "0227": {
       "cod_cia": "0227",
       "razon_social": "COMPAÑIA DE SEGUROS EUROAMERICA S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 16269944643.0,
       "disponibilidades": 221032735.0,
       "inversiones": 4642195694.0,
@@ -39872,7 +39879,7 @@
     "0236": {
       "cod_cia": "0236",
       "razon_social": "EVOLUCIÓN SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 63484932538.0,
       "disponibilidades": 231254150.0,
       "inversiones": 1822623662.0,
@@ -41793,7 +41800,7 @@
     "0254": {
       "cod_cia": "0254",
       "razon_social": "INSTITUTO AUTÁRQUICO PROVINCIAL DEL SEGURO",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 367480546880.0,
       "disponibilidades": 1723781326.0,
       "inversiones": 173005634228.0,
@@ -42093,7 +42100,7 @@
     "0259": {
       "cod_cia": "0259",
       "razon_social": "CAJA POPULAR DE AHORROS DE LA PROVINCIA DE TUCUMAN",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 158085543010.0,
       "disponibilidades": 493980394.0,
       "inversiones": 14377250720.0,
@@ -42288,7 +42295,7 @@
     "0261": {
       "cod_cia": "0261",
       "razon_social": "HORIZONTE COMPAÑIA ARGENTINA DE SEGUROS GENERALES SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 147940334281.0,
       "disponibilidades": 1059494635.0,
       "inversiones": 98374963553.0,
@@ -43929,7 +43936,7 @@
     "0333": {
       "cod_cia": "0333",
       "razon_social": "HAMBURGO COMPAÑIA DE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 28109781530.0,
       "disponibilidades": 450560891.0,
       "inversiones": 21927846073.0,
@@ -45336,7 +45343,7 @@
     "0381": {
       "cod_cia": "0381",
       "razon_social": "INSTITUTO ASEGURADOR MERCANTIL COMPAÑIA ARGENTINA DE SEGUROS SOCIEDAD ANÓNIMA IAM",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 11456464891.0,
       "disponibilidades": 530477880.0,
       "inversiones": 3624140474.0,
@@ -46435,7 +46442,7 @@
     "0406": {
       "cod_cia": "0406",
       "razon_social": "CARUSO COMPAÑÍA ARGENTINA DE SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 107985217166.0,
       "disponibilidades": 556741936.0,
       "inversiones": 83262940845.0,
@@ -46684,7 +46691,7 @@
     "0409": {
       "cod_cia": "0409",
       "razon_social": "PREVINCA SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 11211171336.0,
       "disponibilidades": 57971057.0,
       "inversiones": 1751930834.0,
@@ -46849,7 +46856,7 @@
     "0412": {
       "cod_cia": "0412",
       "razon_social": "COMPAÑIA ARGENTINA DE SEGUROS LATITUD SUR SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 38777234533.0,
       "disponibilidades": 937028487.0,
       "inversiones": 16606752153.0,
@@ -47019,7 +47026,7 @@
     "0413": {
       "cod_cia": "0413",
       "razon_social": "SENTIR SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 7528997299.0,
       "disponibilidades": 14208420.0,
       "inversiones": 148673584.0,
@@ -47812,7 +47819,7 @@
     "0432": {
       "cod_cia": "0432",
       "razon_social": "COMPAÑÍA DE SEGUROS MAÑANA SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 5492811725.0,
       "disponibilidades": 207325292.0,
       "inversiones": 624416450.0,
@@ -48809,7 +48816,7 @@
     "0491": {
       "cod_cia": "0491",
       "razon_social": "CERTEZA COMPAÑIA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 6082955498.0,
       "disponibilidades": 374627873.0,
       "inversiones": 4021038349.0,
@@ -48944,7 +48951,7 @@
     "0498": {
       "cod_cia": "0498",
       "razon_social": "SANTA LUCÍA S.A. COMPAÑÍA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1991677033.0,
       "disponibilidades": 675890569.0,
       "inversiones": 10240429.0,
@@ -50064,7 +50071,7 @@
     "0516": {
       "cod_cia": "0516",
       "razon_social": "GGAL SEGUROS S.A.U.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 368658271020.0,
       "disponibilidades": 1684465132.0,
       "inversiones": 354055903243.0,
@@ -51234,7 +51241,7 @@
     "0541": {
       "cod_cia": "0541",
       "razon_social": "ZURICH INTERNATIONAL LIFE LIMITED SUCURSAL ARGENTINA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2077429973807.0,
       "disponibilidades": 25271329921.0,
       "inversiones": 1899552645925.0,
@@ -51369,7 +51376,7 @@
     "0546": {
       "cod_cia": "0546",
       "razon_social": "PLENARIA SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 3922277375.0,
       "disponibilidades": 32399726.0,
       "inversiones": 3162544369.0,
@@ -51499,7 +51506,7 @@
     "0553": {
       "cod_cia": "0553",
       "razon_social": "CRUZ SUIZA COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1033797252.0,
       "disponibilidades": 47970662.0,
       "inversiones": 709800225.0,
@@ -51631,7 +51638,7 @@
     "0555": {
       "cod_cia": "0555",
       "razon_social": "BENEFICIO S.A. COMPAÑIA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 6330135650.0,
       "disponibilidades": 80106769.0,
       "inversiones": 4669070703.0,
@@ -51917,7 +51924,7 @@
     "0574": {
       "cod_cia": "0574",
       "razon_social": "SOL NACIENTE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 27884195603.0,
       "disponibilidades": 322848440.0,
       "inversiones": 1693235179.0,
@@ -52318,7 +52325,7 @@
     "0576": {
       "cod_cia": "0576",
       "razon_social": "CNP ASSURANCES COMPAÑIA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 95199025421.0,
       "disponibilidades": 935481221.0,
       "inversiones": 72347136422.0,
@@ -53279,7 +53286,7 @@
     "0595": {
       "cod_cia": "0595",
       "razon_social": "SUPERVIELLE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 51352560429.0,
       "disponibilidades": 16905968.0,
       "inversiones": 27144308199.0,
@@ -54446,7 +54453,7 @@
     "0632": {
       "cod_cia": "0632",
       "razon_social": "MISTA SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 4761394244.0,
       "disponibilidades": 17663366.0,
       "inversiones": 4069628287.0,
@@ -54604,7 +54611,7 @@
     "0643": {
       "cod_cia": "0643",
       "razon_social": "PIEVE SEGUROS SOCIEDAD ANONIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2582745640.0,
       "disponibilidades": 8495420.0,
       "inversiones": 1875499446.0,
@@ -57285,7 +57292,7 @@
     "0721": {
       "cod_cia": "0721",
       "razon_social": "CAJA DE PREVISIÓN Y SEGURO MÉDICO DE LA PROVINCIA DE BS.AS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 29564572754.0,
       "disponibilidades": 758615214.0,
       "inversiones": 28251499088.0,
@@ -57816,7 +57823,7 @@
     "0728": {
       "cod_cia": "0728",
       "razon_social": "INSTITUTO DE SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 27905876017.0,
       "disponibilidades": 1117399847.0,
       "inversiones": 20989001713.0,
@@ -58298,7 +58305,7 @@
     "0747": {
       "cod_cia": "0747",
       "razon_social": "SMSV COMPAÑIA ARGENTINA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 46891962787.0,
       "disponibilidades": 156952520.0,
       "inversiones": 37208450902.0,
@@ -59372,7 +59379,7 @@
     "0820": {
       "cod_cia": "0820",
       "razon_social": "BIND SEGUROS S.A",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 23188252146.0,
       "disponibilidades": 441064878.0,
       "inversiones": 16086300299.0,
@@ -59535,7 +59542,7 @@
     "0821": {
       "cod_cia": "0821",
       "razon_social": "CONFLUENCIA COMPAÑIA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 13008423009.0,
       "disponibilidades": 31367829.0,
       "inversiones": 3191539071.0,
@@ -59936,7 +59943,7 @@
     "0822": {
       "cod_cia": "0822",
       "razon_social": "COMPAÑÍA DE SEGUROS DE JUJUY SOCIEDAD DEL ESTADO",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 12946665548.0,
       "disponibilidades": 828545497.0,
       "inversiones": 9550065326.0,
@@ -60439,7 +60446,7 @@
     "0844": {
       "cod_cia": "0844",
       "razon_social": "ANTICIPAR COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2475093621.0,
       "disponibilidades": 13983512.0,
       "inversiones": 131550247.0,
@@ -60576,7 +60583,7 @@
     "0845": {
       "cod_cia": "0845",
       "razon_social": "N.S.A. SEGUROS GENERALES S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1579545662.0,
       "disponibilidades": 4259565.0,
       "inversiones": 1549712639.0,
@@ -60682,7 +60689,7 @@
     "0847": {
       "cod_cia": "0847",
       "razon_social": "SAN GERMAN SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 4936043609.0,
       "disponibilidades": 3559895848.0,
       "inversiones": 10167782.0,
@@ -62763,7 +62770,7 @@
     "0879": {
       "cod_cia": "0879",
       "razon_social": "QUALIA COMPAÑÍA DE SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 132665933326.0,
       "disponibilidades": 1908739330.0,
       "inversiones": 88640242155.0,
@@ -63350,7 +63357,7 @@
     "0888": {
       "cod_cia": "0888",
       "razon_social": "STELLANTIS INSURANCE COMPAÑIA DE SEGUROS S.A.U.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 89392042492.0,
       "disponibilidades": 1132428081.0,
       "inversiones": 75334595640.0,
@@ -63591,7 +63598,7 @@
     "0894": {
       "cod_cia": "0894",
       "razon_social": "OMINT S.A. COMPAÑÍA DE SEGUROS",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2103940504.0,
       "disponibilidades": 12157976.0,
       "inversiones": 1689404484.0,
@@ -64228,7 +64235,7 @@
     "0926": {
       "cod_cia": "0926",
       "razon_social": "SAN MARINO COMPAÑÍA DE SEGUROS SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1999057503.0,
       "disponibilidades": 5194175.0,
       "inversiones": 1460201914.0,
@@ -64728,7 +64735,7 @@
     "0933": {
       "cod_cia": "0933",
       "razon_social": "ESENCIA SEGUROS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1721956933.0,
       "disponibilidades": 663871.0,
       "inversiones": 1701183165.0,
@@ -64914,7 +64921,7 @@
     "0937": {
       "cod_cia": "0937",
       "razon_social": "ASEGURADORA DE BIENES Y SERVICIOS S.A.",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 1644329904.0,
       "disponibilidades": 4554790.0,
       "inversiones": 1306280271.0,
@@ -65212,7 +65219,7 @@
     "0962": {
       "cod_cia": "0962",
       "razon_social": "ART MUTUAL DE EMPLEADOS MECANICOS Y AFINES DEL TRANSPORTE AUTOMOTOR SAN FRANCISCO",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Riesgos del Trabajo (ART)",
       "activo": 17958037391.0,
       "disponibilidades": 72280358.0,
       "inversiones": 17003644115.0,
@@ -66072,7 +66079,7 @@
     "0979": {
       "cod_cia": "0979",
       "razon_social": "COMPAÑÍA DE SEGUROS GENERALES DE LA PROVINCIA DE SANTA CRUZ SOCIEDAD ANÓNIMA",
-      "tipo_entidad": "Patrimoniales y Mixtas",
+      "tipo_entidad": "Seguros de Personas",
       "activo": 2637618417.0,
       "disponibilidades": 178967801.0,
       "inversiones": 904718239.0,
