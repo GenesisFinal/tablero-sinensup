@@ -12,13 +12,30 @@ from insurance_kpis import (
 
 def build_complete_dataset():
     print("Loading balance raw data...")
-    df_raw = get_balance_data()
+    df_raw = get_balance_data(force_reload=True)
     print("Computing company summary...")
     df_summary = compute_all_companies_summary(df_raw)
 
     # Market-wide subramos
     market_subramos = get_company_subramos(df_raw)
     market_subramos_list = market_subramos.to_dict(orient='records')
+
+    # Macro Branch Totals
+    sub_valid = df_raw[(df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna()) & (df_raw['cod_cuenta'].str.startswith('5.01'))]
+    
+    patrim_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('1.') & (~sub_valid['cod_subramo'].str.startswith('1.050'))]['importe'].sum())
+    art_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('1.050')]['importe'].sum())
+    personas_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('2.01') | sub_valid['cod_subramo'].str.startswith('2.02') | sub_valid['cod_subramo'].str.startswith('2.03') | sub_valid['cod_subramo'].str.startswith('2.05')]['importe'].sum())
+    retiro_total = float(sub_valid[sub_valid['cod_subramo'].str.startswith('2.06') | sub_valid['cod_subramo'].str.startswith('2.07')]['importe'].sum())
+    mercado_total = patrim_total + art_total + personas_total + retiro_total
+
+    macro_ramos = {
+        "patrimoniales": round(patrim_total, 2),
+        "art": round(art_total, 2),
+        "personas_vida": round(personas_total, 2),
+        "retiro": round(retiro_total, 2),
+        "total_mercado": round(mercado_total, 2)
+    }
 
     # Convert summary to list of dicts with deep dive details
     companies_dict = {}
@@ -56,6 +73,7 @@ def build_complete_dataset():
         "periodo": str(df_raw['periodo'].iloc[0]),
         "total_entidades": len(df_summary),
         "segmentos": segments,
+        "macro_ramos": macro_ramos,
         "market_subramos": market_subramos_list,
         "companies": list(companies_dict.values()),
         "companies_by_code": companies_dict
