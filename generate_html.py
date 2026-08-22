@@ -158,17 +158,20 @@ def generate_html():
       <button onclick="switchTab('ramos-suscripcion')" id="tabBtn-ramos-suscripcion" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-shield-heart"></i> 3. Ramos y Suscripción
       </button>
+      <button onclick="switchTab('rankings-ramos')" id="tabBtn-rankings-ramos" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-ranking-star text-amber-400"></i> 4. Rankings por Rama
+      </button>
       <button onclick="switchTab('inversiones-finanzas')" id="tabBtn-inversiones-finanzas" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-chart-line"></i> 4. Inversiones y Finanzas
+        <i class="fa-solid fa-chart-line"></i> 5. Inversiones y Finanzas
       </button>
       <button onclick="switchTab('solvencia-ratios')" id="tabBtn-solvencia-ratios" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-scale-balanced"></i> 5. Solvencia y Ratios SSN
+        <i class="fa-solid fa-scale-balanced"></i> 6. Solvencia y Ratios SSN
       </button>
       <button onclick="switchTab('ratios-gestion')" id="tabBtn-ratios-gestion" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-gauge-high"></i> 6. Ratios de Gestión
+        <i class="fa-solid fa-gauge-high"></i> 7. Ratios de Gestión
       </button>
       <button onclick="switchTab('balances')" id="tabBtn-balances" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 7. Balances Contables
+        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 8. Balances Contables
       </button>
     </div>
   </header>
@@ -1466,6 +1469,119 @@ def generate_html():
 
     </section>
 
+    <!-- ======================================================== -->
+    <!-- TAB 4: RANKINGS DE PRODUCCIÓN POR RAMOS Y SUBRAMOS -->
+    <!-- ======================================================== -->
+    <section id="tab-rankings-ramos" class="hidden space-y-6">
+      
+      <!-- Hierarchical Selector Header (Macro-Sección -> Ramo Agrupado -> Subramo / Todo el Ramo) -->
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-amber-500 flex flex-col gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-3">
+              <h2 id="rrSelectedTitle" class="text-lg font-bold text-white">Ranking de Producción por Ramos</h2>
+              <span id="rrSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">Subramo SSN</span>
+            </div>
+            <p id="rrSelectedSubtitle" class="text-xs text-slate-400 mt-1">Explora el liderazgo de mercado, cuotas de emisión y siniestralidad técnica por rama o subrama</p>
+          </div>
+
+          <!-- Mode Switch: Grupos vs Aseguradoras -->
+          <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
+            <button type="button" onclick="setRamosRankMode('groups')" id="rrModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
+              <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores
+            </button>
+            <button type="button" onclick="setRamosRankMode('companies')" id="rrModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-Tier Navigation Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-800">
+          <!-- 1. Macro Sección -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <i class="fa-solid fa-layer-group text-amber-400"></i> 1. Macro-Sección:
+            </label>
+            <div id="rrSectionButtons" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- 2. Ramo Agrupado -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <i class="fa-solid fa-folder-tree text-emerald-400"></i> 2. Ramo Agrupado:
+            </label>
+            <div id="rrGroupButtons" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- 3. Apertura de Subramo -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <i class="fa-solid fa-tags text-sky-400"></i> 3. Nivel de Apertura / Subramo:
+            </label>
+            <select id="rrSubramoSelect" onchange="setRamosSubramo(this.value)" class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-amber-400 w-full">
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards of Selected Branch -->
+      <div id="rrKpiBanner" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5"></div>
+
+      <!-- Concentration & Market Share Chart -->
+      <div class="glass-card p-5 rounded-xl">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-amber-400"></i> Concentración de Mercado (Top 10 de la Rama)
+            </h3>
+            <p class="text-xs text-slate-400">Distribución de Primas Emitidas y Cuotas de Mercado de los líderes en esta rama</p>
+          </div>
+        </div>
+        <div id="rrMarketSharePlot" class="w-full h-72"></div>
+      </div>
+
+      <!-- Branch Ranking Table -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-trophy text-amber-400"></i> Ranking Completo en la Rama
+            </h3>
+            <p class="text-xs text-slate-400">Entidades operativas ordenadas por Primas Emitidas en la rama seleccionada</p>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <input type="text" id="rrTableFilter" oninput="filterRamosRankingTable(this.value)" placeholder="Buscar aseguradora o grupo..." 
+                   class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 w-60">
+            <button onclick="exportRamosRankCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-x-auto max-h-[600px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px] font-mono">
+              <tr>
+                <th class="py-2.5 px-2 text-center w-8">#</th>
+                <th class="py-2.5 px-2 text-left w-56">Aseguradora / Grupo Económico</th>
+                <th class="py-2.5 px-2 text-center w-16">Tipo / Cías</th>
+                <th class="py-2.5 px-2 text-right font-bold text-white">Primas Emitidas</th>
+                <th class="py-2.5 px-2 text-right w-28">Market Share</th>
+                <th class="py-2.5 px-2 text-right">Siniestros</th>
+                <th class="py-2.5 px-2 text-right">Siniestralidad (Loss Ratio)</th>
+                <th class="py-2.5 px-2 text-right font-bold">Resultado Técnico</th>
+                <th class="py-2.5 px-2 text-center w-16">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="rrTableBody" class="divide-y divide-slate-800/60 font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
   </main>
   <!-- FOOTER -->
   <footer class="bg-slate-950 border-t border-slate-800/80 py-4 mt-auto">
@@ -1494,6 +1610,11 @@ def generate_html():
       highlightedCiaCode: null,
       marketRankingMode: 'groups',
       selectedGroupId: 'sancor',
+      ramosRankSection: 'personas',
+      ramosRankGroup: 'vida',
+      ramosRankSubramo: 'all',
+      ramosRankMode: 'groups',
+      ramosRankSearchQuery: '',
       ramosScope: 'cia',
       invScope: 'cia',
       invTopMetric: 'activo',
@@ -1698,6 +1819,8 @@ def generate_html():
       buildSegmentPills();
       updateAllComboboxLabels();
       setupSearchAutocomplete();
+      initBalancesSubramos();
+      initRamosRankingsTab();
       renderAll();
     }}
 
@@ -2005,7 +2128,7 @@ def generate_html():
 
     function switchTab(tabId) {{
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances'].forEach(id => {{
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances'].forEach(id => {{
         const el = document.getElementById(`tab-${{id}}`);
         const btn = document.getElementById(`tabBtn-${{id}}`);
         if (!el || !btn) return;
@@ -2030,6 +2153,7 @@ def generate_html():
       renderMarketOverview();
       renderCompanyDetails();
       renderRamosTab();
+      renderRamosRankingsTab();
       renderInvestmentsTab();
       renderSolvencyTab();
       renderManagementTab();
@@ -2711,8 +2835,420 @@ def generate_html():
       `).join('');
     }}
 
+    // ========================================================
+    // TAB 4: RANKINGS DE PRODUCCIÓN POR RAMOS Y SUBRAMOS
+    // ========================================================
+    function initRamosRankingsTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return;
+
+      const tax = data.ramos_taxonomy;
+
+      // 1. Render Section Buttons
+      const secContainer = document.getElementById('rrSectionButtons');
+      if (secContainer) {{
+        secContainer.innerHTML = Object.values(tax).map(sec => {{
+          const isActive = state.ramosRankSection === sec.id;
+          return `
+            <button onclick="setRamosSection('${{sec.id}}')" 
+                    class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${{
+                      isActive ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    }}">
+              <i class="fa-solid ${{sec.icon || 'fa-folder'}} mr-1"></i> ${{sec.name}}
+            </button>
+          `;
+        }}).join('');
+      }}
+
+      // 2. Render Group Buttons for active section
+      const activeSec = tax[state.ramosRankSection] || Object.values(tax)[0];
+      const grpContainer = document.getElementById('rrGroupButtons');
+      if (grpContainer && activeSec) {{
+        const groupsList = Object.values(activeSec.ramos);
+        grpContainer.innerHTML = groupsList.map(g => {{
+          const isActive = state.ramosRankGroup === g.id;
+          return `
+            <button onclick="setRamosGroup('${{g.id}}')" 
+                    class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${{
+                      isActive ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    }}">
+              ${{g.name}}
+            </button>
+          `;
+        }}).join('');
+      }}
+
+      // 3. Populate Subramo Select dropdown
+      const subSelect = document.getElementById('rrSubramoSelect');
+      if (subSelect && activeSec) {{
+        const activeGrp = activeSec.ramos[state.ramosRankGroup] || Object.values(activeSec.ramos)[0];
+        const catalog = {{}};
+        (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+
+        let opts = `<option value="all">🌟 TODO EL RAMO: ${{activeGrp ? activeGrp.name.toUpperCase() : 'CONSOLIDADO'}}</option>`;
+        if (activeGrp && activeGrp.subramos) {{
+          activeGrp.subramos.forEach(scod => {{
+            const sdesc = catalog[scod] || scod;
+            opts += `<option value="${{scod}}">${{scod}} - ${{sdesc}}</option>`;
+          }});
+        }}
+        subSelect.innerHTML = opts;
+        subSelect.value = state.ramosRankSubramo || 'all';
+      }}
+    }}
+
+    function setRamosSection(sectionId) {{
+      state.ramosRankSection = sectionId;
+      const data = window.DATA_SINENSUP;
+      if (data && data.ramos_taxonomy && data.ramos_taxonomy[sectionId]) {{
+        const firstGrp = Object.keys(data.ramos_taxonomy[sectionId].ramos)[0];
+        state.ramosRankGroup = firstGrp;
+        state.ramosRankSubramo = 'all';
+      }}
+      initRamosRankingsTab();
+      renderRamosRankingsTab();
+    }}
+
+    function setRamosGroup(groupId) {{
+      state.ramosRankGroup = groupId;
+      state.ramosRankSubramo = 'all';
+      initRamosRankingsTab();
+      renderRamosRankingsTab();
+    }}
+
+    function setRamosSubramo(subramoCode) {{
+      state.ramosRankSubramo = subramoCode;
+      renderRamosRankingsTab();
+    }}
+
+    function setRamosRankMode(mode) {{
+      state.ramosRankMode = mode;
+      const btnG = document.getElementById('rrModeBtn-groups');
+      const btnC = document.getElementById('rrModeBtn-companies');
+
+      if (mode === 'groups') {{
+        if (btnG) btnG.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5';
+        if (btnC) btnC.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5';
+      }} else {{
+        if (btnG) btnG.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5';
+        if (btnC) btnC.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5';
+      }}
+      renderRamosRankingsTab();
+    }}
+
+    function filterRamosRankingTable(query) {{
+      state.ramosRankSearchQuery = query || '';
+      renderRamosRankingTableOnly();
+    }}
+
+    function getTargetRamosSubramos() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return [];
+      const tax = data.ramos_taxonomy;
+
+      if (state.ramosRankSubramo && state.ramosRankSubramo !== 'all') {{
+        return [state.ramosRankSubramo];
+      }}
+
+      const sec = tax[state.ramosRankSection];
+      if (!sec) return [];
+      const grp = sec.ramos[state.ramosRankGroup];
+      if (grp) return grp.subramos;
+
+      let allSubs = [];
+      Object.values(sec.ramos).forEach(g => {{
+        allSubs = allSubs.concat(g.subramos);
+      }});
+      return [...new Set(allSubs)];
+    }}
+
+    function computeRamosRankingData() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return {{ total_emitidas: 0, total_siniestros: 0, loss_ratio: 0, resultado_tecnico: 0, entities_count: 0, ranking: [] }};
+
+      const targetSubs = getTargetRamosSubramos();
+      const ciasSub = data.cias_balances_subramos || {{}};
+      const groupsSub = data.groups_balances_subramos || {{}};
+      const ciasByCode = data.companies_by_code || {{}};
+      const groupsById = data.groups_by_id || {{}};
+
+      const ranking = [];
+
+      if (state.ramosRankMode === 'companies') {{
+        Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
+          let totEmit = 0.0, totSin = 0.0, totEgr = 0.0;
+          targetSubs.forEach(s => {{
+            if (sub_map[s]) {{
+              const d = sub_map[s];
+              totEmit += (d['5.01.00.00.00.00.00.00'] || d['5.00.00.00.00.00.00.00'] || 0.0);
+              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0);
+              totEgr += (d['4.01.00.00.00.00.00.00'] || d['4.00.00.00.00.00.00.00'] || 0.0);
+            }}
+          }});
+          if (totEmit > 0) {{
+            const c = ciasByCode[cod_cia] || {{}};
+            const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
+            const resTec = totEmit - totEgr;
+            ranking.push({{
+              id: cod_cia,
+              code: cod_cia,
+              name: c.razon_social || cod_cia,
+              tipo: c.tipo_entidad || '',
+              emitidas: totEmit,
+              siniestros: totSin,
+              loss_ratio: lossRatio,
+              resultado_tecnico: resTec
+            }});
+          }}
+        }});
+      }} else {{
+        Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
+          let totEmit = 0.0, totSin = 0.0, totEgr = 0.0;
+          targetSubs.forEach(s => {{
+            if (sub_map[s]) {{
+              const d = sub_map[s];
+              totEmit += (d['5.01.00.00.00.00.00.00'] || d['5.00.00.00.00.00.00.00'] || 0.0);
+              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0);
+              totEgr += (d['4.01.00.00.00.00.00.00'] || d['4.00.00.00.00.00.00.00'] || 0.0);
+            }}
+          }});
+          if (totEmit > 0) {{
+            const g = groupsById[gid] || {{}};
+            const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
+            const resTec = totEmit - totEgr;
+            ranking.push({{
+              id: gid,
+              code: gid,
+              name: g.name || gid,
+              tipo: `${{g.entities_count || 0}} Cías`,
+              emitidas: totEmit,
+              siniestros: totSin,
+              loss_ratio: lossRatio,
+              resultado_tecnico: resTec
+            }});
+          }}
+        }});
+      }}
+
+      const totBranch = ranking.reduce((acc, r) => acc + r.emitidas, 0.0);
+      const totSinBranch = ranking.reduce((acc, r) => acc + r.siniestros, 0.0);
+      const lossBranch = totBranch > 0 ? (totSinBranch / totBranch * 100.0) : 0.0;
+      const resTecBranch = ranking.reduce((acc, r) => acc + r.resultado_tecnico, 0.0);
+
+      ranking.forEach(r => {{
+        r.market_share = totBranch > 0 ? (r.emitidas / totBranch * 100.0) : 0.0;
+      }});
+
+      ranking.sort((a, b) => b.emitidas - a.emitidas);
+      return {{
+        total_emitidas: totBranch,
+        total_siniestros: totSinBranch,
+        loss_ratio: lossBranch,
+        resultado_tecnico: resTecBranch,
+        entities_count: ranking.length,
+        ranking: ranking
+      }};
+    }}
+
+    let currentRamosRankData = null;
+
+    function renderRamosRankingsTab() {{
+      initRamosRankingsTab();
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const tax = data.ramos_taxonomy || {{}};
+      const sec = tax[state.ramosRankSection];
+      const grp = sec ? sec.ramos[state.ramosRankGroup] : null;
+
+      const titleEl = document.getElementById('rrSelectedTitle');
+      const badgeEl = document.getElementById('rrSelectedBadge');
+      const subTitleEl = document.getElementById('rrSelectedSubtitle');
+
+      if (titleEl) {{
+        if (state.ramosRankSubramo && state.ramosRankSubramo !== 'all') {{
+          const catalog = {{}};
+          (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+          titleEl.innerText = `${{state.ramosRankSubramo}} - ${{catalog[state.ramosRankSubramo] || 'Subramo'}}`;
+          if (badgeEl) badgeEl.innerText = 'Subramo Específico SSN';
+        }} else if (grp) {{
+          titleEl.innerText = `${{grp.name}} (Ramo Consolidado)`;
+          if (badgeEl) badgeEl.innerText = `${{sec ? sec.name : 'Sección'}} • Consolidado`;
+        }}
+      }}
+
+      const res = computeRamosRankingData();
+      currentRamosRankData = res;
+
+      // Render KPIs
+      const banner = document.getElementById('rrKpiBanner');
+      if (banner) {{
+        const totalMarketEmit = (data.macro_entidades && data.macro_entidades.total_mercado_emitidas) ? data.macro_entidades.total_mercado_emitidas : 29.9e12;
+        const shareOfMarket = (res.total_emitidas / totalMarketEmit * 100.0);
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS EMITIDAS RAMA</div>
+            <div class="text-lg font-bold font-mono text-white mt-1">${{formatARS(res.total_emitidas)}}</div>
+            <div class="text-[10px] text-amber-400 font-bold mt-1">${{shareOfMarket.toFixed(1)}}% del Mercado Total</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTROS EN LA RAMA</div>
+            <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(res.total_siniestros)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Devengamiento Técnico</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl ${{res.loss_ratio <= 65 ? 'border-l-emerald-500' : 'border-l-rose-500'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTRALIDAD MEDIA</div>
+            <div class="text-lg font-bold font-mono ${{res.loss_ratio <= 65 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatPercent(res.loss_ratio)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{res.loss_ratio <= 65 ? 'Siniestralidad Controlada' : 'Alta Siniestralidad'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl ${{res.resultado_tecnico >= 0 ? 'border-l-emerald-500' : 'border-l-rose-500'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO RAMA</div>
+            <div class="text-lg font-bold font-mono ${{res.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatARS(res.resultado_tecnico)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{res.resultado_tecnico >= 0 ? 'Superávit Técnico' : 'Déficit Técnico'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-sky-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">ENTIDADES OPERATIVAS</div>
+            <div class="text-lg font-bold font-mono text-sky-400 mt-1">${{res.entities_count}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{state.ramosRankMode === 'groups' ? 'Grupos Aseguradores' : 'Aseguradoras Directas'}}</div>
+          </div>
+        `;
+      }}
+
+      // Render Plot
+      renderRamosMarketSharePlot(res.ranking);
+
+      // Render Table
+      renderRamosRankingTableOnly();
+    }}
+
+    function renderRamosMarketSharePlot(ranking) {{
+      const plotEl = document.getElementById('rrMarketSharePlot');
+      if (!plotEl) return;
+
+      const top10 = ranking.slice(0, 10);
+      if (top10.length === 0) {{
+        plotEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs">No hay datos para graficar en esta selección</div>';
+        return;
+      }}
+
+      const othersEmit = ranking.slice(10).reduce((acc, r) => acc + r.emitidas, 0.0);
+      const labels = top10.map(r => r.name);
+      const values = top10.map(r => r.emitidas);
+      if (othersEmit > 0) {{
+        labels.push('Resto del Mercado');
+        values.push(othersEmit);
+      }}
+
+      const data = [{{
+        type: 'pie',
+        labels: labels,
+        values: values,
+        textinfo: 'label+percent',
+        hoverinfo: 'label+value+percent',
+        hole: 0.45,
+        marker: {{
+          colors: ['#F59E0B', '#3B82F6', '#10B981', '#EC4899', '#8B5CF6', '#06B6D4', '#E11D48', '#84CC16', '#F97316', '#6366F1', '#475569']
+        }}
+      }}];
+
+      const layout = {{
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        font: {{ color: '#94A3B8', size: 11 }},
+        margin: {{ t: 10, b: 10, l: 10, r: 10 }},
+        showlegend: true,
+        legend: {{ orientation: 'h', x: 0, y: -0.1, font: {{ size: 10, color: '#cbd5e1' }} }}
+      }};
+
+      Plotly.newPlot('rrMarketSharePlot', data, layout, {{ responsive: true, displayModeBar: false }});
+    }}
+
+    function renderRamosRankingTableOnly() {{
+      const tbody = document.getElementById('rrTableBody');
+      if (!tbody || !currentRamosRankData) return;
+
+      const q = (state.ramosRankSearchQuery || '').toLowerCase().trim();
+      const filtered = currentRamosRankData.ranking.filter(r => {{
+        if (!q) return true;
+        return r.name.toLowerCase().includes(q) || r.code.toLowerCase().includes(q);
+      }});
+
+      if (filtered.length === 0) {{
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-500">No se encontraron entidades en este ramo</td></tr>';
+        return;
+      }}
+
+      tbody.innerHTML = filtered.map((r, i) => {{
+        const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
+        const isSelected = (state.ramosRankMode === 'companies' && state.selectedCompanyCode === r.code) ||
+                           (state.ramosRankMode === 'groups' && state.selectedGroupId === r.code);
+        return `
+          <tr class="hover:bg-slate-800/60 ${{isSelected ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70 font-semibold' : '')}} cursor-pointer transition-colors">
+            <td class="py-2 px-2 text-center text-slate-400 font-mono font-bold">${{i + 1}}</td>
+            <td class="py-2 px-2">
+              <div class="font-bold text-white flex items-center gap-1.5">
+                <span class="font-mono text-xs text-slate-400">${{r.code}}</span>
+                <span class="truncate max-w-[220px]" title="${{r.name}}">${{r.name}}</span>
+                ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+              </div>
+            </td>
+            <td class="py-2 px-2 text-center">
+              ${{state.ramosRankMode === 'groups' ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">${{r.tipo}}</span>` : getTipoBadge(r.tipo)}}
+            </td>
+            <td class="py-2 px-2 text-right font-bold text-white font-mono">${{formatARS(r.emitidas)}}</td>
+            <td class="py-2 px-2 text-right">
+              <div class="font-bold font-mono text-amber-300">${{r.market_share.toFixed(2)}}%</div>
+              <div class="w-full bg-slate-800 h-1 rounded-full mt-1 overflow-hidden">
+                <div class="bg-amber-400 h-full rounded-full" style="width: ${{Math.min(100, r.market_share * 5)}}%"></div>
+              </div>
+            </td>
+            <td class="py-2 px-2 text-right text-rose-300 font-mono">${{formatARS(r.siniestros)}}</td>
+            <td class="py-2 px-2 text-right font-mono ${{r.loss_ratio <= 65 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(r.loss_ratio)}}</td>
+            <td class="py-2 px-2 text-right font-mono font-bold ${{r.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(r.resultado_tecnico)}}</td>
+            <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+              ${{state.ramosRankMode === 'groups' ? `
+                <button onclick="openGroupModal('${{r.code}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver Grupo</button>
+              ` : `
+                <button onclick="selectCompany('${{r.code}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver Ficha</button>
+              `}}
+            </td>
+          </tr>
+        `;
+      }}).join('');
+    }}
+
+    function exportRamosRankCSV() {{
+      if (!currentRamosRankData || !currentRamosRankData.ranking) return;
+
+      const headers = ['rank', 'codigo', 'nombre', 'tipo', 'primas_emitidas', 'market_share', 'siniestros', 'loss_ratio', 'resultado_tecnico'];
+      let csv = headers.join(',') + '\\n';
+
+      currentRamosRankData.ranking.forEach((r, idx) => {{
+        const row = [
+          idx + 1,
+          `"${{r.code}}"`,
+          `"${{r.name.replace(/"/g, '""')}}"`,
+          `"${{r.tipo}}"`,
+          r.emitidas || 0,
+          (r.market_share || 0).toFixed(2),
+          r.siniestros || 0,
+          (r.loss_ratio || 0).toFixed(2),
+          r.resultado_tecnico || 0
+        ];
+        csv += row.join(',') + '\\n';
+      }});
+
+      const blob = new Blob([csv], {{ type: 'text/csv;charset=utf-8;' }});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ranking_ramos_${{state.ramosRankSection}}_${{state.ramosRankGroup}}_${{state.ramosRankSubramo}}_${{state.ramosRankMode}}.csv`;
+      a.click();
+    }}
+
     // ----------------------------------------------------
-    // TAB 4 RENDER: INVERSIONES Y FINANZAS
+    // TAB 5 RENDER: INVERSIONES Y FINANZAS
     // ----------------------------------------------------
     function setInvScope(scope) {{
       state.invScope = scope;
@@ -4077,11 +4613,19 @@ def generate_html():
       a.click();
     }}
 
-    // Export all tree and group functions to window scope
+    // Export all tree, group and ramos ranking functions to window scope
     window.setRankingMode = setRankingMode;
     window.openGroupModal = openGroupModal;
     window.closeGroupModal = closeGroupModal;
     window.renderGroupsRankingTable = renderGroupsRankingTable;
+    window.initRamosRankingsTab = initRamosRankingsTab;
+    window.setRamosSection = setRamosSection;
+    window.setRamosGroup = setRamosGroup;
+    window.setRamosSubramo = setRamosSubramo;
+    window.setRamosRankMode = setRamosRankMode;
+    window.filterRamosRankingTable = filterRamosRankingTable;
+    window.renderRamosRankingsTab = renderRamosRankingsTab;
+    window.exportRamosRankCSV = exportRamosRankCSV;
     window.setBalScope = setBalScope;
     window.setBalStatement = setBalStatement;
     window.setBalSubramo = setBalSubramo;
