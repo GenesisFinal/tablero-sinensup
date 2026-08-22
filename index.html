@@ -68,6 +68,19 @@
       backdrop-filter: blur(12px);
       border: 1px solid rgba(51, 65, 85, 0.6);
     }
+    .combobox-dropdown-menu {
+      z-index: 99999 !important;
+      position: absolute !important;
+      box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.7) !important;
+    }
+    .header-card-sticky {
+      position: relative !important;
+      z-index: 50 !important;
+    }
+    .content-card-lower {
+      position: relative !important;
+      z-index: 1 !important;
+    }
     .tab-btn.active {
       background-color: #E20039;
       color: #FFFFFF;
@@ -314,7 +327,7 @@
       </div>
 
       <!-- 1. FULL WIDTH: Interactive Strategic Scatter Plot Matrix with Company Highlighter -->
-      <div class="glass-card p-5 rounded-xl w-full relative z-30 overflow-visible">
+      <div class="glass-card header-card-sticky p-5 rounded-xl w-full relative z-30 overflow-visible">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -462,7 +475,7 @@
     <section id="tab-ficha-compania" class="hidden space-y-6">
       
       <!-- Company Selector Header -->
-      <div class="glass-card p-5 rounded-xl border-l-4 border-l-brand-red flex flex-wrap items-center justify-between gap-4 relative z-30 overflow-visible">
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-brand-red flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-3">
             <h2 id="selectedCiaTitle" class="text-lg font-bold text-white">...</h2>
@@ -477,19 +490,19 @@
               <span id="ciaComboboxLabel" class="truncate">...</span>
               <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
             </button>
-            <div id="ciaComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-[100] p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+            <div id="ciaComboboxDropdown" class="hidden combobox-dropdown-menu top-full right-0 w-full sm:w-96 mt-1 bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs max-h-80 flex flex-col">
               <div class="relative mb-2">
                 <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input type="text" id="ciaComboboxInput" oninput="filterCombobox('ciaCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-red font-normal">
               </div>
-              <div id="ciaComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+              <div id="ciaComboboxList" class="overflow-y-auto max-h-64 divide-y divide-slate-800/40"></div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Company Mini KPI Cards (6 Cards with Primas Emitidas & Variación de Reservas) -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+      <div class="content-card-lower grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-slate-400">
           <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS EMITIDAS</div>
           <div id="ciaKpiPrimasEmit" class="text-base font-bold font-mono text-white mt-1">...</div>
@@ -603,7 +616,7 @@
     <section id="tab-inversiones-finanzas" class="hidden space-y-6">
       
       <!-- Company Selector Header in Tab 4 -->
-      <div class="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 flex flex-wrap items-center justify-between gap-4 relative z-30 overflow-visible">
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-amber-500 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-3">
             <h2 id="invSelectedTitle" class="text-lg font-bold text-white">...</h2>
@@ -617,17 +630,17 @@
             <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
               <i class="fa-solid fa-building text-amber-400"></i> Aseguradora:
             </span>
-            <div class="relative w-64 sm:w-72" id="invComboboxContainer">
+            <div class="relative w-64 sm:w-80" id="invComboboxContainer">
               <button type="button" onclick="toggleCombobox('invCombobox')" id="invComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-amber-400 transition-all">
                 <span id="invComboboxLabel" class="truncate">...</span>
                 <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
               </button>
-              <div id="invComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-[100] p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+              <div id="invComboboxDropdown" class="hidden combobox-dropdown-menu top-full right-0 w-full sm:w-96 mt-1 bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs max-h-80 flex flex-col">
                 <div class="relative mb-2">
                   <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                   <input type="text" id="invComboboxInput" oninput="filterCombobox('invCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-normal">
                 </div>
-                <div id="invComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+                <div id="invComboboxList" class="overflow-y-auto max-h-64 divide-y divide-slate-800/40"></div>
               </div>
             </div>
           </div>
@@ -644,7 +657,7 @@
       </div>
 
       <!-- Scope Selector Pills (Aseguradora vs Tipo de Empresa vs Mercado Total) -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+      <div class="content-card-lower flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-amber-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
@@ -662,7 +675,7 @@
       </div>
 
       <!-- Financial KPI Cards (4 Cards) -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="content-card-lower grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
           <div class="text-[11px] font-semibold uppercase text-slate-400">TOTAL INVERSIONES (1.02)</div>
           <div id="invTotalVal" class="text-base font-bold font-mono text-amber-300 mt-1">...</div>
@@ -716,7 +729,7 @@
             </h3>
             <span id="invDonutSubtitle" class="text-xs text-slate-400 font-mono">...</span>
           </div>
-          <div id="investmentsPieChart" class="w-full h-72"></div>
+          <div id="investmentsDonutChart" class="w-full h-72"></div>
         </div>
       </div>
 
@@ -767,7 +780,7 @@
     <section id="tab-solvencia-ratios" class="hidden space-y-6">
       
       <!-- Company Selector Header in Tab 5 -->
-      <div class="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500 flex flex-wrap items-center justify-between gap-4 relative z-30 overflow-visible">
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-emerald-500 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-3">
             <h2 id="solvSelectedTitle" class="text-lg font-bold text-white">...</h2>
@@ -781,17 +794,17 @@
             <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
               <i class="fa-solid fa-building text-emerald-400"></i> Aseguradora:
             </span>
-            <div class="relative w-64 sm:w-72" id="solvComboboxContainer">
+            <div class="relative w-64 sm:w-80" id="solvComboboxContainer">
               <button type="button" onclick="toggleCombobox('solvCombobox')" id="solvComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-emerald-400 transition-all">
                 <span id="solvComboboxLabel" class="truncate">...</span>
                 <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
               </button>
-              <div id="solvComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-[100] p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+              <div id="solvComboboxDropdown" class="hidden combobox-dropdown-menu top-full right-0 w-full sm:w-96 mt-1 bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs max-h-80 flex flex-col">
                 <div class="relative mb-2">
                   <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                   <input type="text" id="solvComboboxInput" oninput="filterCombobox('solvCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-normal">
                 </div>
-                <div id="solvComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+                <div id="solvComboboxList" class="overflow-y-auto max-h-64 divide-y divide-slate-800/40"></div>
               </div>
             </div>
           </div>
@@ -808,7 +821,7 @@
       </div>
 
       <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa) -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+      <div class="content-card-lower flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-emerald-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
@@ -826,7 +839,7 @@
       </div>
 
       <!-- Solvency Cards (Agregadas por Alcance o Individuales) -->
-      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div class="content-card-lower grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
           <div class="text-[11px] font-semibold text-slate-400 uppercase">COBERTURA COMPROMISOS TÉCNICOS</div>
           <div id="solvCoberturaVal" class="text-xl font-bold font-mono text-white mt-1">...</div>
@@ -898,7 +911,7 @@
     <section id="tab-ratios-gestion" class="hidden space-y-6">
       
       <!-- Company Selector Header in Tab 6 -->
-      <div class="glass-card p-5 rounded-xl border-l-4 border-l-indigo-500 flex flex-wrap items-center justify-between gap-4 relative z-30 overflow-visible">
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-indigo-500 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-3">
             <h2 id="gestSelectedTitle" class="text-lg font-bold text-white">...</h2>
@@ -912,17 +925,17 @@
             <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
               <i class="fa-solid fa-building text-indigo-400"></i> Aseguradora:
             </span>
-            <div class="relative w-64 sm:w-72" id="gestComboboxContainer">
+            <div class="relative w-64 sm:w-80" id="gestComboboxContainer">
               <button type="button" onclick="toggleCombobox('gestCombobox')" id="gestComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-indigo-400 transition-all">
                 <span id="gestComboboxLabel" class="truncate">...</span>
                 <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
               </button>
-              <div id="gestComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-[100] p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+              <div id="gestComboboxDropdown" class="hidden combobox-dropdown-menu top-full right-0 w-full sm:w-96 mt-1 bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs max-h-80 flex flex-col">
                 <div class="relative mb-2">
                   <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                   <input type="text" id="gestComboboxInput" oninput="filterCombobox('gestCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-normal">
                 </div>
-                <div id="gestComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+                <div id="gestComboboxList" class="overflow-y-auto max-h-64 divide-y divide-slate-800/40"></div>
               </div>
             </div>
           </div>
@@ -939,7 +952,7 @@
       </div>
 
       <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa) -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+      <div class="content-card-lower flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-indigo-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
