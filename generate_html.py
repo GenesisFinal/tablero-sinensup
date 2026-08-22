@@ -592,44 +592,153 @@ def generate_html():
     <!-- TAB 4: INVERSIONES Y FINANZAS -->
     <!-- ======================================================== -->
     <section id="tab-inversiones-finanzas" class="hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-5 glass-card p-5 rounded-xl space-y-4">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-coins text-amber-400"></i> Métricas Financieras: <span id="invCiaName" class="text-brand-blue font-mono">...</span>
-          </h3>
-          
-          <div class="space-y-3 font-mono text-xs">
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-slate-400">Total Inversiones (1.02):</span>
-              <span id="invTotalVal" class="text-white font-bold text-sm">...</span>
-            </div>
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-slate-400">Resultado Financiero Neto:</span>
-              <span id="invResFinVal" class="text-white font-bold text-sm">...</span>
-            </div>
-            <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
-              <span class="text-slate-400">Rendimiento s/ Inversiones (ROI):</span>
-              <span id="invRoiVal" class="text-emerald-400 font-bold text-sm">...</span>
-            </div>
+      
+      <!-- Company Selector Header in Tab 4 -->
+      <div class="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 id="invSelectedTitle" class="text-lg font-bold text-white">...</h2>
+            <span id="invSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">...</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Análisis de Cartera de Inversiones (1.02) y Rendimiento Financiero SSN</p>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-building text-amber-400"></i> Aseguradora:
+            </span>
+            <select id="invCompanyDropdownSelect" onchange="onCompanyDropdownChange(this.value)"
+                    class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-amber-500 max-w-[240px] truncate"></select>
           </div>
 
-          <div class="mt-4">
-            <h4 class="text-xs font-semibold text-slate-300 uppercase mb-2">Desglose de Cartera (Nivel 3)</h4>
-            <div class="overflow-y-auto max-h-56">
-              <table class="w-full text-left text-xs font-mono">
-                <tbody id="investmentsListBody" class="divide-y divide-slate-800"></tbody>
-              </table>
-            </div>
+          <!-- Quick La Segunda Pills -->
+          <div class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
+            <span class="text-[10px] font-bold text-amber-300 mr-1">★ La Segunda:</span>
+            <button onclick="onCompanyDropdownChange('0317')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Seguros Generales">0317</button>
+            <button onclick="onCompanyDropdownChange('0618')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda ART">0618</button>
+            <button onclick="onCompanyDropdownChange('0117')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Personas">0117</button>
+            <button onclick="onCompanyDropdownChange('0436')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Retiro">0436</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scope Selector Pills (Aseguradora vs Tipo de Empresa vs Mercado Total) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-amber-400"></i> Alcance del Análisis:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setInvScope('cia')" id="invScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500 text-slate-950 font-bold transition-all shadow-md shadow-amber-500/20">🏢 Aseguradora Seleccionada</button>
+            <button onclick="setInvScope('market')" id="invScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setInvScope('Patrimoniales y Mixtas')" id="invScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
+            <button onclick="setInvScope('Riesgos del Trabajo (ART)')" id="invScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
+            <button onclick="setInvScope('Seguros de Personas')" id="invScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
+            <button onclick="setInvScope('Seguros de Retiro')" id="invScopeBtn-Seguros de Retiro" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏦 Seguros de Retiro</button>
+          </div>
+        </div>
+        <div class="text-xs text-slate-400">
+          Entidades analizadas: <span id="invEntitiesCount" class="font-mono font-bold text-white">1</span>
+        </div>
+      </div>
+
+      <!-- Financial KPI Cards (4 Cards) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
+          <div class="text-[11px] font-semibold uppercase text-slate-400">TOTAL INVERSIONES (1.02)</div>
+          <div id="invTotalVal" class="text-base font-bold font-mono text-amber-300 mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Cartera de Activos Financieros</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+          <div class="text-[11px] font-semibold uppercase text-slate-400">RESULTADO FINANCIERO NETO</div>
+          <div id="invResFinVal" class="text-base font-bold font-mono text-white mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Ganancias - Pérdidas Fin.</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
+          <div class="text-[11px] font-semibold uppercase text-slate-400">RENDIMIENTO FINANCIERO (ROI)</div>
+          <div id="invRoiVal" class="text-base font-bold font-mono text-brand-blue mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Res. Fin. / Inversiones</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
+          <div class="text-[11px] font-semibold uppercase text-slate-400">INVERSIONES / ACTIVO TOTAL</div>
+          <div id="invAssetShareVal" class="text-base font-bold font-mono text-purple-300 mt-1">...</div>
+          <div class="text-[10px] text-slate-400 mt-1">Densidad Financiera del Activo</div>
+        </div>
+      </div>
+
+      <!-- Detail Table & Donut Chart -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 glass-card p-5 rounded-xl space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-ol text-amber-400"></i> Desglose por Instrumento Financiero
+            </h3>
+            <span class="text-[10px] font-mono text-slate-400">Plan de Cuentas SSN (1.02)</span>
+          </div>
+          
+          <div class="overflow-y-auto max-h-72">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="text-slate-400 bg-slate-900 sticky top-0 border-b border-slate-700 text-[11px]">
+                <tr>
+                  <th class="py-2 px-2">Instrumento</th>
+                  <th class="py-2 px-2 text-right">Importe</th>
+                  <th class="py-2 px-2 text-right">% Cartera</th>
+                </tr>
+              </thead>
+              <tbody id="investmentsListBody" class="divide-y divide-slate-800"></tbody>
+            </table>
           </div>
         </div>
 
         <div class="lg:col-span-7 glass-card p-5 rounded-xl">
-          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-chart-pie text-emerald-400"></i> Composición del Portafolio de Inversiones
-          </h3>
-          <div id="investmentsPieChart" class="w-full h-80"></div>
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-emerald-400"></i> Composición y Asset Allocation del Portafolio
+            </h3>
+            <span id="invDonutSubtitle" class="text-xs text-slate-400 font-mono">...</span>
+          </div>
+          <div id="investmentsPieChart" class="w-full h-72"></div>
         </div>
       </div>
+
+      <!-- Top 20 Financial Rankings Section -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-ranking-star text-amber-400"></i> Rankings Financieros: Top 20 Aseguradoras
+            </h3>
+            <p class="text-xs text-slate-400">Selecciona el criterio de ordenamiento para explorar los líderes de mercado</p>
+          </div>
+
+          <!-- Ranking Metric Tabs -->
+          <div class="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs">
+            <button onclick="setInvTopMetric('activo')" id="invTopMetricBtn-activo" class="px-3 py-1 rounded bg-amber-500 text-slate-950 font-bold">🏛️ Mayor Activo</button>
+            <button onclick="setInvTopMetric('patrimonio_neto')" id="invTopMetricBtn-patrimonio_neto" class="px-3 py-1 rounded text-slate-400 hover:text-white font-semibold">⚖️ Mayor Patrimonio</button>
+            <button onclick="setInvTopMetric('resultado_financiero')" id="invTopMetricBtn-resultado_financiero" class="px-3 py-1 rounded text-slate-400 hover:text-white font-semibold">📈 Mayor Res. Financiero</button>
+            <button onclick="setInvTopMetric('inversiones')" id="invTopMetricBtn-inversiones" class="px-3 py-1 rounded text-slate-400 hover:text-white font-semibold">💰 Mayor Inversión (1.02)</button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-hidden">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/90 border-b border-slate-700 text-[11px]">
+              <tr>
+                <th class="py-2 px-2 text-center w-8">#</th>
+                <th class="py-2 px-2 whitespace-nowrap text-left w-48 max-w-[200px]">Razón Social</th>
+                <th class="py-2 px-2 text-center w-12">Tipo</th>
+                <th class="py-2.5 px-2 text-right font-bold text-amber-300">Total Inversiones</th>
+                <th class="py-2.5 px-2 text-right">Activo Total</th>
+                <th class="py-2.5 px-2 text-right">Patrimonio Neto</th>
+                <th class="py-2.5 px-2 text-right">Res. Financiero</th>
+                <th class="py-2.5 px-2 text-right">ROI (%)</th>
+                <th class="py-2.5 px-2 text-center w-14">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="invTopRankingTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
     <!-- ======================================================== -->
@@ -716,7 +825,9 @@ def generate_html():
       selectedSegment: 'Todos',
       selectedCompanyCode: '0436',
       highlightedCiaCode: null,
-      ramosScope: 'cia'
+      ramosScope: 'cia',
+      invScope: 'cia',
+      invTopMetric: 'activo'
     }};
 
     // Standardized Financial Notation:
@@ -833,7 +944,7 @@ def generate_html():
       }}
 
       buildSegmentPills();
-      buildCompanyDropdown();
+      buildCompanyDropdowns();
       buildScatterCompanySelect();
       setupSearchAutocomplete();
       renderAll();
@@ -863,18 +974,25 @@ def generate_html():
       }});
     }}
 
-    function buildCompanyDropdown() {{
+    function buildCompanyDropdowns() {{
       const data = window.DATA_SINENSUP;
-      const select = document.getElementById('companyDropdownSelect');
-      select.innerHTML = '';
+      const selects = [
+        document.getElementById('companyDropdownSelect'),
+        document.getElementById('invCompanyDropdownSelect')
+      ];
 
       const sorted = [...data.companies].sort((a, b) => a.razon_social.localeCompare(b.razon_social));
-      sorted.forEach(c => {{
-        const opt = document.createElement('option');
-        opt.value = c.cod_cia;
-        opt.innerText = `${{c.cod_cia}} - ${{c.razon_social}}`;
-        if (c.cod_cia === state.selectedCompanyCode) opt.selected = true;
-        select.appendChild(opt);
+      
+      selects.forEach(select => {{
+        if (!select) return;
+        select.innerHTML = '';
+        sorted.forEach(c => {{
+          const opt = document.createElement('option');
+          opt.value = c.cod_cia;
+          opt.innerText = `${{c.cod_cia}} - ${{c.razon_social}}`;
+          if (c.cod_cia === state.selectedCompanyCode) opt.selected = true;
+          select.appendChild(opt);
+        }});
       }});
     }}
 
@@ -949,14 +1067,30 @@ def generate_html():
       state.highlightedCiaCode = code;
       document.getElementById('globalCompanySearch').value = '';
       document.getElementById('searchResultsDropdown').classList.add('hidden');
-      document.getElementById('companyDropdownSelect').value = code;
+      
+      const cSel1 = document.getElementById('companyDropdownSelect');
+      if (cSel1) cSel1.value = code;
+      const cSel2 = document.getElementById('invCompanyDropdownSelect');
+      if (cSel2) cSel2.value = code;
+
       switchTab('ficha-compania');
     }}
 
     function onCompanyDropdownChange(code) {{
       state.selectedCompanyCode = code;
       state.highlightedCiaCode = code;
-      renderCompanyDetails();
+      
+      const cSel1 = document.getElementById('companyDropdownSelect');
+      if (cSel1) cSel1.value = code;
+      const cSel2 = document.getElementById('invCompanyDropdownSelect');
+      if (cSel2) cSel2.value = code;
+
+      // If in investments tab, switch scope back to company
+      if (state.currentTab === 'inversiones-finanzas') {{
+        setInvScope('cia');
+      }} else {{
+        renderAll();
+      }}
     }}
 
     function switchTab(tabId) {{
@@ -1521,45 +1655,216 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 4 RENDER: INVERSIONES
+    // TAB 4 RENDER: INVERSIONES Y FINANZAS (COMPAÑÍA, SEGMENTOS Y TOP 20)
     // ----------------------------------------------------
+    function setInvScope(scope) {{
+      state.invScope = scope;
+      
+      const scopes = ['cia', 'market', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'];
+      scopes.forEach(sc => {{
+        const btn = document.getElementById(`invScopeBtn-${{sc}}`);
+        if (btn) {{
+          if (state.invScope === sc) {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500 text-slate-950 font-bold transition-all shadow-md shadow-amber-500/20';
+          }} else {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all';
+          }}
+        }}
+      }});
+
+      renderInvestmentsTab();
+    }}
+
+    function setInvTopMetric(metric) {{
+      state.invTopMetric = metric;
+      const metrics = ['activo', 'patrimonio_neto', 'resultado_financiero', 'inversiones'];
+      metrics.forEach(m => {{
+        const btn = document.getElementById(`invTopMetricBtn-${{m}}`);
+        if (btn) {{
+          if (state.invTopMetric === m) {{
+            btn.className = 'px-3 py-1 rounded bg-amber-500 text-slate-950 font-bold';
+          }} else {{
+            btn.className = 'px-3 py-1 rounded text-slate-400 hover:text-white font-semibold';
+          }}
+        }}
+      }});
+      renderInvTopRankings();
+    }}
+
     function renderInvestmentsTab() {{
       const data = window.DATA_SINENSUP;
-      const c = data.companies_by_code[state.selectedCompanyCode];
-      if (!c) return;
+      if (!data) return;
 
-      document.getElementById('invCiaName').innerText = c.razon_social;
-      document.getElementById('invTotalVal').innerText = formatARS(c.inversiones);
-      document.getElementById('invResFinVal').innerText = formatARS(c.resultado_financiero);
-      document.getElementById('invRoiVal').innerText = formatPercent(c.roi_inversiones);
+      let title = '', badge = '', count = 1;
+      let totInv = 0, resFin = 0, totActivo = 0, invs = [];
 
-      const invs = c.investments || [];
+      if (state.invScope === 'cia') {{
+        const c = data.companies_by_code[state.selectedCompanyCode];
+        if (!c) return;
+        title = c.razon_social;
+        badge = c.tipo_entidad;
+        count = 1;
+        totInv = c.inversiones || 0;
+        resFin = c.resultado_financiero || 0;
+        totActivo = c.activo || 0;
+        invs = c.investments || [];
+      }} else if (state.invScope === 'market') {{
+        title = 'Mercado Asegurador Consolidado';
+        badge = 'Total Mercado';
+        count = data.total_entidades || 185;
+        data.companies.forEach(c => {{
+          totInv += c.inversiones || 0;
+          resFin += c.resultado_financiero || 0;
+          totActivo += c.activo || 0;
+        }});
+        invs = data.market_investments || [];
+      }} else {{
+        // Segment scope
+        const seg = state.invScope;
+        title = `Segmento: ${{seg}}`;
+        badge = seg;
+        const segCias = data.companies.filter(c => c.tipo_entidad === seg);
+        count = segCias.length;
+        segCias.forEach(c => {{
+          totInv += c.inversiones || 0;
+          resFin += c.resultado_financiero || 0;
+          totActivo += c.activo || 0;
+        }});
+        invs = (data.segment_investments && data.segment_investments[seg]) ? data.segment_investments[seg] : [];
+      }}
+
+      const roi = totInv > 0 ? (resFin / totInv * 100.0) : 0.0;
+      const share = totActivo > 0 ? (totInv / totActivo * 100.0) : 0.0;
+
+      // Update Tab 4 Header
+      document.getElementById('invSelectedTitle').innerText = title;
+      document.getElementById('invSelectedBadge').innerText = badge;
+      document.getElementById('invEntitiesCount').innerText = count;
+
+      // Update KPI Cards
+      document.getElementById('invTotalVal').innerText = formatARS(totInv);
+      document.getElementById('invResFinVal').innerText = formatARS(resFin);
+      document.getElementById('invResFinVal').className = `text-base font-bold font-mono mt-1 ${{resFin >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      
+      document.getElementById('invRoiVal').innerText = formatPercent(roi);
+      document.getElementById('invRoiVal').className = `text-base font-bold font-mono mt-1 ${{roi >= 0 ? 'text-brand-blue' : 'text-rose-400'}}`;
+      
+      document.getElementById('invAssetShareVal').innerText = formatPercent(share);
+
+      // Update Table
       const listBody = document.getElementById('investmentsListBody');
-      if (invs.length === 0) {{
-        listBody.innerHTML = '<tr><td class="p-3 text-slate-400">Sin desglose nivel 3</td></tr>';
+      if (!invs || invs.length === 0) {{
+        listBody.innerHTML = '<tr><td colspan="3" class="p-3 text-slate-400 text-center">Sin desglose informado para esta selección</td></tr>';
       }} else {{
         listBody.innerHTML = invs.map(item => `
-          <tr class="hover:bg-slate-800/40">
-            <td class="py-2 px-2 text-slate-300">${{item.desc_cuenta}}</td>
-            <td class="py-2 px-2 text-right text-white font-bold">${{formatARS(item.importe)}}</td>
-            <td class="py-2 px-2 text-right text-brand-blue">${{item.porcentaje}}%</td>
+          <tr class="hover:bg-slate-800/50">
+            <td class="py-1.5 px-2 text-slate-200 font-medium">${{item.desc_cuenta}}</td>
+            <td class="py-1.5 px-2 text-right text-white font-bold">${{formatARS(item.importe)}}</td>
+            <td class="py-1.5 px-2 text-right text-amber-300 font-bold">${{item.porcentaje}}%</td>
           </tr>
         `).join('');
       }}
 
-      Plotly.newPlot('investmentsPieChart', [{{
-        labels: invs.map(i => i.desc_cuenta),
-        values: invs.map(i => i.importe),
-        hole: 0.4,
-        type: 'pie',
-        textinfo: 'label+percent',
-        marker: {{ colors: ['#38BDF8', '#10B981', '#F59E0B', '#C084FC', '#FB923C', '#94A3B8'] }}
-      }}], {{
-        paper_bgcolor: 'transparent',
-        margin: {{ l: 20, r: 20, t: 20, b: 20 }},
-        showlegend: false,
-        font: {{ color: '#E2E8F0', size: 11 }}
-      }}, {{ responsive: true, displayModeBar: false }});
+      // Update Donut Chart
+      document.getElementById('invDonutSubtitle').innerText = `${{title}} (${{formatARS(totInv)}})`;
+      
+      if (!invs || invs.length === 0) {{
+        Plotly.newPlot('investmentsPieChart', [], {{
+          paper_bgcolor: 'transparent',
+          annotations: [{{ text: 'Sin datos de inversiones', showarrow: false, font: {{ color: '#94A3B8', size: 14 }} }}]
+        }}, {{ responsive: true, displayModeBar: false }});
+      }} else {{
+        const colors = ['#38BDF8', '#10B981', '#F59E0B', '#C084FC', '#FB923C', '#F43F5E', '#A855F7', '#64748B', '#06B6D4'];
+        Plotly.newPlot('investmentsPieChart', [{{
+          labels: invs.map(i => i.desc_cuenta),
+          values: invs.map(i => i.importe),
+          hole: 0.45,
+          type: 'pie',
+          textinfo: 'label+percent',
+          textposition: 'inside',
+          marker: {{ colors: colors }},
+          customdata: invs.map(i => formatARS(i.importe)),
+          hovertemplate: '<b>%{{label}}</b><br>Importe: <b>%{{customdata}}</b><br>Participación: <b>%{{percent}}</b><extra></extra>'
+        }}], {{
+          paper_bgcolor: 'transparent',
+          plot_bgcolor: 'transparent',
+          margin: {{ l: 15, r: 15, t: 15, b: 15 }},
+          showlegend: false,
+          font: {{ color: '#E2E8F0', size: 11, family: 'Sora' }}
+        }}, {{ responsive: true, displayModeBar: false }});
+      }}
+
+      renderInvTopRankings();
+    }}
+
+    function renderInvTopRankings() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.companies) return;
+
+      const metric = state.invTopMetric || 'activo';
+      const sorted = [...data.companies].sort((a, b) => (b[metric] || 0) - (a[metric] || 0));
+      const top20 = sorted.slice(0, 20);
+      const top20Codes = new Set(top20.map(c => c.cod_cia));
+
+      const isLaSegunda = c => ['0117', '0317', '0436', '0618'].includes(c.cod_cia) || c.razon_social.toUpperCase().includes('SEGUNDA');
+      const extraLaSegunda = sorted.filter(c => isLaSegunda(c) && !top20Codes.has(c.cod_cia));
+
+      let rowsHtml = top20.map((c, i) => {{
+        const isLS = isLaSegunda(c);
+        const isHL = state.selectedCompanyCode === c.cod_cia;
+        return `
+        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}')">
+          <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
+          <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">
+            ${{c.razon_social}}
+            ${{isLS ? '<span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+          </td>
+          <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold text-amber-300">${{formatARS(c.inversiones)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-200 font-bold">${{formatARS(c.activo)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.patrimonio_neto)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.roi_inversiones >= 0 ? 'text-brand-blue' : 'text-rose-400'}}">${{formatPercent(c.roi_inversiones)}}</td>
+          <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
+            <button onclick="onCompanyDropdownChange('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver</button>
+          </td>
+        </tr>
+      `}}).join('');
+
+      if (extraLaSegunda.length > 0) {{
+        rowsHtml += `
+        <tr class="bg-slate-900/95 border-y-2 border-amber-500/40">
+          <td colspan="9" class="py-1.5 px-2 text-[11px] font-bold text-amber-300">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400 text-xs"></i> Grupo Asegurador La Segunda (Benchmark / Fuera de Top 20)</span>
+              <span class="text-[9px] text-slate-400 font-normal">Fijadas permanentemente</span>
+            </div>
+          </td>
+        </tr>
+        ` + extraLaSegunda.map(c => {{
+          const rank = sorted.findIndex(x => x.cod_cia === c.cod_cia) + 1;
+          const isHL = state.selectedCompanyCode === c.cod_cia;
+          return `
+          <tr class="hover:bg-amber-500/15 ${{isHL ? 'bg-amber-500/25 border-l-4 border-l-amber-400 font-bold' : 'bg-amber-500/5 border-l-4 border-l-amber-400/80'}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}')">
+            <td class="py-1.5 px-2 text-center text-amber-300 font-mono font-bold">#${{rank}}</td>
+            <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">
+              ${{c.razon_social}}
+              <span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>
+            </td>
+            <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold text-amber-300">${{formatARS(c.inversiones)}}</td>
+            <td class="py-1.5 px-2 text-right text-slate-200 font-bold">${{formatARS(c.activo)}}</td>
+            <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.patrimonio_neto)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${{c.roi_inversiones >= 0 ? 'text-brand-blue' : 'text-rose-400'}}">${{formatPercent(c.roi_inversiones)}}</td>
+            <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
+              <button onclick="onCompanyDropdownChange('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver</button>
+            </td>
+          </tr>
+        `}}).join('');
+      }}
+
+      document.getElementById('invTopRankingTableBody').innerHTML = rowsHtml;
     }}
 
     // ----------------------------------------------------
