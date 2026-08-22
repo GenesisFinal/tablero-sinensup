@@ -149,6 +149,12 @@ def build_complete_dataset():
     # Segments list
     segments = sorted(df_summary['tipo_entidad'].unique().tolist())
 
+    # Market and Segment Investment Breakdowns
+    market_investments = get_company_investments_breakdown(df_raw)
+    segment_investments = {}
+    for seg in segments:
+        segment_investments[seg] = get_company_investments_breakdown(df_raw[df_raw['tipo_entidad'] == seg])
+
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
         "total_entidades": len(df_summary),
@@ -157,6 +163,8 @@ def build_complete_dataset():
         "macro_entidades": macro_entidades,
         "macro_productos": macro_productos,
         "market_subramos": market_subramos_list,
+        "market_investments": market_investments,
+        "segment_investments": segment_investments,
         "companies": list(companies_dict.values()),
         "companies_by_code": companies_dict
     }
