@@ -1535,13 +1535,17 @@ def generate_html():
                 <th class="py-2.5 px-2 text-right">Siniestros</th>
                 <th class="py-2.5 px-2 text-right w-20">Loss Ratio</th>
                 <th class="py-2.5 px-2 text-right font-bold">Res. Técnico</th>
-                <th class="py-2.5 px-2 text-right font-bold">Res. Financiero</th>
+                <th class="py-2.5 px-2 text-right font-bold text-amber-300" title="Resultado Financiero Global de la Entidad o Grupo según Balance General (No prorrateado por ramo)">Res. Financiero *</th>
                 <th class="py-2.5 px-2 text-center w-16">Acción</th>
               </tr>
             </thead>
             <tbody id="rrTableBody" class="divide-y divide-slate-800/60 font-mono text-[11px]"></tbody>
           </table>
         </div>
+        <p class="text-[10px] text-slate-400 mt-2.5 flex items-center gap-1.5 font-sans">
+          <i class="fa-solid fa-circle-info text-amber-400"></i> 
+          <span><b>* Nota sobre Resultado Financiero:</b> Refleja el Resultado Financiero Global del Balance General de la aseguradora o grupo económico (la SSN no distribuye las rentas de títulos, inversiones ni el RECPAM por subramo).</span>
+        </p>
       </div>
 
     <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador (Universal) -->
@@ -3313,7 +3317,7 @@ def generate_html():
             const c = ciasByCode[cod_cia] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
             const resTec = totIngTec - totEgrTec;
-            const resFin = totIngFin - totEgrFin;
+            const resFin = (c.resultado_financiero !== undefined) ? c.resultado_financiero : (totIngFin - totEgrFin);
             ranking.push({{
               id: cod_cia,
               code: cod_cia,
@@ -3329,7 +3333,7 @@ def generate_html():
         }});
       }} else {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
+          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
@@ -3337,25 +3341,27 @@ def generate_html():
               totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
               totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
               totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
-              totIngFin += (d['5.02.00.00.00.00.00.00'] || 0.0);
-              totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
             }}
           }});
           if (totEmit > 0) {{
             const g = groupsById[gid] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
             const resTec = totIngTec - totEgrTec;
-            const resFin = totIngFin - totEgrFin;
 
-            // Compute active member companies in the selected subramos
+            // Compute active member companies and aggregate their general financial result
             let activeCiasCount = 0;
+            let activeResFin = 0;
             const members = g.members || [];
             members.forEach(m => {{
               const mCode = m.cod_cia;
               if (ciasSub[mCode]) {{
                 const subM = ciasSub[mCode];
                 const emitM = targetSubs.reduce((acc, s) => acc + (subM[s] ? (subM[s]['5.01.01.00.00.00.00.00'] || 0.0) : 0.0), 0.0);
-                if (emitM > 0) activeCiasCount++;
+                if (emitM > 0) {{
+                  activeCiasCount++;
+                  const mCia = ciasByCode[mCode] || {{}};
+                  activeResFin += (mCia.resultado_financiero || 0);
+                }}
               }}
             }});
             const tipoLabel = (activeCiasCount === members.length) 
@@ -3371,7 +3377,7 @@ def generate_html():
               siniestros: totSin,
               loss_ratio: lossRatio,
               resultado_tecnico: resTec,
-              resultado_financiero: resFin
+              resultado_financiero: activeResFin
             }});
           }}
         }});
