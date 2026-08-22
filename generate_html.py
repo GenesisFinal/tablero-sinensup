@@ -331,20 +331,23 @@ def generate_html():
             <p class="text-xs text-slate-400">Selecciona o haz clic en cualquier burbuja para resaltarla con su ficha y métricas</p>
           </div>
 
-          <!-- Highlight Company Selector & Zoom Controls -->
-          <div class="flex flex-wrap items-center gap-2">
-            <div class="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-1 rounded-lg border border-slate-700">
-              <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-bullseye text-brand-red"></i> Resaltar:
-              </span>
-              <select id="scatterCompanySelect" onchange="highlightScatterCompany(this.value)"
-                      class="bg-slate-900 text-xs text-amber-300 font-semibold focus:outline-none max-w-[210px] truncate border-0">
-                <option value="">-- Seleccionar aseguradora --</option>
-              </select>
-              <button id="clearHighlightBtn" onclick="highlightScatterCompany('')" class="hidden text-xs text-slate-400 hover:text-white px-1" title="Quitar selección">
-                <i class="fa-solid fa-xmark"></i>
+            <!-- Searchable Highlight Combobox -->
+            <div class="relative w-56 sm:w-64" id="scatterComboboxContainer">
+              <button type="button" onclick="toggleCombobox('scatterCombobox')" id="scatterComboboxBtn" class="w-full flex items-center justify-between px-2.5 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs text-amber-300 font-semibold focus:outline-none hover:border-amber-400 transition-all">
+                <span id="scatterComboboxLabel" class="truncate">🔍 Resaltar aseguradora...</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[9px] ml-1.5 flex-shrink-0"></i>
               </button>
+              <div id="scatterComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+                <div class="relative mb-2">
+                  <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                  <input type="text" id="scatterComboboxInput" oninput="filterCombobox('scatterCombobox', this.value)" placeholder="Tipea nombre o código..." class="w-full pl-7 pr-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-normal">
+                </div>
+                <div id="scatterComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+              </div>
             </div>
+            <button id="clearHighlightBtn" onclick="highlightScatterCompany('')" class="hidden px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors" title="Quitar resaltado">
+              <i class="fa-solid fa-xmark text-rose-400"></i>
+            </button>
 
             <!-- Quick La Segunda Pills -->
             <div class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
@@ -477,8 +480,19 @@ def generate_html():
         </div>
         
         <div class="flex items-center gap-3">
-          <select id="companyDropdownSelect" onchange="onCompanyDropdownChange(this.value)" 
-                  class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-brand-red"></select>
+          <div class="relative w-64 sm:w-80" id="ciaComboboxContainer">
+            <button type="button" onclick="toggleCombobox('ciaCombobox')" id="ciaComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-brand-red transition-all">
+              <span id="ciaComboboxLabel" class="truncate">...</span>
+              <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
+            </button>
+            <div id="ciaComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+              <div class="relative mb-2">
+                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="ciaComboboxInput" oninput="filterCombobox('ciaCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-red font-normal">
+              </div>
+              <div id="ciaComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -611,8 +625,19 @@ def generate_html():
             <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
               <i class="fa-solid fa-building text-amber-400"></i> Aseguradora:
             </span>
-            <select id="invCompanyDropdownSelect" onchange="onCompanyDropdownChange(this.value)"
-                    class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-amber-500 max-w-[240px] truncate"></select>
+            <div class="relative w-64 sm:w-72" id="invComboboxContainer">
+              <button type="button" onclick="toggleCombobox('invCombobox')" id="invComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-amber-400 transition-all">
+                <span id="invComboboxLabel" class="truncate">...</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
+              </button>
+              <div id="invComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+                <div class="relative mb-2">
+                  <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                  <input type="text" id="invComboboxInput" oninput="filterCombobox('invCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-normal">
+                </div>
+                <div id="invComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+              </div>
+            </div>
           </div>
 
           <!-- Quick La Segunda Pills -->
@@ -764,8 +789,19 @@ def generate_html():
             <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
               <i class="fa-solid fa-building text-emerald-400"></i> Aseguradora:
             </span>
-            <select id="solvCompanyDropdownSelect" onchange="onCompanyDropdownChange(this.value)"
-                    class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-emerald-500 max-w-[240px] truncate"></select>
+            <div class="relative w-64 sm:w-72" id="solvComboboxContainer">
+              <button type="button" onclick="toggleCombobox('solvCombobox')" id="solvComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-emerald-400 transition-all">
+                <span id="solvComboboxLabel" class="truncate">...</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
+              </button>
+              <div id="solvComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+                <div class="relative mb-2">
+                  <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                  <input type="text" id="solvComboboxInput" oninput="filterCombobox('solvCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-normal">
+                </div>
+                <div id="solvComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+              </div>
+            </div>
           </div>
 
           <!-- Quick La Segunda Pills -->
@@ -884,8 +920,19 @@ def generate_html():
             <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
               <i class="fa-solid fa-building text-indigo-400"></i> Aseguradora:
             </span>
-            <select id="gestCompanyDropdownSelect" onchange="onCompanyDropdownChange(this.value)"
-                    class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-indigo-500 max-w-[240px] truncate"></select>
+            <div class="relative w-64 sm:w-72" id="gestComboboxContainer">
+              <button type="button" onclick="toggleCombobox('gestCombobox')" id="gestComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-indigo-400 transition-all">
+                <span id="gestComboboxLabel" class="truncate">...</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
+              </button>
+              <div id="gestComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
+                <div class="relative mb-2">
+                  <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                  <input type="text" id="gestComboboxInput" oninput="filterCombobox('gestCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-normal">
+                </div>
+                <div id="gestComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
+              </div>
+            </div>
           </div>
 
           <!-- Quick La Segunda Pills -->
@@ -1397,8 +1444,7 @@ def generate_html():
       }}
 
       buildSegmentPills();
-      buildCompanyDropdowns();
-      buildScatterCompanySelect();
+      updateAllComboboxLabels();
       setupSearchAutocomplete();
       renderAll();
     }}
@@ -1406,7 +1452,7 @@ def generate_html():
     function setSegmentFilter(seg) {{
       state.selectedSegment = seg;
       buildSegmentPills();
-      buildScatterCompanySelect();
+      updateAllComboboxLabels();
       renderAll();
     }}
 
@@ -1427,50 +1473,119 @@ def generate_html():
       }});
     }}
 
-    function buildCompanyDropdowns() {{
-      const data = window.DATA_SINENSUP;
-      const selects = [
-        document.getElementById('companyDropdownSelect'),
-        document.getElementById('invCompanyDropdownSelect'),
-        document.getElementById('solvCompanyDropdownSelect'),
-        document.getElementById('gestCompanyDropdownSelect')
-      ];
+    // ========================================================
+    // UNIVERSAL SEARCHABLE COMBOBOX CONTROLLER
+    // ========================================================
+    const COMBOBOX_IDS = ['scatterCombobox', 'ciaCombobox', 'invCombobox', 'solvCombobox', 'gestCombobox'];
 
-      const sorted = [...data.companies].sort((a, b) => a.razon_social.localeCompare(b.razon_social));
+    function toggleCombobox(idPrefix) {{
+      const dropdown = document.getElementById(`${{idPrefix}}Dropdown`);
+      if (!dropdown) return;
+      const isClosed = dropdown.classList.contains('hidden');
       
-      selects.forEach(select => {{
-        if (!select) return;
-        select.innerHTML = '';
-        sorted.forEach(c => {{
-          const opt = document.createElement('option');
-          opt.value = c.cod_cia;
-          opt.innerText = `${{c.cod_cia}} - ${{c.razon_social}}`;
-          if (c.cod_cia === state.selectedCompanyCode) opt.selected = true;
-          select.appendChild(opt);
-        }});
+      // Close all other dropdowns
+      COMBOBOX_IDS.forEach(id => {{
+        const d = document.getElementById(`${{id}}Dropdown`);
+        if (d) d.classList.add('hidden');
+      }});
+
+      if (isClosed) {{
+        dropdown.classList.remove('hidden');
+        const input = document.getElementById(`${{idPrefix}}Input`);
+        if (input) {{
+          input.value = '';
+          setTimeout(() => input.focus(), 50);
+        }}
+        populateComboboxList(idPrefix, '');
+      }}
+    }}
+
+    function closeAllComboboxes() {{
+      COMBOBOX_IDS.forEach(id => {{
+        const d = document.getElementById(`${{id}}Dropdown`);
+        if (d) d.classList.add('hidden');
       }});
     }}
 
-    function buildScatterCompanySelect() {{
-      const select = document.getElementById('scatterCompanySelect');
-      if (!select) return;
-      select.innerHTML = '<option value="">-- Seleccionar aseguradora --</option>';
+    function filterCombobox(idPrefix, query) {{
+      populateComboboxList(idPrefix, query);
+    }}
 
-      const list = getFilteredCompanies();
-      const sorted = [...list].sort((a, b) => a.razon_social.localeCompare(b.razon_social));
-      sorted.forEach(c => {{
-        const opt = document.createElement('option');
-        opt.value = c.cod_cia;
-        opt.innerText = `${{c.cod_cia}} - ${{c.razon_social}}`;
-        if (c.cod_cia === state.highlightedCiaCode) opt.selected = true;
-        select.appendChild(opt);
+    function populateComboboxList(idPrefix, query) {{
+      const listEl = document.getElementById(`${{idPrefix}}List`);
+      if (!listEl) return;
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.companies) return;
+
+      const q = (query || '').toLowerCase().trim();
+      let sourceList = data.companies;
+      if (idPrefix === 'scatterCombobox' && state.selectedSegment !== 'Todos') {{
+        sourceList = getFilteredCompanies();
+      }}
+
+      const filtered = sourceList.filter(c => {{
+        if (!q) return true;
+        return c.razon_social.toLowerCase().includes(q) || c.cod_cia.includes(q);
       }});
+
+      if (filtered.length === 0) {{
+        listEl.innerHTML = '<div class="p-3 text-slate-500 text-center text-xs">No se encontraron coincidencias</div>';
+        return;
+      }}
+
+      listEl.innerHTML = filtered.map(c => {{
+        const isSelected = (idPrefix === 'scatterCombobox' && state.highlightedCiaCode === c.cod_cia) ||
+                           (idPrefix !== 'scatterCombobox' && state.selectedCompanyCode === c.cod_cia);
+        return `
+          <div onclick="onComboboxSelect('${{idPrefix}}', '${{c.cod_cia}}')" 
+               class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-slate-800/80 font-bold text-white' : 'text-slate-300'}}">
+            <div class="truncate flex items-center gap-1.5">
+              <span class="font-mono text-[10px] text-slate-400 font-bold">${{c.cod_cia}}</span>
+              <span class="truncate font-semibold text-xs text-white">${{c.razon_social}}</span>
+            </div>
+            <div class="flex-shrink-0">
+              ${{getTipoBadge(c.tipo_entidad)}}
+            </div>
+          </div>
+        `;
+      }}).join('');
+    }}
+
+    function onComboboxSelect(idPrefix, code) {{
+      closeAllComboboxes();
+      if (idPrefix === 'scatterCombobox') {{
+        highlightScatterCompany(code);
+      }} else {{
+        onCompanyDropdownChange(code);
+      }}
+    }}
+
+    function updateAllComboboxLabels() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.companies_by_code) return;
+
+      const current = data.companies_by_code[state.selectedCompanyCode];
+      const currentLabel = current ? `${{current.cod_cia}} - ${{current.razon_social}}` : 'Seleccionar aseguradora...';
+
+      ['ciaComboboxLabel', 'invComboboxLabel', 'solvComboboxLabel', 'gestComboboxLabel'].forEach(id => {{
+        const el = document.getElementById(id);
+        if (el) el.innerText = currentLabel;
+      }});
+
+      const scatterLabelEl = document.getElementById('scatterComboboxLabel');
+      if (scatterLabelEl) {{
+        if (state.highlightedCiaCode && data.companies_by_code[state.highlightedCiaCode]) {{
+          const hl = data.companies_by_code[state.highlightedCiaCode];
+          scatterLabelEl.innerText = `${{hl.cod_cia}} - ${{hl.razon_social}}`;
+        }} else {{
+          scatterLabelEl.innerText = '🔍 Resaltar aseguradora...';
+        }}
+      }}
     }}
 
     function highlightScatterCompany(code) {{
       state.highlightedCiaCode = code || null;
-      const select = document.getElementById('scatterCompanySelect');
-      if (select) select.value = code || '';
+      updateAllComboboxLabels();
       
       const clearBtn = document.getElementById('clearHighlightBtn');
       if (clearBtn) {{
@@ -1514,6 +1629,14 @@ def generate_html():
         if (!input.contains(e.target) && !dropdown.contains(e.target)) {{
           dropdown.classList.add('hidden');
         }}
+        
+        COMBOBOX_IDS.forEach(id => {{
+          const container = document.getElementById(`${{id}}Container`);
+          if (container && !container.contains(e.target)) {{
+            const d = document.getElementById(`${{id}}Dropdown`);
+            if (d) d.classList.add('hidden');
+          }}
+        }});
       }});
     }}
 
@@ -1522,23 +1645,14 @@ def generate_html():
       state.highlightedCiaCode = code;
       document.getElementById('globalCompanySearch').value = '';
       document.getElementById('searchResultsDropdown').classList.add('hidden');
-      
-      ['companyDropdownSelect', 'invCompanyDropdownSelect', 'solvCompanyDropdownSelect', 'gestCompanyDropdownSelect'].forEach(id => {{
-        const el = document.getElementById(id);
-        if (el) el.value = code;
-      }});
-
+      updateAllComboboxLabels();
       switchTab('ficha-compania');
     }}
 
     function onCompanyDropdownChange(code) {{
       state.selectedCompanyCode = code;
       state.highlightedCiaCode = code;
-      
-      ['companyDropdownSelect', 'invCompanyDropdownSelect', 'solvCompanyDropdownSelect', 'gestCompanyDropdownSelect'].forEach(id => {{
-        const el = document.getElementById(id);
-        if (el) el.value = code;
-      }});
+      updateAllComboboxLabels();
 
       // Auto switch scope to cia when selecting specific company
       if (state.currentTab === 'inversiones-finanzas') {{
