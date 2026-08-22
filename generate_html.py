@@ -167,6 +167,9 @@ def generate_html():
       <button onclick="switchTab('ratios-gestion')" id="tabBtn-ratios-gestion" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-gauge-high"></i> 6. Ratios de Gestión
       </button>
+      <button onclick="switchTab('balances')" id="tabBtn-balances" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 7. Balances Contables
+      </button>
     </div>
   </header>
 
@@ -1246,8 +1249,146 @@ def generate_html():
 
     </section>
 
-  </main>
+    <!-- ======================================================== -->
+    <!-- TAB 7: BALANCES CONTABLES SSN (ÁRBOL MULTINIVEL) -->
+    <!-- ======================================================== -->
+    <section id="tab-balances" class="hidden space-y-6">
+      
+      <!-- Company / Scope Selector Header -->
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-emerald-500 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 id="balSelectedTitle" class="text-lg font-bold text-white">Mercado Total Consolidado</h2>
+            <span id="balSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">185 Cías</span>
+          </div>
+          <p id="balSelectedSubtitle" class="text-xs text-slate-400 mt-1">Plan de Cuentas Oficial SSN • Apertura Jerárquica Multinivel por Cuentas e Importes</p>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-building text-emerald-400"></i> Aseguradora:
+            </span>
+            <div class="relative w-64 sm:w-80" id="balComboboxContainer">
+              <button type="button" onclick="toggleCombobox('balCombobox')" id="balComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-emerald-400 transition-all">
+                <span id="balComboboxLabel" class="truncate">Seleccionar aseguradora...</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
+              </button>
+              <div id="balComboboxDropdown" class="hidden combobox-dropdown-menu top-full right-0 w-full sm:w-96 mt-1 bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs max-h-80 flex flex-col">
+                <div class="relative mb-2">
+                  <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                  <input type="text" id="balComboboxInput" oninput="filterCombobox('balCombobox', this.value)" placeholder="Escribe para buscar aseguradora..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 font-normal">
+                </div>
+                <div id="balComboboxList" class="overflow-y-auto max-h-64 divide-y divide-slate-800/40"></div>
+              </div>
+            </div>
+          </div>
 
+          <!-- Quick La Segunda Pills -->
+          <div class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
+            <span class="text-[10px] font-bold text-amber-300 mr-1">★ La Segunda:</span>
+            <button onclick="onCompanyDropdownChange('0317')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Seguros Generales">0317</button>
+            <button onclick="onCompanyDropdownChange('0618')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda ART">0618</button>
+            <button onclick="onCompanyDropdownChange('0117')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Personas">0117</button>
+            <button onclick="onCompanyDropdownChange('0436')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Retiro">0436</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa) -->
+      <div class="content-card-lower flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-emerald-400"></i> Alcance del Balance:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setBalScope('market')" id="balScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setBalScope('Patrimoniales y Mixtas')" id="balScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
+            <button onclick="setBalScope('Riesgos del Trabajo (ART)')" id="balScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
+            <button onclick="setBalScope('Seguros de Personas')" id="balScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
+            <button onclick="setBalScope('Seguros de Retiro')" id="balScopeBtn-Seguros de Retiro" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏦 Seguros de Retiro</button>
+            <button onclick="setBalScope('cia')" id="balScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏢 Empresa Seleccionada</button>
+          </div>
+        </div>
+        <div class="text-xs text-slate-400">
+          Entidades consolidadas: <span id="balEntitiesCount" class="font-mono font-bold text-white">185</span>
+        </div>
+      </div>
+
+      <!-- Statement Selector Switch (5 Tabs: Patrimonial, EDR, Estructura Tec, Estructura Fin, Tec por Ramo) -->
+      <div class="content-card-lower glass-card p-3 rounded-xl flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-book-open text-amber-400"></i> Estado Contable:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setBalStatement('patrimonial')" id="balStmtBtn-patrimonial" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20">🏛️ Estado Patrimonial</button>
+            <button onclick="setBalStatement('edr')" id="balStmtBtn-edr" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">📈 Estado de Resultados (EDR)</button>
+            <button onclick="setBalStatement('tec')" id="balStmtBtn-tec" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">⚡ Estructura Técnica</button>
+            <button onclick="setBalStatement('fin')" id="balStmtBtn-fin" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">💰 Estructura Financiera</button>
+            <button onclick="setBalStatement('ramo')" id="balStmtBtn-ramo" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">📦 Estructura Técnica por Ramo</button>
+          </div>
+        </div>
+
+        <!-- Subramo Dropdown (only visible when 'ramo' is active) -->
+        <div id="balSubramoContainer" class="hidden flex items-center gap-2">
+          <span class="text-xs text-amber-300 font-semibold"><i class="fa-solid fa-tag"></i> Subramo:</span>
+          <select id="balSubramoSelect" onchange="setBalSubramo(this.value)" class="px-3 py-1.5 bg-slate-900 border border-amber-500/50 rounded-lg text-xs text-amber-200 font-semibold focus:outline-none max-w-[260px] truncate"></select>
+        </div>
+      </div>
+
+      <!-- Balance Summary KPI Banner -->
+      <div id="balKpiBanner" class="content-card-lower grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <!-- Dynamically populated according to statement type -->
+      </div>
+
+      <!-- Interactive Tree Action Bar (Global Controls & Account Search) -->
+      <div class="content-card-lower glass-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-3 border border-slate-800">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-folder-tree text-brand-blue"></i> Controles del Árbol:</span>
+          <button onclick="expandAllBalNodes()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-plus text-emerald-400"></i> Expandir Todo
+          </button>
+          <button onclick="collapseBalToLevel(3)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-layer-group text-amber-400"></i> Colapsar a Rubros (Nivel 2)
+          </button>
+          <button onclick="collapseBalToLevel(2)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-minus text-rose-400"></i> Colapsar a Capítulos (Nivel 1)
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Search within balance -->
+          <div class="relative w-56 sm:w-72">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="balAccountSearchInput" oninput="filterBalTree(this.value)" placeholder="Buscar cuenta o código..." class="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-blue font-normal">
+          </div>
+
+          <!-- Export button -->
+          <button onclick="exportBalanceCSV()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20">
+            <i class="fa-solid fa-file-excel"></i> Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Balance Hierarchical Tree Table -->
+      <div class="content-card-lower glass-card p-5 rounded-xl w-full">
+        <div class="w-full overflow-x-auto max-h-[700px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px] font-mono">
+              <tr>
+                <th class="py-2.5 px-3 text-center w-12">Abrir</th>
+                <th class="py-2.5 px-3 text-left w-48 font-mono">Código de Cuenta</th>
+                <th class="py-2.5 px-3 text-left">Denominación / Rubro Contable SSN</th>
+                <th class="py-2.5 px-3 text-right font-bold text-white">Saldo ($ ARS)</th>
+                <th class="py-2.5 px-3 text-right w-28">% Capítulo</th>
+                <th class="py-2.5 px-3 text-center w-16">Nivel</th>
+              </tr>
+            </thead>
+            <tbody id="balanceTreeTableBody" class="divide-y divide-slate-800/60 font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
   <!-- FOOTER -->
   <footer class="bg-slate-950 border-t border-slate-800/80 py-4 mt-auto">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
@@ -1279,7 +1420,22 @@ def generate_html():
       solvScope: 'Todos',
       solvSortMetric: 'cobertura_reservas',
       gestScope: 'cia',
-      gestFilterMode: 'all'
+      gestFilterMode: 'all',
+      balScope: 'market',
+      balStatement: 'patrimonial',
+      balSubramo: '1.030.01',
+      balSearchQuery: '',
+      balExpandedNodes: new Set([
+        '1.00.00.00.00.00.00.00', '2.00.00.00.00.00.00.00', '3.00.00.00.00.00.00.00',
+        '4.00.00.00.00.00.00.00', '5.00.00.00.00.00.00.00',
+        '1.01.00.00.00.00.00.00', '1.02.00.00.00.00.00.00', '1.03.00.00.00.00.00.00',
+        '1.04.00.00.00.00.00.00', '1.05.00.00.00.00.00.00', '1.06.00.00.00.00.00.00',
+        '2.01.00.00.00.00.00.00', '2.02.00.00.00.00.00.00', '2.03.00.00.00.00.00.00',
+        '3.01.00.00.00.00.00.00', '3.02.00.00.00.00.00.00', '3.03.00.00.00.00.00.00',
+        '3.04.00.00.00.00.00.00', '3.05.00.00.00.00.00.00',
+        '4.01.00.00.00.00.00.00', '4.02.00.00.00.00.00.00',
+        '5.01.00.00.00.00.00.00', '5.02.00.00.00.00.00.00'
+      ])
     }};
 
     // Standardized Financial Notation:
@@ -1337,24 +1493,24 @@ def generate_html():
         else if (val <= 108.0) {{ status = 'yellow'; label = 'Tolerancia'; }}
         else {{ status = 'red'; label = 'Pérdida'; }}
       }} else if (metric === 'loss_ratio') {{
-        if (val <= 65.0) {{ status = 'green'; label = 'Controlado'; }}
-        else if (val <= 75.0) {{ status = 'yellow'; label = 'Atención'; }}
-        else {{ status = 'red'; label = 'Elevado'; }}
+        if (val <= 65.0) {{ status = 'green'; label = 'Baja'; }}
+        else if (val <= 75.0) {{ status = 'yellow'; label = 'Normal'; }}
+        else {{ status = 'red'; label = 'Elevada'; }}
       }} else if (metric === 'comm_ratio') {{
-        if (val <= 20.0) {{ status = 'green'; label = 'Eficiente'; }}
-        else if (val <= 28.0) {{ status = 'yellow'; label = 'Moderado'; }}
+        if (val <= 18.0) {{ status = 'green'; label = 'Eficiente'; }}
+        else if (val <= 25.0) {{ status = 'yellow'; label = 'Medio'; }}
         else {{ status = 'red'; label = 'Alto'; }}
       }} else if (metric === 'exp_ratio') {{
-        if (val <= 15.0) {{ status = 'green'; label = 'Ligera'; }}
-        else if (val <= 22.0) {{ status = 'yellow'; label = 'Media'; }}
-        else {{ status = 'red'; label = 'Pesada'; }}
+        if (val <= 18.0) {{ status = 'green'; label = 'Controlado'; }}
+        else if (val <= 25.0) {{ status = 'yellow'; label = 'Moderado'; }}
+        else {{ status = 'red'; label = 'Excesivo'; }}
       }} else if (metric === 'retencion_ratio') {{
         if (val >= 65.0 && val <= 90.0) {{ status = 'green'; label = 'Equilibrada'; }}
         else if (val >= 50.0 && val <= 95.0) {{ status = 'yellow'; label = 'Atención'; }}
         else {{ status = 'red'; label = 'Desbalance'; }}
       }} else if (metric === 'roi_inversiones') {{
-        if (val >= 0.0) {{ status = 'green'; label = 'Positivo'; }}
-        else if (val >= -5.0) {{ status = 'yellow'; label = 'Neutro'; }}
+        if (val >= 3.0) {{ status = 'green'; label = 'Rentable'; }}
+        else if (val >= 0.0) {{ status = 'yellow'; label = 'Neutro'; }}
         else {{ status = 'red'; label = 'Negativo'; }}
       }} else if (metric === 'densidad_inversiones') {{
         if (val >= 65.0) {{ status = 'green'; label = 'Alta'; }}
@@ -1445,6 +1601,9 @@ def generate_html():
         document.getElementById('prodRetiroDetails').innerText = `${{mp.retiro.participacion}}% Mercado • Sin: ${{mp.retiro.siniestralidad}}% (Siniestros: ${{formatARS(mp.retiro.siniestros)}})`;
       }}
 
+      // Populate Balances subramos select
+      initBalancesSubramos();
+
       // Pick default high profile company (0436 or 0117 or 0317)
       if (data.companies_by_code['0436']) {{
         state.selectedCompanyCode = '0436';
@@ -1460,6 +1619,19 @@ def generate_html():
       updateAllComboboxLabels();
       setupSearchAutocomplete();
       renderAll();
+    }}
+
+    function initBalancesSubramos() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.subramos_catalog) return;
+      const select = document.getElementById('balSubramoSelect');
+      if (!select) return;
+      select.innerHTML = data.subramos_catalog.map(s => `
+        <option value="${{s.cod}}">${{s.cod}} - ${{s.desc}}</option>
+      `).join('');
+      if (data.subramos_catalog.length > 0) {{
+        state.balSubramo = data.subramos_catalog[0].cod;
+      }}
     }}
 
     function setSegmentFilter(seg) {{
@@ -1489,7 +1661,7 @@ def generate_html():
     // ========================================================
     // UNIVERSAL SEARCHABLE COMBOBOX CONTROLLER
     // ========================================================
-    const COMBOBOX_IDS = ['scatterCombobox', 'ciaCombobox', 'invCombobox', 'solvCombobox', 'gestCombobox'];
+    const COMBOBOX_IDS = ['scatterCombobox', 'ciaCombobox', 'invCombobox', 'solvCombobox', 'gestCombobox', 'balCombobox'];
 
     function toggleCombobox(idPrefix) {{
       const dropdown = document.getElementById(`${{idPrefix}}Dropdown`);
@@ -1580,7 +1752,7 @@ def generate_html():
       const current = data.companies_by_code[state.selectedCompanyCode];
       const currentLabel = current ? `${{current.cod_cia}} - ${{current.razon_social}}` : 'Seleccionar aseguradora...';
 
-      ['ciaComboboxLabel', 'invComboboxLabel', 'solvComboboxLabel', 'gestComboboxLabel'].forEach(id => {{
+      ['ciaComboboxLabel', 'invComboboxLabel', 'solvComboboxLabel', 'gestComboboxLabel', 'balComboboxLabel'].forEach(id => {{
         const el = document.getElementById(id);
         if (el) el.innerText = currentLabel;
       }});
@@ -1606,32 +1778,38 @@ def generate_html():
         else clearBtn.classList.add('hidden');
       }}
 
-      renderMarketScatterPlot(getFilteredCompanies());
+      if (state.currentTab === 'vision-mercado') {{
+        renderScatterPlot();
+      }}
     }}
 
     function setupSearchAutocomplete() {{
       const input = document.getElementById('globalCompanySearch');
       const dropdown = document.getElementById('searchResultsDropdown');
+      const data = window.DATA_SINENSUP;
+      if (!input || !dropdown || !data) return;
 
       input.addEventListener('input', (e) => {{
         const q = e.target.value.toLowerCase().trim();
-        if (q.length < 2) {{
+        if (!q) {{
           dropdown.classList.add('hidden');
           return;
         }}
 
-        const data = window.DATA_SINENSUP;
         const matches = data.companies.filter(c => 
           c.razon_social.toLowerCase().includes(q) || c.cod_cia.includes(q)
         ).slice(0, 10);
 
         if (matches.length === 0) {{
-          dropdown.innerHTML = '<div class="p-3 text-slate-400">No se encontraron resultados</div>';
+          dropdown.innerHTML = '<div class="p-3 text-slate-500 text-center">No se encontraron resultados</div>';
         }} else {{
           dropdown.innerHTML = matches.map(c => `
-            <div onclick="selectCompany('${{c.cod_cia}}')" class="p-2.5 hover:bg-slate-800 cursor-pointer flex justify-between items-center border-b border-slate-800/50">
-              <span class="font-semibold text-white">${{c.razon_social}}</span>
-              <span class="font-mono text-slate-400 text-[10px]">${{c.cod_cia}} • ${{c.tipo_entidad}}</span>
+            <div onclick="selectCompany('${{c.cod_cia}}')" class="p-2.5 hover:bg-slate-800 cursor-pointer flex items-center justify-between border-b border-slate-800/60 last:border-0">
+              <div>
+                <span class="font-mono text-slate-400 font-bold mr-2">${{c.cod_cia}}</span>
+                <span class="text-slate-200 font-semibold">${{c.razon_social}}</span>
+              </div>
+              <div>${{getTipoBadge(c.tipo_entidad)}}</div>
             </div>
           `).join('');
         }}
@@ -1674,6 +1852,8 @@ def generate_html():
         setSolvScope('cia');
       }} else if (state.currentTab === 'ratios-gestion') {{
         setGestScope('cia');
+      }} else if (state.currentTab === 'balances') {{
+        setBalScope('cia');
       }} else {{
         renderAll();
       }}
@@ -1681,9 +1861,10 @@ def generate_html():
 
     function switchTab(tabId) {{
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion'].forEach(id => {{
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances'].forEach(id => {{
         const el = document.getElementById(`tab-${{id}}`);
         const btn = document.getElementById(`tabBtn-${{id}}`);
+        if (!el || !btn) return;
         if (id === tabId) {{
           el.classList.remove('hidden');
           btn.className = 'tab-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all';
@@ -1708,11 +1889,11 @@ def generate_html():
       renderInvestmentsTab();
       renderSolvencyTab();
       renderManagementTab();
+      renderBalancesTab();
     }}
 
     // ----------------------------------------------------
     // TAB 1 RENDER
-    // ----------------------------------------------------
     function renderMarketOverview() {{
       const list = getFilteredCompanies();
       document.getElementById('filteredCiasCount').innerText = list.length;
@@ -3092,6 +3273,414 @@ def generate_html():
       const a = document.createElement('a');
       a.href = url;
       a.download = `sinensup_mercado_asegurador_${{state.selectedSegment.toLowerCase().replace(/ /g, '_')}}.csv`;
+      a.click();
+    }}
+
+    // ========================================================
+    // TAB 7: BALANCES CONTABLES & HIERARCHICAL TREE ENGINE
+    // ========================================================
+    function setBalScope(scope) {{
+      state.balScope = scope;
+      
+      // Update Scope Pills UI
+      ['market', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro', 'cia'].forEach(s => {{
+        const btn = document.getElementById(`balScopeBtn-${{s}}`);
+        if (btn) {{
+          if (state.balScope === s) {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20';
+          }} else {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all';
+          }}
+        }}
+      }});
+
+      renderBalancesTab();
+    }}
+
+    function setBalStatement(stmt) {{
+      state.balStatement = stmt;
+      
+      // Update Statement Switch UI
+      ['patrimonial', 'edr', 'tec', 'fin', 'ramo'].forEach(st => {{
+        const btn = document.getElementById(`balStmtBtn-${{st}}`);
+        if (btn) {{
+          if (state.balStatement === st) {{
+            btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20';
+          }} else {{
+            btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all';
+          }}
+        }}
+      }});
+
+      // Show/hide subramo select
+      const subContainer = document.getElementById('balSubramoContainer');
+      if (subContainer) {{
+        if (stmt === 'ramo') subContainer.classList.remove('hidden');
+        else subContainer.classList.add('hidden');
+      }}
+
+      renderBalancesTab();
+    }}
+
+    function setBalSubramo(subramoCode) {{
+      state.balSubramo = subramoCode;
+      renderBalancesTab();
+    }}
+
+    function filterBalTree(query) {{
+      state.balSearchQuery = query || '';
+      renderBalanceTree();
+    }}
+
+    function toggleBalNode(code) {{
+      if (state.balExpandedNodes.has(code)) {{
+        state.balExpandedNodes.delete(code);
+      }} else {{
+        state.balExpandedNodes.add(code);
+      }}
+      renderBalanceTree();
+    }}
+
+    function expandAllBalNodes() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.plan_de_cuentas) return;
+      Object.keys(data.plan_de_cuentas).forEach(k => state.balExpandedNodes.add(k));
+      renderBalanceTree();
+    }}
+
+    function collapseBalToLevel(maxLevel) {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.plan_de_cuentas) return;
+      state.balExpandedNodes.clear();
+      Object.entries(data.plan_de_cuentas).forEach(([k, v]) => {{
+        if (v.nivel < maxLevel) {{
+          state.balExpandedNodes.add(k);
+        }}
+      }});
+      renderBalanceTree();
+    }}
+
+    function renderBalancesTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      // Update Header Title & Subtitle based on active scope
+      const titleEl = document.getElementById('balSelectedTitle');
+      const badgeEl = document.getElementById('balSelectedBadge');
+      const countEl = document.getElementById('balEntitiesCount');
+
+      if (!titleEl || !badgeEl || !countEl) return;
+
+      if (state.balScope === 'market') {{
+        titleEl.innerText = 'Mercado Total Consolidado';
+        badgeEl.innerText = '185 Cías';
+        countEl.innerText = '185';
+      }} else if (state.balScope === 'cia') {{
+        const cia = data.companies_by_code[state.selectedCompanyCode];
+        titleEl.innerText = cia ? cia.razon_social : 'Aseguradora';
+        badgeEl.innerText = cia ? `${{cia.cod_cia}} • ${{cia.tipo_entidad}}` : 'Individual';
+        countEl.innerText = '1';
+      }} else {{
+        const count = data.companies.filter(c => c.tipo_entidad === state.balScope).length;
+        titleEl.innerText = `${{state.balScope}} (Consolidado)`;
+        badgeEl.innerText = `${{count}} Cías`;
+        countEl.innerText = count.toString();
+      }}
+
+      renderBalanceKpis();
+      renderBalanceTree();
+    }}
+
+    function getActiveBalanceDict() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return {{}};
+
+      if (state.balStatement === 'ramo') {{
+        const sub = state.balSubramo;
+        if (state.balScope === 'market') {{
+          return (data.market_balances_subramos && data.market_balances_subramos[sub]) || {{}};
+        }} else if (state.balScope in (data.segment_balances_subramos || {{}})) {{
+          return data.segment_balances_subramos[state.balScope][sub] || {{}};
+        }} else if (state.balScope === 'cia') {{
+          const ciaMap = (data.cias_balances_subramos && data.cias_balances_subramos[state.selectedCompanyCode]) || {{}};
+          return ciaMap[sub] || {{}};
+        }}
+      }} else {{
+        if (state.balScope === 'market') {{
+          return data.market_balances_general || {{}};
+        }} else if (state.balScope in (data.segment_balances_general || {{}})) {{
+          return data.segment_balances_general[state.balScope] || {{}};
+        }} else if (state.balScope === 'cia') {{
+          return (data.cias_balances_general && data.cias_balances_general[state.selectedCompanyCode]) || {{}};
+        }}
+      }}
+      return {{}};
+    }}
+
+    function renderBalanceKpis() {{
+      const banner = document.getElementById('balKpiBanner');
+      if (!banner) return;
+      const dict = getActiveBalanceDict();
+
+      if (state.balStatement === 'patrimonial') {{
+        const activo = dict['1.00.00.00.00.00.00.00'] || 0;
+        const pasivo = dict['2.00.00.00.00.00.00.00'] || 0;
+        const pn = dict['3.00.00.00.00.00.00.00'] || 0;
+        const cuadratura = activo - (pasivo + pn);
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">1. TOTAL ACTIVO</div>
+            <div class="text-lg font-bold font-mono text-white mt-1">${{formatARS(activo)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Estructura Patrimonial</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">2. TOTAL PASIVO</div>
+            <div class="text-lg font-bold font-mono text-rose-300 mt-1">${{formatARS(pasivo)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Deudas + Compromisos Téc.</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">3. PATRIMONIO NETO</div>
+            <div class="text-lg font-bold font-mono text-purple-300 mt-1">${{formatARS(pn)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Capital Propio + Reservas</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 ${{Math.abs(cuadratura) < 1000 ? 'border-l-emerald-500' : 'border-l-amber-500'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">CUADRATURA CONTABLE</div>
+            <div class="text-lg font-bold font-mono ${{Math.abs(cuadratura) < 1000 ? 'text-emerald-400' : 'text-amber-400'}} mt-1">
+              ${{Math.abs(cuadratura) < 1000 ? '✓ Cuadrado (Act = Pas + PN)' : formatARS(cuadratura)}}
+            </div>
+            <div class="text-[10px] text-slate-400 mt-1">Ecuación Patrimonial Fundamental</div>
+          </div>
+        `;
+      }} else {{
+        const perdidas = dict['4.00.00.00.00.00.00.00'] || dict['4.01.00.00.00.00.00.00'] || dict['4.02.00.00.00.00.00.00'] || 0;
+        const ganancias = dict['5.00.00.00.00.00.00.00'] || dict['5.01.00.00.00.00.00.00'] || dict['5.02.00.00.00.00.00.00'] || 0;
+        const resNeto = ganancias - perdidas;
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">TOTAL INGRESOS / GANANCIAS</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 mt-1">${{formatARS(ganancias)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Capítulo 5.00</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">TOTAL EGRESOS / PÉRDIDAS</div>
+            <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(perdidas)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Capítulo 4.00</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 ${{resNeto >= 0 ? 'border-l-emerald-400' : 'border-l-rose-400'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO NETO DEL PERÍODO</div>
+            <div class="text-lg font-bold font-mono ${{resNeto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatARS(resNeto)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{resNeto >= 0 ? 'Ganancia Neta' : 'Pérdida Neta'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">ESTADO CONTABLE</div>
+            <div class="text-base font-bold font-mono text-amber-300 mt-1 uppercase">${{state.balStatement}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Plan Oficial SSN</div>
+          </div>
+        `;
+      }}
+    }}
+
+    function renderBalanceTree() {{
+      const tbody = document.getElementById('balanceTreeTableBody');
+      if (!tbody) return;
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.plan_de_cuentas) return;
+
+      const dict = getActiveBalanceDict();
+      const plan = data.plan_de_cuentas;
+
+      // 1. Determine accounts in statement
+      let rootPrefixes = [];
+      if (state.balStatement === 'patrimonial') {{
+        rootPrefixes = ['1.', '2.', '3.'];
+      }} else if (state.balStatement === 'edr') {{
+        rootPrefixes = ['4.', '5.'];
+      }} else if (state.balStatement === 'tec') {{
+        rootPrefixes = ['4.01.', '5.01.'];
+      }} else if (state.balStatement === 'fin') {{
+        rootPrefixes = ['4.02.', '5.02.'];
+      }} else if (state.balStatement === 'ramo') {{
+        rootPrefixes = ['4.', '5.'];
+      }}
+
+      // 2. Filter relevant accounts
+      const allCodes = Object.keys(plan).sort();
+      const stmtCodes = allCodes.filter(c => rootPrefixes.some(p => c.startsWith(p)));
+
+      // 3. Build parent-child tree mapping
+      const childrenMap = {{}};
+      stmtCodes.forEach(code => {{
+        const p = plan[code];
+        const padre = p.padre;
+        if (padre && plan[padre]) {{
+          if (!childrenMap[padre]) childrenMap[padre] = [];
+          childrenMap[padre].push(code);
+        }}
+      }});
+
+      // 4. Compute chapter totals for percentages
+      const chapterTotals = {{
+        '1': dict['1.00.00.00.00.00.00.00'] || 0,
+        '2': dict['2.00.00.00.00.00.00.00'] || 0,
+        '3': dict['3.00.00.00.00.00.00.00'] || 0,
+        '4': dict['4.00.00.00.00.00.00.00'] || dict['4.01.00.00.00.00.00.00'] || dict['4.02.00.00.00.00.00.00'] || 0,
+        '5': dict['5.00.00.00.00.00.00.00'] || dict['5.01.00.00.00.00.00.00'] || dict['5.02.00.00.00.00.00.00'] || 0
+      }};
+
+      // 5. Check if search query active
+      const searchQ = (state.balSearchQuery || '').toLowerCase().trim();
+      let matchedCodes = new Set();
+      if (searchQ) {{
+        stmtCodes.forEach(c => {{
+          const desc = (plan[c].desc || '').toLowerCase();
+          if (c.includes(searchQ) || desc.includes(searchQ)) {{
+            matchedCodes.add(c);
+            // Add all ancestors
+            let curr = plan[c].padre;
+            while (curr && plan[curr]) {{
+              matchedCodes.add(curr);
+              curr = plan[curr].padre;
+            }}
+          }}
+        }});
+      }}
+
+      // 6. Helper to check if an account is visible
+      function isAccountVisible(code) {{
+        if (searchQ) {{
+          return matchedCodes.has(code);
+        }}
+        const p = plan[code];
+        if (p.nivel === 1) return true;
+        // For tec/fin, level 2 root (e.g. 4.01) is root
+        if ((state.balStatement === 'tec' || state.balStatement === 'fin') && p.nivel === 2) return true;
+        
+        let curr = p.padre;
+        while (curr && plan[curr]) {{
+          if (!state.balExpandedNodes.has(curr)) return false;
+          curr = plan[curr].padre;
+        }}
+        return true;
+      }}
+
+      // 7. Render visible rows
+      let rowsHtml = '';
+      let visibleCount = 0;
+
+      stmtCodes.forEach(code => {{
+        if (!isAccountVisible(code)) return;
+
+        const info = plan[code];
+        const saldo = dict[code] !== undefined ? dict[code] : 0;
+        
+        // Skip accounts that have zero saldo and no children with saldo unless search is active
+        const hasChildren = childrenMap[code] && childrenMap[code].length > 0;
+        if (!searchQ && saldo === 0 && !hasChildren) return;
+
+        visibleCount++;
+        const isExp = state.balExpandedNodes.has(code) || searchQ !== '';
+        const nivel = info.nivel;
+        const indentPx = (nivel - 1) * 20;
+
+        // Button toggle
+        let toggleBtn = '';
+        if (hasChildren) {{
+          toggleBtn = `
+            <button onclick="toggleBalNode('${{code}}')" 
+                    class="w-5 h-5 flex items-center justify-center rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[10px] font-bold ${{isExp ? 'text-amber-400' : 'text-emerald-400'}} transition-colors"
+                    title="${{isExp ? 'Colapsar subcuentas' : 'Abrir cuentas dependientes'}}">
+              <i class="fa-solid ${{isExp ? 'fa-minus' : 'fa-plus'}}"></i>
+            </button>
+          `;
+        }} else {{
+          toggleBtn = `<span class="text-slate-600 text-xs block text-center">•</span>`;
+        }}
+
+        // Percentage
+        const rootChap = code.charAt(0);
+        const chapTot = chapterTotals[rootChap] || 0;
+        let pctStr = '-';
+        if (chapTot > 0 && saldo !== 0) {{
+          const pct = Math.min(100.0, (Math.abs(saldo) / chapTot) * 100.0);
+          pctStr = `${{pct.toFixed(2)}}%`;
+        }}
+
+        // Row styling according to level
+        let rowStyle = '';
+        let descStyle = '';
+        let codeStyle = '';
+        if (nivel === 1) {{
+          rowStyle = 'bg-slate-900/90 font-bold border-t-2 border-slate-700';
+          descStyle = 'text-white text-xs tracking-wide uppercase';
+          codeStyle = 'text-amber-400 font-bold';
+        }} else if (nivel === 2) {{
+          rowStyle = 'bg-slate-900/40 font-semibold';
+          descStyle = 'text-slate-200 text-xs';
+          codeStyle = 'text-emerald-400 font-semibold';
+        }} else if (nivel === 3) {{
+          rowStyle = 'hover:bg-slate-800/40';
+          descStyle = 'text-slate-300 text-[11px]';
+          codeStyle = 'text-sky-400';
+        }} else {{
+          rowStyle = 'hover:bg-slate-800/30 text-slate-400';
+          descStyle = 'text-slate-300 text-[11px]';
+          codeStyle = 'text-slate-400';
+        }}
+
+        // Level badge
+        const levelBadge = `<span class="px-1.5 py-0.2 rounded text-[9px] font-mono bg-slate-800 border border-slate-700 text-slate-400">N${{nivel}}</span>`;
+
+        rowsHtml += `
+          <tr class="${{rowStyle}} transition-colors">
+            <td class="py-1.5 px-3 text-center">${{toggleBtn}}</td>
+            <td class="py-1.5 px-3 ${{codeStyle}} font-mono">${{code}}</td>
+            <td class="py-1.5 px-3" style="padding-left: ${{indentPx + 12}}px;">
+              <span class="${{descStyle}}">${{info.desc}}</span>
+            </td>
+            <td class="py-1.5 px-3 text-right font-mono font-bold ${{saldo < 0 ? 'text-rose-400' : (saldo > 0 ? 'text-slate-100' : 'text-slate-500')}}">
+              ${{saldo === 0 ? '$0' : formatARS(saldo)}}
+            </td>
+            <td class="py-1.5 px-3 text-right font-mono text-[10px] text-slate-400">${{pctStr}}</td>
+            <td class="py-1.5 px-3 text-center">${{levelBadge}}</td>
+          </tr>
+        `;
+      }});
+
+      if (visibleCount === 0) {{
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-slate-500 text-xs">
+              No se encontraron cuentas contables con los filtros seleccionados
+            </td>
+          </tr>
+        `;
+      }} else {{
+        tbody.innerHTML = rowsHtml;
+      }}
+    }}
+
+    function exportBalanceCSV() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.plan_de_cuentas) return;
+
+      const dict = getActiveBalanceDict();
+      const plan = data.plan_de_cuentas;
+
+      let csv = 'codigo_cuenta,descripcion,nivel,saldo_ars,alcance,estado\\n';
+      const scopeLabel = state.balScope === 'market' ? 'Mercado Total' : (state.balScope === 'cia' ? state.selectedCompanyCode : state.balScope);
+
+      Object.entries(plan).forEach(([code, info]) => {{
+        const saldo = dict[code] || 0;
+        csv += `"${{code}}","${{info.desc.replace(/"/g, '""')}}",${{info.nivel}},${{saldo}},"${{scopeLabel}}","${{state.balStatement}}"\\n`;
+      }});
+
+      const blob = new Blob([csv], {{ type: 'text/csv;charset=utf-8;' }});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `balance_ssn_${{state.balStatement}}_${{scopeLabel.toLowerCase().replace(/ /g, '_')}}.csv`;
       a.click();
     }}
   </script>
