@@ -155,6 +155,55 @@ def build_complete_dataset():
     for seg in segments:
         segment_investments[seg] = get_company_investments_breakdown(df_raw[df_raw['tipo_entidad'] == seg])
 
+    def compute_benchmarks(df_sub):
+        tot_emit = float(df_sub['primas_emitidas'].sum())
+        tot_dev = float(df_sub['primas_devengadas'].sum())
+        base_primas = tot_dev if tot_dev > 0 else tot_emit
+        tot_sin = float(df_sub['siniestros'].sum() + df_sub['rescates'].sum())
+        tot_prod = float(df_sub['gtos_produccion'].sum())
+        tot_expl = float(df_sub['gtos_explotacion'].sum())
+        tot_gtos_op = float(df_sub['gtos_operativos'].sum())
+        tot_res_tec = float(df_sub['resultado_tecnico'].sum())
+        tot_res_fin = float(df_sub['resultado_financiero'].sum())
+        tot_res_neto = float(df_sub['resultado_neto'].sum())
+        tot_inv = float(df_sub['inversiones'].sum())
+        tot_inm = float(df_sub['inmuebles'].sum())
+        tot_disp = float(df_sub['disponibilidades'].sum())
+        tot_ct = float(df_sub['compromisos_tecnicos'].sum())
+        tot_pn = float(df_sub['patrimonio_neto'].sum())
+        tot_activo = float(df_sub['activo'].sum())
+        tot_premios = float(df_sub['premios_a_cobrar'].sum())
+
+        return {
+            'entidades': int(len(df_sub)),
+            'primas_emitidas': tot_emit,
+            'primas_devengadas': tot_dev,
+            'loss_ratio': round((tot_sin / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'comm_ratio': round((tot_prod / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'exp_ratio': round((tot_expl / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'combined_ratio': round(((tot_sin + tot_gtos_op) / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'retencion_ratio': round((tot_dev / tot_emit * 100.0) if tot_emit > 0 else 100.0, 2),
+            'roi_inversiones': round((tot_res_fin / tot_inv * 100.0) if tot_inv > 0 else 0.0, 2),
+            'densidad_inversiones': round((tot_inv / tot_activo * 100.0) if tot_activo > 0 else 0.0, 2),
+            'cobertura_reservas': round(((tot_inv + tot_inm + tot_disp) / tot_ct) if tot_ct > 0 else 1.0, 2),
+            'apalancamiento': round((base_primas / tot_pn) if tot_pn > 0 else 0.0, 2),
+            'calidad_cartera': round((tot_premios / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'roe': round((tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else 0.0, 2),
+            'roa': round((tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0, 2),
+            'margen_neto': round((tot_res_neto / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'patrimonio_neto': tot_pn,
+            'activo': tot_activo,
+            'inversiones': tot_inv,
+            'resultado_tecnico': tot_res_tec,
+            'resultado_financiero': tot_res_fin,
+            'resultado_neto': tot_res_neto
+        }
+
+    market_benchmarks = compute_benchmarks(df_summary)
+    segment_benchmarks = {}
+    for seg in segments:
+        segment_benchmarks[seg] = compute_benchmarks(df_summary[df_summary['tipo_entidad'] == seg])
+
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
         "total_entidades": len(df_summary),
@@ -165,6 +214,8 @@ def build_complete_dataset():
         "market_subramos": market_subramos_list,
         "market_investments": market_investments,
         "segment_investments": segment_investments,
+        "market_benchmarks": market_benchmarks,
+        "segment_benchmarks": segment_benchmarks,
         "companies": list(companies_dict.values()),
         "companies_by_code": companies_dict
     }
