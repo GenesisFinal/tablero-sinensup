@@ -572,6 +572,7 @@ def build_complete_dataset():
             "roe": round(roe, 2),
             "roa": round(roa, 2),
             "margen_neto": round(margen_neto, 2),
+            "margen_tecnico": round((tot_res_tec / tot_dev * 100.0) if tot_dev > 0 else 0.0, 2),
             "market_share": round(mkt_share, 2),
             "waterfall": [
                 {"name": "Primas Emitidas", "amount": tot_emit, "type": "relative"},
