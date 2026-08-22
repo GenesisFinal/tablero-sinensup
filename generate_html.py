@@ -1101,7 +1101,18 @@ def generate_html():
             </h3>
             <span class="text-xs text-slate-400 font-mono">Escala Normalizada 0-100</span>
           </div>
-          <div id="managementRadarChart" class="w-full h-[420px]"></div>
+          <div id="managementRadarChart" class="w-full h-[400px]"></div>
+
+          <!-- Guía Explicativa de los 6 Ejes con valores y barras de progreso -->
+          <div class="mt-4 pt-3 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info text-indigo-400"></i> Desglose de los 6 Ejes (Puntaje 0 a 100)
+              </span>
+              <span class="text-[10px] text-slate-400 font-mono">Centro = 0 (Crítico) • Borde = 100 (Óptimo)</span>
+            </div>
+            <div id="radarAxesBreakdown" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono"></div>
+          </div>
         </div>
 
         <!-- Executive Diagnostic Summary -->
@@ -2615,15 +2626,15 @@ def generate_html():
         'Cobranza de<br>Premios'
       ];
 
-      // Normalize 0-100 score (higher is always better)
+      // Normalize 0-100 score (higher is always better, 100 = outer edge, 0 = center)
       const normScore = m => {{
         return [
-          Math.max(0, Math.min(100, 100 - (m.loss_ratio || 0) * 0.9)),
-          Math.max(0, Math.min(100, 100 - (m.exp_ratio || 0) * 2.2)),
-          Math.max(0, Math.min(100, 100 - (m.comm_ratio || 0) * 2.0)),
-          Math.max(0, Math.min(100, 50 + (m.roi_inversiones || 0) * 2.5)),
-          Math.max(0, Math.min(100, Math.min(100, (m.cobertura_reservas || 1.0) * 45))),
-          Math.max(0, Math.min(100, 100 - (m.calidad_cartera || 0) * 1.5))
+          Math.round(Math.max(0, Math.min(100, 100 - (m.loss_ratio || 0) * 0.9))),
+          Math.round(Math.max(0, Math.min(100, 100 - (m.exp_ratio || 0) * 2.2))),
+          Math.round(Math.max(0, Math.min(100, 100 - (m.comm_ratio || 0) * 2.0))),
+          Math.round(Math.max(0, Math.min(100, 50 + (m.roi_inversiones || 0) * 2.5))),
+          Math.round(Math.max(0, Math.min(100, Math.min(100, (m.cobertura_reservas || 1.0) * 45)))),
+          Math.round(Math.max(0, Math.min(100, 100 - (m.calidad_cartera || 0) * 1.5)))
         ];
       }};
 
@@ -2657,28 +2668,29 @@ def generate_html():
       const layout = {{
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        margin: {{ l: 75, r: 75, t: 40, b: 45 }},
+        margin: {{ l: 95, r: 95, t: 40, b: 50 }},
         polar: {{
-          bgcolor: 'rgba(15, 23, 42, 0.4)',
+          domain: {{ x: [0.12, 0.88], y: [0.08, 0.92] }},
+          bgcolor: 'rgba(15, 23, 42, 0.5)',
           radialaxis: {{
             visible: true,
             range: [0, 100],
-            color: '#64748B',
+            color: '#94A3B8',
             gridcolor: '#334155',
             showticklabels: true,
             tickfont: {{ size: 9, color: '#94A3B8', family: 'JetBrains Mono' }}
           }},
           angularaxis: {{
-            color: '#E2E8F0',
+            color: '#F8FAFC',
             gridcolor: '#334155',
-            tickfont: {{ size: 11, family: 'Sora', color: '#FFFFFF', weight: 'bold' }},
+            tickfont: {{ size: 12, family: 'Sora', color: '#FFFFFF', weight: 'bold' }},
             rotation: 90,
             direction: 'clockwise'
           }}
         }},
         legend: {{
           orientation: 'h',
-          y: -0.16,
+          y: -0.18,
           x: 0.5,
           xanchor: 'center',
           font: {{ color: '#F1F5F9', size: 12, family: 'Sora' }}
@@ -2686,6 +2698,40 @@ def generate_html():
       }};
 
       Plotly.newPlot('managementRadarChart', data, layout, {{ responsive: true, displayModeBar: false }});
+
+      // Populate Axes Breakdown Cards
+      const breakdownEl = document.getElementById('radarAxesBreakdown');
+      if (breakdownEl) {{
+        const axesList = [
+          {{ name: '1. Siniestros', val: `${{(target.loss_ratio || 0).toFixed(1)}}%`, benchVal: `${{(bench.loss_ratio || 0).toFixed(1)}}%`, score: targetVals[0], benchScore: benchVals[0], desc: 'Loss Ratio' }},
+          {{ name: '2. Admin (Estructura)', val: `${{(target.exp_ratio || 0).toFixed(1)}}%`, benchVal: `${{(bench.exp_ratio || 0).toFixed(1)}}%`, score: targetVals[1], benchScore: benchVals[1], desc: 'Gtos Explotación' }},
+          {{ name: '3. Comercial (Comis.)', val: `${{(target.comm_ratio || 0).toFixed(1)}}%`, benchVal: `${{(bench.comm_ratio || 0).toFixed(1)}}%`, score: targetVals[2], benchScore: benchVals[2], desc: 'Gtos Producción' }},
+          {{ name: '4. Rend. Inversiones', val: `${{(target.roi_inversiones || 0).toFixed(1)}}%`, benchVal: `${{(bench.roi_inversiones || 0).toFixed(1)}}%`, score: targetVals[3], benchScore: benchVals[3], desc: 'ROI Inversiones' }},
+          {{ name: '5. Solvencia SSN', val: `${{(target.cobertura_reservas || 1.0).toFixed(2)}}x`, benchVal: `${{(bench.cobertura_reservas || 1.0).toFixed(2)}}x`, score: targetVals[4], benchScore: benchVals[4], desc: 'Cobertura Art. 35' }},
+          {{ name: '6. Cobranza Premios', val: `${{(target.calidad_cartera || 0).toFixed(1)}}%`, benchVal: `${{(bench.calidad_cartera || 0).toFixed(1)}}%`, score: targetVals[5], benchScore: benchVals[5], desc: 'Premios a Cobrar' }}
+        ];
+
+        breakdownEl.innerHTML = axesList.map(ax => {{
+          const diff = ax.score - ax.benchScore;
+          const sign = diff >= 0 ? '+' : '';
+          const barColor = ax.score >= 70 ? 'bg-emerald-500' : (ax.score >= 45 ? 'bg-amber-500' : 'bg-rose-500');
+          return `
+            <div class="p-2.5 bg-slate-900/90 rounded-lg border border-slate-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[11px] font-sans font-bold text-white">
+                <span>${{ax.name}}</span>
+                <span class="font-mono ${{ax.score >= 70 ? 'text-emerald-400' : (ax.score >= 45 ? 'text-amber-400' : 'text-rose-400')}}">${{ax.score}}/100</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full my-1.5 overflow-hidden">
+                <div class="${{barColor}} h-full rounded-full" style="width: ${{ax.score}}%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-400">
+                <span>Real: <b class="text-slate-200">${{ax.val}}</b></span>
+                <span class="${{diff >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{sign}}${{diff}} pts</span>
+              </div>
+            </div>
+          `;
+        }}).join('');
+      }}
     }}
 
     function renderManagementDiagnosis(target, bench, title) {{
