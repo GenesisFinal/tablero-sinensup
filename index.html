@@ -1083,47 +1083,52 @@
         </div>
       </div>
 
-      <!-- RADAR / SPIDER CHART & DIAGNÓSTICO EJECUTIVO -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Radar Chart -->
-        <div class="lg:col-span-7 glass-card p-5 rounded-xl">
-          <div class="flex items-center justify-between mb-2">
+      <!-- 1. FULL WIDTH: RADAR / SPIDER CHART DE EFICIENCIA -->
+      <div class="glass-card p-5 rounded-xl w-full space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-chart-line text-indigo-400"></i> Radar de Eficiencia Aseguradora (6 Ejes)
             </h3>
-            <span class="text-xs text-slate-400 font-mono">Escala Normalizada 0-100</span>
+            <p class="text-xs text-slate-400">Evaluación multidimensional: silueta de la aseguradora vs. promedio benchmark del segmento</p>
           </div>
-          <div id="managementRadarChart" class="w-full h-[400px]"></div>
-
-          <!-- Guía Explicativa de los 6 Ejes con valores y barras de progreso -->
-          <div class="mt-4 pt-3 border-t border-slate-800 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-info text-indigo-400"></i> Desglose de los 6 Ejes (Puntaje 0 a 100)
-              </span>
-              <span class="text-[10px] text-slate-400 font-mono">Centro = 0 (Crítico) • Borde = 100 (Óptimo)</span>
-            </div>
-            <div id="radarAxesBreakdown" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono"></div>
-          </div>
+          <span class="text-xs text-slate-400 font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700">Escala 0 (Centro / Déficit) a 100 (Borde / Óptimo)</span>
         </div>
 
-        <!-- Executive Diagnostic Summary -->
-        <div class="lg:col-span-5 glass-card p-5 rounded-xl flex flex-col justify-between space-y-4">
+        <div id="managementRadarChart" class="w-full h-[460px]"></div>
+
+        <!-- Desglose de los 6 Ejes en Grid de 6 columnas -->
+        <div class="pt-3 border-t border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-info text-indigo-400"></i> Desglose de Rendimiento por Eje (Puntajes y Valores de Balance)
+            </span>
+            <span class="text-[10px] text-slate-400 font-mono">Puntaje Normalizado (0-100) y Comparativa vs. Benchmark</span>
+          </div>
+          <div id="radarAxesBreakdown" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-mono"></div>
+        </div>
+      </div>
+
+      <!-- 2. FULL WIDTH: DIAGNÓSTICO EJECUTIVO AUTOMATIZADO -->
+      <div class="glass-card p-5 rounded-xl w-full space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
           <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-clipboard-check text-emerald-400"></i> Diagnóstico Ejecutivo Automatizado
             </h3>
-            <div id="execDiagnosticContent" class="space-y-2.5 text-xs text-slate-300">
-              <!-- Dynamically populated -->
-            </div>
+            <p class="text-xs text-slate-400">Resumen cualitativo y cuantitativo derivado de la matriz de semáforos inteligentes</p>
           </div>
 
           <!-- Traffic light legend -->
-          <div class="p-3 bg-slate-900/90 rounded-lg border border-slate-800 text-[11px] grid grid-cols-3 gap-2 text-center">
-            <div class="text-emerald-400 font-semibold">🟢 Saludable (Óptimo)</div>
-            <div class="text-amber-400 font-semibold">🟡 Precaución (Tolerancia)</div>
-            <div class="text-rose-400 font-semibold">🔴 Alerta (Déficit/Crítico)</div>
+          <div class="flex items-center gap-3 text-xs bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+            <span class="text-emerald-400 font-semibold flex items-center gap-1">🟢 Saludable (Óptimo)</span>
+            <span class="text-amber-400 font-semibold flex items-center gap-1">🟡 Precaución (Tolerancia)</span>
+            <span class="text-rose-400 font-semibold flex items-center gap-1">🔴 Alerta (Déficit/Crítico)</span>
           </div>
+        </div>
+
+        <div id="execDiagnosticContent" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+          <!-- Dynamically populated into 2 columns (Fortalezas vs Desvíos) -->
         </div>
       </div>
 
@@ -74085,30 +74090,47 @@
         warnings.push(`<b>Atraso en Cobranzas:</b> Premios a cobrar representan el <b>${target.calidad_cartera.toFixed(1)}%</b> de las primas.`);
       }
 
-      let html = '';
+      let leftHtml = '';
       if (strengths.length > 0) {
-        html += `
-          <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded-xl space-y-1.5">
-            <div class="text-emerald-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Fortalezas Principales:</div>
-            <ul class="list-disc list-inside space-y-1 text-slate-200">
+        leftHtml = `
+          <div class="p-4 bg-emerald-500/10 border border-emerald-500/25 rounded-xl space-y-2">
+            <div class="text-emerald-400 font-bold flex items-center gap-1.5 text-xs uppercase tracking-wider">
+              <i class="fa-solid fa-circle-check"></i> Fortalezas Principales (${strengths.length})
+            </div>
+            <ul class="list-disc list-inside space-y-1.5 text-slate-200 text-xs">
               ${strengths.map(s => `<li>${s}</li>`).join('')}
             </ul>
           </div>
         `;
-      }
-
-      if (warnings.length > 0) {
-        html += `
-          <div class="p-3 bg-amber-500/10 border border-amber-500/25 rounded-xl space-y-1.5">
-            <div class="text-amber-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Puntos de Atención & Desvíos:</div>
-            <ul class="list-disc list-inside space-y-1 text-slate-200">
-              ${warnings.map(w => `<li>${w}</li>`).join('')}
-            </ul>
+      } else {
+        leftHtml = `
+          <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-xl text-slate-400 text-xs flex items-center justify-center">
+            Sin fortalezas destacadas en este período
           </div>
         `;
       }
 
-      diagEl.innerHTML = html;
+      let rightHtml = '';
+      if (warnings.length > 0) {
+        rightHtml = `
+          <div class="p-4 bg-amber-500/10 border border-amber-500/25 rounded-xl space-y-2">
+            <div class="text-amber-400 font-bold flex items-center gap-1.5 text-xs uppercase tracking-wider">
+              <i class="fa-solid fa-triangle-exclamation"></i> Puntos de Atención & Desvíos (${warnings.length})
+            </div>
+            <ul class="list-disc list-inside space-y-1.5 text-slate-200 text-xs">
+              ${warnings.map(w => `<li>${w}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      } else {
+        rightHtml = `
+          <div class="p-4 bg-emerald-500/10 border border-emerald-500/25 rounded-xl text-emerald-300 text-xs flex items-center justify-center font-semibold">
+            ✓ No se detectan desvíos críticos ni alertas en este perfil
+          </div>
+        `;
+      }
+
+      diagEl.innerHTML = leftHtml + rightHtml;
     }
 
     function renderManagementTable() {
