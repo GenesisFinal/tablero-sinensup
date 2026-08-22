@@ -407,19 +407,54 @@ def generate_html():
       </div>
 
       <!-- 2. FULL WIDTH: Top Aseguradoras Ranking Table -->
+      <!-- 2. FULL WIDTH: Top Aseguradoras y Grupos Económicos Ranking -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-trophy text-amber-400"></i> Ranking Top Aseguradoras del Segmento (por Primas Emitidas)
+              <i class="fa-solid fa-trophy text-amber-400"></i> Ranking de Producción y Concentración del Mercado
             </h3>
-            <p class="text-xs text-slate-400">Principales aseguradoras ordenadas por volumen de Primas Emitidas (con inclusión fija de Grupo Asegurador La Segunda)</p>
+            <p class="text-xs text-slate-400">Compara el liderazgo de mercado por Grupos Económicos Consolidados o por Aseguradoras Individuales</p>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-[11px] font-mono px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg font-bold">Top 15 + Grupo La Segunda</span>
+          
+          <!-- Mode Switch: Grupos vs Aseguradoras -->
+          <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
+            <button type="button" onclick="setRankingMode('groups')" id="rankingModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
+              <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores (Top 17)
+            </button>
+            <button type="button" onclick="setRankingMode('companies')" id="rankingModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
+            </button>
           </div>
         </div>
-        <div class="w-full overflow-hidden">
+
+        <!-- Groups Ranking Table View -->
+        <div id="groupsRankingContainer" class="w-full overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/90 border-b border-slate-700 text-[11px]">
+              <tr>
+                <th class="py-2.5 px-2 text-center w-8">#</th>
+                <th class="py-2.5 px-2 text-left w-56">Grupo Asegurador</th>
+                <th class="py-2.5 px-2 text-center w-16">Cías</th>
+                <th class="py-2.5 px-2 text-right">Primas Emitidas</th>
+                <th class="py-2.5 px-2 text-right w-24">Market Share</th>
+                <th class="py-2.5 px-2 text-right">Primas Dev.</th>
+                <th class="py-2.5 px-2 text-right">Loss Ratio</th>
+                <th class="py-2.5 px-2 text-right">Comb. Ratio</th>
+                <th class="py-2.5 px-2 text-right">Res. Técnico</th>
+                <th class="py-2.5 px-2 text-right">Res. Financiero</th>
+                <th class="py-2.5 px-2 text-right">Res. Neto</th>
+                <th class="py-2.5 px-2 text-right">Activo</th>
+                <th class="py-2.5 px-2 text-right">Patrimonio Neto</th>
+                <th class="py-2.5 px-2 text-center w-24">Desglose</th>
+              </tr>
+            </thead>
+            <tbody id="groupsRankingTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+
+        <!-- Individual Companies Table View -->
+        <div id="companiesRankingContainer" class="hidden w-full overflow-x-auto">
           <table class="w-full text-left text-xs border-collapse table-auto">
             <thead class="text-slate-400 bg-slate-900/90 border-b border-slate-700 text-[11px]">
               <tr>
@@ -440,6 +475,48 @@ def generate_html():
             </thead>
             <tbody id="topRankingTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador -->
+      <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+          <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+            <div>
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">🏛️ GRUPO ECONÓMICO</span>
+                <h3 id="groupModalTitle" class="text-base font-bold text-white">...</h3>
+              </div>
+              <p id="groupModalSubtitle" class="text-xs text-slate-400 mt-1">...</p>
+            </div>
+            <button onclick="closeGroupModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold">
+              ✕
+            </button>
+          </div>
+          
+          <!-- Group Summary KPIs -->
+          <div id="groupModalKpis" class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-900/60 border-b border-slate-800"></div>
+
+          <!-- Members List -->
+          <div class="p-5 overflow-y-auto space-y-3 flex-1">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-emerald-400"></i> Composición Societaria y Aporte por Aseguradora:
+            </h4>
+            <div id="groupModalMembersList" class="divide-y divide-slate-800/80 rounded-xl border border-slate-800 bg-slate-950/40"></div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-[11px] text-slate-400">Fuente: Base Oficial SSN • Período 2026-2</span>
+            <div class="flex items-center gap-2">
+              <button id="groupModalBalanceBtn" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20">
+                <i class="fa-solid fa-tree"></i> Ver Balance Consolidado (Tab 7)
+              </button>
+              <button onclick="closeGroupModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+                Cerrar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1295,12 +1372,13 @@ def generate_html():
         </div>
       </div>
 
-      <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa) -->
+      <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa vs Grupo) -->
       <div class="content-card-lower flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-emerald-400"></i> Alcance del Balance:</span>
           <div class="flex flex-wrap gap-1.5">
             <button onclick="setBalScope('market')" id="balScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setBalScope('group')" id="balScopeBtn-group" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-amber-300 hover:bg-slate-700 transition-all font-bold">🏛️ Grupo Asegurador</button>
             <button onclick="setBalScope('Patrimoniales y Mixtas')" id="balScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
             <button onclick="setBalScope('Riesgos del Trabajo (ART)')" id="balScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
             <button onclick="setBalScope('Seguros de Personas')" id="balScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
@@ -1414,6 +1492,8 @@ def generate_html():
       selectedSegment: 'Todos',
       selectedCompanyCode: '0436',
       highlightedCiaCode: null,
+      marketRankingMode: 'groups',
+      selectedGroupId: 'sancor',
       ramosScope: 'cia',
       invScope: 'cia',
       invTopMetric: 'activo',
@@ -1703,45 +1783,100 @@ def generate_html():
       if (!data || !data.companies) return;
 
       const q = (query || '').toLowerCase().trim();
+      
+      // Match groups
+      const matchedGroups = (data.groups || []).filter(g => {{
+        if (!q) return true;
+        return g.name.toLowerCase().includes(q) || g.short_name.toLowerCase().includes(q) || g.description.toLowerCase().includes(q);
+      }});
+
+      // Match companies
       let sourceList = data.companies;
       if (idPrefix === 'scatterCombobox' && state.selectedSegment !== 'Todos') {{
         sourceList = getFilteredCompanies();
       }}
 
-      const filtered = sourceList.filter(c => {{
+      const filteredCias = sourceList.filter(c => {{
         if (!q) return true;
         return c.razon_social.toLowerCase().includes(q) || c.cod_cia.includes(q);
       }});
 
-      if (filtered.length === 0) {{
+      if (matchedGroups.length === 0 && filteredCias.length === 0) {{
         listEl.innerHTML = '<div class="p-3 text-slate-500 text-center text-xs">No se encontraron coincidencias</div>';
         return;
       }}
 
-      listEl.innerHTML = filtered.map(c => {{
-        const isSelected = (idPrefix === 'scatterCombobox' && state.highlightedCiaCode === c.cod_cia) ||
-                           (idPrefix !== 'scatterCombobox' && state.selectedCompanyCode === c.cod_cia);
-        return `
-          <div onclick="onComboboxSelect('${{idPrefix}}', '${{c.cod_cia}}')" 
-               class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-slate-800/80 font-bold text-white' : 'text-slate-300'}}">
-            <div class="truncate flex items-center gap-1.5">
-              <span class="font-mono text-[10px] text-slate-400 font-bold">${{c.cod_cia}}</span>
-              <span class="truncate font-semibold text-xs text-white">${{c.razon_social}}</span>
-            </div>
-            <div class="flex-shrink-0">
-              ${{getTipoBadge(c.tipo_entidad)}}
-            </div>
+      let html = '';
+
+      if (matchedGroups.length > 0 && idPrefix !== 'scatterCombobox') {{
+        html += `
+          <div class="px-2 py-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 uppercase tracking-wider flex items-center justify-between">
+            <span>🏛️ Grupos Aseguradores Consolidados (${{matchedGroups.length}})</span>
           </div>
-        `;
-      }}).join('');
+        ` + matchedGroups.map(g => {{
+          const isSelected = (state.balScope === 'group' && state.selectedGroupId === g.id);
+          return `
+            <div onclick="onComboboxSelect('${{idPrefix}}', 'group:${{g.id}}')" 
+                 class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-amber-500/20 font-bold text-amber-300 border-l-2 border-amber-400' : 'text-slate-200'}}">
+              <div class="truncate flex items-center gap-1.5">
+                <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">GRUPO</span>
+                <span class="truncate font-semibold text-xs text-white">${{g.name}}</span>
+                <span class="text-[10px] text-slate-400 font-mono">(${{g.entities_count}} cías)</span>
+              </div>
+              <div class="text-right text-[10px] font-mono text-amber-300 font-bold flex-shrink-0">
+                ${{g.market_share.toFixed(1)}}% mkt
+              </div>
+            </div>
+          `;
+        }}).join('');
+      }}
+
+      if (filteredCias.length > 0) {{
+        if (matchedGroups.length > 0 && idPrefix !== 'scatterCombobox') {{
+          html += `
+            <div class="px-2 py-1 text-[10px] font-bold text-slate-400 bg-slate-950 uppercase tracking-wider mt-1">
+              <span>🏢 Aseguradoras Individuales (${{filteredCias.length}})</span>
+            </div>
+          `;
+        }}
+        html += filteredCias.map(c => {{
+          const isSelected = (idPrefix === 'scatterCombobox' && state.highlightedCiaCode === c.cod_cia) ||
+                             (idPrefix !== 'scatterCombobox' && state.selectedCompanyCode === c.cod_cia && state.balScope !== 'group');
+          return `
+            <div onclick="onComboboxSelect('${{idPrefix}}', '${{c.cod_cia}}')" 
+                 class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-slate-800/80 font-bold text-white' : 'text-slate-300'}}">
+              <div class="truncate flex items-center gap-1.5">
+                <span class="font-mono text-[10px] text-slate-400 font-bold">${{c.cod_cia}}</span>
+                <span class="truncate font-semibold text-xs text-white">${{c.razon_social}}</span>
+              </div>
+              <div class="flex-shrink-0">
+                ${{getTipoBadge(c.tipo_entidad)}}
+              </div>
+            </div>
+          `;
+        }}).join('');
+      }}
+
+      listEl.innerHTML = html;
     }}
 
-    function onComboboxSelect(idPrefix, code) {{
+    function onComboboxSelect(idPrefix, codeOrGid) {{
       closeAllComboboxes();
       if (idPrefix === 'scatterCombobox') {{
-        highlightScatterCompany(code);
+        highlightScatterCompany(codeOrGid);
+      }} else if (codeOrGid.startsWith('group:')) {{
+        const gid = codeOrGid.replace('group:', '');
+        state.selectedGroupId = gid;
+        if (state.currentTab === 'balances') {{
+          setBalScope('group');
+        }} else {{
+          openGroupModal(gid);
+        }}
       }} else {{
-        onCompanyDropdownChange(code);
+        if (state.balScope === 'group') {{
+          state.balScope = 'cia';
+        }}
+        onCompanyDropdownChange(codeOrGid);
       }}
     }}
 
@@ -1752,10 +1887,19 @@ def generate_html():
       const current = data.companies_by_code[state.selectedCompanyCode];
       const currentLabel = current ? `${{current.cod_cia}} - ${{current.razon_social}}` : 'Seleccionar aseguradora...';
 
-      ['ciaComboboxLabel', 'invComboboxLabel', 'solvComboboxLabel', 'gestComboboxLabel', 'balComboboxLabel'].forEach(id => {{
+      ['ciaComboboxLabel', 'invComboboxLabel', 'solvComboboxLabel', 'gestComboboxLabel'].forEach(id => {{
         const el = document.getElementById(id);
         if (el) el.innerText = currentLabel;
       }});
+
+      const balLabel = document.getElementById('balComboboxLabel');
+      if (balLabel) {{
+        if (state.balScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+          balLabel.innerText = `🏛️ ${{data.groups_by_id[state.selectedGroupId].name}} (Consolidado)`;
+        }} else {{
+          balLabel.innerText = currentLabel;
+        }}
+      }}
 
       const scatterLabelEl = document.getElementById('scatterComboboxLabel');
       if (scatterLabelEl) {{
@@ -1893,7 +2037,150 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 1 RENDER
+    // TAB 1 RENDER: MARKET OVERVIEW & GROUPS / COMPANIES RANKING
+    function setRankingMode(mode) {{
+      state.marketRankingMode = mode;
+      const btnG = document.getElementById('rankingModeBtn-groups');
+      const btnC = document.getElementById('rankingModeBtn-companies');
+      const boxG = document.getElementById('groupsRankingContainer');
+      const boxC = document.getElementById('companiesRankingContainer');
+
+      if (mode === 'groups') {{
+        if (btnG) btnG.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5';
+        if (btnC) btnC.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5';
+        if (boxG) boxG.classList.remove('hidden');
+        if (boxC) boxC.classList.add('hidden');
+      }} else {{
+        if (btnG) btnG.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5';
+        if (btnC) btnC.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5';
+        if (boxG) boxG.classList.add('hidden');
+        if (boxC) boxC.classList.remove('hidden');
+      }}
+      renderMarketOverview();
+    }}
+
+    function renderGroupsRankingTable() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.groups) return;
+
+      const tbody = document.getElementById('groupsRankingTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = data.groups.map((g, idx) => {{
+        const isLS = g.id === 'la_segunda';
+        const barWidth = Math.min(100, Math.max(4, g.market_share * 7));
+        return `
+          <tr class="hover:bg-slate-800/70 ${{isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/80 font-semibold' : ''}} cursor-pointer transition-colors" onclick="openGroupModal('${{g.id}}')">
+            <td class="py-2.5 px-2 text-center text-slate-400 font-mono font-bold">${{idx + 1}}</td>
+            <td class="py-2.5 px-2">
+              <div class="font-bold text-white flex items-center gap-1.5">
+                <span>${{g.name}}</span>
+                ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+              </div>
+              <div class="text-[10px] text-slate-400 truncate max-w-[230px]" title="${{g.description}}">${{g.description}}</div>
+            </td>
+            <td class="py-2.5 px-2 text-center">
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 border border-slate-700 text-slate-300">${{g.entities_count}} Cías</span>
+            </td>
+            <td class="py-2.5 px-2 text-right font-bold font-mono text-white">${{formatARS(g.primas_emitidas)}}</td>
+            <td class="py-2.5 px-2 text-right">
+              <div class="font-bold font-mono text-amber-300">${{g.market_share.toFixed(2)}}%</div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1 overflow-hidden">
+                <div class="bg-amber-400 h-full rounded-full" style="width: ${{barWidth}}%"></div>
+              </div>
+            </td>
+            <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.primas_devengadas)}}</td>
+            <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatPercent(g.loss_ratio)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(g.combined_ratio)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono ${{g.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_tecnico)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono ${{g.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_financiero)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_neto)}}</td>
+            <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.activo)}}</td>
+            <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.patrimonio_neto)}}</td>
+            <td class="py-2.5 px-2 text-center" onclick="event.stopPropagation()">
+              <button onclick="openGroupModal('${{g.id}}')" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[10px] font-bold">
+                Ver Cías
+              </button>
+            </td>
+          </tr>
+        `;
+      }}).join('');
+    }}
+
+    function openGroupModal(gid) {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.groups_by_id) return;
+      const g = data.groups_by_id[gid];
+      if (!g) return;
+
+      state.selectedGroupId = gid;
+
+      document.getElementById('groupModalTitle').innerText = g.name;
+      document.getElementById('groupModalSubtitle').innerText = `${{g.description}} • ${{g.entities_count}} entidades aseguradoras consolidadas`;
+
+      document.getElementById('groupModalKpis').innerHTML = `
+        <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase">Primas Emitidas</div>
+          <div class="text-base font-bold font-mono text-white mt-0.5">${{formatARS(g.primas_emitidas)}}</div>
+          <div class="text-[10px] text-amber-400 font-bold">${{g.market_share.toFixed(2)}}% del Mercado Total</div>
+        </div>
+        <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase">Ratio Combinado</div>
+          <div class="text-base font-bold font-mono ${{g.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}} mt-0.5">${{formatPercent(g.combined_ratio)}}</div>
+          <div class="text-[10px] text-slate-400">Siniestralidad: ${{formatPercent(g.loss_ratio)}}</div>
+        </div>
+        <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase">Resultado Neto</div>
+          <div class="text-base font-bold font-mono ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-0.5">${{formatARS(g.resultado_neto)}}</div>
+          <div class="text-[10px] text-slate-400">Téc: ${{formatARS(g.resultado_tecnico)}}</div>
+        </div>
+        <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase">Activo Consolidado</div>
+          <div class="text-base font-bold font-mono text-brand-blue mt-0.5">${{formatARS(g.activo)}}</div>
+          <div class="text-[10px] text-slate-400">PN: ${{formatARS(g.patrimonio_neto)}}</div>
+        </div>
+      `;
+
+      document.getElementById('groupModalMembersList').innerHTML = g.members.map(m => `
+        <div class="p-3.5 flex flex-wrap items-center justify-between gap-3 hover:bg-slate-900/60 transition-colors">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs font-bold text-slate-400">${{m.cod_cia}}</span>
+              <span class="font-bold text-sm text-white">${{m.razon_social}}</span>
+              ${{getTipoBadge(m.tipo_entidad)}}
+            </div>
+            <div class="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-3">
+              <span>Primas: <b class="text-slate-200 font-mono">${{formatARS(m.primas_emitidas)}}</b> (${{m.share_of_group}}% del grupo)</span>
+              <span>Siniestros: <b class="text-rose-300 font-mono">${{formatARS(m.siniestros)}}</b></span>
+              <span>Comb. Ratio: <b class="${{m.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{formatPercent(m.combined_ratio)}}</b></span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="selectCompany('${{m.cod_cia}}'); closeGroupModal();" class="px-3 py-1 rounded-lg bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-xs font-bold">
+              Ver Ficha Individual
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      const balBtn = document.getElementById('groupModalBalanceBtn');
+      if (balBtn) {{
+        balBtn.onclick = () => {{
+          closeGroupModal();
+          state.selectedGroupId = gid;
+          setBalScope('group');
+          switchTab('balances');
+        }};
+      }}
+
+      document.getElementById('groupDetailModal').classList.remove('hidden');
+    }}
+
+    function closeGroupModal() {{
+      const m = document.getElementById('groupDetailModal');
+      if (m) m.classList.add('hidden');
+    }}
+
     function renderMarketOverview() {{
       const list = getFilteredCompanies();
       document.getElementById('filteredCiasCount').innerText = list.length;
@@ -1917,6 +2204,9 @@ def generate_html():
       document.getElementById('kpiLossRatio').innerText = formatPercent(lossRatio);
       document.getElementById('kpiCombinedRatio').innerText = formatPercent(combinedRatio);
       document.getElementById('kpiResNeto').innerText = formatARS(totNeto);
+
+      // Render Groups ranking table
+      renderGroupsRankingTable();
 
       // Top 15 Table SORTED BY PRIMAS EMITIDAS
       const sortedByEmitidas = [...list].sort((a, b) => b.primas_emitidas - a.primas_emitidas);
@@ -3283,7 +3573,7 @@ def generate_html():
       state.balScope = scope;
       
       // Update Scope Pills UI
-      ['market', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro', 'cia'].forEach(s => {{
+      ['market', 'group', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro', 'cia'].forEach(s => {{
         const btn = document.getElementById(`balScopeBtn-${{s}}`);
         if (btn) {{
           if (state.balScope === s) {{
@@ -3294,6 +3584,7 @@ def generate_html():
         }}
       }});
 
+      updateAllComboboxLabels();
       renderBalancesTab();
     }}
 
@@ -3368,6 +3659,7 @@ def generate_html():
       const titleEl = document.getElementById('balSelectedTitle');
       const badgeEl = document.getElementById('balSelectedBadge');
       const countEl = document.getElementById('balEntitiesCount');
+      const subTitleEl = document.getElementById('balSelectedSubtitle');
 
       if (!titleEl || !badgeEl || !countEl) return;
 
@@ -3375,16 +3667,25 @@ def generate_html():
         titleEl.innerText = 'Mercado Total Consolidado';
         badgeEl.innerText = '185 Cías';
         countEl.innerText = '185';
+        if (subTitleEl) subTitleEl.innerText = 'Plan de Cuentas Oficial SSN • Apertura Jerárquica Multinivel por Cuentas e Importes';
+      }} else if (state.balScope === 'group') {{
+        const g = (data.groups_by_id && data.groups_by_id[state.selectedGroupId]) || (data.groups && data.groups[0]);
+        titleEl.innerText = `${{g.name}} (Consolidado)`;
+        badgeEl.innerText = `${{g.entities_count}} Cías del Grupo`;
+        countEl.innerText = g.entities_count.toString();
+        if (subTitleEl) subTitleEl.innerText = `Balance Consolidado del Grupo • ${{g.description}}`;
       }} else if (state.balScope === 'cia') {{
         const cia = data.companies_by_code[state.selectedCompanyCode];
         titleEl.innerText = cia ? cia.razon_social : 'Aseguradora';
         badgeEl.innerText = cia ? `${{cia.cod_cia}} • ${{cia.tipo_entidad}}` : 'Individual';
         countEl.innerText = '1';
+        if (subTitleEl) subTitleEl.innerText = 'Plan de Cuentas Oficial SSN • Apertura Jerárquica Multinivel por Cuentas e Importes';
       }} else {{
         const count = data.companies.filter(c => c.tipo_entidad === state.balScope).length;
         titleEl.innerText = `${{state.balScope}} (Consolidado)`;
         badgeEl.innerText = `${{count}} Cías`;
         countEl.innerText = count.toString();
+        if (subTitleEl) subTitleEl.innerText = 'Plan de Cuentas Oficial SSN • Apertura Jerárquica Multinivel por Cuentas e Importes';
       }}
 
       renderBalanceKpis();
@@ -3399,6 +3700,9 @@ def generate_html():
         const sub = state.balSubramo;
         if (state.balScope === 'market') {{
           return (data.market_balances_subramos && data.market_balances_subramos[sub]) || {{}};
+        }} else if (state.balScope === 'group') {{
+          const gMap = (data.groups_balances_subramos && data.groups_balances_subramos[state.selectedGroupId]) || {{}};
+          return gMap[sub] || {{}};
         }} else if (state.balScope in (data.segment_balances_subramos || {{}})) {{
           return data.segment_balances_subramos[state.balScope][sub] || {{}};
         }} else if (state.balScope === 'cia') {{
@@ -3408,6 +3712,8 @@ def generate_html():
       }} else {{
         if (state.balScope === 'market') {{
           return data.market_balances_general || {{}};
+        }} else if (state.balScope === 'group') {{
+          return (data.groups_balances_general && data.groups_balances_general[state.selectedGroupId]) || {{}};
         }} else if (state.balScope in (data.segment_balances_general || {{}})) {{
           return data.segment_balances_general[state.balScope] || {{}};
         }} else if (state.balScope === 'cia') {{
@@ -3771,7 +4077,11 @@ def generate_html():
       a.click();
     }}
 
-    // Export all tree functions to window scope
+    // Export all tree and group functions to window scope
+    window.setRankingMode = setRankingMode;
+    window.openGroupModal = openGroupModal;
+    window.closeGroupModal = closeGroupModal;
+    window.renderGroupsRankingTable = renderGroupsRankingTable;
     window.setBalScope = setBalScope;
     window.setBalStatement = setBalStatement;
     window.setBalSubramo = setBalSubramo;
