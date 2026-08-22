@@ -685,6 +685,128 @@
       }
     ]
   },
+  "market_benchmarks": {
+    "entidades": 185,
+    "primas_emitidas": 29914862583572.0,
+    "primas_devengadas": 24618674007061.0,
+    "loss_ratio": 67.04,
+    "comm_ratio": 18.04,
+    "exp_ratio": 21.81,
+    "combined_ratio": 106.89,
+    "retencion_ratio": 82.3,
+    "roi_inversiones": -1.69,
+    "densidad_inversiones": 69.02,
+    "cobertura_reservas": 3.09,
+    "apalancamiento": 2.02,
+    "calidad_cartera": 18.01,
+    "roe": -0.9,
+    "roa": -0.3,
+    "margen_neto": -0.45,
+    "patrimonio_neto": 12209132418861.0,
+    "activo": 36002386222419.0,
+    "inversiones": 24849765728603.0,
+    "resultado_tecnico": 511610512134.0,
+    "resultado_financiero": -419908200221.0,
+    "resultado_neto": -109595439750.0
+  },
+  "segment_benchmarks": {
+    "Patrimoniales y Mixtas": {
+      "entidades": 91,
+      "primas_emitidas": 21153940139995.0,
+      "primas_devengadas": 16110357595846.0,
+      "loss_ratio": 66.26,
+      "comm_ratio": 23.53,
+      "exp_ratio": 23.05,
+      "combined_ratio": 112.84,
+      "retencion_ratio": 76.16,
+      "roi_inversiones": 0.41,
+      "densidad_inversiones": 59.2,
+      "cobertura_reservas": 5.72,
+      "apalancamiento": 1.88,
+      "calidad_cartera": 24.74,
+      "roe": -5.34,
+      "roa": -2.17,
+      "margen_neto": -2.85,
+      "patrimonio_neto": 8590122049235.0,
+      "activo": 21163818404022.0,
+      "inversiones": 12528647443380.0,
+      "resultado_tecnico": -367036526770.0,
+      "resultado_financiero": 51804645277.0,
+      "resultado_neto": -458340311757.0
+    },
+    "Riesgos del Trabajo (ART)": {
+      "entidades": 19,
+      "primas_emitidas": 6192990644195.0,
+      "primas_devengadas": 6111135634774.0,
+      "loss_ratio": 79.19,
+      "comm_ratio": 5.39,
+      "exp_ratio": 14.99,
+      "combined_ratio": 99.57,
+      "retencion_ratio": 98.68,
+      "roi_inversiones": -4.55,
+      "densidad_inversiones": 72.91,
+      "cobertura_reservas": 72.52,
+      "apalancamiento": 4.18,
+      "calidad_cartera": 3.69,
+      "roe": -7.14,
+      "roa": -1.84,
+      "margen_neto": -1.71,
+      "patrimonio_neto": 1461425060044.0,
+      "activo": 5661373865800.0,
+      "inversiones": 4127720961785.0,
+      "resultado_tecnico": 29782415154.0,
+      "resultado_financiero": -187709219707.0,
+      "resultado_neto": -104349712435.0
+    },
+    "Seguros de Personas": {
+      "entidades": 60,
+      "primas_emitidas": 2187433503192.0,
+      "primas_devengadas": 2096680676067.0,
+      "loss_ratio": 31.02,
+      "comm_ratio": 15.08,
+      "exp_ratio": 29.4,
+      "combined_ratio": 75.5,
+      "retencion_ratio": 95.85,
+      "roi_inversiones": -3.14,
+      "densidad_inversiones": 83.28,
+      "cobertura_reservas": 1.44,
+      "apalancamiento": 1.53,
+      "calidad_cartera": 10.65,
+      "roe": 24.45,
+      "roa": 6.54,
+      "margen_neto": 15.94,
+      "patrimonio_neto": 1366923408656.0,
+      "activo": 5106069772076.0,
+      "inversiones": 4252571314000.0,
+      "resultado_tecnico": 563122873311.0,
+      "resultado_financiero": -133425461477.0,
+      "resultado_neto": 334165006391.0
+    },
+    "Seguros de Retiro": {
+      "entidades": 15,
+      "primas_emitidas": 380498296190.0,
+      "primas_devengadas": 300500100374.0,
+      "loss_ratio": 113.37,
+      "comm_ratio": 1.45,
+      "exp_ratio": 40.67,
+      "combined_ratio": 155.48,
+      "retencion_ratio": 78.98,
+      "roi_inversiones": -3.82,
+      "densidad_inversiones": 96.8,
+      "cobertura_reservas": 1.31,
+      "apalancamiento": 0.38,
+      "calidad_cartera": 0.03,
+      "roe": 15.04,
+      "roa": 2.92,
+      "margen_neto": 39.58,
+      "patrimonio_neto": 790661900926.0,
+      "activo": 4071124180521.0,
+      "inversiones": 3940826009438.0,
+      "resultado_tecnico": 285741750439.0,
+      "resultado_financiero": -150578164314.0,
+      "resultado_neto": 118929578051.0
+    }
+  },
   "companies": [
     {
       "cod_cia": "0002",
@@ -726,6 +848,11 @@
       "cobertura_reservas": 2.35,
       "apalancamiento": 6.03,
       "calidad_cartera": 43.02,
+      "retencion_ratio": 66.64,
+      "roe": -55.7,
+      "roa": -7.84,
+      "margen_neto": -9.24,
+      "densidad_inversiones": 35.71,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -1005,6 +1132,11 @@
       "cobertura_reservas": 18.56,
       "apalancamiento": 1.67,
       "calidad_cartera": 3.9,
+      "retencion_ratio": 70.92,
+      "roe": 75.98,
+      "roa": 45.24,
+      "margen_neto": 45.37,
+      "densidad_inversiones": 59.03,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -1258,6 +1390,11 @@
       "cobertura_reservas": 18.36,
       "apalancamiento": 0.37,
       "calidad_cartera": 4.75,
+      "retencion_ratio": 93.48,
+      "roe": 9.01,
+      "roa": 7.54,
+      "margen_neto": 24.42,
+      "densidad_inversiones": 37.28,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -1471,6 +1608,11 @@
       "cobertura_reservas": 2.93,
       "apalancamiento": 3.16,
       "calidad_cartera": 41.67,
+      "retencion_ratio": 62.41,
+      "roe": 1.66,
+      "roa": 0.43,
+      "margen_neto": 0.52,
+      "densidad_inversiones": 51.95,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -1772,6 +1914,11 @@
       "cobertura_reservas": 4.99,
       "apalancamiento": 1.67,
       "calidad_cartera": 36.86,
+      "retencion_ratio": 70.57,
+      "roe": 7.61,
+      "roa": 3.09,
+      "margen_neto": 4.55,
+      "densidad_inversiones": 60.02,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -2045,6 +2192,11 @@
       "cobertura_reservas": 13.79,
       "apalancamiento": 3.61,
       "calidad_cartera": 24.31,
+      "retencion_ratio": 55.57,
+      "roe": 60.81,
+      "roa": 20.92,
+      "margen_neto": 16.86,
+      "densidad_inversiones": 31.97,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -2337,6 +2489,11 @@
       "cobertura_reservas": 2.73,
       "apalancamiento": 1.98,
       "calidad_cartera": 30.89,
+      "retencion_ratio": 74.27,
+      "roe": -4.04,
+      "roa": -1.66,
+      "margen_neto": -2.04,
+      "densidad_inversiones": 30.98,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -2594,6 +2751,11 @@
       "cobertura_reservas": 4.84,
       "apalancamiento": 2.25,
       "calidad_cartera": 24.64,
+      "retencion_ratio": 77.52,
+      "roe": -21.56,
+      "roa": -7.79,
+      "margen_neto": -9.58,
+      "densidad_inversiones": 16.41,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -2849,6 +3011,11 @@
       "cobertura_reservas": 2.38,
       "apalancamiento": 2.69,
       "calidad_cartera": 32.88,
+      "retencion_ratio": 70.24,
+      "roe": 0.3,
+      "roa": 0.12,
+      "margen_neto": 0.11,
+      "densidad_inversiones": 22.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -3182,6 +3349,11 @@
       "cobertura_reservas": 1.39,
       "apalancamiento": 1.73,
       "calidad_cartera": 1.75,
+      "retencion_ratio": 88.22,
+      "roe": 1.29,
+      "roa": 0.33,
+      "margen_neto": 0.75,
+      "densidad_inversiones": 73.92,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -3324,6 +3496,11 @@
       "cobertura_reservas": 5.29,
       "apalancamiento": 6.86,
       "calidad_cartera": 16.83,
+      "retencion_ratio": 86.91,
+      "roe": -9.11,
+      "roa": -1.53,
+      "margen_neto": -1.33,
+      "densidad_inversiones": 60.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -3602,6 +3779,11 @@
       "cobertura_reservas": 4.6,
       "apalancamiento": 1.05,
       "calidad_cartera": 40.02,
+      "retencion_ratio": 81.63,
+      "roe": 5.22,
+      "roa": 2.89,
+      "margen_neto": 4.99,
+      "densidad_inversiones": 72.28,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -3819,6 +4001,11 @@
       "cobertura_reservas": 12.87,
       "apalancamiento": 0.72,
       "calidad_cartera": 27.1,
+      "retencion_ratio": 81.54,
+      "roe": 25.25,
+      "roa": 12.74,
+      "margen_neto": 35.05,
+      "densidad_inversiones": 78.79,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -4047,6 +4234,11 @@
       "cobertura_reservas": 850.22,
       "apalancamiento": 0.1,
       "calidad_cartera": 7.08,
+      "retencion_ratio": 98.34,
+      "roe": -1.59,
+      "roa": -1.56,
+      "margen_neto": -15.25,
+      "densidad_inversiones": 3.77,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -4152,6 +4344,11 @@
       "cobertura_reservas": 3.38,
       "apalancamiento": 2.48,
       "calidad_cartera": 26.36,
+      "retencion_ratio": 81.16,
+      "roe": 4.77,
+      "roa": 1.73,
+      "margen_neto": 1.92,
+      "densidad_inversiones": 54.56,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -4472,6 +4669,11 @@
       "cobertura_reservas": 6.1,
       "apalancamiento": 2.83,
       "calidad_cartera": 17.4,
+      "retencion_ratio": 91.18,
+      "roe": 0.91,
+      "roa": 0.3,
+      "margen_neto": 0.32,
+      "densidad_inversiones": 60.21,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -4736,6 +4938,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 0.81,
       "calidad_cartera": 14.51,
+      "retencion_ratio": 93.32,
+      "roe": 0.23,
+      "roa": 0.21,
+      "margen_neto": 0.28,
+      "densidad_inversiones": 30.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -4865,6 +5072,11 @@
       "cobertura_reservas": 8.36,
       "apalancamiento": 1.57,
       "calidad_cartera": 18.3,
+      "retencion_ratio": 86.97,
+      "roe": -14.85,
+      "roa": -7.31,
+      "margen_neto": -9.44,
+      "densidad_inversiones": 70.54,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -5189,6 +5401,11 @@
       "cobertura_reservas": 2.81,
       "apalancamiento": 1.87,
       "calidad_cartera": 31.4,
+      "retencion_ratio": 83.69,
+      "roe": -47.52,
+      "roa": -21.25,
+      "margen_neto": -25.42,
+      "densidad_inversiones": 50.0,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -5485,6 +5702,11 @@
       "cobertura_reservas": 113.76,
       "apalancamiento": 0.36,
       "calidad_cartera": 5.01,
+      "retencion_ratio": 72.44,
+      "roe": 13.53,
+      "roa": 12.89,
+      "margen_neto": 37.5,
+      "densidad_inversiones": 60.73,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -5613,6 +5835,11 @@
       "cobertura_reservas": 1.74,
       "apalancamiento": 3.01,
       "calidad_cartera": 44.53,
+      "retencion_ratio": 89.91,
+      "roe": 18.4,
+      "roa": 6.26,
+      "margen_neto": 6.12,
+      "densidad_inversiones": 33.85,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -5792,6 +6019,11 @@
       "cobertura_reservas": 4.19,
       "apalancamiento": 1.75,
       "calidad_cartera": 38.55,
+      "retencion_ratio": 54.51,
+      "roe": 4.07,
+      "roa": 1.78,
+      "margen_neto": 2.33,
+      "densidad_inversiones": 47.6,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -6034,6 +6266,11 @@
       "cobertura_reservas": 10.96,
       "apalancamiento": 0.92,
       "calidad_cartera": 24.58,
+      "retencion_ratio": 86.23,
+      "roe": 4.29,
+      "roa": 2.66,
+      "margen_neto": 4.66,
+      "densidad_inversiones": 81.06,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -6286,6 +6523,11 @@
       "cobertura_reservas": 8.36,
       "apalancamiento": 1.15,
       "calidad_cartera": 19.03,
+      "retencion_ratio": 88.4,
+      "roe": 0.16,
+      "roa": 0.1,
+      "margen_neto": 0.14,
+      "densidad_inversiones": 70.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -6540,6 +6782,11 @@
       "cobertura_reservas": 5.27,
       "apalancamiento": 1.38,
       "calidad_cartera": 21.82,
+      "retencion_ratio": 73.14,
+      "roe": -1.24,
+      "roa": -0.66,
+      "margen_neto": -0.89,
+      "densidad_inversiones": 44.34,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -6934,6 +7181,11 @@
       "cobertura_reservas": 7.21,
       "apalancamiento": 0.4,
       "calidad_cartera": 70.55,
+      "retencion_ratio": 70.97,
+      "roe": 23.7,
+      "roa": 18.51,
+      "margen_neto": 59.44,
+      "densidad_inversiones": 28.53,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -7122,6 +7374,11 @@
       "cobertura_reservas": 3.89,
       "apalancamiento": 3.94,
       "calidad_cartera": 31.73,
+      "retencion_ratio": 71.8,
+      "roe": -0.9,
+      "roa": -0.2,
+      "margen_neto": -0.23,
+      "densidad_inversiones": 57.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -7435,6 +7692,11 @@
       "cobertura_reservas": 1.91,
       "apalancamiento": 0.3,
       "calidad_cartera": 293.96,
+      "retencion_ratio": 39.84,
+      "roe": 20.0,
+      "roa": 11.59,
+      "margen_neto": 67.45,
+      "densidad_inversiones": 1.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -7531,6 +7793,11 @@
       "cobertura_reservas": 4.66,
       "apalancamiento": 1.31,
       "calidad_cartera": 16.46,
+      "retencion_ratio": 80.78,
+      "roe": 13.6,
+      "roa": 8.05,
+      "margen_neto": 10.41,
+      "densidad_inversiones": 2.87,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -7793,6 +8060,11 @@
       "cobertura_reservas": 6.48,
       "apalancamiento": 0.55,
       "calidad_cartera": 23.41,
+      "retencion_ratio": 80.71,
+      "roe": -33.86,
+      "roa": -16.73,
+      "margen_neto": -61.59,
+      "densidad_inversiones": 28.96,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -7979,6 +8251,11 @@
       "cobertura_reservas": 2.97,
       "apalancamiento": 1.42,
       "calidad_cartera": 53.13,
+      "retencion_ratio": 36.68,
+      "roe": 7.78,
+      "roa": 2.77,
+      "margen_neto": 5.47,
+      "densidad_inversiones": 49.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -8270,6 +8547,11 @@
       "cobertura_reservas": 7.39,
       "apalancamiento": 4.48,
       "calidad_cartera": 19.93,
+      "retencion_ratio": 96.14,
+      "roe": -28.36,
+      "roa": -6.01,
+      "margen_neto": -6.33,
+      "densidad_inversiones": 0.55,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -8479,6 +8761,11 @@
       "cobertura_reservas": 7.94,
       "apalancamiento": 1.41,
       "calidad_cartera": 13.8,
+      "retencion_ratio": 87.58,
+      "roe": 1.56,
+      "roa": 0.93,
+      "margen_neto": 1.11,
+      "densidad_inversiones": 64.75,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -8706,6 +8993,11 @@
       "cobertura_reservas": 3.43,
       "apalancamiento": 1.22,
       "calidad_cartera": 32.34,
+      "retencion_ratio": 87.7,
+      "roe": -75.86,
+      "roa": -33.22,
+      "margen_neto": -62.15,
+      "densidad_inversiones": 30.57,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -8947,6 +9239,11 @@
       "cobertura_reservas": 1.3,
       "apalancamiento": 3.41,
       "calidad_cartera": 11.97,
+      "retencion_ratio": 91.0,
+      "roe": 6.04,
+      "roa": 0.94,
+      "margen_neto": 1.77,
+      "densidad_inversiones": 86.53,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -9237,6 +9534,11 @@
       "cobertura_reservas": 4.45,
       "apalancamiento": 1.71,
       "calidad_cartera": 31.63,
+      "retencion_ratio": 41.12,
+      "roe": 8.67,
+      "roa": 4.5,
+      "margen_neto": 5.08,
+      "densidad_inversiones": 63.64,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -9377,6 +9679,11 @@
       "cobertura_reservas": 25.62,
       "apalancamiento": 0.8,
       "calidad_cartera": 12.73,
+      "retencion_ratio": 93.92,
+      "roe": -6.62,
+      "roa": -4.06,
+      "margen_neto": -8.25,
+      "densidad_inversiones": 47.08,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -9726,6 +10033,11 @@
       "cobertura_reservas": 2.61,
       "apalancamiento": 1.12,
       "calidad_cartera": 9.62,
+      "retencion_ratio": 98.62,
+      "roe": 27.04,
+      "roa": 18.24,
+      "margen_neto": 24.08,
+      "densidad_inversiones": 9.09,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -9920,6 +10232,11 @@
       "cobertura_reservas": 45.17,
       "apalancamiento": 3.47,
       "calidad_cartera": 16.02,
+      "retencion_ratio": 96.44,
+      "roe": 17.02,
+      "roa": 5.12,
+      "margen_neto": 4.9,
+      "densidad_inversiones": 66.5,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -10160,6 +10477,11 @@
       "cobertura_reservas": 4.74,
       "apalancamiento": 0.82,
       "calidad_cartera": 67.24,
+      "retencion_ratio": 32.22,
+      "roe": 34.0,
+      "roa": 14.62,
+      "margen_neto": 41.24,
+      "densidad_inversiones": 64.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -10415,6 +10737,11 @@
       "cobertura_reservas": 5.21,
       "apalancamiento": 1.69,
       "calidad_cartera": 22.89,
+      "retencion_ratio": 90.87,
+      "roe": -34.53,
+      "roa": -16.86,
+      "margen_neto": -20.47,
+      "densidad_inversiones": 50.88,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -10656,6 +10983,11 @@
       "cobertura_reservas": 11.89,
       "apalancamiento": 0.78,
       "calidad_cartera": 53.9,
+      "retencion_ratio": 51.83,
+      "roe": 10.58,
+      "roa": 4.85,
+      "margen_neto": 13.56,
+      "densidad_inversiones": 60.46,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -10784,6 +11116,11 @@
       "cobertura_reservas": 4.05,
       "apalancamiento": 1.46,
       "calidad_cartera": 36.78,
+      "retencion_ratio": 79.95,
+      "roe": -16.04,
+      "roa": -7.43,
+      "margen_neto": -10.97,
+      "densidad_inversiones": 45.81,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -11068,6 +11405,11 @@
       "cobertura_reservas": 4.74,
       "apalancamiento": 0.82,
       "calidad_cartera": 36.96,
+      "retencion_ratio": 51.19,
+      "roe": 5.77,
+      "roa": 3.14,
+      "margen_neto": 7.04,
+      "densidad_inversiones": 41.02,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -11226,6 +11568,11 @@
       "cobertura_reservas": 5.35,
       "apalancamiento": 4.14,
       "calidad_cartera": 7.64,
+      "retencion_ratio": 89.86,
+      "roe": -29.31,
+      "roa": -8.45,
+      "margen_neto": -7.08,
+      "densidad_inversiones": 38.24,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -11500,6 +11847,11 @@
       "cobertura_reservas": 8.25,
       "apalancamiento": 1.37,
       "calidad_cartera": 9.64,
+      "retencion_ratio": 94.89,
+      "roe": 36.47,
+      "roa": 22.0,
+      "margen_neto": 26.68,
+      "densidad_inversiones": 78.01,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -11708,6 +12060,11 @@
       "cobertura_reservas": 2.12,
       "apalancamiento": 4.25,
       "calidad_cartera": 19.33,
+      "retencion_ratio": 88.29,
+      "roe": 17.15,
+      "roa": 6.07,
+      "margen_neto": 4.04,
+      "densidad_inversiones": 31.15,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -11921,6 +12278,11 @@
       "cobertura_reservas": 3.83,
       "apalancamiento": 1.7,
       "calidad_cartera": 46.46,
+      "retencion_ratio": 44.08,
+      "roe": -12.03,
+      "roa": -4.24,
+      "margen_neto": -7.07,
+      "densidad_inversiones": 43.22,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -12182,6 +12544,11 @@
       "cobertura_reservas": 18.26,
       "apalancamiento": 1.32,
       "calidad_cartera": 20.44,
+      "retencion_ratio": 95.56,
+      "roe": -19.82,
+      "roa": -8.04,
+      "margen_neto": -14.97,
+      "densidad_inversiones": 0.26,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -12412,6 +12779,11 @@
       "cobertura_reservas": 3.29,
       "apalancamiento": 6.55,
       "calidad_cartera": 12.18,
+      "retencion_ratio": 84.65,
+      "roe": -53.94,
+      "roa": -12.48,
+      "margen_neto": -8.23,
+      "densidad_inversiones": 18.19,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -12647,6 +13019,11 @@
       "cobertura_reservas": 1.85,
       "apalancamiento": 4.51,
       "calidad_cartera": 35.41,
+      "retencion_ratio": 82.03,
+      "roe": -73.62,
+      "roa": -19.84,
+      "margen_neto": -16.32,
+      "densidad_inversiones": 9.23,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -12958,6 +13335,11 @@
       "cobertura_reservas": 2.9,
       "apalancamiento": 1.2,
       "calidad_cartera": 13.02,
+      "retencion_ratio": 87.28,
+      "roe": 0.1,
+      "roa": 0.06,
+      "margen_neto": 0.08,
+      "densidad_inversiones": 31.63,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -13189,6 +13571,11 @@
       "cobertura_reservas": 4.71,
       "apalancamiento": 0.73,
       "calidad_cartera": 31.91,
+      "retencion_ratio": 87.73,
+      "roe": 3.15,
+      "roa": 2.11,
+      "margen_neto": 4.35,
+      "densidad_inversiones": 48.27,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -13412,6 +13799,11 @@
       "cobertura_reservas": 15.08,
       "apalancamiento": 0.22,
       "calidad_cartera": 18.57,
+      "retencion_ratio": 115.24,
+      "roe": -45.91,
+      "roa": -25.71,
+      "margen_neto": -206.24,
+      "densidad_inversiones": 52.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -13551,6 +13943,11 @@
       "cobertura_reservas": 16.27,
       "apalancamiento": 1.48,
       "calidad_cartera": 14.34,
+      "retencion_ratio": 85.58,
+      "roe": 15.37,
+      "roa": 9.64,
+      "margen_neto": 10.41,
+      "densidad_inversiones": 74.4,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -13777,6 +14174,11 @@
       "cobertura_reservas": 3.81,
       "apalancamiento": 3.44,
       "calidad_cartera": 22.65,
+      "retencion_ratio": 76.02,
+      "roe": -248.65,
+      "roa": -94.98,
+      "margen_neto": -72.27,
+      "densidad_inversiones": 31.37,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -14058,6 +14460,11 @@
       "cobertura_reservas": 6.2,
       "apalancamiento": 0.11,
       "calidad_cartera": 13.43,
+      "retencion_ratio": -2.2,
+      "roe": -100.59,
+      "roa": -85.71,
+      "margen_neto": -919.31,
+      "densidad_inversiones": 35.17,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -14159,6 +14566,11 @@
       "cobertura_reservas": 7.91,
       "apalancamiento": 1.72,
       "calidad_cartera": 11.29,
+      "retencion_ratio": 93.71,
+      "roe": 20.84,
+      "roa": 12.14,
+      "margen_neto": 12.11,
+      "densidad_inversiones": 77.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -14428,6 +14840,11 @@
       "cobertura_reservas": 116.39,
       "apalancamiento": 0.69,
       "calidad_cartera": 4.64,
+      "retencion_ratio": 94.42,
+      "roe": -4.32,
+      "roa": -3.49,
+      "margen_neto": -6.23,
+      "densidad_inversiones": 15.63,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -14623,6 +15040,11 @@
       "cobertura_reservas": 16.11,
       "apalancamiento": 1.22,
       "calidad_cartera": 35.82,
+      "retencion_ratio": 86.69,
+      "roe": -0.34,
+      "roa": -0.17,
+      "margen_neto": -0.28,
+      "densidad_inversiones": 42.83,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -14820,6 +15242,11 @@
       "cobertura_reservas": 97.12,
       "apalancamiento": 0.5,
       "calidad_cartera": 1.85,
+      "retencion_ratio": 92.83,
+      "roe": -8.42,
+      "roa": -7.22,
+      "margen_neto": -16.74,
+      "densidad_inversiones": 1.97,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -14951,6 +15378,11 @@
       "cobertura_reservas": 9.44,
       "apalancamiento": 1.56,
       "calidad_cartera": 34.97,
+      "retencion_ratio": 65.99,
+      "roe": -11.5,
+      "roa": -2.94,
+      "margen_neto": -7.37,
+      "densidad_inversiones": 12.33,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15075,6 +15507,11 @@
       "cobertura_reservas": 1.11,
       "apalancamiento": 1.95,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 94.49,
+      "roe": 48.73,
+      "roa": 4.38,
+      "margen_neto": 25.04,
+      "densidad_inversiones": 95.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15231,6 +15668,11 @@
       "cobertura_reservas": 1.28,
       "apalancamiento": 0.71,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 182.35,
+      "roe": 34.81,
+      "roa": 4.69,
+      "margen_neto": 48.77,
+      "densidad_inversiones": 99.32,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15387,6 +15829,11 @@
       "cobertura_reservas": 1.61,
       "apalancamiento": 0.28,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 18.75,
+      "roe": 0.15,
+      "roa": 0.05,
+      "margen_neto": 0.52,
+      "densidad_inversiones": 92.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15521,6 +15968,11 @@
       "cobertura_reservas": 1.54,
       "apalancamiento": 0.1,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 185.35,
+      "roe": 6.08,
+      "roa": 2.18,
+      "margen_neto": 60.48,
+      "densidad_inversiones": 94.59,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15651,6 +16103,11 @@
       "cobertura_reservas": 62.24,
       "apalancamiento": 3.0,
       "calidad_cartera": 11.48,
+      "retencion_ratio": 69.74,
+      "roe": 7.73,
+      "roa": 4.76,
+      "margen_neto": 2.58,
+      "densidad_inversiones": 11.37,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15815,6 +16272,11 @@
       "cobertura_reservas": 1.16,
       "apalancamiento": 0.45,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 64.06,
+      "roe": -4.66,
+      "roa": -0.81,
+      "margen_neto": -10.38,
+      "densidad_inversiones": 95.06,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -15976,6 +16438,11 @@
       "cobertura_reservas": 2.54,
       "apalancamiento": 0.22,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -7.04,
+      "roe": 0.24,
+      "roa": 0.14,
+      "margen_neto": 1.09,
+      "densidad_inversiones": 53.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16133,6 +16600,11 @@
       "cobertura_reservas": 135.58,
       "apalancamiento": 0.08,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 101.23,
+      "roe": 0.26,
+      "roa": 0.25,
+      "margen_neto": 3.32,
+      "densidad_inversiones": 5.71,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16246,6 +16718,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 6.47,
       "calidad_cartera": 0.05,
+      "retencion_ratio": 98.36,
+      "roe": 7.3,
+      "roa": 0.93,
+      "margen_neto": 1.13,
+      "densidad_inversiones": 87.39,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16370,6 +16847,11 @@
       "cobertura_reservas": 1.27,
       "apalancamiento": 0.87,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -48.63,
+      "roe": 0.43,
+      "roa": 0.08,
+      "margen_neto": 0.5,
+      "densidad_inversiones": 91.34,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16544,6 +17026,11 @@
       "cobertura_reservas": 1.52,
       "apalancamiento": 0.41,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 143.37,
+      "roe": 6.16,
+      "roa": 1.77,
+      "margen_neto": 15.04,
+      "densidad_inversiones": 97.69,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16694,6 +17181,11 @@
       "cobertura_reservas": 2.0,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 100.0,
+      "roe": 7.31,
+      "roa": 3.47,
+      "margen_neto": 113117127200.0,
+      "densidad_inversiones": 94.8,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16809,6 +17301,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 1.06,
       "calidad_cartera": 2.16,
+      "retencion_ratio": 99.92,
+      "roe": 25.05,
+      "roa": 21.33,
+      "margen_neto": 23.74,
+      "densidad_inversiones": 66.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -16942,6 +17439,11 @@
       "cobertura_reservas": 22.86,
       "apalancamiento": 0.42,
       "calidad_cartera": 9.24,
+      "retencion_ratio": 100.42,
+      "roe": -4.53,
+      "roa": -4.21,
+      "margen_neto": -10.7,
+      "densidad_inversiones": 0.51,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -17072,6 +17574,11 @@
       "cobertura_reservas": 5.39,
       "apalancamiento": 5.44,
       "calidad_cartera": 28.22,
+      "retencion_ratio": 89.58,
+      "roe": 12.67,
+      "roa": 2.19,
+      "margen_neto": 2.33,
+      "densidad_inversiones": 65.22,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -17336,6 +17843,11 @@
       "cobertura_reservas": 10.39,
       "apalancamiento": 4.66,
       "calidad_cartera": 13.87,
+      "retencion_ratio": 80.44,
+      "roe": 4.52,
+      "roa": 1.38,
+      "margen_neto": 0.97,
+      "densidad_inversiones": 51.25,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -17512,6 +18024,11 @@
       "cobertura_reservas": 7.42,
       "apalancamiento": 2.63,
       "calidad_cartera": 7.71,
+      "retencion_ratio": 87.95,
+      "roe": -2.79,
+      "roa": -1.05,
+      "margen_neto": -1.06,
+      "densidad_inversiones": 61.07,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -17816,6 +18333,11 @@
       "cobertura_reservas": 7.21,
       "apalancamiento": 0.62,
       "calidad_cartera": 49.35,
+      "retencion_ratio": 45.92,
+      "roe": 6.68,
+      "roa": 3.77,
+      "margen_neto": 10.68,
+      "densidad_inversiones": 77.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -18154,6 +18676,11 @@
       "cobertura_reservas": 1.58,
       "apalancamiento": 0.72,
       "calidad_cartera": 5.39,
+      "retencion_ratio": 135.61,
+      "roe": 15.81,
+      "roa": 4.57,
+      "margen_neto": 22.02,
+      "densidad_inversiones": 96.04,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -18345,6 +18872,11 @@
       "cobertura_reservas": 1.64,
       "apalancamiento": 0.61,
       "calidad_cartera": 8.82,
+      "retencion_ratio": 84.32,
+      "roe": 10.56,
+      "roa": 3.79,
+      "margen_neto": 17.18,
+      "densidad_inversiones": 97.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -18503,6 +19035,11 @@
       "cobertura_reservas": 5.83,
       "apalancamiento": 5.52,
       "calidad_cartera": 15.25,
+      "retencion_ratio": 83.84,
+      "roe": -37.74,
+      "roa": -9.58,
+      "margen_neto": -6.84,
+      "densidad_inversiones": 21.93,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -18744,6 +19281,11 @@
       "cobertura_reservas": 1.14,
       "apalancamiento": 0.63,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 209.73,
+      "roe": -12.97,
+      "roa": -1.6,
+      "margen_neto": -20.6,
+      "densidad_inversiones": 97.01,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -18904,6 +19446,11 @@
       "cobertura_reservas": 2.8,
       "apalancamiento": 0.8,
       "calidad_cartera": 10.59,
+      "retencion_ratio": 89.66,
+      "roe": 15.68,
+      "roa": 8.7,
+      "margen_neto": 19.62,
+      "densidad_inversiones": 91.74,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -19048,6 +19595,11 @@
       "cobertura_reservas": 1.38,
       "apalancamiento": 0.03,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 14.96,
+      "roe": 9.09,
+      "roa": 2.3,
+      "margen_neto": 296.25,
+      "densidad_inversiones": 99.52,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -19214,6 +19766,11 @@
       "cobertura_reservas": 40.9,
       "apalancamiento": 3.7,
       "calidad_cartera": 6.79,
+      "retencion_ratio": 92.0,
+      "roe": -13.2,
+      "roa": -7.63,
+      "margen_neto": -3.56,
+      "densidad_inversiones": 47.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -19413,6 +19970,11 @@
       "cobertura_reservas": 1.09,
       "apalancamiento": 1.54,
       "calidad_cartera": 1.32,
+      "retencion_ratio": 160.13,
+      "roe": 33.76,
+      "roa": 3.29,
+      "margen_neto": 21.92,
+      "densidad_inversiones": 91.44,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -19568,6 +20130,11 @@
       "cobertura_reservas": 85.81,
       "apalancamiento": 0.71,
       "calidad_cartera": 3.4,
+      "retencion_ratio": 99.74,
+      "roe": 8.76,
+      "roa": 8.15,
+      "margen_neto": 12.28,
+      "densidad_inversiones": 80.63,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -19713,6 +20280,11 @@
       "cobertura_reservas": 7.0,
       "apalancamiento": 2.19,
       "calidad_cartera": 9.4,
+      "retencion_ratio": 97.37,
+      "roe": -5.95,
+      "roa": -4.29,
+      "margen_neto": -2.71,
+      "densidad_inversiones": 68.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -19860,6 +20432,11 @@
       "cobertura_reservas": 8.71,
       "apalancamiento": 2.08,
       "calidad_cartera": 12.01,
+      "retencion_ratio": 93.31,
+      "roe": 3.3,
+      "roa": 2.16,
+      "margen_neto": 1.59,
+      "densidad_inversiones": 73.76,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -20071,6 +20648,11 @@
       "cobertura_reservas": 4.58,
       "apalancamiento": 1.09,
       "calidad_cartera": 0.23,
+      "retencion_ratio": 97.77,
+      "roe": -1.18,
+      "roa": -1.08,
+      "margen_neto": -1.08,
+      "densidad_inversiones": 27.48,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -20199,6 +20781,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 2.13,
       "calidad_cartera": 4.57,
+      "retencion_ratio": 85.83,
+      "roe": 56.97,
+      "roa": 36.3,
+      "margen_neto": 26.72,
+      "densidad_inversiones": 6.07,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -20328,6 +20915,11 @@
       "cobertura_reservas": 1.54,
       "apalancamiento": 1.28,
       "calidad_cartera": 5.17,
+      "retencion_ratio": 88.62,
+      "roe": -7.01,
+      "roa": -2.74,
+      "margen_neto": -5.46,
+      "densidad_inversiones": 76.0,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -20530,6 +21122,11 @@
       "cobertura_reservas": 0.77,
       "apalancamiento": 6.16,
       "calidad_cartera": 11.24,
+      "retencion_ratio": 93.62,
+      "roe": 8.31,
+      "roa": 4.41,
+      "margen_neto": 1.35,
+      "densidad_inversiones": 2.27,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -20675,6 +21272,11 @@
       "cobertura_reservas": 3.21,
       "apalancamiento": 2.75,
       "calidad_cartera": 9.86,
+      "retencion_ratio": 187.49,
+      "roe": 17.13,
+      "roa": 6.18,
+      "margen_neto": 6.23,
+      "densidad_inversiones": 48.08,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -20818,6 +21420,11 @@
       "cobertura_reservas": 1.26,
       "apalancamiento": 2.35,
       "calidad_cartera": 7.03,
+      "retencion_ratio": 83.77,
+      "roe": 10.42,
+      "roa": 1.85,
+      "margen_neto": 4.43,
+      "densidad_inversiones": 81.22,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -21031,6 +21638,11 @@
       "cobertura_reservas": 3.06,
       "apalancamiento": 3.73,
       "calidad_cartera": 22.37,
+      "retencion_ratio": 80.79,
+      "roe": 13.48,
+      "roa": 6.32,
+      "margen_neto": 3.61,
+      "densidad_inversiones": 41.75,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -21274,6 +21886,11 @@
       "cobertura_reservas": 6.28,
       "apalancamiento": 0.13,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 94.23,
+      "roe": -0.91,
+      "roa": -0.89,
+      "margen_neto": -6.99,
+      "densidad_inversiones": 3.87,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -21374,6 +21991,11 @@
       "cobertura_reservas": 4.9,
       "apalancamiento": 1.82,
       "calidad_cartera": 26.83,
+      "retencion_ratio": 68.03,
+      "roe": 45.82,
+      "roa": 25.95,
+      "margen_neto": 25.16,
+      "densidad_inversiones": 52.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -21571,6 +22193,11 @@
       "cobertura_reservas": 43.12,
       "apalancamiento": 0.04,
       "calidad_cartera": 60.34,
+      "retencion_ratio": 61.39,
+      "roe": 2.13,
+      "roa": 2.05,
+      "margen_neto": 59.36,
+      "densidad_inversiones": 20.23,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -21713,6 +22340,11 @@
       "cobertura_reservas": 1.81,
       "apalancamiento": 0.03,
       "calidad_cartera": 5.11,
+      "retencion_ratio": -1338.65,
+      "roe": 5.5,
+      "roa": 2.41,
+      "margen_neto": 219.56,
+      "densidad_inversiones": 90.99,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -21869,6 +22501,11 @@
       "cobertura_reservas": 394.89,
       "apalancamiento": 9.76,
       "calidad_cartera": 5.9,
+      "retencion_ratio": 99.29,
+      "roe": -12.09,
+      "roa": -1.44,
+      "margen_neto": -1.24,
+      "densidad_inversiones": 86.32,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22019,6 +22656,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 11.09,
       "calidad_cartera": 1.03,
+      "retencion_ratio": 99.8,
+      "roe": -13.88,
+      "roa": -1.72,
+      "margen_neto": -1.25,
+      "densidad_inversiones": 76.13,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22159,6 +22801,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 3.02,
       "calidad_cartera": 2.24,
+      "retencion_ratio": 99.67,
+      "roe": 9.62,
+      "roa": 3.3,
+      "margen_neto": 3.19,
+      "densidad_inversiones": 83.15,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22305,6 +22952,11 @@
       "cobertura_reservas": 76.82,
       "apalancamiento": 4.5,
       "calidad_cartera": 4.01,
+      "retencion_ratio": 98.3,
+      "roe": -38.8,
+      "roa": -7.47,
+      "margen_neto": -8.62,
+      "densidad_inversiones": 84.64,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22446,6 +23098,11 @@
       "cobertura_reservas": 20.98,
       "apalancamiento": 5.79,
       "calidad_cartera": 2.5,
+      "retencion_ratio": 97.93,
+      "roe": -70.01,
+      "roa": -17.44,
+      "margen_neto": -12.09,
+      "densidad_inversiones": 61.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22580,6 +23237,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 0.51,
       "calidad_cartera": 4.06,
+      "retencion_ratio": 72.97,
+      "roe": 28.52,
+      "roa": 12.56,
+      "margen_neto": 55.51,
+      "densidad_inversiones": 96.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22704,6 +23366,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 6.97,
       "calidad_cartera": 2.74,
+      "retencion_ratio": 100.76,
+      "roe": 21.17,
+      "roa": 3.52,
+      "margen_neto": 3.04,
+      "densidad_inversiones": 75.74,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -22855,6 +23522,11 @@
       "cobertura_reservas": 8.51,
       "apalancamiento": 3.9,
       "calidad_cartera": 3.04,
+      "retencion_ratio": 95.56,
+      "roe": 52.0,
+      "roa": 23.84,
+      "margen_neto": 13.33,
+      "densidad_inversiones": 85.47,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23032,6 +23704,11 @@
       "cobertura_reservas": 12.4,
       "apalancamiento": 0.97,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 100.2,
+      "roe": 5.81,
+      "roa": 5.11,
+      "margen_neto": 6.0,
+      "densidad_inversiones": 72.62,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23158,6 +23835,11 @@
       "cobertura_reservas": 7.29,
       "apalancamiento": 2.41,
       "calidad_cartera": 16.91,
+      "retencion_ratio": 49.56,
+      "roe": 17.78,
+      "roa": 4.84,
+      "margen_neto": 7.39,
+      "densidad_inversiones": 45.08,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23292,6 +23974,11 @@
       "cobertura_reservas": 34.65,
       "apalancamiento": 2.23,
       "calidad_cartera": 9.28,
+      "retencion_ratio": 98.09,
+      "roe": 64.34,
+      "roa": 40.1,
+      "margen_neto": 28.91,
+      "densidad_inversiones": 50.56,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23466,6 +24153,11 @@
       "cobertura_reservas": 13.74,
       "apalancamiento": 3.58,
       "calidad_cartera": 7.84,
+      "retencion_ratio": 100.06,
+      "roe": 7.19,
+      "roa": 1.78,
+      "margen_neto": 2.01,
+      "densidad_inversiones": 53.99,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23737,6 +24429,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 0.21,
       "calidad_cartera": 45.26,
+      "retencion_ratio": 99.52,
+      "roe": 0.73,
+      "roa": 0.71,
+      "margen_neto": 3.39,
+      "densidad_inversiones": 31.41,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23849,6 +24546,11 @@
       "cobertura_reservas": 75.11,
       "apalancamiento": 0.21,
       "calidad_cartera": 16.8,
+      "retencion_ratio": 97.88,
+      "roe": -11.32,
+      "roa": -10.16,
+      "margen_neto": -53.96,
+      "densidad_inversiones": 76.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -23973,6 +24675,11 @@
       "cobertura_reservas": 23.33,
       "apalancamiento": 1.26,
       "calidad_cartera": 5.31,
+      "retencion_ratio": 89.7,
+      "roe": -156.35,
+      "roa": -82.04,
+      "margen_neto": -123.62,
+      "densidad_inversiones": 57.32,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24102,6 +24809,11 @@
       "cobertura_reservas": 234.54,
       "apalancamiento": 1.84,
       "calidad_cartera": 15.1,
+      "retencion_ratio": 95.9,
+      "roe": -130.69,
+      "roa": -24.27,
+      "margen_neto": -71.09,
+      "densidad_inversiones": 71.75,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24236,6 +24948,11 @@
       "cobertura_reservas": 217.22,
       "apalancamiento": 0.34,
       "calidad_cartera": 5.81,
+      "retencion_ratio": 93.93,
+      "roe": -3.63,
+      "roa": -2.25,
+      "margen_neto": -10.58,
+      "densidad_inversiones": 86.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24348,6 +25065,11 @@
       "cobertura_reservas": 215.34,
       "apalancamiento": 0.36,
       "calidad_cartera": 4.64,
+      "retencion_ratio": 91.64,
+      "roe": -58.93,
+      "roa": -48.38,
+      "margen_neto": -163.97,
+      "densidad_inversiones": 62.89,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24478,6 +25200,11 @@
       "cobertura_reservas": 2.1,
       "apalancamiento": 1.3,
       "calidad_cartera": 115.06,
+      "retencion_ratio": 80.62,
+      "roe": -14.99,
+      "roa": -2.41,
+      "margen_neto": -11.53,
+      "densidad_inversiones": 49.98,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24591,6 +25318,11 @@
       "cobertura_reservas": 6.32,
       "apalancamiento": 2.13,
       "calidad_cartera": 20.28,
+      "retencion_ratio": 87.48,
+      "roe": 38.52,
+      "roa": 22.17,
+      "margen_neto": 18.1,
+      "densidad_inversiones": 67.24,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24769,6 +25501,11 @@
       "cobertura_reservas": 15.99,
       "apalancamiento": 1.56,
       "calidad_cartera": 9.04,
+      "retencion_ratio": 91.06,
+      "roe": 28.21,
+      "roa": 19.38,
+      "margen_neto": 18.14,
+      "densidad_inversiones": 83.71,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -24953,6 +25690,11 @@
       "cobertura_reservas": 14.64,
       "apalancamiento": 1.78,
       "calidad_cartera": 10.28,
+      "retencion_ratio": 89.3,
+      "roe": 42.48,
+      "roa": 28.64,
+      "margen_neto": 23.88,
+      "densidad_inversiones": 76.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -25110,6 +25852,11 @@
       "cobertura_reservas": 3.55,
       "apalancamiento": 0.76,
       "calidad_cartera": 61.98,
+      "retencion_ratio": 56.61,
+      "roe": 20.65,
+      "roa": 12.43,
+      "margen_neto": 27.15,
+      "densidad_inversiones": 65.35,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -25277,6 +26024,11 @@
       "cobertura_reservas": 1.3,
       "apalancamiento": 0.44,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 135.04,
+      "roe": 19.56,
+      "roa": 3.69,
+      "margen_neto": 44.93,
+      "densidad_inversiones": 96.85,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -25427,6 +26179,11 @@
       "cobertura_reservas": 8.47,
       "apalancamiento": 1.89,
       "calidad_cartera": 8.97,
+      "retencion_ratio": 97.43,
+      "roe": -31.65,
+      "roa": -11.98,
+      "margen_neto": -16.72,
+      "densidad_inversiones": 28.72,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -25629,6 +26386,11 @@
       "cobertura_reservas": 2.14,
       "apalancamiento": 3.22,
       "calidad_cartera": 28.95,
+      "retencion_ratio": 76.86,
+      "roe": 3.84,
+      "roa": 1.13,
+      "margen_neto": 1.19,
+      "densidad_inversiones": 36.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -25845,6 +26607,11 @@
       "cobertura_reservas": 52.55,
       "apalancamiento": 0.06,
       "calidad_cartera": 31.2,
+      "retencion_ratio": 88.83,
+      "roe": 8.09,
+      "roa": 7.9,
+      "margen_neto": 136.03,
+      "densidad_inversiones": 95.56,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -25995,6 +26762,11 @@
       "cobertura_reservas": 5.52,
       "apalancamiento": 0.76,
       "calidad_cartera": 49.71,
+      "retencion_ratio": 63.72,
+      "roe": -4.17,
+      "roa": -3.18,
+      "margen_neto": -5.47,
+      "densidad_inversiones": 4.8,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -26112,6 +26884,11 @@
       "cobertura_reservas": 7.04,
       "apalancamiento": 2.38,
       "calidad_cartera": 21.79,
+      "retencion_ratio": 92.05,
+      "roe": 0.74,
+      "roa": 0.21,
+      "margen_neto": 0.31,
+      "densidad_inversiones": 73.49,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -26461,6 +27238,11 @@
       "cobertura_reservas": 22.38,
       "apalancamiento": 0.79,
       "calidad_cartera": 10.88,
+      "retencion_ratio": 94.86,
+      "roe": 28.84,
+      "roa": 16.47,
+      "margen_neto": 36.65,
+      "densidad_inversiones": 75.21,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -26682,6 +27464,11 @@
       "cobertura_reservas": 4.22,
       "apalancamiento": 2.36,
       "calidad_cartera": 38.22,
+      "retencion_ratio": 76.57,
+      "roe": 5.45,
+      "roa": 1.5,
+      "margen_neto": 2.31,
+      "densidad_inversiones": 45.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -26902,6 +27689,11 @@
       "cobertura_reservas": 3.16,
       "apalancamiento": 1.41,
       "calidad_cartera": 8.29,
+      "retencion_ratio": 95.36,
+      "roe": 9.36,
+      "roa": 4.58,
+      "margen_neto": 6.63,
+      "densidad_inversiones": 79.35,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -27111,6 +27903,11 @@
       "cobertura_reservas": 35.89,
       "apalancamiento": 1.89,
       "calidad_cartera": 6.13,
+      "retencion_ratio": 99.75,
+      "roe": 1.16,
+      "roa": 0.4,
+      "margen_neto": 0.61,
+      "densidad_inversiones": 73.6,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -27248,6 +28045,11 @@
       "cobertura_reservas": 2.94,
       "apalancamiento": 2.38,
       "calidad_cartera": 26.8,
+      "retencion_ratio": 59.46,
+      "roe": 12.17,
+      "roa": 4.59,
+      "margen_neto": 5.1,
+      "densidad_inversiones": 64.13,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -27371,6 +28173,11 @@
       "cobertura_reservas": 19.37,
       "apalancamiento": 0.97,
       "calidad_cartera": 17.8,
+      "retencion_ratio": 68.49,
+      "roe": 10.52,
+      "roa": 5.53,
+      "margen_neto": 10.85,
+      "densidad_inversiones": 16.54,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -27508,6 +28315,11 @@
       "cobertura_reservas": 3.37,
       "apalancamiento": 1.16,
       "calidad_cartera": 32.76,
+      "retencion_ratio": 59.89,
+      "roe": 16.85,
+      "roa": 11.02,
+      "margen_neto": 14.58,
+      "densidad_inversiones": 30.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -27692,6 +28504,11 @@
       "cobertura_reservas": 1.48,
       "apalancamiento": 0.96,
       "calidad_cartera": 54.55,
+      "retencion_ratio": 24.09,
+      "roe": -43.15,
+      "roa": -16.78,
+      "margen_neto": -44.97,
+      "densidad_inversiones": 43.64,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -27827,6 +28644,11 @@
       "cobertura_reservas": 7.6,
       "apalancamiento": 6.8,
       "calidad_cartera": 9.03,
+      "retencion_ratio": 98.37,
+      "roe": 15.87,
+      "roa": 4.99,
+      "margen_neto": 2.33,
+      "densidad_inversiones": 52.01,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28040,6 +28862,11 @@
       "cobertura_reservas": 60.66,
       "apalancamiento": 1.91,
       "calidad_cartera": 11.43,
+      "retencion_ratio": 96.17,
+      "roe": 50.99,
+      "roa": 33.35,
+      "margen_neto": 26.7,
+      "densidad_inversiones": 69.37,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28217,6 +29044,11 @@
       "cobertura_reservas": 191.67,
       "apalancamiento": 1.69,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 99.78,
+      "roe": 78.93,
+      "roa": 50.73,
+      "margen_neto": 46.57,
+      "densidad_inversiones": 24.53,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28336,6 +29168,11 @@
       "cobertura_reservas": 16.77,
       "apalancamiento": 0.52,
       "calidad_cartera": 10.59,
+      "retencion_ratio": 122.23,
+      "roe": 25.35,
+      "roa": 22.16,
+      "margen_neto": 48.59,
+      "densidad_inversiones": 73.76,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28507,6 +29344,11 @@
       "cobertura_reservas": 5.75,
       "apalancamiento": 0.18,
       "calidad_cartera": 64.78,
+      "retencion_ratio": 7.81,
+      "roe": -5.05,
+      "roa": -2.59,
+      "margen_neto": -28.49,
+      "densidad_inversiones": 57.48,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28634,6 +29476,11 @@
       "cobertura_reservas": 23.46,
       "apalancamiento": 0.22,
       "calidad_cartera": 118.57,
+      "retencion_ratio": 9.74,
+      "roe": 11.69,
+      "roa": 8.68,
+      "margen_neto": 54.17,
+      "densidad_inversiones": 72.45,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28781,6 +29628,11 @@
       "cobertura_reservas": 7.88,
       "apalancamiento": 0.58,
       "calidad_cartera": 50.32,
+      "retencion_ratio": 25.73,
+      "roe": 35.02,
+      "roa": 16.77,
+      "margen_neto": 60.71,
+      "densidad_inversiones": 56.54,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -28913,6 +29765,11 @@
       "cobertura_reservas": 18.78,
       "apalancamiento": 2.01,
       "calidad_cartera": 2.81,
+      "retencion_ratio": 95.14,
+      "roe": 4.34,
+      "roa": 3.96,
+      "margen_neto": 2.16,
+      "densidad_inversiones": 5.31,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -29053,6 +29910,11 @@
       "cobertura_reservas": 187.6,
       "apalancamiento": 0.05,
       "calidad_cartera": 6.2,
+      "retencion_ratio": 97.12,
+      "roe": 3.06,
+      "roa": 3.03,
+      "margen_neto": 66.56,
+      "densidad_inversiones": 98.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -29174,6 +30036,11 @@
       "cobertura_reservas": 24.37,
       "apalancamiento": 2.33,
       "calidad_cartera": 14.78,
+      "retencion_ratio": 87.36,
+      "roe": 59.68,
+      "roa": 33.92,
+      "margen_neto": 25.63,
+      "densidad_inversiones": 0.21,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -29318,6 +30185,11 @@
       "cobertura_reservas": 5.25,
       "apalancamiento": 3.52,
       "calidad_cartera": 23.04,
+      "retencion_ratio": 86.1,
+      "roe": -112.17,
+      "roa": -27.65,
+      "margen_neto": -31.9,
+      "densidad_inversiones": 1.7,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -29562,6 +30434,11 @@
       "cobertura_reservas": 23.9,
       "apalancamiento": 0.01,
       "calidad_cartera": 374.2,
+      "retencion_ratio": 29.26,
+      "roe": 2.07,
+      "roa": 1.96,
+      "margen_neto": 141.98,
+      "densidad_inversiones": 80.09,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -29677,6 +30554,11 @@
       "cobertura_reservas": 3.09,
       "apalancamiento": 5.29,
       "calidad_cartera": 16.48,
+      "retencion_ratio": 79.59,
+      "roe": -26.63,
+      "roa": -11.85,
+      "margen_neto": -5.03,
+      "densidad_inversiones": 27.19,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -29882,6 +30764,11 @@
       "cobertura_reservas": 1519.07,
       "apalancamiento": 8.5,
       "calidad_cartera": 2.91,
+      "retencion_ratio": 100.29,
+      "roe": -48.1,
+      "roa": -11.54,
+      "margen_neto": -5.66,
+      "densidad_inversiones": 56.17,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -30017,6 +30904,11 @@
       "cobertura_reservas": 2.14,
       "apalancamiento": 4.19,
       "calidad_cartera": 19.9,
+      "retencion_ratio": 65.43,
+      "roe": 27.95,
+      "roa": 7.33,
+      "margen_neto": 6.66,
+      "densidad_inversiones": 61.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -30181,6 +31073,11 @@
       "cobertura_reservas": 5.73,
       "apalancamiento": 4.65,
       "calidad_cartera": 11.62,
+      "retencion_ratio": 85.11,
+      "roe": -135.27,
+      "roa": -34.36,
+      "margen_neto": -29.1,
+      "densidad_inversiones": 24.91,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -30336,6 +31233,11 @@
       "cobertura_reservas": 9.67,
       "apalancamiento": 1.22,
       "calidad_cartera": 25.56,
+      "retencion_ratio": 62.4,
+      "roe": 47.65,
+      "roa": 25.92,
+      "margen_neto": 39.03,
+      "densidad_inversiones": 54.29,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -30567,6 +31469,11 @@
       "cobertura_reservas": 8.31,
       "apalancamiento": 4.84,
       "calidad_cartera": 7.4,
+      "retencion_ratio": 79.12,
+      "roe": 6.12,
+      "roa": 2.09,
+      "margen_neto": 1.27,
+      "densidad_inversiones": 55.16,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -30855,6 +31762,11 @@
       "cobertura_reservas": 10.83,
       "apalancamiento": 1.14,
       "calidad_cartera": 13.94,
+      "retencion_ratio": 93.59,
+      "roe": 26.7,
+      "roa": 16.57,
+      "margen_neto": 23.49,
+      "densidad_inversiones": 71.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -31038,6 +31950,11 @@
       "cobertura_reservas": 5.74,
       "apalancamiento": 4.47,
       "calidad_cartera": 15.9,
+      "retencion_ratio": 74.31,
+      "roe": -418.59,
+      "roa": -87.92,
+      "margen_neto": -93.72,
+      "densidad_inversiones": 14.93,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -31285,6 +32202,11 @@
       "cobertura_reservas": 9.84,
       "apalancamiento": 2.09,
       "calidad_cartera": 14.38,
+      "retencion_ratio": 88.69,
+      "roe": 59.55,
+      "roa": 33.68,
+      "margen_neto": 28.5,
+      "densidad_inversiones": 66.81,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -31507,6 +32429,11 @@
       "cobertura_reservas": 7.9,
       "apalancamiento": 4.61,
       "calidad_cartera": 23.25,
+      "retencion_ratio": 14.71,
+      "roe": 10.3,
+      "roa": 2.52,
+      "margen_neto": 2.24,
+      "densidad_inversiones": 61.7,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -31745,6 +32672,11 @@
       "cobertura_reservas": 2.83,
       "apalancamiento": 1.16,
       "calidad_cartera": 126.58,
+      "retencion_ratio": 54.24,
+      "roe": 0.09,
+      "roa": 0.04,
+      "margen_neto": 0.08,
+      "densidad_inversiones": 20.29,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -31916,6 +32848,11 @@
       "cobertura_reservas": 67770.15,
       "apalancamiento": 0.96,
       "calidad_cartera": 7.79,
+      "retencion_ratio": 100.0,
+      "roe": 48.36,
+      "roa": 35.31,
+      "margen_neto": 50.25,
+      "densidad_inversiones": 84.27,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32048,6 +32985,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 4.29,
       "calidad_cartera": 1.29,
+      "retencion_ratio": 102.65,
+      "roe": 21.54,
+      "roa": 5.58,
+      "margen_neto": 5.03,
+      "densidad_inversiones": 81.55,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32170,6 +33112,11 @@
       "cobertura_reservas": 53.12,
       "apalancamiento": 0.39,
       "calidad_cartera": 34.29,
+      "retencion_ratio": 83.18,
+      "roe": 16.94,
+      "roa": 14.15,
+      "margen_neto": 43.91,
+      "densidad_inversiones": 80.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32314,6 +33261,11 @@
       "cobertura_reservas": 5.23,
       "apalancamiento": 2.03,
       "calidad_cartera": 37.18,
+      "retencion_ratio": 54.98,
+      "roe": 11.16,
+      "roa": 5.28,
+      "margen_neto": 5.51,
+      "densidad_inversiones": 43.31,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32432,6 +33384,11 @@
       "cobertura_reservas": 103.62,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -113.83,
+      "roe": -27.48,
+      "roa": -27.2,
+      "margen_neto": -15219.79,
+      "densidad_inversiones": 33.42,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32528,6 +33485,11 @@
       "cobertura_reservas": 21.96,
       "apalancamiento": 0.3,
       "calidad_cartera": 25.7,
+      "retencion_ratio": 85.48,
+      "roe": 8.89,
+      "roa": 7.6,
+      "margen_neto": 29.35,
+      "densidad_inversiones": 73.04,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32652,6 +33614,11 @@
       "cobertura_reservas": 1.11,
       "apalancamiento": 1.73,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 45.51,
+      "roe": 21.41,
+      "roa": 2.3,
+      "margen_neto": 12.4,
+      "densidad_inversiones": 94.51,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32776,6 +33743,11 @@
       "cobertura_reservas": 9.0,
       "apalancamiento": 2.53,
       "calidad_cartera": 35.95,
+      "retencion_ratio": 44.89,
+      "roe": 43.26,
+      "roa": 4.62,
+      "margen_neto": 17.1,
+      "densidad_inversiones": 13.87,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -32904,6 +33876,11 @@
       "cobertura_reservas": 34.82,
       "apalancamiento": 5.86,
       "calidad_cartera": 3.15,
+      "retencion_ratio": 99.81,
+      "roe": -69.91,
+      "roa": -19.36,
+      "margen_neto": -11.93,
+      "densidad_inversiones": 92.25,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33010,6 +33987,11 @@
       "cobertura_reservas": 10916.9,
       "apalancamiento": 0.1,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 99.91,
+      "roe": 2.05,
+      "roa": 2.03,
+      "margen_neto": 20.36,
+      "densidad_inversiones": 98.79,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33153,6 +34135,11 @@
       "cobertura_reservas": 36.75,
       "apalancamiento": 0.04,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 67.8,
+      "roe": -31.88,
+      "roa": -31.04,
+      "margen_neto": -709.02,
+      "densidad_inversiones": 79.44,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33266,6 +34253,11 @@
       "cobertura_reservas": 4.14,
       "apalancamiento": 4.53,
       "calidad_cartera": 25.35,
+      "retencion_ratio": 64.99,
+      "roe": 12.06,
+      "roa": 2.78,
+      "margen_neto": 2.66,
+      "densidad_inversiones": 18.95,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33395,6 +34387,11 @@
       "cobertura_reservas": 25.88,
       "apalancamiento": 8.7,
       "calidad_cartera": 2.48,
+      "retencion_ratio": 97.8,
+      "roe": -68.13,
+      "roa": -14.92,
+      "margen_neto": -7.83,
+      "densidad_inversiones": 59.7,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33517,6 +34514,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 3.33,
       "calidad_cartera": 0.01,
+      "retencion_ratio": 100.0,
+      "roe": 26.42,
+      "roa": 11.38,
+      "margen_neto": 7.94,
+      "densidad_inversiones": 94.69,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33631,6 +34633,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 1.32,
       "calidad_cartera": 7.5,
+      "retencion_ratio": 100.0,
+      "roe": 44.14,
+      "roa": 31.95,
+      "margen_neto": 33.44,
+      "densidad_inversiones": 44.83,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33732,6 +34739,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 1.08,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 100.03,
+      "roe": 52.88,
+      "roa": 45.79,
+      "margen_neto": 49.09,
+      "densidad_inversiones": 88.49,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33862,6 +34874,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 6.55,
       "calidad_cartera": 1.71,
+      "retencion_ratio": 100.2,
+      "roe": 63.68,
+      "roa": 15.54,
+      "margen_neto": 9.72,
+      "densidad_inversiones": 62.62,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -33990,6 +35007,11 @@
       "cobertura_reservas": 347.69,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -55826.3,
+      "roe": -110.75,
+      "roa": -73.46,
+      "margen_neto": -14806419.17,
+      "densidad_inversiones": 63.03,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34096,6 +35118,11 @@
       "cobertura_reservas": 5.05,
       "apalancamiento": 2.67,
       "calidad_cartera": 1.68,
+      "retencion_ratio": 83.89,
+      "roe": -101.09,
+      "roa": -52.31,
+      "margen_neto": -37.83,
+      "densidad_inversiones": 11.13,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34223,6 +35250,11 @@
       "cobertura_reservas": 61.64,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.77,
+      "retencion_ratio": -18157.86,
+      "roe": -26.4,
+      "roa": -25.54,
+      "margen_neto": -419670.3,
+      "densidad_inversiones": 69.38,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34342,6 +35374,11 @@
       "cobertura_reservas": 92519.94,
       "apalancamiento": 0.34,
       "calidad_cartera": 26.54,
+      "retencion_ratio": 99.97,
+      "roe": 5.37,
+      "roa": 4.88,
+      "margen_neto": 15.57,
+      "densidad_inversiones": 34.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34460,6 +35497,11 @@
       "cobertura_reservas": 66.83,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -47482.01,
+      "roe": -10.54,
+      "roa": -10.29,
+      "margen_neto": -347573.99,
+      "densidad_inversiones": 88.44,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34555,6 +35597,11 @@
       "cobertura_reservas": 23.98,
       "apalancamiento": 0.05,
       "calidad_cartera": 24.49,
+      "retencion_ratio": -8.86,
+      "roe": -33.01,
+      "roa": -21.38,
+      "margen_neto": -611.04,
+      "densidad_inversiones": 66.49,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34658,6 +35705,11 @@
       "cobertura_reservas": 2.35,
       "apalancamiento": 6.03,
       "calidad_cartera": 43.02,
+      "retencion_ratio": 66.64,
+      "roe": -55.7,
+      "roa": -7.84,
+      "margen_neto": -9.24,
+      "densidad_inversiones": 35.71,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -34937,6 +35989,11 @@
       "cobertura_reservas": 18.56,
       "apalancamiento": 1.67,
       "calidad_cartera": 3.9,
+      "retencion_ratio": 70.92,
+      "roe": 75.98,
+      "roa": 45.24,
+      "margen_neto": 45.37,
+      "densidad_inversiones": 59.03,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -35190,6 +36247,11 @@
       "cobertura_reservas": 18.36,
       "apalancamiento": 0.37,
       "calidad_cartera": 4.75,
+      "retencion_ratio": 93.48,
+      "roe": 9.01,
+      "roa": 7.54,
+      "margen_neto": 24.42,
+      "densidad_inversiones": 37.28,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -35403,6 +36465,11 @@
       "cobertura_reservas": 2.93,
       "apalancamiento": 3.16,
       "calidad_cartera": 41.67,
+      "retencion_ratio": 62.41,
+      "roe": 1.66,
+      "roa": 0.43,
+      "margen_neto": 0.52,
+      "densidad_inversiones": 51.95,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -35704,6 +36771,11 @@
       "cobertura_reservas": 4.99,
       "apalancamiento": 1.67,
       "calidad_cartera": 36.86,
+      "retencion_ratio": 70.57,
+      "roe": 7.61,
+      "roa": 3.09,
+      "margen_neto": 4.55,
+      "densidad_inversiones": 60.02,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -35977,6 +37049,11 @@
       "cobertura_reservas": 13.79,
       "apalancamiento": 3.61,
       "calidad_cartera": 24.31,
+      "retencion_ratio": 55.57,
+      "roe": 60.81,
+      "roa": 20.92,
+      "margen_neto": 16.86,
+      "densidad_inversiones": 31.97,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -36269,6 +37346,11 @@
       "cobertura_reservas": 2.73,
       "apalancamiento": 1.98,
       "calidad_cartera": 30.89,
+      "retencion_ratio": 74.27,
+      "roe": -4.04,
+      "roa": -1.66,
+      "margen_neto": -2.04,
+      "densidad_inversiones": 30.98,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -36526,6 +37608,11 @@
       "cobertura_reservas": 4.84,
       "apalancamiento": 2.25,
       "calidad_cartera": 24.64,
+      "retencion_ratio": 77.52,
+      "roe": -21.56,
+      "roa": -7.79,
+      "margen_neto": -9.58,
+      "densidad_inversiones": 16.41,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -36781,6 +37868,11 @@
       "cobertura_reservas": 2.38,
       "apalancamiento": 2.69,
       "calidad_cartera": 32.88,
+      "retencion_ratio": 70.24,
+      "roe": 0.3,
+      "roa": 0.12,
+      "margen_neto": 0.11,
+      "densidad_inversiones": 22.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -37114,6 +38206,11 @@
       "cobertura_reservas": 1.39,
       "apalancamiento": 1.73,
       "calidad_cartera": 1.75,
+      "retencion_ratio": 88.22,
+      "roe": 1.29,
+      "roa": 0.33,
+      "margen_neto": 0.75,
+      "densidad_inversiones": 73.92,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -37256,6 +38353,11 @@
       "cobertura_reservas": 5.29,
       "apalancamiento": 6.86,
       "calidad_cartera": 16.83,
+      "retencion_ratio": 86.91,
+      "roe": -9.11,
+      "roa": -1.53,
+      "margen_neto": -1.33,
+      "densidad_inversiones": 60.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -37534,6 +38636,11 @@
       "cobertura_reservas": 4.6,
       "apalancamiento": 1.05,
       "calidad_cartera": 40.02,
+      "retencion_ratio": 81.63,
+      "roe": 5.22,
+      "roa": 2.89,
+      "margen_neto": 4.99,
+      "densidad_inversiones": 72.28,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -37751,6 +38858,11 @@
       "cobertura_reservas": 12.87,
       "apalancamiento": 0.72,
       "calidad_cartera": 27.1,
+      "retencion_ratio": 81.54,
+      "roe": 25.25,
+      "roa": 12.74,
+      "margen_neto": 35.05,
+      "densidad_inversiones": 78.79,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -37979,6 +39091,11 @@
       "cobertura_reservas": 850.22,
       "apalancamiento": 0.1,
       "calidad_cartera": 7.08,
+      "retencion_ratio": 98.34,
+      "roe": -1.59,
+      "roa": -1.56,
+      "margen_neto": -15.25,
+      "densidad_inversiones": 3.77,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -38084,6 +39201,11 @@
       "cobertura_reservas": 3.38,
       "apalancamiento": 2.48,
       "calidad_cartera": 26.36,
+      "retencion_ratio": 81.16,
+      "roe": 4.77,
+      "roa": 1.73,
+      "margen_neto": 1.92,
+      "densidad_inversiones": 54.56,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -38404,6 +39526,11 @@
       "cobertura_reservas": 6.1,
       "apalancamiento": 2.83,
       "calidad_cartera": 17.4,
+      "retencion_ratio": 91.18,
+      "roe": 0.91,
+      "roa": 0.3,
+      "margen_neto": 0.32,
+      "densidad_inversiones": 60.21,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -38668,6 +39795,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 0.81,
       "calidad_cartera": 14.51,
+      "retencion_ratio": 93.32,
+      "roe": 0.23,
+      "roa": 0.21,
+      "margen_neto": 0.28,
+      "densidad_inversiones": 30.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -38797,6 +39929,11 @@
       "cobertura_reservas": 8.36,
       "apalancamiento": 1.57,
       "calidad_cartera": 18.3,
+      "retencion_ratio": 86.97,
+      "roe": -14.85,
+      "roa": -7.31,
+      "margen_neto": -9.44,
+      "densidad_inversiones": 70.54,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -39121,6 +40258,11 @@
       "cobertura_reservas": 2.81,
       "apalancamiento": 1.87,
       "calidad_cartera": 31.4,
+      "retencion_ratio": 83.69,
+      "roe": -47.52,
+      "roa": -21.25,
+      "margen_neto": -25.42,
+      "densidad_inversiones": 50.0,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -39417,6 +40559,11 @@
       "cobertura_reservas": 113.76,
       "apalancamiento": 0.36,
       "calidad_cartera": 5.01,
+      "retencion_ratio": 72.44,
+      "roe": 13.53,
+      "roa": 12.89,
+      "margen_neto": 37.5,
+      "densidad_inversiones": 60.73,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -39545,6 +40692,11 @@
       "cobertura_reservas": 1.74,
       "apalancamiento": 3.01,
       "calidad_cartera": 44.53,
+      "retencion_ratio": 89.91,
+      "roe": 18.4,
+      "roa": 6.26,
+      "margen_neto": 6.12,
+      "densidad_inversiones": 33.85,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -39724,6 +40876,11 @@
       "cobertura_reservas": 4.19,
       "apalancamiento": 1.75,
       "calidad_cartera": 38.55,
+      "retencion_ratio": 54.51,
+      "roe": 4.07,
+      "roa": 1.78,
+      "margen_neto": 2.33,
+      "densidad_inversiones": 47.6,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -39966,6 +41123,11 @@
       "cobertura_reservas": 10.96,
       "apalancamiento": 0.92,
       "calidad_cartera": 24.58,
+      "retencion_ratio": 86.23,
+      "roe": 4.29,
+      "roa": 2.66,
+      "margen_neto": 4.66,
+      "densidad_inversiones": 81.06,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -40218,6 +41380,11 @@
       "cobertura_reservas": 8.36,
       "apalancamiento": 1.15,
       "calidad_cartera": 19.03,
+      "retencion_ratio": 88.4,
+      "roe": 0.16,
+      "roa": 0.1,
+      "margen_neto": 0.14,
+      "densidad_inversiones": 70.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -40472,6 +41639,11 @@
       "cobertura_reservas": 5.27,
       "apalancamiento": 1.38,
       "calidad_cartera": 21.82,
+      "retencion_ratio": 73.14,
+      "roe": -1.24,
+      "roa": -0.66,
+      "margen_neto": -0.89,
+      "densidad_inversiones": 44.34,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -40866,6 +42038,11 @@
       "cobertura_reservas": 7.21,
       "apalancamiento": 0.4,
       "calidad_cartera": 70.55,
+      "retencion_ratio": 70.97,
+      "roe": 23.7,
+      "roa": 18.51,
+      "margen_neto": 59.44,
+      "densidad_inversiones": 28.53,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -41054,6 +42231,11 @@
       "cobertura_reservas": 3.89,
       "apalancamiento": 3.94,
       "calidad_cartera": 31.73,
+      "retencion_ratio": 71.8,
+      "roe": -0.9,
+      "roa": -0.2,
+      "margen_neto": -0.23,
+      "densidad_inversiones": 57.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -41367,6 +42549,11 @@
       "cobertura_reservas": 1.91,
       "apalancamiento": 0.3,
       "calidad_cartera": 293.96,
+      "retencion_ratio": 39.84,
+      "roe": 20.0,
+      "roa": 11.59,
+      "margen_neto": 67.45,
+      "densidad_inversiones": 1.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -41463,6 +42650,11 @@
       "cobertura_reservas": 4.66,
       "apalancamiento": 1.31,
       "calidad_cartera": 16.46,
+      "retencion_ratio": 80.78,
+      "roe": 13.6,
+      "roa": 8.05,
+      "margen_neto": 10.41,
+      "densidad_inversiones": 2.87,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -41725,6 +42917,11 @@
       "cobertura_reservas": 6.48,
       "apalancamiento": 0.55,
       "calidad_cartera": 23.41,
+      "retencion_ratio": 80.71,
+      "roe": -33.86,
+      "roa": -16.73,
+      "margen_neto": -61.59,
+      "densidad_inversiones": 28.96,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -41911,6 +43108,11 @@
       "cobertura_reservas": 2.97,
       "apalancamiento": 1.42,
       "calidad_cartera": 53.13,
+      "retencion_ratio": 36.68,
+      "roe": 7.78,
+      "roa": 2.77,
+      "margen_neto": 5.47,
+      "densidad_inversiones": 49.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -42202,6 +43404,11 @@
       "cobertura_reservas": 7.39,
       "apalancamiento": 4.48,
       "calidad_cartera": 19.93,
+      "retencion_ratio": 96.14,
+      "roe": -28.36,
+      "roa": -6.01,
+      "margen_neto": -6.33,
+      "densidad_inversiones": 0.55,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -42411,6 +43618,11 @@
       "cobertura_reservas": 7.94,
       "apalancamiento": 1.41,
       "calidad_cartera": 13.8,
+      "retencion_ratio": 87.58,
+      "roe": 1.56,
+      "roa": 0.93,
+      "margen_neto": 1.11,
+      "densidad_inversiones": 64.75,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -42638,6 +43850,11 @@
       "cobertura_reservas": 3.43,
       "apalancamiento": 1.22,
       "calidad_cartera": 32.34,
+      "retencion_ratio": 87.7,
+      "roe": -75.86,
+      "roa": -33.22,
+      "margen_neto": -62.15,
+      "densidad_inversiones": 30.57,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -42879,6 +44096,11 @@
       "cobertura_reservas": 1.3,
       "apalancamiento": 3.41,
       "calidad_cartera": 11.97,
+      "retencion_ratio": 91.0,
+      "roe": 6.04,
+      "roa": 0.94,
+      "margen_neto": 1.77,
+      "densidad_inversiones": 86.53,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -43169,6 +44391,11 @@
       "cobertura_reservas": 4.45,
       "apalancamiento": 1.71,
       "calidad_cartera": 31.63,
+      "retencion_ratio": 41.12,
+      "roe": 8.67,
+      "roa": 4.5,
+      "margen_neto": 5.08,
+      "densidad_inversiones": 63.64,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -43309,6 +44536,11 @@
       "cobertura_reservas": 25.62,
       "apalancamiento": 0.8,
       "calidad_cartera": 12.73,
+      "retencion_ratio": 93.92,
+      "roe": -6.62,
+      "roa": -4.06,
+      "margen_neto": -8.25,
+      "densidad_inversiones": 47.08,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -43658,6 +44890,11 @@
       "cobertura_reservas": 2.61,
       "apalancamiento": 1.12,
       "calidad_cartera": 9.62,
+      "retencion_ratio": 98.62,
+      "roe": 27.04,
+      "roa": 18.24,
+      "margen_neto": 24.08,
+      "densidad_inversiones": 9.09,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -43852,6 +45089,11 @@
       "cobertura_reservas": 45.17,
       "apalancamiento": 3.47,
       "calidad_cartera": 16.02,
+      "retencion_ratio": 96.44,
+      "roe": 17.02,
+      "roa": 5.12,
+      "margen_neto": 4.9,
+      "densidad_inversiones": 66.5,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -44092,6 +45334,11 @@
       "cobertura_reservas": 4.74,
       "apalancamiento": 0.82,
       "calidad_cartera": 67.24,
+      "retencion_ratio": 32.22,
+      "roe": 34.0,
+      "roa": 14.62,
+      "margen_neto": 41.24,
+      "densidad_inversiones": 64.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -44347,6 +45594,11 @@
       "cobertura_reservas": 5.21,
       "apalancamiento": 1.69,
       "calidad_cartera": 22.89,
+      "retencion_ratio": 90.87,
+      "roe": -34.53,
+      "roa": -16.86,
+      "margen_neto": -20.47,
+      "densidad_inversiones": 50.88,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -44588,6 +45840,11 @@
       "cobertura_reservas": 11.89,
       "apalancamiento": 0.78,
       "calidad_cartera": 53.9,
+      "retencion_ratio": 51.83,
+      "roe": 10.58,
+      "roa": 4.85,
+      "margen_neto": 13.56,
+      "densidad_inversiones": 60.46,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -44716,6 +45973,11 @@
       "cobertura_reservas": 4.05,
       "apalancamiento": 1.46,
       "calidad_cartera": 36.78,
+      "retencion_ratio": 79.95,
+      "roe": -16.04,
+      "roa": -7.43,
+      "margen_neto": -10.97,
+      "densidad_inversiones": 45.81,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -45000,6 +46262,11 @@
       "cobertura_reservas": 4.74,
       "apalancamiento": 0.82,
       "calidad_cartera": 36.96,
+      "retencion_ratio": 51.19,
+      "roe": 5.77,
+      "roa": 3.14,
+      "margen_neto": 7.04,
+      "densidad_inversiones": 41.02,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -45158,6 +46425,11 @@
       "cobertura_reservas": 5.35,
       "apalancamiento": 4.14,
       "calidad_cartera": 7.64,
+      "retencion_ratio": 89.86,
+      "roe": -29.31,
+      "roa": -8.45,
+      "margen_neto": -7.08,
+      "densidad_inversiones": 38.24,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -45432,6 +46704,11 @@
       "cobertura_reservas": 8.25,
       "apalancamiento": 1.37,
       "calidad_cartera": 9.64,
+      "retencion_ratio": 94.89,
+      "roe": 36.47,
+      "roa": 22.0,
+      "margen_neto": 26.68,
+      "densidad_inversiones": 78.01,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -45640,6 +46917,11 @@
       "cobertura_reservas": 2.12,
       "apalancamiento": 4.25,
       "calidad_cartera": 19.33,
+      "retencion_ratio": 88.29,
+      "roe": 17.15,
+      "roa": 6.07,
+      "margen_neto": 4.04,
+      "densidad_inversiones": 31.15,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -45853,6 +47135,11 @@
       "cobertura_reservas": 3.83,
       "apalancamiento": 1.7,
       "calidad_cartera": 46.46,
+      "retencion_ratio": 44.08,
+      "roe": -12.03,
+      "roa": -4.24,
+      "margen_neto": -7.07,
+      "densidad_inversiones": 43.22,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -46114,6 +47401,11 @@
       "cobertura_reservas": 18.26,
       "apalancamiento": 1.32,
       "calidad_cartera": 20.44,
+      "retencion_ratio": 95.56,
+      "roe": -19.82,
+      "roa": -8.04,
+      "margen_neto": -14.97,
+      "densidad_inversiones": 0.26,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -46344,6 +47636,11 @@
       "cobertura_reservas": 3.29,
       "apalancamiento": 6.55,
       "calidad_cartera": 12.18,
+      "retencion_ratio": 84.65,
+      "roe": -53.94,
+      "roa": -12.48,
+      "margen_neto": -8.23,
+      "densidad_inversiones": 18.19,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -46579,6 +47876,11 @@
       "cobertura_reservas": 1.85,
       "apalancamiento": 4.51,
       "calidad_cartera": 35.41,
+      "retencion_ratio": 82.03,
+      "roe": -73.62,
+      "roa": -19.84,
+      "margen_neto": -16.32,
+      "densidad_inversiones": 9.23,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -46890,6 +48192,11 @@
       "cobertura_reservas": 2.9,
       "apalancamiento": 1.2,
       "calidad_cartera": 13.02,
+      "retencion_ratio": 87.28,
+      "roe": 0.1,
+      "roa": 0.06,
+      "margen_neto": 0.08,
+      "densidad_inversiones": 31.63,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -47121,6 +48428,11 @@
       "cobertura_reservas": 4.71,
       "apalancamiento": 0.73,
       "calidad_cartera": 31.91,
+      "retencion_ratio": 87.73,
+      "roe": 3.15,
+      "roa": 2.11,
+      "margen_neto": 4.35,
+      "densidad_inversiones": 48.27,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -47344,6 +48656,11 @@
       "cobertura_reservas": 15.08,
       "apalancamiento": 0.22,
       "calidad_cartera": 18.57,
+      "retencion_ratio": 115.24,
+      "roe": -45.91,
+      "roa": -25.71,
+      "margen_neto": -206.24,
+      "densidad_inversiones": 52.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -47483,6 +48800,11 @@
       "cobertura_reservas": 16.27,
       "apalancamiento": 1.48,
       "calidad_cartera": 14.34,
+      "retencion_ratio": 85.58,
+      "roe": 15.37,
+      "roa": 9.64,
+      "margen_neto": 10.41,
+      "densidad_inversiones": 74.4,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -47709,6 +49031,11 @@
       "cobertura_reservas": 3.81,
       "apalancamiento": 3.44,
       "calidad_cartera": 22.65,
+      "retencion_ratio": 76.02,
+      "roe": -248.65,
+      "roa": -94.98,
+      "margen_neto": -72.27,
+      "densidad_inversiones": 31.37,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -47990,6 +49317,11 @@
       "cobertura_reservas": 6.2,
       "apalancamiento": 0.11,
       "calidad_cartera": 13.43,
+      "retencion_ratio": -2.2,
+      "roe": -100.59,
+      "roa": -85.71,
+      "margen_neto": -919.31,
+      "densidad_inversiones": 35.17,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -48091,6 +49423,11 @@
       "cobertura_reservas": 7.91,
       "apalancamiento": 1.72,
       "calidad_cartera": 11.29,
+      "retencion_ratio": 93.71,
+      "roe": 20.84,
+      "roa": 12.14,
+      "margen_neto": 12.11,
+      "densidad_inversiones": 77.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -48360,6 +49697,11 @@
       "cobertura_reservas": 116.39,
       "apalancamiento": 0.69,
       "calidad_cartera": 4.64,
+      "retencion_ratio": 94.42,
+      "roe": -4.32,
+      "roa": -3.49,
+      "margen_neto": -6.23,
+      "densidad_inversiones": 15.63,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -48555,6 +49897,11 @@
       "cobertura_reservas": 16.11,
       "apalancamiento": 1.22,
       "calidad_cartera": 35.82,
+      "retencion_ratio": 86.69,
+      "roe": -0.34,
+      "roa": -0.17,
+      "margen_neto": -0.28,
+      "densidad_inversiones": 42.83,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -48752,6 +50099,11 @@
       "cobertura_reservas": 97.12,
       "apalancamiento": 0.5,
       "calidad_cartera": 1.85,
+      "retencion_ratio": 92.83,
+      "roe": -8.42,
+      "roa": -7.22,
+      "margen_neto": -16.74,
+      "densidad_inversiones": 1.97,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -48883,6 +50235,11 @@
       "cobertura_reservas": 9.44,
       "apalancamiento": 1.56,
       "calidad_cartera": 34.97,
+      "retencion_ratio": 65.99,
+      "roe": -11.5,
+      "roa": -2.94,
+      "margen_neto": -7.37,
+      "densidad_inversiones": 12.33,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49007,6 +50364,11 @@
       "cobertura_reservas": 1.11,
       "apalancamiento": 1.95,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 94.49,
+      "roe": 48.73,
+      "roa": 4.38,
+      "margen_neto": 25.04,
+      "densidad_inversiones": 95.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49163,6 +50525,11 @@
       "cobertura_reservas": 1.28,
       "apalancamiento": 0.71,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 182.35,
+      "roe": 34.81,
+      "roa": 4.69,
+      "margen_neto": 48.77,
+      "densidad_inversiones": 99.32,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49319,6 +50686,11 @@
       "cobertura_reservas": 1.61,
       "apalancamiento": 0.28,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 18.75,
+      "roe": 0.15,
+      "roa": 0.05,
+      "margen_neto": 0.52,
+      "densidad_inversiones": 92.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49453,6 +50825,11 @@
       "cobertura_reservas": 1.54,
       "apalancamiento": 0.1,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 185.35,
+      "roe": 6.08,
+      "roa": 2.18,
+      "margen_neto": 60.48,
+      "densidad_inversiones": 94.59,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49583,6 +50960,11 @@
       "cobertura_reservas": 62.24,
       "apalancamiento": 3.0,
       "calidad_cartera": 11.48,
+      "retencion_ratio": 69.74,
+      "roe": 7.73,
+      "roa": 4.76,
+      "margen_neto": 2.58,
+      "densidad_inversiones": 11.37,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49747,6 +51129,11 @@
       "cobertura_reservas": 1.16,
       "apalancamiento": 0.45,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 64.06,
+      "roe": -4.66,
+      "roa": -0.81,
+      "margen_neto": -10.38,
+      "densidad_inversiones": 95.06,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -49908,6 +51295,11 @@
       "cobertura_reservas": 2.54,
       "apalancamiento": 0.22,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -7.04,
+      "roe": 0.24,
+      "roa": 0.14,
+      "margen_neto": 1.09,
+      "densidad_inversiones": 53.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50065,6 +51457,11 @@
       "cobertura_reservas": 135.58,
       "apalancamiento": 0.08,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 101.23,
+      "roe": 0.26,
+      "roa": 0.25,
+      "margen_neto": 3.32,
+      "densidad_inversiones": 5.71,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50178,6 +51575,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 6.47,
       "calidad_cartera": 0.05,
+      "retencion_ratio": 98.36,
+      "roe": 7.3,
+      "roa": 0.93,
+      "margen_neto": 1.13,
+      "densidad_inversiones": 87.39,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50302,6 +51704,11 @@
       "cobertura_reservas": 1.27,
       "apalancamiento": 0.87,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -48.63,
+      "roe": 0.43,
+      "roa": 0.08,
+      "margen_neto": 0.5,
+      "densidad_inversiones": 91.34,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50476,6 +51883,11 @@
       "cobertura_reservas": 1.52,
       "apalancamiento": 0.41,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 143.37,
+      "roe": 6.16,
+      "roa": 1.77,
+      "margen_neto": 15.04,
+      "densidad_inversiones": 97.69,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50626,6 +52038,11 @@
       "cobertura_reservas": 2.0,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 100.0,
+      "roe": 7.31,
+      "roa": 3.47,
+      "margen_neto": 113117127200.0,
+      "densidad_inversiones": 94.8,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50741,6 +52158,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 1.06,
       "calidad_cartera": 2.16,
+      "retencion_ratio": 99.92,
+      "roe": 25.05,
+      "roa": 21.33,
+      "margen_neto": 23.74,
+      "densidad_inversiones": 66.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -50874,6 +52296,11 @@
       "cobertura_reservas": 22.86,
       "apalancamiento": 0.42,
       "calidad_cartera": 9.24,
+      "retencion_ratio": 100.42,
+      "roe": -4.53,
+      "roa": -4.21,
+      "margen_neto": -10.7,
+      "densidad_inversiones": 0.51,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -51004,6 +52431,11 @@
       "cobertura_reservas": 5.39,
       "apalancamiento": 5.44,
       "calidad_cartera": 28.22,
+      "retencion_ratio": 89.58,
+      "roe": 12.67,
+      "roa": 2.19,
+      "margen_neto": 2.33,
+      "densidad_inversiones": 65.22,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -51268,6 +52700,11 @@
       "cobertura_reservas": 10.39,
       "apalancamiento": 4.66,
       "calidad_cartera": 13.87,
+      "retencion_ratio": 80.44,
+      "roe": 4.52,
+      "roa": 1.38,
+      "margen_neto": 0.97,
+      "densidad_inversiones": 51.25,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -51444,6 +52881,11 @@
       "cobertura_reservas": 7.42,
       "apalancamiento": 2.63,
       "calidad_cartera": 7.71,
+      "retencion_ratio": 87.95,
+      "roe": -2.79,
+      "roa": -1.05,
+      "margen_neto": -1.06,
+      "densidad_inversiones": 61.07,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -51748,6 +53190,11 @@
       "cobertura_reservas": 7.21,
       "apalancamiento": 0.62,
       "calidad_cartera": 49.35,
+      "retencion_ratio": 45.92,
+      "roe": 6.68,
+      "roa": 3.77,
+      "margen_neto": 10.68,
+      "densidad_inversiones": 77.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -52086,6 +53533,11 @@
       "cobertura_reservas": 1.58,
       "apalancamiento": 0.72,
       "calidad_cartera": 5.39,
+      "retencion_ratio": 135.61,
+      "roe": 15.81,
+      "roa": 4.57,
+      "margen_neto": 22.02,
+      "densidad_inversiones": 96.04,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -52277,6 +53729,11 @@
       "cobertura_reservas": 1.64,
       "apalancamiento": 0.61,
       "calidad_cartera": 8.82,
+      "retencion_ratio": 84.32,
+      "roe": 10.56,
+      "roa": 3.79,
+      "margen_neto": 17.18,
+      "densidad_inversiones": 97.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -52435,6 +53892,11 @@
       "cobertura_reservas": 5.83,
       "apalancamiento": 5.52,
       "calidad_cartera": 15.25,
+      "retencion_ratio": 83.84,
+      "roe": -37.74,
+      "roa": -9.58,
+      "margen_neto": -6.84,
+      "densidad_inversiones": 21.93,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -52676,6 +54138,11 @@
       "cobertura_reservas": 1.14,
       "apalancamiento": 0.63,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 209.73,
+      "roe": -12.97,
+      "roa": -1.6,
+      "margen_neto": -20.6,
+      "densidad_inversiones": 97.01,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -52836,6 +54303,11 @@
       "cobertura_reservas": 2.8,
       "apalancamiento": 0.8,
       "calidad_cartera": 10.59,
+      "retencion_ratio": 89.66,
+      "roe": 15.68,
+      "roa": 8.7,
+      "margen_neto": 19.62,
+      "densidad_inversiones": 91.74,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -52980,6 +54452,11 @@
       "cobertura_reservas": 1.38,
       "apalancamiento": 0.03,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 14.96,
+      "roe": 9.09,
+      "roa": 2.3,
+      "margen_neto": 296.25,
+      "densidad_inversiones": 99.52,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -53146,6 +54623,11 @@
       "cobertura_reservas": 40.9,
       "apalancamiento": 3.7,
       "calidad_cartera": 6.79,
+      "retencion_ratio": 92.0,
+      "roe": -13.2,
+      "roa": -7.63,
+      "margen_neto": -3.56,
+      "densidad_inversiones": 47.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -53345,6 +54827,11 @@
       "cobertura_reservas": 1.09,
       "apalancamiento": 1.54,
       "calidad_cartera": 1.32,
+      "retencion_ratio": 160.13,
+      "roe": 33.76,
+      "roa": 3.29,
+      "margen_neto": 21.92,
+      "densidad_inversiones": 91.44,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -53500,6 +54987,11 @@
       "cobertura_reservas": 85.81,
       "apalancamiento": 0.71,
       "calidad_cartera": 3.4,
+      "retencion_ratio": 99.74,
+      "roe": 8.76,
+      "roa": 8.15,
+      "margen_neto": 12.28,
+      "densidad_inversiones": 80.63,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -53645,6 +55137,11 @@
       "cobertura_reservas": 7.0,
       "apalancamiento": 2.19,
       "calidad_cartera": 9.4,
+      "retencion_ratio": 97.37,
+      "roe": -5.95,
+      "roa": -4.29,
+      "margen_neto": -2.71,
+      "densidad_inversiones": 68.66,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -53792,6 +55289,11 @@
       "cobertura_reservas": 8.71,
       "apalancamiento": 2.08,
       "calidad_cartera": 12.01,
+      "retencion_ratio": 93.31,
+      "roe": 3.3,
+      "roa": 2.16,
+      "margen_neto": 1.59,
+      "densidad_inversiones": 73.76,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54003,6 +55505,11 @@
       "cobertura_reservas": 4.58,
       "apalancamiento": 1.09,
       "calidad_cartera": 0.23,
+      "retencion_ratio": 97.77,
+      "roe": -1.18,
+      "roa": -1.08,
+      "margen_neto": -1.08,
+      "densidad_inversiones": 27.48,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54131,6 +55638,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 2.13,
       "calidad_cartera": 4.57,
+      "retencion_ratio": 85.83,
+      "roe": 56.97,
+      "roa": 36.3,
+      "margen_neto": 26.72,
+      "densidad_inversiones": 6.07,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54260,6 +55772,11 @@
       "cobertura_reservas": 1.54,
       "apalancamiento": 1.28,
       "calidad_cartera": 5.17,
+      "retencion_ratio": 88.62,
+      "roe": -7.01,
+      "roa": -2.74,
+      "margen_neto": -5.46,
+      "densidad_inversiones": 76.0,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54462,6 +55979,11 @@
       "cobertura_reservas": 0.77,
       "apalancamiento": 6.16,
       "calidad_cartera": 11.24,
+      "retencion_ratio": 93.62,
+      "roe": 8.31,
+      "roa": 4.41,
+      "margen_neto": 1.35,
+      "densidad_inversiones": 2.27,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54607,6 +56129,11 @@
       "cobertura_reservas": 3.21,
       "apalancamiento": 2.75,
       "calidad_cartera": 9.86,
+      "retencion_ratio": 187.49,
+      "roe": 17.13,
+      "roa": 6.18,
+      "margen_neto": 6.23,
+      "densidad_inversiones": 48.08,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54750,6 +56277,11 @@
       "cobertura_reservas": 1.26,
       "apalancamiento": 2.35,
       "calidad_cartera": 7.03,
+      "retencion_ratio": 83.77,
+      "roe": 10.42,
+      "roa": 1.85,
+      "margen_neto": 4.43,
+      "densidad_inversiones": 81.22,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -54963,6 +56495,11 @@
       "cobertura_reservas": 3.06,
       "apalancamiento": 3.73,
       "calidad_cartera": 22.37,
+      "retencion_ratio": 80.79,
+      "roe": 13.48,
+      "roa": 6.32,
+      "margen_neto": 3.61,
+      "densidad_inversiones": 41.75,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -55206,6 +56743,11 @@
       "cobertura_reservas": 6.28,
       "apalancamiento": 0.13,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 94.23,
+      "roe": -0.91,
+      "roa": -0.89,
+      "margen_neto": -6.99,
+      "densidad_inversiones": 3.87,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -55306,6 +56848,11 @@
       "cobertura_reservas": 4.9,
       "apalancamiento": 1.82,
       "calidad_cartera": 26.83,
+      "retencion_ratio": 68.03,
+      "roe": 45.82,
+      "roa": 25.95,
+      "margen_neto": 25.16,
+      "densidad_inversiones": 52.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -55503,6 +57050,11 @@
       "cobertura_reservas": 43.12,
       "apalancamiento": 0.04,
       "calidad_cartera": 60.34,
+      "retencion_ratio": 61.39,
+      "roe": 2.13,
+      "roa": 2.05,
+      "margen_neto": 59.36,
+      "densidad_inversiones": 20.23,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -55645,6 +57197,11 @@
       "cobertura_reservas": 1.81,
       "apalancamiento": 0.03,
       "calidad_cartera": 5.11,
+      "retencion_ratio": -1338.65,
+      "roe": 5.5,
+      "roa": 2.41,
+      "margen_neto": 219.56,
+      "densidad_inversiones": 90.99,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -55801,6 +57358,11 @@
       "cobertura_reservas": 394.89,
       "apalancamiento": 9.76,
       "calidad_cartera": 5.9,
+      "retencion_ratio": 99.29,
+      "roe": -12.09,
+      "roa": -1.44,
+      "margen_neto": -1.24,
+      "densidad_inversiones": 86.32,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -55951,6 +57513,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 11.09,
       "calidad_cartera": 1.03,
+      "retencion_ratio": 99.8,
+      "roe": -13.88,
+      "roa": -1.72,
+      "margen_neto": -1.25,
+      "densidad_inversiones": 76.13,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56091,6 +57658,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 3.02,
       "calidad_cartera": 2.24,
+      "retencion_ratio": 99.67,
+      "roe": 9.62,
+      "roa": 3.3,
+      "margen_neto": 3.19,
+      "densidad_inversiones": 83.15,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56237,6 +57809,11 @@
       "cobertura_reservas": 76.82,
       "apalancamiento": 4.5,
       "calidad_cartera": 4.01,
+      "retencion_ratio": 98.3,
+      "roe": -38.8,
+      "roa": -7.47,
+      "margen_neto": -8.62,
+      "densidad_inversiones": 84.64,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56378,6 +57955,11 @@
       "cobertura_reservas": 20.98,
       "apalancamiento": 5.79,
       "calidad_cartera": 2.5,
+      "retencion_ratio": 97.93,
+      "roe": -70.01,
+      "roa": -17.44,
+      "margen_neto": -12.09,
+      "densidad_inversiones": 61.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56512,6 +58094,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 0.51,
       "calidad_cartera": 4.06,
+      "retencion_ratio": 72.97,
+      "roe": 28.52,
+      "roa": 12.56,
+      "margen_neto": 55.51,
+      "densidad_inversiones": 96.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56636,6 +58223,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 6.97,
       "calidad_cartera": 2.74,
+      "retencion_ratio": 100.76,
+      "roe": 21.17,
+      "roa": 3.52,
+      "margen_neto": 3.04,
+      "densidad_inversiones": 75.74,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56787,6 +58379,11 @@
       "cobertura_reservas": 8.51,
       "apalancamiento": 3.9,
       "calidad_cartera": 3.04,
+      "retencion_ratio": 95.56,
+      "roe": 52.0,
+      "roa": 23.84,
+      "margen_neto": 13.33,
+      "densidad_inversiones": 85.47,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -56964,6 +58561,11 @@
       "cobertura_reservas": 12.4,
       "apalancamiento": 0.97,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 100.2,
+      "roe": 5.81,
+      "roa": 5.11,
+      "margen_neto": 6.0,
+      "densidad_inversiones": 72.62,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -57090,6 +58692,11 @@
       "cobertura_reservas": 7.29,
       "apalancamiento": 2.41,
       "calidad_cartera": 16.91,
+      "retencion_ratio": 49.56,
+      "roe": 17.78,
+      "roa": 4.84,
+      "margen_neto": 7.39,
+      "densidad_inversiones": 45.08,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -57224,6 +58831,11 @@
       "cobertura_reservas": 34.65,
       "apalancamiento": 2.23,
       "calidad_cartera": 9.28,
+      "retencion_ratio": 98.09,
+      "roe": 64.34,
+      "roa": 40.1,
+      "margen_neto": 28.91,
+      "densidad_inversiones": 50.56,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -57398,6 +59010,11 @@
       "cobertura_reservas": 13.74,
       "apalancamiento": 3.58,
       "calidad_cartera": 7.84,
+      "retencion_ratio": 100.06,
+      "roe": 7.19,
+      "roa": 1.78,
+      "margen_neto": 2.01,
+      "densidad_inversiones": 53.99,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -57669,6 +59286,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 0.21,
       "calidad_cartera": 45.26,
+      "retencion_ratio": 99.52,
+      "roe": 0.73,
+      "roa": 0.71,
+      "margen_neto": 3.39,
+      "densidad_inversiones": 31.41,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -57781,6 +59403,11 @@
       "cobertura_reservas": 75.11,
       "apalancamiento": 0.21,
       "calidad_cartera": 16.8,
+      "retencion_ratio": 97.88,
+      "roe": -11.32,
+      "roa": -10.16,
+      "margen_neto": -53.96,
+      "densidad_inversiones": 76.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -57905,6 +59532,11 @@
       "cobertura_reservas": 23.33,
       "apalancamiento": 1.26,
       "calidad_cartera": 5.31,
+      "retencion_ratio": 89.7,
+      "roe": -156.35,
+      "roa": -82.04,
+      "margen_neto": -123.62,
+      "densidad_inversiones": 57.32,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58034,6 +59666,11 @@
       "cobertura_reservas": 234.54,
       "apalancamiento": 1.84,
       "calidad_cartera": 15.1,
+      "retencion_ratio": 95.9,
+      "roe": -130.69,
+      "roa": -24.27,
+      "margen_neto": -71.09,
+      "densidad_inversiones": 71.75,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58168,6 +59805,11 @@
       "cobertura_reservas": 217.22,
       "apalancamiento": 0.34,
       "calidad_cartera": 5.81,
+      "retencion_ratio": 93.93,
+      "roe": -3.63,
+      "roa": -2.25,
+      "margen_neto": -10.58,
+      "densidad_inversiones": 86.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58280,6 +59922,11 @@
       "cobertura_reservas": 215.34,
       "apalancamiento": 0.36,
       "calidad_cartera": 4.64,
+      "retencion_ratio": 91.64,
+      "roe": -58.93,
+      "roa": -48.38,
+      "margen_neto": -163.97,
+      "densidad_inversiones": 62.89,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58410,6 +60057,11 @@
       "cobertura_reservas": 2.1,
       "apalancamiento": 1.3,
       "calidad_cartera": 115.06,
+      "retencion_ratio": 80.62,
+      "roe": -14.99,
+      "roa": -2.41,
+      "margen_neto": -11.53,
+      "densidad_inversiones": 49.98,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58523,6 +60175,11 @@
       "cobertura_reservas": 6.32,
       "apalancamiento": 2.13,
       "calidad_cartera": 20.28,
+      "retencion_ratio": 87.48,
+      "roe": 38.52,
+      "roa": 22.17,
+      "margen_neto": 18.1,
+      "densidad_inversiones": 67.24,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58701,6 +60358,11 @@
       "cobertura_reservas": 15.99,
       "apalancamiento": 1.56,
       "calidad_cartera": 9.04,
+      "retencion_ratio": 91.06,
+      "roe": 28.21,
+      "roa": 19.38,
+      "margen_neto": 18.14,
+      "densidad_inversiones": 83.71,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -58885,6 +60547,11 @@
       "cobertura_reservas": 14.64,
       "apalancamiento": 1.78,
       "calidad_cartera": 10.28,
+      "retencion_ratio": 89.3,
+      "roe": 42.48,
+      "roa": 28.64,
+      "margen_neto": 23.88,
+      "densidad_inversiones": 76.61,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -59042,6 +60709,11 @@
       "cobertura_reservas": 3.55,
       "apalancamiento": 0.76,
       "calidad_cartera": 61.98,
+      "retencion_ratio": 56.61,
+      "roe": 20.65,
+      "roa": 12.43,
+      "margen_neto": 27.15,
+      "densidad_inversiones": 65.35,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -59209,6 +60881,11 @@
       "cobertura_reservas": 1.3,
       "apalancamiento": 0.44,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 135.04,
+      "roe": 19.56,
+      "roa": 3.69,
+      "margen_neto": 44.93,
+      "densidad_inversiones": 96.85,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -59359,6 +61036,11 @@
       "cobertura_reservas": 8.47,
       "apalancamiento": 1.89,
       "calidad_cartera": 8.97,
+      "retencion_ratio": 97.43,
+      "roe": -31.65,
+      "roa": -11.98,
+      "margen_neto": -16.72,
+      "densidad_inversiones": 28.72,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -59561,6 +61243,11 @@
       "cobertura_reservas": 2.14,
       "apalancamiento": 3.22,
       "calidad_cartera": 28.95,
+      "retencion_ratio": 76.86,
+      "roe": 3.84,
+      "roa": 1.13,
+      "margen_neto": 1.19,
+      "densidad_inversiones": 36.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -59777,6 +61464,11 @@
       "cobertura_reservas": 52.55,
       "apalancamiento": 0.06,
       "calidad_cartera": 31.2,
+      "retencion_ratio": 88.83,
+      "roe": 8.09,
+      "roa": 7.9,
+      "margen_neto": 136.03,
+      "densidad_inversiones": 95.56,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -59927,6 +61619,11 @@
       "cobertura_reservas": 5.52,
       "apalancamiento": 0.76,
       "calidad_cartera": 49.71,
+      "retencion_ratio": 63.72,
+      "roe": -4.17,
+      "roa": -3.18,
+      "margen_neto": -5.47,
+      "densidad_inversiones": 4.8,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -60044,6 +61741,11 @@
       "cobertura_reservas": 7.04,
       "apalancamiento": 2.38,
       "calidad_cartera": 21.79,
+      "retencion_ratio": 92.05,
+      "roe": 0.74,
+      "roa": 0.21,
+      "margen_neto": 0.31,
+      "densidad_inversiones": 73.49,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -60393,6 +62095,11 @@
       "cobertura_reservas": 22.38,
       "apalancamiento": 0.79,
       "calidad_cartera": 10.88,
+      "retencion_ratio": 94.86,
+      "roe": 28.84,
+      "roa": 16.47,
+      "margen_neto": 36.65,
+      "densidad_inversiones": 75.21,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -60614,6 +62321,11 @@
       "cobertura_reservas": 4.22,
       "apalancamiento": 2.36,
       "calidad_cartera": 38.22,
+      "retencion_ratio": 76.57,
+      "roe": 5.45,
+      "roa": 1.5,
+      "margen_neto": 2.31,
+      "densidad_inversiones": 45.05,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -60834,6 +62546,11 @@
       "cobertura_reservas": 3.16,
       "apalancamiento": 1.41,
       "calidad_cartera": 8.29,
+      "retencion_ratio": 95.36,
+      "roe": 9.36,
+      "roa": 4.58,
+      "margen_neto": 6.63,
+      "densidad_inversiones": 79.35,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61043,6 +62760,11 @@
       "cobertura_reservas": 35.89,
       "apalancamiento": 1.89,
       "calidad_cartera": 6.13,
+      "retencion_ratio": 99.75,
+      "roe": 1.16,
+      "roa": 0.4,
+      "margen_neto": 0.61,
+      "densidad_inversiones": 73.6,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61180,6 +62902,11 @@
       "cobertura_reservas": 2.94,
       "apalancamiento": 2.38,
       "calidad_cartera": 26.8,
+      "retencion_ratio": 59.46,
+      "roe": 12.17,
+      "roa": 4.59,
+      "margen_neto": 5.1,
+      "densidad_inversiones": 64.13,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61303,6 +63030,11 @@
       "cobertura_reservas": 19.37,
       "apalancamiento": 0.97,
       "calidad_cartera": 17.8,
+      "retencion_ratio": 68.49,
+      "roe": 10.52,
+      "roa": 5.53,
+      "margen_neto": 10.85,
+      "densidad_inversiones": 16.54,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61440,6 +63172,11 @@
       "cobertura_reservas": 3.37,
       "apalancamiento": 1.16,
       "calidad_cartera": 32.76,
+      "retencion_ratio": 59.89,
+      "roe": 16.85,
+      "roa": 11.02,
+      "margen_neto": 14.58,
+      "densidad_inversiones": 30.86,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61624,6 +63361,11 @@
       "cobertura_reservas": 1.48,
       "apalancamiento": 0.96,
       "calidad_cartera": 54.55,
+      "retencion_ratio": 24.09,
+      "roe": -43.15,
+      "roa": -16.78,
+      "margen_neto": -44.97,
+      "densidad_inversiones": 43.64,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61759,6 +63501,11 @@
       "cobertura_reservas": 7.6,
       "apalancamiento": 6.8,
       "calidad_cartera": 9.03,
+      "retencion_ratio": 98.37,
+      "roe": 15.87,
+      "roa": 4.99,
+      "margen_neto": 2.33,
+      "densidad_inversiones": 52.01,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -61972,6 +63719,11 @@
       "cobertura_reservas": 60.66,
       "apalancamiento": 1.91,
       "calidad_cartera": 11.43,
+      "retencion_ratio": 96.17,
+      "roe": 50.99,
+      "roa": 33.35,
+      "margen_neto": 26.7,
+      "densidad_inversiones": 69.37,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62149,6 +63901,11 @@
       "cobertura_reservas": 191.67,
       "apalancamiento": 1.69,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 99.78,
+      "roe": 78.93,
+      "roa": 50.73,
+      "margen_neto": 46.57,
+      "densidad_inversiones": 24.53,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62268,6 +64025,11 @@
       "cobertura_reservas": 16.77,
       "apalancamiento": 0.52,
       "calidad_cartera": 10.59,
+      "retencion_ratio": 122.23,
+      "roe": 25.35,
+      "roa": 22.16,
+      "margen_neto": 48.59,
+      "densidad_inversiones": 73.76,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62439,6 +64201,11 @@
       "cobertura_reservas": 5.75,
       "apalancamiento": 0.18,
       "calidad_cartera": 64.78,
+      "retencion_ratio": 7.81,
+      "roe": -5.05,
+      "roa": -2.59,
+      "margen_neto": -28.49,
+      "densidad_inversiones": 57.48,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62566,6 +64333,11 @@
       "cobertura_reservas": 23.46,
       "apalancamiento": 0.22,
       "calidad_cartera": 118.57,
+      "retencion_ratio": 9.74,
+      "roe": 11.69,
+      "roa": 8.68,
+      "margen_neto": 54.17,
+      "densidad_inversiones": 72.45,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62713,6 +64485,11 @@
       "cobertura_reservas": 7.88,
       "apalancamiento": 0.58,
       "calidad_cartera": 50.32,
+      "retencion_ratio": 25.73,
+      "roe": 35.02,
+      "roa": 16.77,
+      "margen_neto": 60.71,
+      "densidad_inversiones": 56.54,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62845,6 +64622,11 @@
       "cobertura_reservas": 18.78,
       "apalancamiento": 2.01,
       "calidad_cartera": 2.81,
+      "retencion_ratio": 95.14,
+      "roe": 4.34,
+      "roa": 3.96,
+      "margen_neto": 2.16,
+      "densidad_inversiones": 5.31,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -62985,6 +64767,11 @@
       "cobertura_reservas": 187.6,
       "apalancamiento": 0.05,
       "calidad_cartera": 6.2,
+      "retencion_ratio": 97.12,
+      "roe": 3.06,
+      "roa": 3.03,
+      "margen_neto": 66.56,
+      "densidad_inversiones": 98.11,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -63106,6 +64893,11 @@
       "cobertura_reservas": 24.37,
       "apalancamiento": 2.33,
       "calidad_cartera": 14.78,
+      "retencion_ratio": 87.36,
+      "roe": 59.68,
+      "roa": 33.92,
+      "margen_neto": 25.63,
+      "densidad_inversiones": 0.21,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -63250,6 +65042,11 @@
       "cobertura_reservas": 5.25,
       "apalancamiento": 3.52,
       "calidad_cartera": 23.04,
+      "retencion_ratio": 86.1,
+      "roe": -112.17,
+      "roa": -27.65,
+      "margen_neto": -31.9,
+      "densidad_inversiones": 1.7,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -63494,6 +65291,11 @@
       "cobertura_reservas": 23.9,
       "apalancamiento": 0.01,
       "calidad_cartera": 374.2,
+      "retencion_ratio": 29.26,
+      "roe": 2.07,
+      "roa": 1.96,
+      "margen_neto": 141.98,
+      "densidad_inversiones": 80.09,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -63609,6 +65411,11 @@
       "cobertura_reservas": 3.09,
       "apalancamiento": 5.29,
       "calidad_cartera": 16.48,
+      "retencion_ratio": 79.59,
+      "roe": -26.63,
+      "roa": -11.85,
+      "margen_neto": -5.03,
+      "densidad_inversiones": 27.19,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -63814,6 +65621,11 @@
       "cobertura_reservas": 1519.07,
       "apalancamiento": 8.5,
       "calidad_cartera": 2.91,
+      "retencion_ratio": 100.29,
+      "roe": -48.1,
+      "roa": -11.54,
+      "margen_neto": -5.66,
+      "densidad_inversiones": 56.17,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -63949,6 +65761,11 @@
       "cobertura_reservas": 2.14,
       "apalancamiento": 4.19,
       "calidad_cartera": 19.9,
+      "retencion_ratio": 65.43,
+      "roe": 27.95,
+      "roa": 7.33,
+      "margen_neto": 6.66,
+      "densidad_inversiones": 61.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -64113,6 +65930,11 @@
       "cobertura_reservas": 5.73,
       "apalancamiento": 4.65,
       "calidad_cartera": 11.62,
+      "retencion_ratio": 85.11,
+      "roe": -135.27,
+      "roa": -34.36,
+      "margen_neto": -29.1,
+      "densidad_inversiones": 24.91,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -64268,6 +66090,11 @@
       "cobertura_reservas": 9.67,
       "apalancamiento": 1.22,
       "calidad_cartera": 25.56,
+      "retencion_ratio": 62.4,
+      "roe": 47.65,
+      "roa": 25.92,
+      "margen_neto": 39.03,
+      "densidad_inversiones": 54.29,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -64499,6 +66326,11 @@
       "cobertura_reservas": 8.31,
       "apalancamiento": 4.84,
       "calidad_cartera": 7.4,
+      "retencion_ratio": 79.12,
+      "roe": 6.12,
+      "roa": 2.09,
+      "margen_neto": 1.27,
+      "densidad_inversiones": 55.16,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -64787,6 +66619,11 @@
       "cobertura_reservas": 10.83,
       "apalancamiento": 1.14,
       "calidad_cartera": 13.94,
+      "retencion_ratio": 93.59,
+      "roe": 26.7,
+      "roa": 16.57,
+      "margen_neto": 23.49,
+      "densidad_inversiones": 71.1,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -64970,6 +66807,11 @@
       "cobertura_reservas": 5.74,
       "apalancamiento": 4.47,
       "calidad_cartera": 15.9,
+      "retencion_ratio": 74.31,
+      "roe": -418.59,
+      "roa": -87.92,
+      "margen_neto": -93.72,
+      "densidad_inversiones": 14.93,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -65217,6 +67059,11 @@
       "cobertura_reservas": 9.84,
       "apalancamiento": 2.09,
       "calidad_cartera": 14.38,
+      "retencion_ratio": 88.69,
+      "roe": 59.55,
+      "roa": 33.68,
+      "margen_neto": 28.5,
+      "densidad_inversiones": 66.81,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -65439,6 +67286,11 @@
       "cobertura_reservas": 7.9,
       "apalancamiento": 4.61,
       "calidad_cartera": 23.25,
+      "retencion_ratio": 14.71,
+      "roe": 10.3,
+      "roa": 2.52,
+      "margen_neto": 2.24,
+      "densidad_inversiones": 61.7,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -65677,6 +67529,11 @@
       "cobertura_reservas": 2.83,
       "apalancamiento": 1.16,
       "calidad_cartera": 126.58,
+      "retencion_ratio": 54.24,
+      "roe": 0.09,
+      "roa": 0.04,
+      "margen_neto": 0.08,
+      "densidad_inversiones": 20.29,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -65848,6 +67705,11 @@
       "cobertura_reservas": 67770.15,
       "apalancamiento": 0.96,
       "calidad_cartera": 7.79,
+      "retencion_ratio": 100.0,
+      "roe": 48.36,
+      "roa": 35.31,
+      "margen_neto": 50.25,
+      "densidad_inversiones": 84.27,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -65980,6 +67842,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 4.29,
       "calidad_cartera": 1.29,
+      "retencion_ratio": 102.65,
+      "roe": 21.54,
+      "roa": 5.58,
+      "margen_neto": 5.03,
+      "densidad_inversiones": 81.55,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66102,6 +67969,11 @@
       "cobertura_reservas": 53.12,
       "apalancamiento": 0.39,
       "calidad_cartera": 34.29,
+      "retencion_ratio": 83.18,
+      "roe": 16.94,
+      "roa": 14.15,
+      "margen_neto": 43.91,
+      "densidad_inversiones": 80.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66246,6 +68118,11 @@
       "cobertura_reservas": 5.23,
       "apalancamiento": 2.03,
       "calidad_cartera": 37.18,
+      "retencion_ratio": 54.98,
+      "roe": 11.16,
+      "roa": 5.28,
+      "margen_neto": 5.51,
+      "densidad_inversiones": 43.31,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66364,6 +68241,11 @@
       "cobertura_reservas": 103.62,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -113.83,
+      "roe": -27.48,
+      "roa": -27.2,
+      "margen_neto": -15219.79,
+      "densidad_inversiones": 33.42,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66460,6 +68342,11 @@
       "cobertura_reservas": 21.96,
       "apalancamiento": 0.3,
       "calidad_cartera": 25.7,
+      "retencion_ratio": 85.48,
+      "roe": 8.89,
+      "roa": 7.6,
+      "margen_neto": 29.35,
+      "densidad_inversiones": 73.04,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66584,6 +68471,11 @@
       "cobertura_reservas": 1.11,
       "apalancamiento": 1.73,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 45.51,
+      "roe": 21.41,
+      "roa": 2.3,
+      "margen_neto": 12.4,
+      "densidad_inversiones": 94.51,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66708,6 +68600,11 @@
       "cobertura_reservas": 9.0,
       "apalancamiento": 2.53,
       "calidad_cartera": 35.95,
+      "retencion_ratio": 44.89,
+      "roe": 43.26,
+      "roa": 4.62,
+      "margen_neto": 17.1,
+      "densidad_inversiones": 13.87,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66836,6 +68733,11 @@
       "cobertura_reservas": 34.82,
       "apalancamiento": 5.86,
       "calidad_cartera": 3.15,
+      "retencion_ratio": 99.81,
+      "roe": -69.91,
+      "roa": -19.36,
+      "margen_neto": -11.93,
+      "densidad_inversiones": 92.25,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -66942,6 +68844,11 @@
       "cobertura_reservas": 10916.9,
       "apalancamiento": 0.1,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 99.91,
+      "roe": 2.05,
+      "roa": 2.03,
+      "margen_neto": 20.36,
+      "densidad_inversiones": 98.79,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67085,6 +68992,11 @@
       "cobertura_reservas": 36.75,
       "apalancamiento": 0.04,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 67.8,
+      "roe": -31.88,
+      "roa": -31.04,
+      "margen_neto": -709.02,
+      "densidad_inversiones": 79.44,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67198,6 +69110,11 @@
       "cobertura_reservas": 4.14,
       "apalancamiento": 4.53,
       "calidad_cartera": 25.35,
+      "retencion_ratio": 64.99,
+      "roe": 12.06,
+      "roa": 2.78,
+      "margen_neto": 2.66,
+      "densidad_inversiones": 18.95,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67327,6 +69244,11 @@
       "cobertura_reservas": 25.88,
       "apalancamiento": 8.7,
       "calidad_cartera": 2.48,
+      "retencion_ratio": 97.8,
+      "roe": -68.13,
+      "roa": -14.92,
+      "margen_neto": -7.83,
+      "densidad_inversiones": 59.7,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67449,6 +69371,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 3.33,
       "calidad_cartera": 0.01,
+      "retencion_ratio": 100.0,
+      "roe": 26.42,
+      "roa": 11.38,
+      "margen_neto": 7.94,
+      "densidad_inversiones": 94.69,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67563,6 +69490,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 1.32,
       "calidad_cartera": 7.5,
+      "retencion_ratio": 100.0,
+      "roe": 44.14,
+      "roa": 31.95,
+      "margen_neto": 33.44,
+      "densidad_inversiones": 44.83,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67664,6 +69596,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 1.08,
       "calidad_cartera": 0.0,
+      "retencion_ratio": 100.03,
+      "roe": 52.88,
+      "roa": 45.79,
+      "margen_neto": 49.09,
+      "densidad_inversiones": 88.49,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67794,6 +69731,11 @@
       "cobertura_reservas": 1.0,
       "apalancamiento": 6.55,
       "calidad_cartera": 1.71,
+      "retencion_ratio": 100.2,
+      "roe": 63.68,
+      "roa": 15.54,
+      "margen_neto": 9.72,
+      "densidad_inversiones": 62.62,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -67922,6 +69864,11 @@
       "cobertura_reservas": 347.69,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -55826.3,
+      "roe": -110.75,
+      "roa": -73.46,
+      "margen_neto": -14806419.17,
+      "densidad_inversiones": 63.03,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -68028,6 +69975,11 @@
       "cobertura_reservas": 5.05,
       "apalancamiento": 2.67,
       "calidad_cartera": 1.68,
+      "retencion_ratio": 83.89,
+      "roe": -101.09,
+      "roa": -52.31,
+      "margen_neto": -37.83,
+      "densidad_inversiones": 11.13,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -68155,6 +70107,11 @@
       "cobertura_reservas": 61.64,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.77,
+      "retencion_ratio": -18157.86,
+      "roe": -26.4,
+      "roa": -25.54,
+      "margen_neto": -419670.3,
+      "densidad_inversiones": 69.38,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -68274,6 +70231,11 @@
       "cobertura_reservas": 92519.94,
       "apalancamiento": 0.34,
       "calidad_cartera": 26.54,
+      "retencion_ratio": 99.97,
+      "roe": 5.37,
+      "roa": 4.88,
+      "margen_neto": 15.57,
+      "densidad_inversiones": 34.3,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -68392,6 +70354,11 @@
       "cobertura_reservas": 66.83,
       "apalancamiento": 0.0,
       "calidad_cartera": 0.0,
+      "retencion_ratio": -47482.01,
+      "roe": -10.54,
+      "roa": -10.29,
+      "margen_neto": -347573.99,
+      "densidad_inversiones": 88.44,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
@@ -68487,6 +70454,11 @@
       "cobertura_reservas": 23.98,
       "apalancamiento": 0.05,
       "calidad_cartera": 24.49,
+      "retencion_ratio": -8.86,
+      "roe": -33.01,
+      "roa": -21.38,
+      "margen_neto": -611.04,
+      "densidad_inversiones": 66.49,
       "waterfall": [
         {
           "name": "Primas y Recargos Emitidos",
