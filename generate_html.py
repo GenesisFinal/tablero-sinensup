@@ -1570,6 +1570,9 @@ def generate_html():
         <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex flex-wrap items-center justify-between gap-3">
           <span class="text-[11px] text-slate-400">Fuente: Base Oficial SSN • Período 2026-2</span>
           <div class="flex items-center gap-2">
+            <button id="groupModalFichaBtn" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer">
+              <i class="fa-solid fa-id-card"></i> Ver Ficha Integral Consolidada (Tab 2)
+            </button>
             <button id="groupModalBalanceBtn" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer">
               <i class="fa-solid fa-tree"></i> Ver Balance Consolidado (Tab 8)
             </button>
@@ -1605,6 +1608,7 @@ def generate_html():
     let state = {{
       currentTab: 'vision-mercado',
       selectedSegment: 'Todos',
+      entityScope: 'cia',
       selectedCompanyCode: '0436',
       highlightedCiaCode: null,
       marketRankingMode: 'groups',
@@ -1988,13 +1992,9 @@ def generate_html():
         highlightScatterCompany(codeOrGid);
       }} else if (codeOrGid.startsWith('group:')) {{
         const gid = codeOrGid.replace('group:', '');
-        state.selectedGroupId = gid;
-        if (state.currentTab === 'balances') {{
-          setBalScope('group');
-        }} else {{
-          openGroupModal(gid);
-        }}
+        selectGroup(gid);
       }} else {{
+        state.entityScope = 'cia';
         if (state.balScope === 'group') {{
           state.balScope = 'cia';
         }}
@@ -2002,12 +2002,28 @@ def generate_html():
       }}
     }}
 
+    function selectGroup(gid) {{
+      state.entityScope = 'group';
+      state.selectedGroupId = gid;
+      if (state.currentTab === 'balances') {{
+        setBalScope('group');
+      }}
+      updateAllComboboxLabels();
+      renderAll();
+    }}
+
     function updateAllComboboxLabels() {{
       const data = window.DATA_SINENSUP;
-      if (!data || !data.companies_by_code) return;
+      if (!data) return;
 
-      const current = data.companies_by_code[state.selectedCompanyCode];
-      const currentLabel = current ? `${{current.cod_cia}} - ${{current.razon_social}}` : 'Seleccionar aseguradora...';
+      let currentLabel = 'Seleccionar entidad...';
+      if (state.entityScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+        const g = data.groups_by_id[state.selectedGroupId];
+        currentLabel = `🏛️ ${{g.name}} (${{g.entities_count}} Cías)`;
+      }} else if (data.companies_by_code && data.companies_by_code[state.selectedCompanyCode]) {{
+        const current = data.companies_by_code[state.selectedCompanyCode];
+        currentLabel = `${{current.cod_cia}} - ${{current.razon_social}}`;
+      }}
 
       ['ciaComboboxLabel', 'invComboboxLabel', 'solvComboboxLabel', 'gestComboboxLabel'].forEach(id => {{
         const el = document.getElementById(id);
@@ -2025,7 +2041,7 @@ def generate_html():
 
       const scatterLabelEl = document.getElementById('scatterComboboxLabel');
       if (scatterLabelEl) {{
-        if (state.highlightedCiaCode && data.companies_by_code[state.highlightedCiaCode]) {{
+        if (state.highlightedCiaCode && data.companies_by_code && data.companies_by_code[state.highlightedCiaCode]) {{
           const hl = data.companies_by_code[state.highlightedCiaCode];
           scatterLabelEl.innerText = `${{hl.cod_cia}} - ${{hl.razon_social}}`;
         }} else {{
@@ -2062,22 +2078,52 @@ def generate_html():
           return;
         }}
 
-        const matches = data.companies.filter(c => 
+        const matchedGroups = (data.groups || []).filter(g => 
+          g.name.toLowerCase().includes(q) || (g.short_name && g.short_name.toLowerCase().includes(q)) || g.id.toLowerCase().includes(q)
+        ).slice(0, 4);
+
+        const matches = (data.companies || []).filter(c => 
           c.razon_social.toLowerCase().includes(q) || c.cod_cia.includes(q)
         ).slice(0, 10);
 
-        if (matches.length === 0) {{
+        if (matchedGroups.length === 0 && matches.length === 0) {{
           dropdown.innerHTML = '<div class="p-3 text-slate-500 text-center">No se encontraron resultados</div>';
         }} else {{
-          dropdown.innerHTML = matches.map(c => `
-            <div onclick="selectCompany('${{c.cod_cia}}')" class="p-2.5 hover:bg-slate-800 cursor-pointer flex items-center justify-between border-b border-slate-800/60 last:border-0">
-              <div>
-                <span class="font-mono text-slate-400 font-bold mr-2">${{c.cod_cia}}</span>
-                <span class="text-slate-200 font-semibold">${{c.razon_social}}</span>
+          let html = '';
+          if (matchedGroups.length > 0) {{
+            html += `
+              <div class="px-2.5 py-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 uppercase tracking-wider">
+                🏛️ Grupos Aseguradores Consolidados
               </div>
-              <div>${{getTipoBadge(c.tipo_entidad)}}</div>
-            </div>
-          `).join('');
+            ` + matchedGroups.map(g => `
+              <div onclick="selectGroup('${{g.id}}'); document.getElementById('globalCompanySearch').value = ''; document.getElementById('searchResultsDropdown').classList.add('hidden'); switchTab('ficha-compania');" 
+                   class="p-2.5 hover:bg-slate-800 cursor-pointer flex items-center justify-between border-b border-slate-800/60 transition-colors">
+                <div>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 mr-1.5">GRUPO</span>
+                  <span class="text-amber-200 font-bold text-xs">${{g.name}}</span>
+                  <span class="text-[10px] text-slate-400 font-mono ml-1">(${{g.entities_count}} cías)</span>
+                </div>
+                <div class="text-xs font-mono font-bold text-amber-400">${{g.market_share.toFixed(1)}}% mkt</div>
+              </div>
+            `).join('');
+          }}
+
+          if (matches.length > 0) {{
+            html += `
+              <div class="px-2.5 py-1 text-[10px] font-bold text-slate-400 bg-slate-950 uppercase tracking-wider">
+                🏢 Aseguradoras Individuales
+              </div>
+            ` + matches.map(c => `
+              <div onclick="selectCompany('${{c.cod_cia}}')" class="p-2.5 hover:bg-slate-800 cursor-pointer flex items-center justify-between border-b border-slate-800/60 last:border-0 transition-colors">
+                <div>
+                  <span class="font-mono text-slate-400 font-bold mr-2 text-xs">${{c.cod_cia}}</span>
+                  <span class="text-slate-200 font-semibold text-xs">${{c.razon_social}}</span>
+                </div>
+                <div>${{getTipoBadge(c.tipo_entidad)}}</div>
+              </div>
+            `).join('');
+          }}
+          dropdown.innerHTML = html;
         }}
         dropdown.classList.remove('hidden');
       }});
@@ -2098,6 +2144,7 @@ def generate_html():
     }}
 
     function selectCompany(code) {{
+      state.entityScope = 'cia';
       state.selectedCompanyCode = code;
       state.highlightedCiaCode = code;
       document.getElementById('globalCompanySearch').value = '';
@@ -2107,6 +2154,7 @@ def generate_html():
     }}
 
     function onCompanyDropdownChange(code) {{
+      state.entityScope = 'cia';
       state.selectedCompanyCode = code;
       state.highlightedCiaCode = code;
       updateAllComboboxLabels();
@@ -2285,6 +2333,15 @@ def generate_html():
           </div>
         </div>
       `).join('');
+
+      const fichaBtn = document.getElementById('groupModalFichaBtn');
+      if (fichaBtn) {{
+        fichaBtn.onclick = () => {{
+          closeGroupModal();
+          selectGroup(gid);
+          switchTab('ficha-compania');
+        }};
+      }}
 
       const balBtn = document.getElementById('groupModalBalanceBtn');
       if (balBtn) {{
@@ -2616,16 +2673,34 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 2 RENDER: COMPANY DEEP DIVE
+    // TAB 2 RENDER: COMPANY / GROUP DEEP DIVE
     // ----------------------------------------------------
     function renderCompanyDetails() {{
       const data = window.DATA_SINENSUP;
-      const c = data.companies_by_code[state.selectedCompanyCode];
+      if (!data) return;
+
+      let c = null;
+      let isGroup = (state.entityScope === 'group');
+
+      if (isGroup && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+        c = data.groups_by_id[state.selectedGroupId];
+      }} else {{
+        isGroup = false;
+        c = data.companies_by_code[state.selectedCompanyCode];
+      }}
       if (!c) return;
 
-      document.getElementById('selectedCiaTitle').innerText = c.razon_social;
-      document.getElementById('selectedCiaBadge').innerText = c.tipo_entidad;
-      document.getElementById('selectedCiaCode').innerText = c.cod_cia;
+      if (isGroup) {{
+        document.getElementById('selectedCiaTitle').innerText = c.name;
+        document.getElementById('selectedCiaBadge').className = 'text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        document.getElementById('selectedCiaBadge').innerText = `🏛️ GRUPO ECONÓMICO (${{c.entities_count}} Cías)`;
+        document.getElementById('selectedCiaCode').innerText = `CONSOLIDADO (${{c.entities_count}} Entidades SSN)`;
+      }} else {{
+        document.getElementById('selectedCiaTitle').innerText = c.razon_social;
+        document.getElementById('selectedCiaBadge').className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-brand-red/20 text-brand-red border border-brand-red/30';
+        document.getElementById('selectedCiaBadge').innerText = c.tipo_entidad;
+        document.getElementById('selectedCiaCode').innerText = c.cod_cia;
+      }}
 
       document.getElementById('ciaKpiPrimasEmit').innerText = formatARS(c.primas_emitidas);
       document.getElementById('ciaKpiVarReservas').innerText = formatARS(c.var_reservas);
@@ -2692,7 +2767,7 @@ def generate_html():
 
     function renderCompanyDonuts(c) {{
       const assetLabels = ['Disponibilidades', 'Inversiones', 'Créditos', 'Inmuebles', 'Otros Activos'];
-      const assetVals = [c.disponibilidades, c.inversiones, c.creditos, c.inmuebles, (c.otros_activos || 0) + (c.bienes_uso || 0)];
+      const assetVals = [c.disponibilidades || 0, c.inversiones || 0, c.creditos || 0, c.inmuebles || 0, (c.otros_activos || 0) + (c.bienes_uso || 0)];
 
       Plotly.newPlot('ciaAssetDonut', [{{
         labels: assetLabels,
@@ -2709,7 +2784,7 @@ def generate_html():
       }}, {{ responsive: true, displayModeBar: false }});
 
       const liabLabels = ['Deudas', 'Compromisos Técnicos', 'Previsiones', 'Patrimonio Neto'];
-      const liabVals = [c.deudas, c.compromisos_tecnicos, c.previsiones, Math.max(0, c.patrimonio_neto)];
+      const liabVals = [c.deudas || 0, c.compromisos_tecnicos || 0, c.previsiones || 0, Math.max(0, c.patrimonio_neto || 0)];
 
       Plotly.newPlot('ciaLiabDonut', [{{
         labels: liabLabels,
@@ -2740,9 +2815,25 @@ def generate_html():
       const data = window.DATA_SINENSUP;
       let subList = [];
 
+      const ciaBtn = document.getElementById('ramosScopeCiaBtn');
+      if (ciaBtn) {{
+        ciaBtn.innerText = state.entityScope === 'group' ? 'Grupo Seleccionado' : 'Aseguradora Seleccionada';
+      }}
+
       if (state.ramosScope === 'cia') {{
-        const c = data.companies_by_code[state.selectedCompanyCode];
-        subList = (c && c.subramos) ? c.subramos : [];
+        if (state.entityScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+          const g = data.groups_by_id[state.selectedGroupId];
+          subList = (g && g.subramos) ? g.subramos.map(s => ({{
+            cod_subramo: s.cod_subramo,
+            desc_subramo: s.desc_subramo,
+            primas: s.primas_emitidas,
+            siniestros: s.siniestros,
+            'siniestralidad_%': s.loss_ratio
+          }})) : [];
+        }} else {{
+          const c = data.companies_by_code[state.selectedCompanyCode];
+          subList = (c && c.subramos) ? c.subramos : [];
+        }}
       }} else {{
         subList = data.market_subramos || [];
       }}
@@ -3432,15 +3523,26 @@ def generate_html():
       let totInv = 0, resFin = 0, totActivo = 0, invs = [];
 
       if (state.invScope === 'cia') {{
-        const c = data.companies_by_code[state.selectedCompanyCode];
-        if (!c) return;
-        title = c.razon_social;
-        badge = c.tipo_entidad;
-        count = 1;
-        totInv = c.inversiones || 0;
-        resFin = c.resultado_financiero || 0;
-        totActivo = c.activo || 0;
-        invs = c.investments || [];
+        if (state.entityScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+          const g = data.groups_by_id[state.selectedGroupId];
+          title = g.name;
+          badge = `🏛️ Grupo Económico (${{g.entities_count}} Cías)`;
+          count = g.entities_count;
+          totInv = g.inversiones || 0;
+          resFin = g.resultado_financiero || 0;
+          totActivo = g.activo || 0;
+          invs = [];
+        }} else {{
+          const c = data.companies_by_code[state.selectedCompanyCode];
+          if (!c) return;
+          title = c.razon_social;
+          badge = c.tipo_entidad;
+          count = 1;
+          totInv = c.inversiones || 0;
+          resFin = c.resultado_financiero || 0;
+          totActivo = c.activo || 0;
+          invs = c.investments || [];
+        }}
       }} else if (state.invScope === 'market') {{
         title = 'Mercado Asegurador Consolidado';
         badge = 'Total Mercado';
@@ -3642,22 +3744,40 @@ def generate_html():
       let cob = 0, apal = 0, cobranza = 0, pn = 0;
 
       if (state.solvScope === 'cia') {{
-        const c = data.companies_by_code[state.selectedCompanyCode];
-        if (!c) return;
-        title = c.razon_social;
-        badge = c.tipo_entidad;
-        subtitle = `Indicadores Individuales de Solvencia, Cobertura y Ratios SSN (Cód: ${{c.cod_cia}})`;
-        count = 1;
+        if (state.entityScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+          const g = data.groups_by_id[state.selectedGroupId];
+          title = g.name;
+          badge = `🏛️ Grupo Económico (${{g.entities_count}} Cías)`;
+          subtitle = `Indicadores Consolidados de Solvencia, Cobertura y Ratios SSN (${{g.entities_count}} Aseguradoras)`;
+          count = g.entities_count;
 
-        cob = c.cobertura_reservas || 0;
-        apal = c.apalancamiento || 0;
-        cobranza = c.calidad_cartera || 0;
-        pn = c.patrimonio_neto || 0;
+          cob = g.cobertura_reservas || 0;
+          apal = g.apalancamiento || 0;
+          cobranza = g.calidad_cartera || 0;
+          pn = g.patrimonio_neto || 0;
 
-        document.getElementById('solvCoberturaSub').innerText = 'Exigencia s/ Compromisos Técnicos';
-        document.getElementById('solvApalancamientoSub').innerText = 'Exposición s/ Capital Propio';
-        document.getElementById('solvCobranzaSub').innerText = 'Índice de Cartera a Cobrar';
-        document.getElementById('solvPnSub').innerText = 'Solvencia Patrimonial Individual';
+          document.getElementById('solvCoberturaSub').innerText = 'Exigencia s/ Compromisos Técnicos Consolidados';
+          document.getElementById('solvApalancamientoSub').innerText = 'Exposición s/ Patrimonio Neto del Grupo';
+          document.getElementById('solvCobranzaSub').innerText = 'Índice de Cartera Consolidado';
+          document.getElementById('solvPnSub').innerText = 'Patrimonio Neto Total del Grupo';
+        }} else {{
+          const c = data.companies_by_code[state.selectedCompanyCode];
+          if (!c) return;
+          title = c.razon_social;
+          badge = c.tipo_entidad;
+          subtitle = `Indicadores Individuales de Solvencia, Cobertura y Ratios SSN (Cód: ${{c.cod_cia}})`;
+          count = 1;
+
+          cob = c.cobertura_reservas || 0;
+          apal = c.apalancamiento || 0;
+          cobranza = c.calidad_cartera || 0;
+          pn = c.patrimonio_neto || 0;
+
+          document.getElementById('solvCoberturaSub').innerText = 'Exigencia s/ Compromisos Técnicos';
+          document.getElementById('solvApalancamientoSub').innerText = 'Exposición s/ Capital Propio';
+          document.getElementById('solvCobranzaSub').innerText = 'Índice de Cartera a Cobrar';
+          document.getElementById('solvPnSub').innerText = 'Solvencia Patrimonial Individual';
+        }}
       }} else if (state.solvScope === 'Todos') {{
         title = 'Mercado Asegurador Consolidado';
         badge = 'Total Mercado';
@@ -3821,13 +3941,23 @@ def generate_html():
       const segBench = (currentCompany && data.segment_benchmarks) ? data.segment_benchmarks[currentCompany.tipo_entidad] : marketBench;
 
       if (state.gestScope === 'cia') {{
-        if (!currentCompany) return;
-        title = currentCompany.razon_social;
-        badge = currentCompany.tipo_entidad;
-        subtitle = `Scorecard Individual de Gestión (Cód: ${{currentCompany.cod_cia}}) • Comparado contra Promedio de ${{currentCompany.tipo_entidad}}`;
-        count = 1;
-        targetMetrics = currentCompany;
-        benchmarkMetrics = segBench || marketBench;
+        if (state.entityScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+          const g = data.groups_by_id[state.selectedGroupId];
+          title = g.name;
+          badge = `🏛️ Grupo Económico (${{g.entities_count}} Cías)`;
+          subtitle = `Scorecard Consolidado de Gestión (${{g.entities_count}} Aseguradoras) • Comparado contra Mercado Total`;
+          count = g.entities_count;
+          targetMetrics = g;
+          benchmarkMetrics = marketBench;
+        }} else {{
+          if (!currentCompany) return;
+          title = currentCompany.razon_social;
+          badge = currentCompany.tipo_entidad;
+          subtitle = `Scorecard Individual de Gestión (Cód: ${{currentCompany.cod_cia}}) • Comparado contra Promedio de ${{currentCompany.tipo_entidad}}`;
+          count = 1;
+          targetMetrics = currentCompany;
+          benchmarkMetrics = segBench || marketBench;
+        }}
       }} else if (state.gestScope === 'Todos') {{
         title = 'Mercado Asegurador Argentino Consolidado';
         badge = 'Total Mercado';
@@ -4754,6 +4884,8 @@ def generate_html():
     }}
 
     // Export all tree, group and ramos ranking functions to window scope
+    window.selectCompany = selectCompany;
+    window.selectGroup = selectGroup;
     window.setRankingMode = setRankingMode;
     window.openGroupModal = openGroupModal;
     window.closeGroupModal = closeGroupModal;
