@@ -753,7 +753,7 @@ def generate_html():
             <h2 id="solvSelectedTitle" class="text-lg font-bold text-white">...</h2>
             <span id="solvSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">...</span>
           </div>
-          <p class="text-xs text-slate-400 mt-1">Indicadores de Solvencia, Cobertura de Compromisos Técnicos y Ratios Regulatorios SSN</p>
+          <p id="solvSelectedSubtitle" class="text-xs text-slate-400 mt-1">Indicadores de Solvencia, Cobertura de Compromisos Técnicos y Ratios Regulatorios SSN</p>
         </div>
         
         <div class="flex flex-wrap items-center gap-3">
@@ -776,12 +776,13 @@ def generate_html():
         </div>
       </div>
 
-      <!-- Scope Selector Pills (Todas vs Tipo de Empresa) -->
+      <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa) -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-filter text-emerald-400"></i> Filtrar Aseguradoras por Tipo:</span>
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-emerald-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
-            <button onclick="setSolvScope('Todos')" id="solvScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Todas (185 Cías)</button>
+            <button onclick="setSolvScope('cia')" id="solvScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏢 Aseguradora Seleccionada</button>
+            <button onclick="setSolvScope('Todos')" id="solvScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total (185 Cías)</button>
             <button onclick="setSolvScope('Patrimoniales y Mixtas')" id="solvScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
             <button onclick="setSolvScope('Riesgos del Trabajo (ART)')" id="solvScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
             <button onclick="setSolvScope('Seguros de Personas')" id="solvScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
@@ -789,31 +790,32 @@ def generate_html():
           </div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades en la tabla: <span id="solvEntitiesCount" class="font-mono font-bold text-white">185</span>
+          Entidades analizadas: <span id="solvEntitiesCount" class="font-mono font-bold text-white">185</span>
         </div>
       </div>
 
-      <!-- Solvency Cards for selected company -->
+      <!-- Solvency Cards (Agregadas por Alcance o Individuales) -->
       <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
-          <div class="text-[11px] font-semibold text-slate-400">COBERTURA COMPROMISOS TÉCNICOS</div>
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">COBERTURA COMPROMISOS TÉCNICOS</div>
           <div id="solvCoberturaVal" class="text-xl font-bold font-mono text-white mt-1">...</div>
           <div id="solvCoberturaStatus" class="text-[10px] font-semibold mt-1">...</div>
+          <div id="solvCoberturaSub" class="text-[10px] text-slate-400 mt-1 truncate">...</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
-          <div class="text-[11px] font-semibold text-slate-400">APALANCAMIENTO (PRIMAS/PN)</div>
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">APALANCAMIENTO (PRIMAS/PN)</div>
           <div id="solvApalancamientoVal" class="text-xl font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Exposición s/ Capital Propio</div>
+          <div id="solvApalancamientoSub" class="text-[10px] text-slate-400 mt-1">Exposición s/ Capital Propio</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
-          <div class="text-[11px] font-semibold text-slate-400">PREMIOS A COBRAR / PRIMAS</div>
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">PREMIOS A COBRAR / PRIMAS</div>
           <div id="solvCobranzaVal" class="text-xl font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Índice de Cartera a Cobrar</div>
+          <div id="solvCobranzaSub" class="text-[10px] text-slate-400 mt-1">Índice de Cartera a Cobrar</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
-          <div class="text-[11px] font-semibold text-slate-400">PATRIMONIO NETO TOTAL</div>
+          <div class="text-[11px] font-semibold text-slate-400 uppercase">PATRIMONIO NETO TOTAL</div>
           <div id="solvPnVal" class="text-xl font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Solvencia Patrimonial</div>
+          <div id="solvPnSub" class="text-[10px] text-slate-400 mt-1">Solvencia Patrimonial</div>
         </div>
       </div>
 
@@ -1149,9 +1151,11 @@ def generate_html():
         if (el) el.value = code;
       }});
 
-      // If in investments tab, switch scope back to company
+      // Auto switch scope to cia when selecting specific company
       if (state.currentTab === 'inversiones-finanzas') {{
         setInvScope('cia');
+      }} else if (state.currentTab === 'solvencia-ratios') {{
+        setSolvScope('cia');
       }} else {{
         renderAll();
       }}
@@ -1932,11 +1936,11 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 5 RENDER: SOLVENCIA Y RATIOS SSN (SELECTOR DE SEGMENTO Y ORDENAMIENTO)
+    // TAB 5 RENDER: SOLVENCIA Y RATIOS SSN (SELECTOR DE ALCANCE, AGREGACIÓN Y ORDENAMIENTO)
     // ----------------------------------------------------
     function setSolvScope(scope) {{
       state.solvScope = scope;
-      const scopes = ['Todos', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'];
+      const scopes = ['cia', 'Todos', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'];
       scopes.forEach(sc => {{
         const btn = document.getElementById(`solvScopeBtn-${{sc}}`);
         if (btn) {{
@@ -1970,45 +1974,118 @@ def generate_html():
       const data = window.DATA_SINENSUP;
       if (!data) return;
 
-      const c = data.companies_by_code[state.selectedCompanyCode];
-      if (c) {{
-        document.getElementById('solvSelectedTitle').innerText = c.razon_social;
-        document.getElementById('solvSelectedBadge').innerText = c.tipo_entidad;
+      let title = '', badge = '', subtitle = '', count = 1;
+      let cob = 0, apal = 0, cobranza = 0, pn = 0;
 
-        const cob = c.cobertura_reservas || 0;
-        document.getElementById('solvCoberturaVal').innerText = cob.toFixed(2) + 'x';
-        document.getElementById('solvCoberturaStatus').innerText = cob >= 1.0 ? '● Superávit Regulatorio' : '● Déficit de Cobertura';
-        document.getElementById('solvCoberturaStatus').className = `text-[10px] font-semibold mt-1 ${{cob >= 1.0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      if (state.solvScope === 'cia') {{
+        const c = data.companies_by_code[state.selectedCompanyCode];
+        if (!c) return;
+        title = c.razon_social;
+        badge = c.tipo_entidad;
+        subtitle = `Indicadores Individuales de Solvencia, Cobertura y Ratios SSN (Cód: ${{c.cod_cia}})`;
+        count = 1;
 
-        document.getElementById('solvApalancamientoVal').innerText = (c.apalancamiento || 0).toFixed(2) + 'x';
-        document.getElementById('solvCobranzaVal').innerText = formatPercent(c.calidad_cartera);
-        document.getElementById('solvPnVal').innerText = formatARS(c.patrimonio_neto);
+        cob = c.cobertura_reservas || 0;
+        apal = c.apalancamiento || 0;
+        cobranza = c.calidad_cartera || 0;
+        pn = c.patrimonio_neto || 0;
+
+        document.getElementById('solvCoberturaSub').innerText = 'Exigencia s/ Compromisos Técnicos';
+        document.getElementById('solvApalancamientoSub').innerText = 'Exposición s/ Capital Propio';
+        document.getElementById('solvCobranzaSub').innerText = 'Índice de Cartera a Cobrar';
+        document.getElementById('solvPnSub').innerText = 'Solvencia Patrimonial Individual';
+      }} else if (state.solvScope === 'Todos') {{
+        title = 'Mercado Asegurador Consolidado';
+        badge = 'Total Mercado';
+        subtitle = 'Indicadores Agregados de Solvencia y Cobertura Regulatoria del Mercado (185 Entidades)';
+        count = data.total_entidades || 185;
+
+        let totDisp = 0, totInv = 0, totInm = 0, totCompTec = 0, totPrimas = 0, totPremios = 0, totPN = 0;
+        data.companies.forEach(c => {{
+          totDisp += c.disponibilidades || 0;
+          totInv += c.inversiones || 0;
+          totInm += c.inmuebles || 0;
+          totCompTec += c.compromisos_tecnicos || 0;
+          totPrimas += (c.primas_devengadas > 0 ? c.primas_devengadas : (c.primas_emitidas || 0));
+          totPremios += (c.premios_a_cobrar || 0);
+          totPN += c.patrimonio_neto || 0;
+        }});
+
+        cob = totCompTec > 0 ? ((totInv + totInm + totDisp) / totCompTec) : 1.0;
+        apal = totPN > 0 ? (totPrimas / totPN) : 0;
+        cobranza = totPrimas > 0 ? ((totPremios / totPrimas) * 100.0) : 0;
+        pn = totPN;
+
+        document.getElementById('solvCoberturaSub').innerText = `Activos Elegibles: ${{formatARS(totInv + totInm + totDisp)}} / Comp. Téc: ${{formatARS(totCompTec)}}`;
+        document.getElementById('solvApalancamientoSub').innerText = 'Primas / Patrimonio Neto Consolidado';
+        document.getElementById('solvCobranzaSub').innerText = `Premios a Cobrar: ${{formatARS(totPremios)}} / Primas`;
+        document.getElementById('solvPnSub').innerText = 'Patrimonio Neto Consolidado Mercado';
+      }} else {{
+        const seg = state.solvScope;
+        title = `Segmento: ${{seg}}`;
+        badge = seg;
+        subtitle = `Indicadores Agregados de Solvencia y Ratios Consolidados de ${{seg}}`;
+        
+        const segCias = data.companies.filter(c => c.tipo_entidad === seg);
+        count = segCias.length;
+
+        let totDisp = 0, totInv = 0, totInm = 0, totCompTec = 0, totPrimas = 0, totPremios = 0, totPN = 0;
+        segCias.forEach(c => {{
+          totDisp += c.disponibilidades || 0;
+          totInv += c.inversiones || 0;
+          totInm += c.inmuebles || 0;
+          totCompTec += c.compromisos_tecnicos || 0;
+          totPrimas += (c.primas_devengadas > 0 ? c.primas_devengadas : (c.primas_emitidas || 0));
+          totPremios += (c.premios_a_cobrar || 0);
+          totPN += c.patrimonio_neto || 0;
+        }});
+
+        cob = totCompTec > 0 ? ((totInv + totInm + totDisp) / totCompTec) : 1.0;
+        apal = totPN > 0 ? (totPrimas / totPN) : 0;
+        cobranza = totPrimas > 0 ? ((totPremios / totPrimas) * 100.0) : 0;
+        pn = totPN;
+
+        document.getElementById('solvCoberturaSub').innerText = `Activos Elegibles: ${{formatARS(totInv + totInm + totDisp)}} / Comp. Téc: ${{formatARS(totCompTec)}}`;
+        document.getElementById('solvApalancamientoSub').innerText = 'Primas / Patrimonio Neto del Segmento';
+        document.getElementById('solvCobranzaSub').innerText = `Premios a Cobrar: ${{formatARS(totPremios)}} / Primas`;
+        document.getElementById('solvPnSub').innerText = `Patrimonio Neto Total (${{count}} Aseguradoras)`;
       }}
 
-      // Solvency Table
+      // Update Header
+      document.getElementById('solvSelectedTitle').innerText = title;
+      document.getElementById('solvSelectedBadge').innerText = badge;
+      document.getElementById('solvEntitiesCount').innerText = count;
+      const subEl = document.getElementById('solvSelectedSubtitle');
+      if (subEl) subEl.innerText = subtitle;
+
+      // Update KPI Cards
+      document.getElementById('solvCoberturaVal').innerText = cob.toFixed(2) + 'x';
+      document.getElementById('solvCoberturaStatus').innerText = cob >= 1.0 ? '● Superávit Regulatorio' : '● Déficit de Cobertura';
+      document.getElementById('solvCoberturaStatus').className = `text-[10px] font-semibold mt-1 ${{cob >= 1.0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+
+      document.getElementById('solvApalancamientoVal').innerText = apal.toFixed(2) + 'x';
+      document.getElementById('solvCobranzaVal').innerText = formatPercent(cobranza);
+      document.getElementById('solvPnVal').innerText = formatARS(pn);
+
+      // Solvency Table List
       let list = data.companies;
-      if (state.solvScope !== 'Todos') {{
+      if (state.solvScope !== 'Todos' && state.solvScope !== 'cia') {{
         list = data.companies.filter(x => x.tipo_entidad === state.solvScope);
       }}
-      document.getElementById('solvEntitiesCount').innerText = list.length;
 
       const metric = state.solvSortMetric || 'cobertura_reservas';
       let sortedSolv = [...list];
       if (metric === 'combined_ratio' || metric === 'apalancamiento') {{
-        // Ascending for combined ratio and apalancamiento
         sortedSolv.sort((a, b) => (a[metric] || 0) - (b[metric] || 0));
       }} else {{
-        // Descending for cobertura and patrimonio
         sortedSolv.sort((a, b) => (b[metric] || 0) - (a[metric] || 0));
       }}
 
       const isLaSegunda = c => ['0117', '0317', '0436', '0618'].includes(c.cod_cia) || c.razon_social.toUpperCase().includes('SEGUNDA');
-      const topCodes = new Set(sortedSolv.slice(0, 30).map(x => x.cod_cia));
-      const extraLaSegunda = sortedSolv.filter(x => isLaSegunda(x) && !topCodes.has(x.cod_cia));
 
       let rowsHtml = sortedSolv.map((item, i) => {{
         const isLS = isLaSegunda(item);
-        const isHL = state.selectedCompanyCode === item.cod_cia;
+        const isHL = (state.selectedCompanyCode === item.cod_cia);
         return `
         <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{item.cod_cia}}')">
           <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
