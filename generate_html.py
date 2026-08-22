@@ -1610,8 +1610,8 @@ def generate_html():
       highlightedCiaCode: null,
       marketRankingMode: 'groups',
       selectedGroupId: 'sancor',
-      ramosRankSection: 'personas',
-      ramosRankGroup: 'vida',
+      ramosRankSections: ['personas'],
+      ramosRankGroups: ['vida'],
       ramosRankSubramo: 'all',
       ramosRankMode: 'groups',
       ramosRankSearchQuery: '',
@@ -2843,74 +2843,168 @@ def generate_html():
       if (!data || !data.ramos_taxonomy) return;
 
       const tax = data.ramos_taxonomy;
+      const allSecKeys = Object.keys(tax);
 
-      // 1. Render Section Buttons
-      const secContainer = document.getElementById('rrSectionButtons');
-      if (secContainer) {{
-        secContainer.innerHTML = Object.values(tax).map(sec => {{
-          const isActive = state.ramosRankSection === sec.id;
-          return `
-            <button onclick="setRamosSection('${{sec.id}}')" 
-                    class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${{
-                      isActive ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                    }}">
-              <i class="fa-solid ${{sec.icon || 'fa-folder'}} mr-1"></i> ${{sec.name}}
-            </button>
-          `;
-        }}).join('');
+      // Ensure active sections is valid array
+      if (!Array.isArray(state.ramosRankSections) || state.ramosRankSections.length === 0) {{
+        state.ramosRankSections = ['personas'];
       }}
 
-      // 2. Render Group Buttons for active section
-      const activeSec = tax[state.ramosRankSection] || Object.values(tax)[0];
-      const grpContainer = document.getElementById('rrGroupButtons');
-      if (grpContainer && activeSec) {{
-        const groupsList = Object.values(activeSec.ramos);
-        grpContainer.innerHTML = groupsList.map(g => {{
-          const isActive = state.ramosRankGroup === g.id;
+      // 1. Render Section Multi-Select Buttons
+      const secContainer = document.getElementById('rrSectionButtons');
+      if (secContainer) {{
+        const isAllSec = allSecKeys.every(k => state.ramosRankSections.includes(k));
+        let secHtml = `
+          <button onclick="toggleRamosSection('all')" 
+                  class="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all ${{
+                    isAllSec ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }}">
+            🌟 Todas
+          </button>
+        `;
+
+        secHtml += allSecKeys.map(secKey => {{
+          const sec = tax[secKey];
+          const isSelected = state.ramosRankSections.includes(secKey);
           return `
-            <button onclick="setRamosGroup('${{g.id}}')" 
-                    class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${{
-                      isActive ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+            <button onclick="toggleRamosSection('${{secKey}}')" 
+                    class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${{
+                      isSelected ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                     }}">
-              ${{g.name}}
+              <i class="fa-solid ${{sec.icon || 'fa-folder'}}"></i>
+              <span>${{sec.name}}</span>
+              <span class="text-[10px] opacity-70">${{isSelected ? '✓' : '+'}}</span>
             </button>
           `;
         }}).join('');
+        secContainer.innerHTML = secHtml;
+      }}
+
+      // 2. Gather available groups for active sections
+      let availableGroups = [];
+      state.ramosRankSections.forEach(secKey => {{
+        const sec = tax[secKey];
+        if (sec && sec.ramos) {{
+          Object.values(sec.ramos).forEach(g => {{
+            if (!availableGroups.some(ag => ag.id === g.id)) {{
+              availableGroups.push(g);
+            }}
+          }});
+        }}
+      }});
+
+      // Ensure active groups is valid array
+      if (!Array.isArray(state.ramosRankGroups) || state.ramosRankGroups.length === 0) {{
+        state.ramosRankGroups = availableGroups.length > 0 ? [availableGroups[0].id] : [];
+      }} else {{
+        // Filter out groups no longer in active sections
+        const validGroupIds = availableGroups.map(g => g.id);
+        const filtered = state.ramosRankGroups.filter(gid => validGroupIds.includes(gid));
+        state.ramosRankGroups = filtered.length > 0 ? filtered : (availableGroups.length > 0 ? [availableGroups[0].id] : []);
+      }}
+
+      // Render Group Multi-Select Buttons
+      const grpContainer = document.getElementById('rrGroupButtons');
+      if (grpContainer) {{
+        const isAllGrp = availableGroups.length > 0 && availableGroups.every(g => state.ramosRankGroups.includes(g.id));
+        let grpHtml = `
+          <button onclick="toggleRamosGroup('all')" 
+                  class="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all ${{
+                    isAllGrp ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }}">
+            🌟 Todos (${{availableGroups.length}})
+          </button>
+        `;
+
+        grpHtml += availableGroups.map(g => {{
+          const isSelected = state.ramosRankGroups.includes(g.id);
+          return `
+            <button onclick="toggleRamosGroup('${{g.id}}')" 
+                    class="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${{
+                      isSelected ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    }}">
+              <span>${{g.name}}</span>
+              <span class="text-[10px] opacity-70">${{isSelected ? '✓' : '+'}}</span>
+            </button>
+          `;
+        }}).join('');
+        grpContainer.innerHTML = grpHtml;
       }}
 
       // 3. Populate Subramo Select dropdown
       const subSelect = document.getElementById('rrSubramoSelect');
-      if (subSelect && activeSec) {{
-        const activeGrp = activeSec.ramos[state.ramosRankGroup] || Object.values(activeSec.ramos)[0];
+      if (subSelect) {{
         const catalog = {{}};
         (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
 
-        let opts = `<option value="all">🌟 TODO EL RAMO: ${{activeGrp ? activeGrp.name.toUpperCase() : 'CONSOLIDADO'}}</option>`;
-        if (activeGrp && activeGrp.subramos) {{
-          activeGrp.subramos.forEach(scod => {{
-            const sdesc = catalog[scod] || scod;
-            opts += `<option value="${{scod}}">${{scod}} - ${{sdesc}}</option>`;
+        // Gather all subramos under currently selected groups
+        let activeSubramos = [];
+        availableGroups.filter(g => state.ramosRankGroups.includes(g.id)).forEach(g => {{
+          (g.subramos || []).forEach(scod => {{
+            if (!activeSubramos.includes(scod)) activeSubramos.push(scod);
           }});
-        }}
+        }});
+        activeSubramos.sort();
+
+        let opts = `<option value="all">🌟 CONSOLIDADO: TODOS LOS SUBRAMOS SELECCIONADOS (${{activeSubramos.length}})</option>`;
+        activeSubramos.forEach(scod => {{
+          const sdesc = catalog[scod] || scod;
+          opts += `<option value="${{scod}}">${{scod}} - ${{sdesc}}</option>`;
+        }});
         subSelect.innerHTML = opts;
         subSelect.value = state.ramosRankSubramo || 'all';
       }}
     }}
 
-    function setRamosSection(sectionId) {{
-      state.ramosRankSection = sectionId;
+    function toggleRamosSection(sectionId) {{
       const data = window.DATA_SINENSUP;
-      if (data && data.ramos_taxonomy && data.ramos_taxonomy[sectionId]) {{
-        const firstGrp = Object.keys(data.ramos_taxonomy[sectionId].ramos)[0];
-        state.ramosRankGroup = firstGrp;
-        state.ramosRankSubramo = 'all';
+      if (!data || !data.ramos_taxonomy) return;
+      const allSecKeys = Object.keys(data.ramos_taxonomy);
+
+      if (sectionId === 'all') {{
+        const isAll = allSecKeys.every(k => state.ramosRankSections.includes(k));
+        state.ramosRankSections = isAll ? ['patrimoniales'] : [...allSecKeys];
+      }} else {{
+        if (state.ramosRankSections.includes(sectionId)) {{
+          if (state.ramosRankSections.length > 1) {{
+            state.ramosRankSections = state.ramosRankSections.filter(k => k !== sectionId);
+          }}
+        }} else {{
+          state.ramosRankSections.push(sectionId);
+        }}
       }}
+      state.ramosRankSubramo = 'all';
       initRamosRankingsTab();
       renderRamosRankingsTab();
     }}
 
-    function setRamosGroup(groupId) {{
-      state.ramosRankGroup = groupId;
+    function toggleRamosGroup(groupId) {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return;
+
+      // Gather available groups in active sections
+      let availableGroupIds = [];
+      state.ramosRankSections.forEach(secKey => {{
+        const sec = data.ramos_taxonomy[secKey];
+        if (sec && sec.ramos) {{
+          Object.keys(sec.ramos).forEach(gid => {{
+            if (!availableGroupIds.includes(gid)) availableGroupIds.push(gid);
+          }});
+        }}
+      }});
+
+      if (groupId === 'all') {{
+        const isAll = availableGroupIds.every(gid => state.ramosRankGroups.includes(gid));
+        state.ramosRankGroups = isAll ? (availableGroupIds.length > 0 ? [availableGroupIds[0]] : []) : [...availableGroupIds];
+      }} else {{
+        if (state.ramosRankGroups.includes(groupId)) {{
+          if (state.ramosRankGroups.length > 1) {{
+            state.ramosRankGroups = state.ramosRankGroups.filter(g => g !== groupId);
+          }}
+        }} else {{
+          state.ramosRankGroups.push(groupId);
+        }}
+      }}
       state.ramosRankSubramo = 'all';
       initRamosRankingsTab();
       renderRamosRankingsTab();
@@ -2950,16 +3044,20 @@ def generate_html():
         return [state.ramosRankSubramo];
       }}
 
-      const sec = tax[state.ramosRankSection];
-      if (!sec) return [];
-      const grp = sec.ramos[state.ramosRankGroup];
-      if (grp) return grp.subramos;
-
       let allSubs = [];
-      Object.values(sec.ramos).forEach(g => {{
-        allSubs = allSubs.concat(g.subramos);
+      state.ramosRankSections.forEach(secKey => {{
+        const sec = tax[secKey];
+        if (sec && sec.ramos) {{
+          Object.entries(sec.ramos).forEach(([gid, g]) => {{
+            if (state.ramosRankGroups.includes(gid)) {{
+              (g.subramos || []).forEach(scod => {{
+                if (!allSubs.includes(scod)) allSubs.push(scod);
+              }});
+            }}
+          }});
+        }}
       }});
-      return [...new Set(allSubs)];
+      return allSubs;
     }}
 
     function computeRamosRankingData() {{
@@ -2976,19 +3074,20 @@ def generate_html():
 
       if (state.ramosRankMode === 'companies') {{
         Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totEgr = 0.0;
+          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
-              totEmit += (d['5.01.00.00.00.00.00.00'] || d['5.00.00.00.00.00.00.00'] || 0.0);
-              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0);
-              totEgr += (d['4.01.00.00.00.00.00.00'] || d['4.00.00.00.00.00.00.00'] || 0.0);
+              totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
+              totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
+              totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
             }}
           }});
           if (totEmit > 0) {{
             const c = ciasByCode[cod_cia] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
-            const resTec = totEmit - totEgr;
+            const resTec = totIngTec - totEgrTec;
             ranking.push({{
               id: cod_cia,
               code: cod_cia,
@@ -3003,19 +3102,20 @@ def generate_html():
         }});
       }} else {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totEgr = 0.0;
+          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
-              totEmit += (d['5.01.00.00.00.00.00.00'] || d['5.00.00.00.00.00.00.00'] || 0.0);
-              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0);
-              totEgr += (d['4.01.00.00.00.00.00.00'] || d['4.00.00.00.00.00.00.00'] || 0.0);
+              totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
+              totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
+              totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
             }}
           }});
           if (totEmit > 0) {{
             const g = groupsById[gid] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
-            const resTec = totEmit - totEgr;
+            const resTec = totIngTec - totEgrTec;
             ranking.push({{
               id: gid,
               code: gid,
@@ -3058,9 +3158,6 @@ def generate_html():
       if (!data) return;
 
       const tax = data.ramos_taxonomy || {{}};
-      const sec = tax[state.ramosRankSection];
-      const grp = sec ? sec.ramos[state.ramosRankGroup] : null;
-
       const titleEl = document.getElementById('rrSelectedTitle');
       const badgeEl = document.getElementById('rrSelectedBadge');
       const subTitleEl = document.getElementById('rrSelectedSubtitle');
@@ -3071,9 +3168,11 @@ def generate_html():
           (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
           titleEl.innerText = `${{state.ramosRankSubramo}} - ${{catalog[state.ramosRankSubramo] || 'Subramo'}}`;
           if (badgeEl) badgeEl.innerText = 'Subramo Específico SSN';
-        }} else if (grp) {{
-          titleEl.innerText = `${{grp.name}} (Ramo Consolidado)`;
-          if (badgeEl) badgeEl.innerText = `${{sec ? sec.name : 'Sección'}} • Consolidado`;
+        }} else {{
+          const secNames = state.ramosRankSections.map(k => tax[k] ? tax[k].name : k).join(' + ');
+          const grpCount = state.ramosRankGroups.length;
+          titleEl.innerText = `${{secNames}} (${{grpCount}} Ramos)`;
+          if (badgeEl) badgeEl.innerText = `Ramos Consolidados (${{grpCount}})`;
         }}
       }}
 
@@ -3088,14 +3187,14 @@ def generate_html():
 
         banner.innerHTML = `
           <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
-            <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS EMITIDAS RAMA</div>
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS EMITIDAS SELECCIÓN</div>
             <div class="text-lg font-bold font-mono text-white mt-1">${{formatARS(res.total_emitidas)}}</div>
             <div class="text-[10px] text-amber-400 font-bold mt-1">${{shareOfMarket.toFixed(1)}}% del Mercado Total</div>
           </div>
           <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
-            <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTROS EN LA RAMA</div>
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTROS / BENEFICIOS</div>
             <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(res.total_siniestros)}}</div>
-            <div class="text-[10px] text-slate-400 mt-1">Devengamiento Técnico</div>
+            <div class="text-[10px] text-slate-400 mt-1">Siniestros + Rescates/Rentas</div>
           </div>
           <div class="glass-card p-4 rounded-xl ${{res.loss_ratio <= 65 ? 'border-l-emerald-500' : 'border-l-rose-500'}}">
             <div class="text-[11px] font-semibold text-slate-400 uppercase">SINIESTRALIDAD MEDIA</div>
@@ -3103,7 +3202,7 @@ def generate_html():
             <div class="text-[10px] text-slate-400 mt-1">${{res.loss_ratio <= 65 ? 'Siniestralidad Controlada' : 'Alta Siniestralidad'}}</div>
           </div>
           <div class="glass-card p-4 rounded-xl ${{res.resultado_tecnico >= 0 ? 'border-l-emerald-500' : 'border-l-rose-500'}}">
-            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO RAMA</div>
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO TOTAL</div>
             <div class="text-lg font-bold font-mono ${{res.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatARS(res.resultado_tecnico)}}</div>
             <div class="text-[10px] text-slate-400 mt-1">${{res.resultado_tecnico >= 0 ? 'Superávit Técnico' : 'Déficit Técnico'}}</div>
           </div>
@@ -3183,15 +3282,31 @@ def generate_html():
         const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
         const isSelected = (state.ramosRankMode === 'companies' && state.selectedCompanyCode === r.code) ||
                            (state.ramosRankMode === 'groups' && state.selectedGroupId === r.code);
+        
+        // Entity name cell: clean group name vs company [code] name
+        let entityNameHtml = '';
+        if (state.ramosRankMode === 'groups') {{
+          entityNameHtml = `
+            <div class="font-bold text-amber-300 flex items-center gap-1.5">
+              <span class="truncate max-w-[280px]" title="${{r.name}}">${{r.name}}</span>
+              ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+            </div>
+          `;
+        }} else {{
+          entityNameHtml = `
+            <div class="font-bold text-white flex items-center gap-1.5">
+              <span class="font-mono text-xs text-slate-400 font-normal mr-1">[${{r.code}}]</span>
+              <span class="truncate max-w-[240px]" title="${{r.name}}">${{r.name}}</span>
+              ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+            </div>
+          `;
+        }}
+
         return `
           <tr class="hover:bg-slate-800/60 ${{isSelected ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70 font-semibold' : '')}} cursor-pointer transition-colors">
             <td class="py-2 px-2 text-center text-slate-400 font-mono font-bold">${{i + 1}}</td>
             <td class="py-2 px-2">
-              <div class="font-bold text-white flex items-center gap-1.5">
-                <span class="font-mono text-xs text-slate-400">${{r.code}}</span>
-                <span class="truncate max-w-[220px]" title="${{r.name}}">${{r.name}}</span>
-                ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
-              </div>
+              ${{entityNameHtml}}
             </td>
             <td class="py-2 px-2 text-center">
               ${{state.ramosRankMode === 'groups' ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">${{r.tipo}}</span>` : getTipoBadge(r.tipo)}}
@@ -3221,7 +3336,7 @@ def generate_html():
     function exportRamosRankCSV() {{
       if (!currentRamosRankData || !currentRamosRankData.ranking) return;
 
-      const headers = ['rank', 'codigo', 'nombre', 'tipo', 'primas_emitidas', 'market_share', 'siniestros', 'loss_ratio', 'resultado_tecnico'];
+      const headers = ['rank', 'codigo', 'nombre', 'tipo', 'primas_emitidas', 'market_share', 'siniestros_beneficios', 'loss_ratio', 'resultado_tecnico'];
       let csv = headers.join(',') + '\\n';
 
       currentRamosRankData.ranking.forEach((r, idx) => {{
@@ -3243,7 +3358,7 @@ def generate_html():
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ranking_ramos_${{state.ramosRankSection}}_${{state.ramosRankGroup}}_${{state.ramosRankSubramo}}_${{state.ramosRankMode}}.csv`;
+      a.download = `ranking_ramos_${{state.ramosRankSections.join('_')}}_${{state.ramosRankMode}}.csv`;
       a.click();
     }}
 
@@ -4619,8 +4734,10 @@ def generate_html():
     window.closeGroupModal = closeGroupModal;
     window.renderGroupsRankingTable = renderGroupsRankingTable;
     window.initRamosRankingsTab = initRamosRankingsTab;
-    window.setRamosSection = setRamosSection;
-    window.setRamosGroup = setRamosGroup;
+    window.toggleRamosSection = toggleRamosSection;
+    window.toggleRamosGroup = toggleRamosGroup;
+    window.setRamosSection = toggleRamosSection;
+    window.setRamosGroup = toggleRamosGroup;
     window.setRamosSubramo = setRamosSubramo;
     window.setRamosRankMode = setRamosRankMode;
     window.filterRamosRankingTable = filterRamosRankingTable;
