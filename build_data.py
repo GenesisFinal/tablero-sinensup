@@ -210,12 +210,31 @@ def build_complete_dataset():
     # ========================================================
     print("Building complete Plan de Cuentas and balance trees...")
     cat_df = df_raw[['cod_cuenta', 'desc_cuenta', 'nivel', 'id_padre']].drop_duplicates().sort_values('cod_cuenta')
+    all_codes_set = set(cat_df['cod_cuenta'].astype(str))
+
+    def get_parent_account_code(code, nivel):
+        if nivel <= 1:
+            return ''
+        parts = code.split('.')
+        for try_level in range(nivel - 1, 0, -1):
+            parent_parts = parts[:]
+            for i in range(try_level, len(parts)):
+                parent_parts[i] = '00'
+            candidate = '.'.join(parent_parts)
+            if candidate in all_codes_set and candidate != code:
+                return candidate
+        return ''
+
     plan_de_cuentas = {}
     for _, r in cat_df.iterrows():
-        plan_de_cuentas[str(r['cod_cuenta'])] = {
+        code_str = str(r['cod_cuenta'])
+        niv = int(r['nivel'])
+        padre_code = get_parent_account_code(code_str, niv)
+        plan_de_cuentas[code_str] = {
             'desc': str(r['desc_cuenta']),
-            'nivel': int(r['nivel']),
-            'padre': str(r['id_padre']) if pd.notna(r['id_padre']) else ''
+            'nivel': niv,
+            'padre_codigo': padre_code,
+            'id_padre': str(r['id_padre']) if pd.notna(r['id_padre']) else ''
         }
 
     # General Balance (where cod_subramo is empty)
