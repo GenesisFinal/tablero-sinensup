@@ -547,7 +547,7 @@
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-shield-virus text-brand-red"></i> Distribución de Producción y Siniestralidad por Ramo
             </h3>
-            <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS) | Línea y Etiquetas = Siniestralidad Devengada (%)</p>
+            <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS) | Línea y Etiquetas = Siniestralidad s/ Emisión (%)</p>
           </div>
           <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs">
             <button onclick="setRamosScope('cia')" id="ramosScopeCiaBtn" class="px-3 py-1 rounded bg-brand-red text-white font-semibold">Aseguradora Seleccionada</button>
@@ -571,7 +571,7 @@
                 <th class="py-2.5 px-3">Descripción del Subramo</th>
                 <th class="py-2.5 px-3 text-right">Primas Emitidas (ARS)</th>
                 <th class="py-2.5 px-3 text-right">Siniestros (ARS)</th>
-                <th class="py-2.5 px-3 text-right">Siniestralidad (%)</th>
+                <th class="py-2.5 px-3 text-right">Siniestralidad s/ Emisión (%)</th>
               </tr>
             </thead>
             <tbody id="subramosTableBody" class="divide-y divide-slate-800 font-mono"></tbody>
@@ -62054,13 +62054,13 @@
           sin_txt: formatARS(s.siniestros),
           loss_txt: (s['siniestralidad_%'] || 0).toFixed(1) + '%'
         })),
-        hovertemplate: '<b>%{customdata.sub}</b> (Cód: %{customdata.cod})<br>Primas Emitidas: <b>%{customdata.primas_txt}</b><br>Siniestros: <b>%{customdata.sin_txt}</b><br>Siniestralidad: <b>%{customdata.loss_txt}</b><extra></extra>'
+        hovertemplate: '<b>%{customdata.sub}</b> (Cód: %{customdata.cod})<br>Primas Emitidas: <b>%{customdata.primas_txt}</b><br>Siniestros: <b>%{customdata.sin_txt}</b><br>Siniestralidad s/ Emisión: <b>%{customdata.loss_txt}</b><extra></extra>'
       };
 
       const traceLoss = {
         x: topSub.map(s => s.desc_subramo),
         y: topSub.map(s => s['siniestralidad_%'] || 0),
-        name: 'Siniestralidad Devengada (%)',
+        name: 'Siniestralidad s/ Emisión (%)',
         type: 'scatter',
         mode: 'lines+markers+text',
         text: topSub.map(s => (s['siniestralidad_%'] || 0).toFixed(1) + '%'),
@@ -62069,7 +62069,7 @@
         yaxis: 'y2',
         marker: { color: '#E20039', size: 9, line: { color: '#FFFFFF', width: 2 } },
         line: { color: '#E20039', width: 3 },
-        hovertemplate: '<b>%{x}</b><br>Siniestralidad Devengada: <b>%{y:.1f}%</b><extra></extra>'
+        hovertemplate: '<b>%{x}</b><br>Siniestralidad s/ Emisión: <b>%{y:.1f}%</b><extra></extra>'
       };
 
       const layout = {
@@ -62087,7 +62087,7 @@
           showgrid: true
         },
         yaxis2: {
-          title: 'Siniestralidad Devengada (%)',
+          title: 'Siniestralidad s/ Emisión (%)',
           overlaying: 'y',
           side: 'right',
           color: '#E20039',
