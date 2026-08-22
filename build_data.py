@@ -572,7 +572,19 @@ def build_complete_dataset():
             "roe": round(roe, 2),
             "roa": round(roa, 2),
             "margen_neto": round(margen_neto, 2),
-            "market_share": round(mkt_share, 2)
+            "market_share": round(mkt_share, 2),
+            "waterfall": [
+                {"name": "Primas Emitidas", "amount": tot_emit, "type": "relative"},
+                {"name": "Variación Reservas", "amount": tot_var, "type": "relative"},
+                {"name": "Primas Devengadas", "amount": tot_dev, "type": "total"},
+                {"name": "Siniestros Netos", "amount": -tot_sin, "type": "relative"},
+                {"name": "Gastos Producción", "amount": -tot_gtos_prod, "type": "relative"},
+                {"name": "Gastos Explotación", "amount": -tot_gtos_exp, "type": "relative"},
+                {"name": "Resultado Técnico", "amount": tot_res_tec, "type": "total"},
+                {"name": "Resultado Financiero", "amount": tot_res_fin, "type": "relative"},
+                {"name": "Otros Ing/Egr e Imp.", "amount": tot_res_neto - tot_res_tec - tot_res_fin, "type": "relative"},
+                {"name": "Resultado Neto", "amount": tot_res_neto, "type": "total"}
+            ]
         }
 
         groups_ranking.append(g_obj)
@@ -588,6 +600,7 @@ def build_complete_dataset():
 
         # Consolidate Subramo Balances for this group
         groups_balances_subramos[gid] = {}
+        g_subramos_list = []
         for scat in subramos_catalog:
             scod = scat['cod']
             group_sub_raw = {}
@@ -596,7 +609,20 @@ def build_complete_dataset():
                     for acc_code, acc_val in cias_balances_subramos[cd][scod].items():
                         group_sub_raw[acc_code] = group_sub_raw.get(acc_code, 0.0) + acc_val
             if group_sub_raw:
-                groups_balances_subramos[gid][scod] = compute_hierarchical_rollup(group_sub_raw, is_subramo=True)
+                sub_rollup = compute_hierarchical_rollup(group_sub_raw, is_subramo=True)
+                groups_balances_subramos[gid][scod] = sub_rollup
+                sub_emit = sub_rollup.get('5.01.01.00.00.00.00.00', 0.0)
+                sub_sin = sub_rollup.get('4.01.01.00.00.00.00.00', 0.0) + sub_rollup.get('4.01.02.00.00.00.00.00', 0.0)
+                if sub_emit > 0:
+                    g_subramos_list.append({
+                        "cod_subramo": scod,
+                        "desc_subramo": scat['desc'],
+                        "primas_emitidas": sub_emit,
+                        "siniestros": sub_sin,
+                        "loss_ratio": round((sub_sin / sub_emit * 100.0), 2) if sub_emit > 0 else 0.0
+                    })
+        g_subramos_list.sort(key=lambda x: x['primas_emitidas'], reverse=True)
+        g_obj["subramos"] = g_subramos_list
 
     groups_ranking.sort(key=lambda x: x['primas_emitidas'], reverse=True)
     for i, g in enumerate(groups_ranking, 1):
