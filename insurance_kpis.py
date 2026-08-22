@@ -160,8 +160,9 @@ def compute_all_companies_summary(df):
         premios_a_cobrar = get_account_value(df_c, '1.03.01.00.00.00.00.00', exact=True)
         calidad_cartera = (premios_a_cobrar / base_primas) * 100.0 if base_primas > 0 else 0.0
 
-        # Ratios de Gestión adicionales
-        retencion_ratio = (primas_dev / primas_emit * 100.0) if primas_emit > 0 else 100.0
+        # Ratios de Gestión adicionales (Retención pura de Reaseguro: Primas Emitidas - Cedidas / Primas Emitidas)
+        retencion_ratio = max(0.0, min(100.0, ((primas_emit - primas_cedidas) / primas_emit * 100.0))) if primas_emit > 0 else 100.0
+        cesion_ratio = (primas_cedidas / primas_emit * 100.0) if primas_emit > 0 else 0.0
         roe = (res_neto / pn * 100.0) if pn > 0 else 0.0
         roa = (res_neto / activo_tot * 100.0) if activo_tot > 0 else 0.0
         margen_neto = (res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
@@ -185,6 +186,7 @@ def compute_all_companies_summary(df):
             'previsiones': prev,
             'patrimonio_neto': pn,
             'primas_emitidas': primas_emit,
+            'primas_cedidas': primas_cedidas,
             'cesiones_anulaciones': cesiones_anul,
             'var_reservas': var_comp_tec,
             'primas_devengadas': primas_dev,
@@ -208,6 +210,7 @@ def compute_all_companies_summary(df):
             'apalancamiento': apalancamiento,
             'calidad_cartera': calidad_cartera,
             'retencion_ratio': retencion_ratio,
+            'cesion_ratio': cesion_ratio,
             'roe': roe,
             'roa': roa,
             'margen_neto': margen_neto,
