@@ -160,6 +160,13 @@ def compute_all_companies_summary(df):
         premios_a_cobrar = get_account_value(df_c, '1.03.01.00.00.00.00.00', exact=True)
         calidad_cartera = (premios_a_cobrar / base_primas) * 100.0 if base_primas > 0 else 0.0
 
+        # Ratios de Gestión adicionales
+        retencion_ratio = (primas_dev / primas_emit * 100.0) if primas_emit > 0 else 100.0
+        roe = (res_neto / pn * 100.0) if pn > 0 else 0.0
+        roa = (res_neto / activo_tot * 100.0) if activo_tot > 0 else 0.0
+        margen_neto = (res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
+        densidad_inversiones = (inv / activo_tot * 100.0) if activo_tot > 0 else 0.0
+
         records.append({
             'cod_cia': cod,
             'razon_social': cia['razon_social'],
@@ -199,7 +206,12 @@ def compute_all_companies_summary(df):
             'roi_inversiones': roi_inversiones,
             'cobertura_reservas': cobertura_res,
             'apalancamiento': apalancamiento,
-            'calidad_cartera': calidad_cartera
+            'calidad_cartera': calidad_cartera,
+            'retencion_ratio': retencion_ratio,
+            'roe': roe,
+            'roa': roa,
+            'margen_neto': margen_neto,
+            'densidad_inversiones': densidad_inversiones
         })
 
     return pd.DataFrame(records)
