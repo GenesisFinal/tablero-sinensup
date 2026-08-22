@@ -1523,13 +1523,14 @@ def generate_html():
             <thead class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px] font-mono">
               <tr>
                 <th class="py-2.5 px-2 text-center w-8">#</th>
-                <th class="py-2.5 px-2 text-left w-56">Aseguradora / Grupo Económico</th>
-                <th class="py-2.5 px-2 text-center w-16">Tipo / Cías</th>
+                <th class="py-2.5 px-2 text-left w-52">Aseguradora / Grupo Económico</th>
+                <th class="py-2.5 px-2 text-center w-20">Tipo / Cías</th>
                 <th class="py-2.5 px-2 text-right font-bold text-white">Primas Emitidas</th>
-                <th class="py-2.5 px-2 text-right w-28">Market Share</th>
+                <th class="py-2.5 px-2 text-right w-24">Market Share</th>
                 <th class="py-2.5 px-2 text-right">Siniestros</th>
-                <th class="py-2.5 px-2 text-right">Siniestralidad (Loss Ratio)</th>
-                <th class="py-2.5 px-2 text-right font-bold">Resultado Técnico</th>
+                <th class="py-2.5 px-2 text-right w-20">Loss Ratio</th>
+                <th class="py-2.5 px-2 text-right font-bold">Res. Técnico</th>
+                <th class="py-2.5 px-2 text-right font-bold">Res. Financiero</th>
                 <th class="py-2.5 px-2 text-center w-16">Acción</th>
               </tr>
             </thead>
@@ -3072,7 +3073,7 @@ def generate_html():
 
       if (state.ramosRankMode === 'companies') {{
         Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
+          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
@@ -3080,12 +3081,15 @@ def generate_html():
               totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
               totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
               totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+              totIngFin += (d['5.02.00.00.00.00.00.00'] || 0.0);
+              totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
             }}
           }});
           if (totEmit > 0) {{
             const c = ciasByCode[cod_cia] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
             const resTec = totIngTec - totEgrTec;
+            const resFin = totIngFin - totEgrFin;
             ranking.push({{
               id: cod_cia,
               code: cod_cia,
@@ -3094,13 +3098,14 @@ def generate_html():
               emitidas: totEmit,
               siniestros: totSin,
               loss_ratio: lossRatio,
-              resultado_tecnico: resTec
+              resultado_tecnico: resTec,
+              resultado_financiero: resFin
             }});
           }}
         }});
       }} else {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
+          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
@@ -3108,12 +3113,15 @@ def generate_html():
               totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
               totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
               totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+              totIngFin += (d['5.02.00.00.00.00.00.00'] || 0.0);
+              totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
             }}
           }});
           if (totEmit > 0) {{
             const g = groupsById[gid] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
             const resTec = totIngTec - totEgrTec;
+            const resFin = totIngFin - totEgrFin;
 
             // Compute active member companies in the selected subramos
             let activeCiasCount = 0;
@@ -3138,7 +3146,8 @@ def generate_html():
               emitidas: totEmit,
               siniestros: totSin,
               loss_ratio: lossRatio,
-              resultado_tecnico: resTec
+              resultado_tecnico: resTec,
+              resultado_financiero: resFin
             }});
           }}
         }});
@@ -3288,7 +3297,7 @@ def generate_html():
       }});
 
       if (filtered.length === 0) {{
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-500">No se encontraron entidades en este ramo</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center py-6 text-slate-500">No se encontraron entidades en este ramo</td></tr>';
         return;
       }}
 
@@ -3302,7 +3311,7 @@ def generate_html():
         if (state.ramosRankMode === 'groups') {{
           entityNameHtml = `
             <div class="font-bold text-amber-300 flex items-center gap-1.5">
-              <span class="truncate max-w-[280px]" title="${{r.name}}">${{r.name}}</span>
+              <span class="truncate max-w-[260px]" title="${{r.name}}">${{r.name}}</span>
               ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
             </div>
           `;
@@ -3310,7 +3319,7 @@ def generate_html():
           entityNameHtml = `
             <div class="font-bold text-white flex items-center gap-1.5">
               <span class="font-mono text-xs text-slate-400 font-normal mr-1">[${{r.code}}]</span>
-              <span class="truncate max-w-[240px]" title="${{r.name}}">${{r.name}}</span>
+              <span class="truncate max-w-[220px]" title="${{r.name}}">${{r.name}}</span>
               ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
             </div>
           `;
@@ -3335,11 +3344,12 @@ def generate_html():
             <td class="py-2 px-2 text-right text-rose-300 font-mono">${{formatARS(r.siniestros)}}</td>
             <td class="py-2 px-2 text-right font-mono ${{r.loss_ratio <= 65 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(r.loss_ratio)}}</td>
             <td class="py-2 px-2 text-right font-mono font-bold ${{r.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(r.resultado_tecnico)}}</td>
+            <td class="py-2 px-2 text-right font-mono font-bold ${{r.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(r.resultado_financiero)}}</td>
             <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
               ${{state.ramosRankMode === 'groups' ? `
-                <button onclick="openGroupModal('${{r.code}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver Grupo</button>
+                <button onclick="openGroupModal('${{r.code}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold cursor-pointer">Ver Grupo</button>
               ` : `
-                <button onclick="selectCompany('${{r.code}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver Ficha</button>
+                <button onclick="selectCompany('${{r.code}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold cursor-pointer">Ver Ficha</button>
               `}}
             </td>
           </tr>
@@ -3350,7 +3360,7 @@ def generate_html():
     function exportRamosRankCSV() {{
       if (!currentRamosRankData || !currentRamosRankData.ranking) return;
 
-      const headers = ['rank', 'codigo', 'nombre', 'tipo', 'primas_emitidas', 'market_share', 'siniestros_beneficios', 'loss_ratio', 'resultado_tecnico'];
+      const headers = ['rank', 'codigo', 'nombre', 'tipo', 'primas_emitidas', 'market_share', 'siniestros_beneficios', 'loss_ratio', 'resultado_tecnico', 'resultado_financiero'];
       let csv = headers.join(',') + '\\n';
 
       currentRamosRankData.ranking.forEach((r, idx) => {{
@@ -3363,7 +3373,8 @@ def generate_html():
           (r.market_share || 0).toFixed(2),
           r.siniestros || 0,
           (r.loss_ratio || 0).toFixed(2),
-          r.resultado_tecnico || 0
+          r.resultado_tecnico || 0,
+          r.resultado_financiero || 0
         ];
         csv += row.join(',') + '\\n';
       }});
