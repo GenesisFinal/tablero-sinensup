@@ -3452,21 +3452,103 @@ def generate_html():
             <div class="text-[10px] text-slate-400 mt-1">Ecuación Patrimonial Fundamental</div>
           </div>
         `;
+      }} else if (state.balStatement === 'tec') {{
+        const ingTec = dict['5.01.00.00.00.00.00.00'] || 0;
+        const egrTec = dict['4.01.00.00.00.00.00.00'] || 0;
+        const resTec = ingTec - egrTec;
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">INGRESOS TÉCNICOS (5.01)</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 mt-1">${{formatARS(ingTec)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Primas Devengadas + Otros Ing. Téc.</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">EGRESOS TÉCNICOS (4.01)</div>
+            <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(egrTec)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Siniestros + Gastos Prod./Explotación</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 ${{resTec >= 0 ? 'border-l-emerald-400' : 'border-l-rose-400'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO (ET)</div>
+            <div class="text-lg font-bold font-mono ${{resTec >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatARS(resTec)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{resTec >= 0 ? 'Superávit Técnico' : 'Déficit Técnico'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">ESTRUCTURA CONTABLE</div>
+            <div class="text-base font-bold font-mono text-amber-300 mt-1">ESTRUCTURA TÉCNICA</div>
+            <div class="text-[10px] text-slate-400 mt-1">Rubros 4.01 vs 5.01</div>
+          </div>
+        `;
+      }} else if (state.balStatement === 'fin') {{
+        const ingFin = dict['5.02.00.00.00.00.00.00'] || 0;
+        const egrFin = dict['4.02.00.00.00.00.00.00'] || 0;
+        const resFin = ingFin - egrFin;
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">INGRESOS FINANCIEROS (5.02)</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 mt-1">${{formatARS(ingFin)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Rentas + Tenencia + Realización</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">EGRESOS FINANCIEROS (4.02)</div>
+            <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(egrFin)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Gastos Financieros + Desvalorizaciones</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 ${{resFin >= 0 ? 'border-l-emerald-400' : 'border-l-rose-400'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO FINANCIERO (EF)</div>
+            <div class="text-lg font-bold font-mono ${{resFin >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatARS(resFin)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{resFin >= 0 ? 'Ganancia Financiera' : 'Pérdida Financiera'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">ESTRUCTURA CONTABLE</div>
+            <div class="text-base font-bold font-mono text-amber-300 mt-1">ESTRUCTURA FINANCIERA</div>
+            <div class="text-[10px] text-slate-400 mt-1">Rubros 4.02 vs 5.02</div>
+          </div>
+        `;
+      }} else if (state.balStatement === 'ramo') {{
+        const ingRamo = dict['5.01.00.00.00.00.00.00'] || dict['5.00.00.00.00.00.00.00'] || 0;
+        const egrRamo = dict['4.01.00.00.00.00.00.00'] || dict['4.00.00.00.00.00.00.00'] || 0;
+        const resRamo = ingRamo - egrRamo;
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">INGRESOS TÉCNICOS RAMO</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 mt-1">${{formatARS(ingRamo)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Devengamiento Subramo</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">EGRESOS TÉCNICOS RAMO</div>
+            <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(egrRamo)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Siniestros + Gastos Subramo</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 ${{resRamo >= 0 ? 'border-l-emerald-400' : 'border-l-rose-400'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO TÉCNICO RAMO</div>
+            <div class="text-lg font-bold font-mono ${{resRamo >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{formatARS(resRamo)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{resRamo >= 0 ? 'Superávit del Subramo' : 'Déficit del Subramo'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">SUBRAMO SELECCIONADO</div>
+            <div class="text-sm font-bold font-mono text-amber-300 mt-1 truncate" title="${{state.balSubramo}}">${{state.balSubramo}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Apertura Técnica SSN</div>
+          </div>
+        `;
       }} else {{
-        const perdidas = dict['4.00.00.00.00.00.00.00'] || dict['4.01.00.00.00.00.00.00'] || dict['4.02.00.00.00.00.00.00'] || 0;
-        const ganancias = dict['5.00.00.00.00.00.00.00'] || dict['5.01.00.00.00.00.00.00'] || dict['5.02.00.00.00.00.00.00'] || 0;
+        // EDR (Estado de Resultados Integral)
+        const perdidas = dict['4.00.00.00.00.00.00.00'] || 0;
+        const ganancias = dict['5.00.00.00.00.00.00.00'] || 0;
         const resNeto = ganancias - perdidas;
 
         banner.innerHTML = `
           <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
             <div class="text-[11px] font-semibold text-slate-400 uppercase">TOTAL INGRESOS / GANANCIAS</div>
             <div class="text-lg font-bold font-mono text-emerald-400 mt-1">${{formatARS(ganancias)}}</div>
-            <div class="text-[10px] text-slate-400 mt-1">Capítulo 5.00</div>
+            <div class="text-[10px] text-slate-400 mt-1">Capítulo 5.00 Integral</div>
           </div>
           <div class="glass-card p-4 rounded-xl border-l-4 border-l-rose-500">
             <div class="text-[11px] font-semibold text-slate-400 uppercase">TOTAL EGRESOS / PÉRDIDAS</div>
             <div class="text-lg font-bold font-mono text-rose-400 mt-1">${{formatARS(perdidas)}}</div>
-            <div class="text-[10px] text-slate-400 mt-1">Capítulo 4.00</div>
+            <div class="text-[10px] text-slate-400 mt-1">Capítulo 4.00 Integral</div>
           </div>
           <div class="glass-card p-4 rounded-xl border-l-4 ${{resNeto >= 0 ? 'border-l-emerald-400' : 'border-l-rose-400'}}">
             <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO NETO DEL PERÍODO</div>
@@ -3475,7 +3557,7 @@ def generate_html():
           </div>
           <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
             <div class="text-[11px] font-semibold text-slate-400 uppercase">ESTADO CONTABLE</div>
-            <div class="text-base font-bold font-mono text-amber-300 mt-1 uppercase">${{state.balStatement}}</div>
+            <div class="text-base font-bold font-mono text-amber-300 mt-1">ESTADO DE RESULTADOS</div>
             <div class="text-[10px] text-slate-400 mt-1">Plan Oficial SSN</div>
           </div>
         `;
@@ -3553,12 +3635,16 @@ def generate_html():
           return matchedCodes.has(code);
         }}
         const p = plan[code];
-        if (p.nivel === 1) return true;
-        // For tec/fin, level 2 root (e.g. 4.01) is root
-        if ((state.balStatement === 'tec' || state.balStatement === 'fin') && p.nivel === 2) return true;
+        if (state.balStatement === 'patrimonial' || state.balStatement === 'edr' || state.balStatement === 'ramo') {{
+          if (p.nivel === 1) return true;
+        }} else if (state.balStatement === 'tec' || state.balStatement === 'fin') {{
+          if (p.nivel === 2) return true;
+        }}
         
         let curr = p.padre_codigo || p.padre;
         while (curr && plan[curr]) {{
+          // In tec / fin, stop traversing once reaching above level 2 root
+          if ((state.balStatement === 'tec' || state.balStatement === 'fin') && plan[curr].nivel < 2) break;
           if (!state.balExpandedNodes.has(curr)) return false;
           curr = plan[curr].padre_codigo || plan[curr].padre;
         }}
