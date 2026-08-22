@@ -371,24 +371,36 @@ def get_company_subramos(df, cod_cia=None):
     return merged[['cod_subramo', 'desc_subramo', 'primas', 'siniestros', 'siniestralidad_%']].to_dict(orient='records')
 
 def get_company_investments_breakdown(df_cia):
-    """Extracts level 3 breakdown of account 1.02 (Inversiones)."""
-    inv_df = df_cia[df_cia['cod_cuenta'].str.startswith('1.02.')]
-    
-    level3 = inv_df[inv_df['cod_cuenta'].apply(lambda x: len(x.split('.')) >= 3 and x.split('.')[2] != '00' and (len(x.split('.')) == 3 or x.split('.')[3] == '00'))]
-    
-    if level3.empty:
-        level3 = inv_df[inv_df['cod_cuenta'].apply(lambda x: len(x.split('.')) >= 2 and x.split('.')[1] != '00' and (len(x.split('.')) == 2 or x.split('.')[2] == '00'))]
+    """
+    Extracts detailed instrument allocation breakdown of account 1.02 (Inversiones)
+    at Level 4 (Títulos Públicos, Acciones, FCIs, ONs, Plazos Fijos, etc.).
+    """
+    inv4 = df_cia[df_cia['cod_cuenta'].str.startswith('1.02.01.') & df_cia['cod_cuenta'].apply(
+        lambda x: len(x.split('.')) >= 4 and x.split('.')[3] != '00' and (len(x.split('.')) == 4 or x.split('.')[4] == '00')
+    )]
+    inv_ext = df_cia[df_cia['cod_cuenta'] == '1.02.02.00.00.00.00.00']
+    combined = pd.concat([inv4, inv_ext]) if not inv_ext.empty else inv4
+
+    if combined.empty:
+        # Fallback to level 3 if level 4 is not populated
+        combined = df_cia[df_cia['cod_cuenta'].str.startswith('1.02.') & df_cia['cod_cuenta'].apply(
+            lambda x: len(x.split('.')) >= 3 and x.split('.')[2] != '00' and (len(x.split('.')) == 3 or x.split('.')[3] == '00')
+        )]
+
+    if combined.empty:
+        return []
+
+    grp = combined.groupby(['cod_cuenta', 'desc_cuenta'])['importe'].sum().reset_index()
+    tot = grp['importe'].sum()
+    grp['porcentaje'] = (grp['importe'] / tot * 100.0).round(1) if tot > 0 else 0.0
+    grp = grp[grp['importe'] > 0].sort_values(by='importe', ascending=False)
 
     records = []
-    total_inv = level3['importe'].sum()
-    for _, row in level3.iterrows():
-        if row['importe'] > 0:
-            pct = (row['importe'] / total_inv * 100.0) if total_inv > 0 else 0.0
-            records.append({
-                'cod_cuenta': row['cod_cuenta'],
-                'desc_cuenta': row['desc_cuenta'],
-                'importe': float(row['importe']),
-                'porcentaje': round(pct, 1)
-            })
-    records.sort(key=lambda x: x['importe'], reverse=True)
+    for _, row in grp.iterrows():
+        records.append({
+            'cod_cuenta': str(row['cod_cuenta']),
+            'desc_cuenta': str(row['desc_cuenta']),
+            'importe': float(row['importe']),
+            'porcentaje': float(row['porcentaje'])
+        })
     return records
