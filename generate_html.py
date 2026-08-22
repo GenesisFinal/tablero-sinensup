@@ -347,19 +347,30 @@ def generate_html():
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-crosshairs text-brand-red"></i> Matriz Estratégica: Margen Técnico vs. Rendimiento Financiero
             </h3>
-            <p class="text-xs text-slate-400">Selecciona o haz clic en cualquier burbuja para resaltarla con su ficha y métricas</p>
+            <p class="text-xs text-slate-400">Analiza el posicionamiento competitivo por Grupos Económicos Consolidados o por Aseguradoras Individuales</p>
           </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Mode Switch: Grupos vs Aseguradoras -->
+            <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
+              <button type="button" onclick="setScatterMode('groups')" id="scatterModeBtn-groups" class="px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores
+              </button>
+              <button type="button" onclick="setScatterMode('companies')" id="scatterModeBtn-companies" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-building"></i> 🏢 Aseguradoras
+              </button>
+            </div>
 
             <!-- Searchable Highlight Combobox -->
             <div class="relative w-56 sm:w-64" id="scatterComboboxContainer">
               <button type="button" onclick="toggleCombobox('scatterCombobox')" id="scatterComboboxBtn" class="w-full flex items-center justify-between px-2.5 py-1 bg-slate-900 border border-slate-700 rounded-lg text-xs text-amber-300 font-semibold focus:outline-none hover:border-amber-400 transition-all">
-                <span id="scatterComboboxLabel" class="truncate">🔍 Resaltar aseguradora...</span>
+                <span id="scatterComboboxLabel" class="truncate">🔍 Resaltar entidad...</span>
                 <i class="fa-solid fa-chevron-down text-slate-400 text-[9px] ml-1.5 flex-shrink-0"></i>
               </button>
               <div id="scatterComboboxDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-[100] p-2 text-xs backdrop-blur-md max-h-72 flex flex-col">
                 <div class="relative mb-2">
                   <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                  <input type="text" id="scatterComboboxInput" oninput="filterCombobox('scatterCombobox', this.value)" placeholder="Tipea nombre o código..." class="w-full pl-7 pr-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-normal">
+                  <input type="text" id="scatterComboboxInput" oninput="filterCombobox('scatterCombobox', this.value)" placeholder="Tipea nombre..." class="w-full pl-7 pr-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-normal">
                 </div>
                 <div id="scatterComboboxList" class="overflow-y-auto max-h-56 divide-y divide-slate-800/40"></div>
               </div>
@@ -368,30 +379,24 @@ def generate_html():
               <i class="fa-solid fa-xmark text-rose-400"></i>
             </button>
 
-            <!-- Quick La Segunda Pills -->
-            <div class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
-              <span class="text-[10px] font-bold text-amber-300 mr-1"><i class="fa-solid fa-star"></i> La Segunda:</span>
-              <button onclick="highlightScatterCompany('0317')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Seguros Generales">0317</button>
-              <button onclick="highlightScatterCompany('0618')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda ART">0618</button>
-              <button onclick="highlightScatterCompany('0117')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Personas">0117</button>
-              <button onclick="highlightScatterCompany('0436')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Retiro">0436</button>
-            </div>
+            <!-- Quick Benchmark Pills Container (Dynamic) -->
+            <div id="scatterQuickPills" class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30"></div>
 
             <!-- Zoom, Pan, Reset & Download PNG -->
             <div class="flex items-center gap-1">
-              <button onclick="zoomScatterPlot(0.7)" title="Acercar Zoom (+)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors">
+              <button onclick="zoomScatterPlot(0.7)" title="Acercar Zoom (+)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors cursor-pointer">
                 <i class="fa-solid fa-magnifying-glass-plus text-brand-blue"></i>
               </button>
-              <button onclick="zoomScatterPlot(1.4)" title="Alejar Zoom (-)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors">
+              <button onclick="zoomScatterPlot(1.4)" title="Alejar Zoom (-)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors cursor-pointer">
                 <i class="fa-solid fa-magnifying-glass-minus text-brand-blue"></i>
               </button>
-              <button id="panToggleBtn" onclick="toggleScatterPan()" title="Desplazar / Pan (arrastrar el gráfico)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors">
+              <button id="panToggleBtn" onclick="toggleScatterPan()" title="Desplazar / Pan (arrastrar el gráfico)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors cursor-pointer">
                 <i class="fa-solid fa-up-down-left-right text-amber-400"></i>
               </button>
-              <button onclick="resetScatterPlotZoom()" title="Restablecer vista / Reset Axes" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <button onclick="resetScatterPlotZoom()" title="Restablecer vista / Reset Axes" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-arrows-rotate text-emerald-400"></i> Centrar
               </button>
-              <button onclick="downloadScatterPlotPNG()" title="Descargar imagen PNG" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <button onclick="downloadScatterPlotPNG()" title="Descargar imagen PNG" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-camera text-sky-400"></i> PNG
               </button>
             </div>
@@ -1611,6 +1616,7 @@ def generate_html():
       entityScope: 'cia',
       selectedCompanyCode: '0436',
       highlightedCiaCode: null,
+      scatterMode: 'groups',
       marketRankingMode: 'groups',
       selectedGroupId: 'sancor',
       ramosRankSections: ['personas'],
@@ -1934,7 +1940,64 @@ def generate_html():
 
       let html = '';
 
-      if (matchedGroups.length > 0 && idPrefix !== 'scatterCombobox') {{
+      if (idPrefix === 'scatterCombobox') {{
+        if (state.scatterMode === 'groups') {{
+          if (matchedGroups.length === 0) {{
+            listEl.innerHTML = '<div class="p-3 text-slate-500 text-center text-xs">No se encontraron grupos</div>';
+            return;
+          }}
+          html = `
+            <div class="px-2 py-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 uppercase tracking-wider">
+              🏛️ Grupos Aseguradores Consolidados (${{matchedGroups.length}})
+            </div>
+          ` + matchedGroups.map(g => {{
+            const isSelected = (state.highlightedCiaCode === g.id);
+            return `
+              <div onclick="onComboboxSelect('scatterCombobox', '${{g.id}}')" 
+                   class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-amber-500/20 font-bold text-amber-300 border-l-2 border-amber-400' : 'text-slate-200'}}">
+                <div class="truncate flex items-center gap-1.5">
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">GRUPO</span>
+                  <span class="truncate font-semibold text-xs text-white">${{g.name}}</span>
+                  <span class="text-[10px] text-slate-400 font-mono">(${{g.entities_count}} cías)</span>
+                </div>
+                <div class="text-right text-[10px] font-mono text-amber-300 font-bold flex-shrink-0">
+                  ${{g.market_share.toFixed(1)}}% mkt
+                </div>
+              </div>
+            `;
+          }}).join('');
+          listEl.innerHTML = html;
+          return;
+        }} else {{
+          if (filteredCias.length === 0) {{
+            listEl.innerHTML = '<div class="p-3 text-slate-500 text-center text-xs">No se encontraron aseguradoras</div>';
+            return;
+          }}
+          html = `
+            <div class="px-2 py-1 text-[10px] font-bold text-slate-400 bg-slate-950 uppercase tracking-wider">
+              🏢 Aseguradoras Individuales (${{filteredCias.length}})
+            </div>
+          ` + filteredCias.map(c => {{
+            const isSelected = (state.highlightedCiaCode === c.cod_cia);
+            return `
+              <div onclick="onComboboxSelect('scatterCombobox', '${{c.cod_cia}}')" 
+                   class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-slate-800/80 font-bold text-white' : 'text-slate-300'}}">
+                <div class="truncate flex items-center gap-1.5">
+                  <span class="font-mono text-[10px] text-slate-400 font-bold">${{c.cod_cia}}</span>
+                  <span class="truncate font-semibold text-xs text-white">${{c.razon_social}}</span>
+                </div>
+                <div class="flex-shrink-0">
+                  ${{getTipoBadge(c.tipo_entidad)}}
+                </div>
+              </div>
+            `;
+          }}).join('');
+          listEl.innerHTML = html;
+          return;
+        }}
+      }}
+
+      if (matchedGroups.length > 0) {{
         html += `
           <div class="px-2 py-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 uppercase tracking-wider flex items-center justify-between">
             <span>🏛️ Grupos Aseguradores Consolidados (${{matchedGroups.length}})</span>
@@ -1958,7 +2021,7 @@ def generate_html():
       }}
 
       if (filteredCias.length > 0) {{
-        if (matchedGroups.length > 0 && idPrefix !== 'scatterCombobox') {{
+        if (matchedGroups.length > 0) {{
           html += `
             <div class="px-2 py-1 text-[10px] font-bold text-slate-400 bg-slate-950 uppercase tracking-wider mt-1">
               <span>🏢 Aseguradoras Individuales (${{filteredCias.length}})</span>
@@ -1966,8 +2029,7 @@ def generate_html():
           `;
         }}
         html += filteredCias.map(c => {{
-          const isSelected = (idPrefix === 'scatterCombobox' && state.highlightedCiaCode === c.cod_cia) ||
-                             (idPrefix !== 'scatterCombobox' && state.selectedCompanyCode === c.cod_cia && state.balScope !== 'group');
+          const isSelected = (state.selectedCompanyCode === c.cod_cia && state.balScope !== 'group');
           return `
             <div onclick="onComboboxSelect('${{idPrefix}}', '${{c.cod_cia}}')" 
                  class="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between gap-2 rounded transition-colors ${{isSelected ? 'bg-slate-800/80 font-bold text-white' : 'text-slate-300'}}">
@@ -2041,11 +2103,14 @@ def generate_html():
 
       const scatterLabelEl = document.getElementById('scatterComboboxLabel');
       if (scatterLabelEl) {{
-        if (state.highlightedCiaCode && data.companies_by_code && data.companies_by_code[state.highlightedCiaCode]) {{
+        if (state.scatterMode === 'groups' && state.highlightedCiaCode && data.groups_by_id && data.groups_by_id[state.highlightedCiaCode]) {{
+          const g = data.groups_by_id[state.highlightedCiaCode];
+          scatterLabelEl.innerText = `🏛️ ${{g.name}}`;
+        }} else if (state.highlightedCiaCode && data.companies_by_code && data.companies_by_code[state.highlightedCiaCode]) {{
           const hl = data.companies_by_code[state.highlightedCiaCode];
           scatterLabelEl.innerText = `${{hl.cod_cia}} - ${{hl.razon_social}}`;
         }} else {{
-          scatterLabelEl.innerText = '🔍 Resaltar aseguradora...';
+          scatterLabelEl.innerText = state.scatterMode === 'groups' ? '🔍 Resaltar grupo...' : '🔍 Resaltar aseguradora...';
         }}
       }}
     }}
@@ -2061,7 +2126,7 @@ def generate_html():
       }}
 
       if (state.currentTab === 'vision-mercado') {{
-        renderScatterPlot();
+        renderMarketScatterPlot();
       }}
     }}
 
@@ -2468,43 +2533,102 @@ def generate_html():
 
       document.getElementById('topRankingTableBody').innerHTML = rowsHtml;
 
+      buildScatterQuickPills();
       renderMarketScatterPlot(list);
       renderMarketTable();
     }}
 
+    function setScatterMode(mode) {{
+      state.scatterMode = mode;
+      state.highlightedCiaCode = null;
+      const btnG = document.getElementById('scatterModeBtn-groups');
+      const btnC = document.getElementById('scatterModeBtn-companies');
+
+      if (mode === 'groups') {{
+        if (btnG) btnG.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5 cursor-pointer';
+        if (btnC) btnC.className = 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer';
+      }} else {{
+        if (btnG) btnG.className = 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer';
+        if (btnC) btnC.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5 cursor-pointer';
+      }}
+      buildScatterQuickPills();
+      updateAllComboboxLabels();
+      renderMarketScatterPlot();
+    }}
+
+    function buildScatterQuickPills() {{
+      const container = document.getElementById('scatterQuickPills');
+      if (!container) return;
+
+      if (state.scatterMode === 'groups') {{
+        container.innerHTML = `
+          <span class="text-[10px] font-bold text-amber-300 mr-1"><i class="fa-solid fa-star"></i> Benchmark:</span>
+          <button onclick="highlightScatterCompany('la_segunda')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Asegurador La Segunda">★ La Segunda</button>
+          <button onclick="highlightScatterCompany('sancor')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Sancor Seguros">Sancor</button>
+          <button onclick="highlightScatterCompany('fed_pat')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Federación Patronal">Fed. Patronal</button>
+        `;
+      }} else {{
+        container.innerHTML = `
+          <span class="text-[10px] font-bold text-amber-300 mr-1"><i class="fa-solid fa-star"></i> La Segunda:</span>
+          <button onclick="highlightScatterCompany('0317')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="La Segunda Seguros Generales">0317</button>
+          <button onclick="highlightScatterCompany('0618')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="La Segunda ART">0618</button>
+          <button onclick="highlightScatterCompany('0117')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="La Segunda Personas">0117</button>
+          <button onclick="highlightScatterCompany('0436')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="La Segunda Retiro">0436</button>
+        `;
+      }}
+    }}
+
     function renderMarketScatterPlot(list) {{
-      const valid = list.filter(c => c.primas_devengadas > 0);
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const isGroupsMode = (state.scatterMode === 'groups');
+      const items = isGroupsMode ? (data.groups || []) : (list || getFilteredCompanies());
+      const valid = items.filter(x => (x.primas_devengadas || 0) > 0);
       const hlCode = state.highlightedCiaCode;
-      const hasHighlight = !!hlCode && valid.some(c => c.cod_cia === hlCode);
+      const hasHighlight = !!hlCode && valid.some(x => (isGroupsMode ? x.id : x.cod_cia) === hlCode);
 
       const trace = {{
-        x: valid.map(c => Math.max(-120, Math.min(150, c.margen_tecnico))),
-        y: valid.map(c => Math.max(-40, Math.min(80, c.roi_inversiones))),
-        text: valid.map(c => `<b>${{c.razon_social}}</b><br>Cód SSN: ${{c.cod_cia}} • Tipo: ${{c.tipo_entidad}}<br>Primas Emitidas: ${{formatARS(c.primas_emitidas)}}<br>Primas Devengadas: ${{formatARS(c.primas_devengadas)}}<br>Siniestros: ${{formatARS(c.siniestros)}}<br>M. Técnico: ${{c.margen_tecnico.toFixed(1)}}%<br>ROI Inv: ${{c.roi_inversiones.toFixed(1)}}%<br>Ratio Comb: ${{c.combined_ratio.toFixed(1)}}%`),
-        customdata: valid.map(c => c.cod_cia),
+        x: valid.map(x => Math.max(-120, Math.min(150, x.margen_tecnico || 0))),
+        y: valid.map(x => Math.max(-40, Math.min(80, x.roi_inversiones || 0))),
+        text: valid.map(x => {{
+          if (isGroupsMode) {{
+            return `<b>${{x.name}}</b><br>🏛️ Grupo Económico (${{x.entities_count}} Cías Consolidadas)<br>Primas Emitidas: ${{formatARS(x.primas_emitidas)}} (${{x.market_share.toFixed(1)}}% mkt)<br>Primas Devengadas: ${{formatARS(x.primas_devengadas)}}<br>Resultado Técnico: ${{formatARS(x.resultado_tecnico)}} (M. Téc: ${{((x.margen_tecnico || 0)).toFixed(1)}}%)<br>Resultado Financiero: ${{formatARS(x.resultado_financiero)}} (ROI: ${{((x.roi_inversiones || 0)).toFixed(1)}}%)<br>Resultado Neto: ${{formatARS(x.resultado_neto)}}<br>Ratio Combinado: ${{((x.combined_ratio || 0)).toFixed(1)}}%`;
+          }} else {{
+            return `<b>${{x.razon_social}}</b><br>Cód SSN: ${{x.cod_cia}} • Tipo: ${{x.tipo_entidad}}<br>Primas Emitidas: ${{formatARS(x.primas_emitidas)}}<br>Primas Devengadas: ${{formatARS(x.primas_devengadas)}}<br>Siniestros: ${{formatARS(x.siniestros)}}<br>M. Técnico: ${{((x.margen_tecnico || 0)).toFixed(1)}}%<br>ROI Inv: ${{((x.roi_inversiones || 0)).toFixed(1)}}%<br>Ratio Comb: ${{((x.combined_ratio || 0)).toFixed(1)}}%`;
+          }}
+        }}),
+        customdata: valid.map(x => isGroupsMode ? x.id : x.cod_cia),
         mode: 'markers',
         marker: {{
-          size: valid.map(c => {{
-            const baseSize = Math.max(9, Math.min(46, Math.sqrt(c.primas_emitidas / 8e7)));
-            return (hasHighlight && c.cod_cia === hlCode) ? baseSize * 1.35 + 8 : baseSize;
+          size: valid.map(x => {{
+            const itemCode = isGroupsMode ? x.id : x.cod_cia;
+            const divisor = isGroupsMode ? 5e7 : 8e7;
+            const baseSize = Math.max(isGroupsMode ? 14 : 9, Math.min(52, Math.sqrt((x.primas_emitidas || 0) / divisor)));
+            return (hasHighlight && itemCode === hlCode) ? baseSize * 1.35 + 8 : baseSize;
           }}),
-          color: valid.map(c => {{
-            if (c.margen_tecnico >= 0 && c.roi_inversiones >= 0) return '#10B981';
-            if (c.margen_tecnico < 0 && c.roi_inversiones >= 0) return '#F59E0B';
-            if (c.margen_tecnico >= 0 && c.roi_inversiones < 0) return '#38BDF8';
+          color: valid.map(x => {{
+            const mt = x.margen_tecnico || 0;
+            const roi = x.roi_inversiones || 0;
+            if (mt >= 0 && roi >= 0) return '#10B981';
+            if (mt < 0 && roi >= 0) return '#F59E0B';
+            if (mt >= 0 && roi < 0) return '#38BDF8';
             return '#E20039';
           }}),
-          opacity: valid.map(c => {{
+          opacity: valid.map(x => {{
             if (!hasHighlight) return 0.88;
-            return c.cod_cia === hlCode ? 1.0 : 0.22;
+            const itemCode = isGroupsMode ? x.id : x.cod_cia;
+            return itemCode === hlCode ? 1.0 : 0.22;
           }}),
           line: {{
-            color: valid.map(c => {{
-              if (hasHighlight && c.cod_cia === hlCode) return '#FBBF24';
+            color: valid.map(x => {{
+              const itemCode = isGroupsMode ? x.id : x.cod_cia;
+              if (hasHighlight && itemCode === hlCode) return '#FBBF24';
               return '#FFFFFF';
             }}),
-            width: valid.map(c => {{
-              if (hasHighlight && c.cod_cia === hlCode) return 4.0;
+            width: valid.map(x => {{
+              const itemCode = isGroupsMode ? x.id : x.cod_cia;
+              if (hasHighlight && itemCode === hlCode) return 4.0;
               return hasHighlight ? 0.5 : 1.2;
             }})
           }}
@@ -2521,12 +2645,13 @@ def generate_html():
       ];
 
       if (hasHighlight) {{
-        const target = valid.find(c => c.cod_cia === hlCode);
+        const target = valid.find(x => (isGroupsMode ? x.id : x.cod_cia) === hlCode);
         if (target) {{
+          const targetName = isGroupsMode ? target.name : target.razon_social;
           annotations.push({{
-            x: Math.max(-120, Math.min(150, target.margen_tecnico)),
-            y: Math.max(-40, Math.min(80, target.roi_inversiones)),
-            text: `<b>📍 ${{target.razon_social}}</b><br>Primas Emit: ${{formatARS(target.primas_emitidas)}} | M. Téc: ${{target.margen_tecnico.toFixed(1)}}% | ROI: ${{target.roi_inversiones.toFixed(1)}}%`,
+            x: Math.max(-120, Math.min(150, target.margen_tecnico || 0)),
+            y: Math.max(-40, Math.min(80, target.roi_inversiones || 0)),
+            text: `<b>📍 ${{targetName}}</b><br>Primas Emit: ${{formatARS(target.primas_emitidas)}} | M. Téc: ${{((target.margen_tecnico || 0)).toFixed(1)}}% | ROI: ${{((target.roi_inversiones || 0)).toFixed(1)}}%`,
             showarrow: true,
             arrowhead: 2,
             arrowsize: 1.2,
@@ -2574,12 +2699,20 @@ def generate_html():
         const plotEl = document.getElementById('marketScatterPlot');
         plotEl.on('plotly_click', (data) => {{
           if (data && data.points && data.points.length > 0) {{
-            const ciaCode = data.points[0].customdata;
-            if (ciaCode) {{
-              if (state.highlightedCiaCode === ciaCode) {{
-                selectCompany(ciaCode);
+            const itemCode = data.points[0].customdata;
+            if (itemCode) {{
+              if (isGroupsMode) {{
+                if (state.highlightedCiaCode === itemCode) {{
+                  openGroupModal(itemCode);
+                }} else {{
+                  highlightScatterCompany(itemCode);
+                }}
               }} else {{
-                highlightScatterCompany(ciaCode);
+                if (state.highlightedCiaCode === itemCode) {{
+                  selectCompany(itemCode);
+                }} else {{
+                  highlightScatterCompany(itemCode);
+                }}
               }}
             }}
           }}
@@ -4886,6 +5019,9 @@ def generate_html():
     // Export all tree, group and ramos ranking functions to window scope
     window.selectCompany = selectCompany;
     window.selectGroup = selectGroup;
+    window.setScatterMode = setScatterMode;
+    window.buildScatterQuickPills = buildScatterQuickPills;
+    window.highlightScatterCompany = highlightScatterCompany;
     window.setRankingMode = setRankingMode;
     window.openGroupModal = openGroupModal;
     window.closeGroupModal = closeGroupModal;
