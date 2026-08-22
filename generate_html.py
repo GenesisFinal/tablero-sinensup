@@ -481,48 +481,6 @@ def generate_html():
         </div>
       </div>
 
-      <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador -->
-      <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-          <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
-            <div>
-              <div class="flex items-center gap-3">
-                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">🏛️ GRUPO ECONÓMICO</span>
-                <h3 id="groupModalTitle" class="text-base font-bold text-white">...</h3>
-              </div>
-              <p id="groupModalSubtitle" class="text-xs text-slate-400 mt-1">...</p>
-            </div>
-            <button onclick="closeGroupModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold">
-              ✕
-            </button>
-          </div>
-          
-          <!-- Group Summary KPIs -->
-          <div id="groupModalKpis" class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-900/60 border-b border-slate-800"></div>
-
-          <!-- Members List -->
-          <div class="p-5 overflow-y-auto space-y-3 flex-1">
-            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <i class="fa-solid fa-layer-group text-emerald-400"></i> Composición Societaria y Aporte por Aseguradora:
-            </h4>
-            <div id="groupModalMembersList" class="divide-y divide-slate-800/80 rounded-xl border border-slate-800 bg-slate-950/40"></div>
-          </div>
-
-          <!-- Footer Actions -->
-          <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex flex-wrap items-center justify-between gap-3">
-            <span class="text-[11px] text-slate-400">Fuente: Base Oficial SSN • Período 2026-2</span>
-            <div class="flex items-center gap-2">
-              <button id="groupModalBalanceBtn" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20">
-                <i class="fa-solid fa-tree"></i> Ver Balance Consolidado (Tab 7)
-              </button>
-              <button onclick="closeGroupModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- 3. FULL WIDTH: Base Consolidada del Mercado Asegurador (185 Entidades) -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -1580,7 +1538,47 @@ def generate_html():
         </div>
       </div>
 
-    </section>
+    <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador (Universal) -->
+    <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+          <div>
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">🏛️ GRUPO ECONÓMICO</span>
+              <h3 id="groupModalTitle" class="text-base font-bold text-white">...</h3>
+            </div>
+            <p id="groupModalSubtitle" class="text-xs text-slate-400 mt-1">...</p>
+          </div>
+          <button onclick="closeGroupModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold cursor-pointer">
+            ✕
+          </button>
+        </div>
+        
+        <!-- Group Summary KPIs -->
+        <div id="groupModalKpis" class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-900/60 border-b border-slate-800"></div>
+
+        <!-- Members List -->
+        <div class="p-5 overflow-y-auto space-y-3 flex-1">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-layer-group text-emerald-400"></i> Composición Societaria y Aporte por Aseguradora:
+          </h4>
+          <div id="groupModalMembersList" class="divide-y divide-slate-800/80 rounded-xl border border-slate-800 bg-slate-950/40"></div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex flex-wrap items-center justify-between gap-3">
+          <span class="text-[11px] text-slate-400">Fuente: Base Oficial SSN • Período 2026-2</span>
+          <div class="flex items-center gap-2">
+            <button id="groupModalBalanceBtn" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer">
+              <i class="fa-solid fa-tree"></i> Ver Balance Consolidado (Tab 8)
+            </button>
+            <button onclick="closeGroupModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </main>
   <!-- FOOTER -->
@@ -3116,11 +3114,27 @@ def generate_html():
             const g = groupsById[gid] || {{}};
             const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
             const resTec = totIngTec - totEgrTec;
+
+            // Compute active member companies in the selected subramos
+            let activeCiasCount = 0;
+            const members = g.members || [];
+            members.forEach(m => {{
+              const mCode = m.cod_cia;
+              if (ciasSub[mCode]) {{
+                const subM = ciasSub[mCode];
+                const emitM = targetSubs.reduce((acc, s) => acc + (subM[s] ? (subM[s]['5.01.01.00.00.00.00.00'] || 0.0) : 0.0), 0.0);
+                if (emitM > 0) activeCiasCount++;
+              }}
+            }});
+            const tipoLabel = (activeCiasCount === members.length) 
+              ? `${{activeCiasCount}} Cías` 
+              : `${{activeCiasCount}} de ${{members.length}} Cías`;
+
             ranking.push({{
               id: gid,
               code: gid,
               name: g.name || gid,
-              tipo: `${{g.entities_count || 0}} Cías`,
+              tipo: tipoLabel,
               emitidas: totEmit,
               siniestros: totSin,
               loss_ratio: lossRatio,
