@@ -168,6 +168,7 @@ def compute_all_companies_summary(df):
             'disponibilidades': disp,
             'inversiones': inv,
             'creditos': cred,
+            'premios_a_cobrar': premios_a_cobrar,
             'inmuebles': inm,
             'bienes_uso': bienes_uso,
             'otros_activos': otros_act,
