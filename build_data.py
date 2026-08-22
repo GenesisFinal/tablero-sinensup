@@ -237,19 +237,57 @@ def build_complete_dataset():
             'id_padre': str(r['id_padre']) if pd.notna(r['id_padre']) else ''
         }
 
+    # Build children mapping for recursive hierarchical rollups
+    children_map = {}
+    for code, info in plan_de_cuentas.items():
+        padre = info.get('padre_codigo')
+        if padre and padre in plan_de_cuentas:
+            if padre not in children_map:
+                children_map[padre] = []
+            children_map[padre].append(code)
+
+    def compute_hierarchical_rollup(raw_dict, is_subramo=False):
+        memo = {}
+        def get_total(code):
+            if code in memo:
+                return memo[code]
+            children = children_map.get(code, [])
+            if not children:
+                val = float(raw_dict.get(code, 0.0))
+            else:
+                child_sums = sum(get_total(child) for child in children)
+                raw_val = float(raw_dict.get(code, 0.0))
+                if is_subramo:
+                    val = child_sums if child_sums != 0 else raw_val
+                else:
+                    # In general balance, preserve explicit reported figures if present, otherwise roll up
+                    val = raw_val if raw_val != 0 else child_sums
+            memo[code] = val
+            return val
+
+        rolled = {}
+        for code in plan_de_cuentas.keys():
+            tot = get_total(code)
+            if tot != 0:
+                rolled[code] = round(tot, 2)
+        return rolled
+
     # General Balance (where cod_subramo is empty)
     gen_df = df_raw[df_raw['cod_subramo'].fillna('') == '']
     gen_agg = gen_df.groupby(['cod_cia', 'cod_cuenta'])['importe'].sum().reset_index()
 
     cias_balances_general = {}
     for cod_cia, grp in gen_agg.groupby('cod_cia'):
-        cias_balances_general[str(cod_cia)] = {str(r['cod_cuenta']): round(float(r['importe']), 2) for _, r in grp.iterrows()}
+        raw_map = {str(r['cod_cuenta']): round(float(r['importe']), 2) for _, r in grp.iterrows()}
+        cias_balances_general[str(cod_cia)] = compute_hierarchical_rollup(raw_map, is_subramo=False)
 
-    market_balances_general = {str(k): round(float(v), 2) for k, v in gen_df.groupby('cod_cuenta')['importe'].sum().items()}
+    market_raw = {str(k): round(float(v), 2) for k, v in gen_df.groupby('cod_cuenta')['importe'].sum().items()}
+    market_balances_general = compute_hierarchical_rollup(market_raw, is_subramo=False)
 
     segment_balances_general = {}
     for seg, grp in gen_df.groupby('tipo_entidad'):
-        segment_balances_general[str(seg)] = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+        seg_raw = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+        segment_balances_general[str(seg)] = compute_hierarchical_rollup(seg_raw, is_subramo=False)
 
     # Subramo technical balances
     sub_df = df_raw[df_raw['cod_subramo'].fillna('') != '']
@@ -263,11 +301,13 @@ def build_complete_dataset():
         cod_sub_str = str(cod_sub)
         if cod_cia_str not in cias_balances_subramos:
             cias_balances_subramos[cod_cia_str] = {}
-        cias_balances_subramos[cod_cia_str][cod_sub_str] = {str(r['cod_cuenta']): round(float(r['importe']), 2) for _, r in grp.iterrows()}
+        raw_map = {str(r['cod_cuenta']): round(float(r['importe']), 2) for _, r in grp.iterrows()}
+        cias_balances_subramos[cod_cia_str][cod_sub_str] = compute_hierarchical_rollup(raw_map, is_subramo=True)
 
     market_balances_subramos = {}
     for cod_sub, grp in sub_df.groupby('cod_subramo'):
-        market_balances_subramos[str(cod_sub)] = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+        raw_map = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+        market_balances_subramos[str(cod_sub)] = compute_hierarchical_rollup(raw_map, is_subramo=True)
 
     segment_balances_subramos = {}
     for (seg, cod_sub), grp in sub_df.groupby(['tipo_entidad', 'cod_subramo']):
@@ -275,7 +315,8 @@ def build_complete_dataset():
         cod_sub_str = str(cod_sub)
         if seg_str not in segment_balances_subramos:
             segment_balances_subramos[seg_str] = {}
-        segment_balances_subramos[seg_str][cod_sub_str] = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+        raw_map = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+        segment_balances_subramos[seg_str][cod_sub_str] = compute_hierarchical_rollup(raw_map, is_subramo=True)
 
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
