@@ -318,6 +318,290 @@ def build_complete_dataset():
         raw_map = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
         segment_balances_subramos[seg_str][cod_sub_str] = compute_hierarchical_rollup(raw_map, is_subramo=True)
 
+    # ========================================================
+    # INSURANCE GROUPS (GRUPOS ASEGURADORES) CONSOLIDATION
+    # ========================================================
+    print("Consolidating Insurance Groups...")
+    GROUPS_DEFINITIONS = [
+        {
+            "id": "sancor",
+            "name": "Grupo Sancor Seguros",
+            "short_name": "Sancor Seguros",
+            "codes": ["0224", "0626", "0930"],
+            "description": "Sancor Seguros, Prevención ART, Prevención Retiro"
+        },
+        {
+            "id": "federacion_patronal",
+            "name": "Grupo Federación Patronal",
+            "short_name": "Federación Patronal",
+            "codes": ["0726", "0425"],
+            "description": "Federación Patronal Seguros (PM+ART), Federación Patronal Retiro"
+        },
+        {
+            "id": "provincia",
+            "name": "Grupo Provincia",
+            "short_name": "Provincia",
+            "codes": ["0499", "0621", "0532"],
+            "description": "Provincia Seguros, Provincia ART, Provincia Vida"
+        },
+        {
+            "id": "san_cristobal",
+            "name": "Grupo San Cristóbal",
+            "short_name": "San Cristóbal",
+            "codes": ["0192", "0620", "0434"],
+            "description": "San Cristóbal Seguros, Asociart ART, San Cristóbal Retiro"
+        },
+        {
+            "id": "la_segunda",
+            "name": "Grupo Asegurador La Segunda",
+            "short_name": "La Segunda",
+            "codes": ["0317", "0618", "0117", "0436"],
+            "description": "La Segunda Generales, La Segunda ART, La Segunda Personas, La Segunda Retiro"
+        },
+        {
+            "id": "la_caja_generali",
+            "name": "Grupo La Caja / Generali",
+            "short_name": "La Caja / Generali",
+            "codes": ["0501"],
+            "description": "Caja de Seguros S.A. (Patrimoniales y Vida)"
+        },
+        {
+            "id": "zurich",
+            "name": "Grupo Zurich",
+            "short_name": "Zurich",
+            "codes": ["0228", "0692", "0541"],
+            "description": "Zurich Argentina, Zurich Santander, Zurich International Life"
+        },
+        {
+            "id": "experta_werthein",
+            "name": "Grupo Experta / Werthein",
+            "short_name": "Experta / Werthein",
+            "codes": ["0880", "0616", "0419"],
+            "description": "Experta Seguros, Experta ART, La Estrella Retiro"
+        },
+        {
+            "id": "mercantil_andina",
+            "name": "Grupo Mercantil Andina",
+            "short_name": "Mercantil Andina",
+            "codes": ["0116", "0959"],
+            "description": "Mercantil Andina, Andina ART"
+        },
+        {
+            "id": "rivadavia",
+            "name": "Grupo Asegurador Rivadavia",
+            "short_name": "Rivadavia",
+            "codes": ["0222", "0678"],
+            "description": "Seguros Bernardino Rivadavia, Mutual Rivadavia TP"
+        },
+        {
+            "id": "galicia",
+            "name": "Grupo Galicia Seguros",
+            "short_name": "Galicia Seguros",
+            "codes": ["0025", "0589", "0443", "0426"],
+            "description": "Galicia Seguros, Sudamericana Seguros Galicia, Galicia Retiro"
+        },
+        {
+            "id": "swiss_medical",
+            "name": "Grupo Swiss Medical (SMG)",
+            "short_name": "Swiss Medical (SMG)",
+            "codes": ["0002", "0605", "0580", "0710", "0661"],
+            "description": "SMG Seguros, Swiss Medical ART, SMG Life, SMG Retiro, Instituto de Salta"
+        },
+        {
+            "id": "st",
+            "name": "Grupo ST",
+            "short_name": "Grupo ST",
+            "codes": ["0251", "0423"],
+            "description": "Life Seguros, Orígenes Retiro"
+        },
+        {
+            "id": "nacion",
+            "name": "Grupo Nación",
+            "short_name": "Nación",
+            "codes": ["0244", "0424"],
+            "description": "Nación Seguros, Nación Retiro"
+        },
+        {
+            "id": "mapfre",
+            "name": "Grupo Mapfre",
+            "short_name": "Mapfre",
+            "codes": ["0213", "0699"],
+            "description": "Mapfre Seguros, Mapfre Vida"
+        },
+        {
+            "id": "barbuss_hdi",
+            "name": "Grupo Barbuss / HDI",
+            "short_name": "Barbuss / HDI",
+            "codes": ["0335"],
+            "description": "Barbuss Risk Seguros (ex HDI Seguros)"
+        },
+        {
+            "id": "galeno",
+            "name": "Grupo Galeno",
+            "short_name": "Galeno",
+            "codes": ["0878", "0606"],
+            "description": "Galeno Seguros, Galeno ART"
+        }
+    ]
+
+    total_mkt_emit = float(macro_entidades['total_mercado_emitidas'])
+    total_mkt_dev = float(macro_entidades['total_mercado_devengadas'])
+
+    groups_ranking = []
+    groups_by_id = {}
+    groups_balances_general = {}
+    groups_balances_subramos = {}
+
+    for gdef in GROUPS_DEFINITIONS:
+        gid = gdef['id']
+        gname = gdef['name']
+        codes = gdef['codes']
+        
+        # Collect member companies that exist in dataset
+        members = []
+        tot_emit = 0.0
+        tot_dev = 0.0
+        tot_var = 0.0
+        tot_sin = 0.0
+        tot_gtos_prod = 0.0
+        tot_gtos_exp = 0.0
+        tot_res_tec = 0.0
+        tot_res_fin = 0.0
+        tot_res_neto = 0.0
+        tot_activo = 0.0
+        tot_inv = 0.0
+        tot_disp = 0.0
+        tot_cred = 0.0
+        tot_inm = 0.0
+        tot_deudas = 0.0
+        tot_comp_tec = 0.0
+        tot_pn = 0.0
+
+        for cd in codes:
+            if cd in companies_dict:
+                c = companies_dict[cd]
+                members.append(c)
+                tot_emit += float(c.get('primas_emitidas', 0.0))
+                tot_dev += float(c.get('primas_devengadas', 0.0))
+                tot_var += float(c.get('var_reservas', 0.0))
+                tot_sin += float(c.get('siniestros', 0.0))
+                tot_gtos_prod += float(c.get('gastos_produccion', 0.0))
+                tot_gtos_exp += float(c.get('gastos_explotacion', 0.0))
+                tot_res_tec += float(c.get('resultado_tecnico', 0.0))
+                tot_res_fin += float(c.get('resultado_financiero', 0.0))
+                tot_res_neto += float(c.get('resultado_neto', 0.0))
+                tot_activo += float(c.get('activo', 0.0))
+                tot_inv += float(c.get('inversiones', 0.0))
+                tot_disp += float(c.get('disponibilidades', 0.0))
+                tot_cred += float(c.get('creditos', 0.0))
+                tot_inm += float(c.get('inmuebles', 0.0))
+                tot_deudas += float(c.get('deudas', 0.0))
+                tot_comp_tec += float(c.get('compromisos_tecnicos', 0.0))
+                tot_pn += float(c.get('patrimonio_neto', 0.0))
+
+        if len(members) == 0:
+            continue
+
+        # Weighted consolidated ratios
+        loss_ratio = (tot_sin / tot_dev * 100.0) if tot_dev > 0 else 0.0
+        comm_ratio = (tot_gtos_prod / tot_dev * 100.0) if tot_dev > 0 else 0.0
+        exp_ratio = (tot_gtos_exp / tot_dev * 100.0) if tot_dev > 0 else 0.0
+        combined_ratio = loss_ratio + comm_ratio + exp_ratio
+        
+        roi_inv = (tot_res_fin / tot_inv * 100.0) if tot_inv > 0 else 0.0
+        total_reservas = tot_comp_tec + tot_deudas
+        cobertura_reservas = (tot_inv + tot_inm) / total_reservas if total_reservas > 0 else 0.0
+        apalancamiento = total_reservas / tot_pn if tot_pn > 0 else 0.0
+        calidad_cartera = (tot_cred / tot_activo * 100.0) if tot_activo > 0 else 0.0
+        roe = (tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else 0.0
+        roa = (tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0
+        margen_neto = (tot_res_neto / tot_dev * 100.0) if tot_dev > 0 else 0.0
+        mkt_share = (tot_emit / total_mkt_emit * 100.0) if total_mkt_emit > 0 else 0.0
+
+        # Members breakdown with individual share of group
+        members_summary = []
+        for m in members:
+            m_emit = float(m.get('primas_emitidas', 0.0))
+            members_summary.append({
+                "cod_cia": m['cod_cia'],
+                "razon_social": m['razon_social'],
+                "tipo_entidad": m['tipo_entidad'],
+                "primas_emitidas": m_emit,
+                "primas_devengadas": float(m.get('primas_devengadas', 0.0)),
+                "siniestros": float(m.get('siniestros', 0.0)),
+                "resultado_neto": float(m.get('resultado_neto', 0.0)),
+                "activo": float(m.get('activo', 0.0)),
+                "patrimonio_neto": float(m.get('patrimonio_neto', 0.0)),
+                "combined_ratio": float(m.get('combined_ratio', 0.0)),
+                "share_of_group": round((m_emit / tot_emit * 100.0) if tot_emit > 0 else 0.0, 1)
+            })
+        members_summary.sort(key=lambda x: x['primas_emitidas'], reverse=True)
+
+        g_obj = {
+            "id": gid,
+            "name": gname,
+            "short_name": gdef['short_name'],
+            "description": gdef['description'],
+            "entities_count": len(members),
+            "members": members_summary,
+            "primas_emitidas": tot_emit,
+            "primas_devengadas": tot_dev,
+            "var_reservas": tot_var,
+            "siniestros": tot_sin,
+            "gastos_produccion": tot_gtos_prod,
+            "gastos_explotacion": tot_gtos_exp,
+            "resultado_tecnico": tot_res_tec,
+            "resultado_financiero": tot_res_fin,
+            "resultado_neto": tot_res_neto,
+            "activo": tot_activo,
+            "inversiones": tot_inv,
+            "disponibilidades": tot_disp,
+            "creditos": tot_cred,
+            "inmuebles": tot_inm,
+            "deudas": tot_deudas,
+            "compromisos_tecnicos": tot_comp_tec,
+            "patrimonio_neto": tot_pn,
+            "loss_ratio": round(loss_ratio, 2),
+            "comm_ratio": round(comm_ratio, 2),
+            "exp_ratio": round(exp_ratio, 2),
+            "combined_ratio": round(combined_ratio, 2),
+            "roi_inversiones": round(roi_inv, 2),
+            "cobertura_reservas": round(cobertura_reservas, 2),
+            "apalancamiento": round(apalancamiento, 2),
+            "calidad_cartera": round(calidad_cartera, 2),
+            "roe": round(roe, 2),
+            "roa": round(roa, 2),
+            "margen_neto": round(margen_neto, 2),
+            "market_share": round(mkt_share, 2)
+        }
+
+        groups_ranking.append(g_obj)
+        groups_by_id[gid] = g_obj
+
+        # Consolidate General Balances for this group
+        group_gen_raw = {}
+        for cd in codes:
+            if cd in cias_balances_general:
+                for acc_code, acc_val in cias_balances_general[cd].items():
+                    group_gen_raw[acc_code] = group_gen_raw.get(acc_code, 0.0) + acc_val
+        groups_balances_general[gid] = compute_hierarchical_rollup(group_gen_raw, is_subramo=False)
+
+        # Consolidate Subramo Balances for this group
+        groups_balances_subramos[gid] = {}
+        for scat in subramos_catalog:
+            scod = scat['cod']
+            group_sub_raw = {}
+            for cd in codes:
+                if cd in cias_balances_subramos and scod in cias_balances_subramos[cd]:
+                    for acc_code, acc_val in cias_balances_subramos[cd][scod].items():
+                        group_sub_raw[acc_code] = group_sub_raw.get(acc_code, 0.0) + acc_val
+            if group_sub_raw:
+                groups_balances_subramos[gid][scod] = compute_hierarchical_rollup(group_sub_raw, is_subramo=True)
+
+    groups_ranking.sort(key=lambda x: x['primas_emitidas'], reverse=True)
+    for i, g in enumerate(groups_ranking, 1):
+        g['rank'] = i
+
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
         "total_entidades": len(df_summary),
@@ -332,6 +616,10 @@ def build_complete_dataset():
         "segment_benchmarks": segment_benchmarks,
         "companies": list(companies_dict.values()),
         "companies_by_code": companies_dict,
+        "groups": groups_ranking,
+        "groups_by_id": groups_by_id,
+        "groups_balances_general": groups_balances_general,
+        "groups_balances_subramos": groups_balances_subramos,
         "plan_de_cuentas": plan_de_cuentas,
         "subramos_catalog": subramos_catalog,
         "market_balances_general": market_balances_general,
@@ -346,7 +634,7 @@ def build_complete_dataset():
     with open(out_json, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"data_sinensup.json generated successfully: {len(payload['companies'])} companies ({os.path.getsize(out_json):,} bytes)")
+    print(f"data_sinensup.json generated successfully: {len(payload['companies'])} companies, {len(groups_ranking)} groups ({os.path.getsize(out_json):,} bytes)")
     return out_json
 
 if __name__ == '__main__':
