@@ -73904,24 +73904,73 @@
       const targetLabel = state.gestScope === 'cia' ? (target.razon_social || title) : title;
       const benchLabel = state.gestScope === 'cia' ? `Promedio ${target.tipo_entidad || 'Segmento'}` : 'Promedio Mercado Total';
 
+      const plainCategories = [
+        'Control de Siniestros',
+        'Eficiencia Administrativa',
+        'Disciplina Comercial',
+        'Rendimiento de Inversiones',
+        'Solvencia Regulatoria SSN',
+        'Cobranza de Premios'
+      ];
+
+      const targetRealValues = [
+        `${(target.loss_ratio || 0).toFixed(1)}% (Loss Ratio)`,
+        `${(target.exp_ratio || 0).toFixed(1)}% (Gastos Admin)`,
+        `${(target.comm_ratio || 0).toFixed(1)}% (Comisiones)`,
+        `${(target.roi_inversiones || 0).toFixed(1)}% (ROI Inv.)`,
+        `${(target.cobertura_reservas || 1.0).toFixed(2)}x (Cobertura SSN)`,
+        `${(target.calidad_cartera || 0).toFixed(1)}% (Premios a Cobrar)`
+      ];
+
+      const benchRealValues = [
+        `${(bench.loss_ratio || 0).toFixed(1)}% (Loss Ratio)`,
+        `${(bench.exp_ratio || 0).toFixed(1)}% (Gastos Admin)`,
+        `${(bench.comm_ratio || 0).toFixed(1)}% (Comisiones)`,
+        `${(bench.roi_inversiones || 0).toFixed(1)}% (ROI Inv.)`,
+        `${(bench.cobertura_reservas || 1.0).toFixed(2)}x (Cobertura SSN)`,
+        `${(bench.calidad_cartera || 0).toFixed(1)}% (Premios a Cobrar)`
+      ];
+
+      const targetCustom = plainCategories.map((cat, idx) => ({
+        cat: cat,
+        score: targetVals[idx],
+        real: targetRealValues[idx],
+        entity: targetLabel
+      }));
+
+      const benchCustom = plainCategories.map((cat, idx) => ({
+        cat: cat,
+        score: benchVals[idx],
+        real: benchRealValues[idx],
+        entity: benchLabel
+      }));
+
       const data = [
         {
           type: 'scatterpolar',
           r: [...benchVals, benchVals[0]],
           theta: [...radarCategories, radarCategories[0]],
+          customdata: [...benchCustom, benchCustom[0]],
           fill: 'toself',
           fillcolor: 'rgba(56, 189, 248, 0.15)',
           name: benchLabel,
-          line: { color: '#38BDF8', width: 2, dash: 'dot' }
+          line: { color: '#38BDF8', width: 2, dash: 'dot' },
+          marker: { size: 6, color: '#38BDF8' },
+          hovertemplate: '<b>%{customdata.entity}</b><br>🎯 Eje: <b>%{customdata.cat}</b><br>📊 Puntaje: <b>%{customdata.score} / 100</b><br>📋 Valor Real: <b>%{customdata.real}</b><extra></extra>',
+          hoverlabel: { bgcolor: '#0F172A', bordercolor: '#38BDF8', font: { family: 'Sora', size: 12, color: '#FFFFFF' } }
         },
         {
           type: 'scatterpolar',
           r: [...targetVals, targetVals[0]],
           theta: [...radarCategories, radarCategories[0]],
+          customdata: [...targetCustom, targetCustom[0]],
           fill: 'toself',
           fillcolor: 'rgba(226, 0, 57, 0.25)',
           name: targetLabel,
-          line: { color: '#E20039', width: 3 }
+          line: { color: '#E20039', width: 3 },
+          marker: { size: 7, color: '#E20039' },
+          hovertemplate: '<b>%{customdata.entity}</b><br>🎯 Eje: <b>%{customdata.cat}</b><br>📊 Puntaje: <b>%{customdata.score} / 100</b><br>📋 Valor Real: <b>%{customdata.real}</b><extra></extra>',
+          hoverlabel: { bgcolor: '#0F172A', bordercolor: '#E20039', font: { family: 'Sora', size: 12, color: '#FFFFFF' } }
         }
       ];
 
