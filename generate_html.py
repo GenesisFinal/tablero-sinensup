@@ -151,6 +151,9 @@ def generate_html():
       <button onclick="switchTab('solvencia-ratios')" id="tabBtn-solvencia-ratios" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-scale-balanced"></i> 5. Solvencia y Ratios SSN
       </button>
+      <button onclick="switchTab('ratios-gestion')" id="tabBtn-ratios-gestion" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-gauge-high"></i> 6. Ratios de Gestión
+      </button>
     </div>
   </header>
 
@@ -861,6 +864,312 @@ def generate_html():
 
     </section>
 
+    <!-- ======================================================== -->
+    <!-- TAB 6: RATIOS DE GESTIÓN & SCORECARD (NUEVO) -->
+    <!-- ======================================================== -->
+    <section id="tab-ratios-gestion" class="hidden space-y-6">
+      
+      <!-- Company Selector Header in Tab 6 -->
+      <div class="glass-card p-5 rounded-xl border-l-4 border-l-indigo-500 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <h2 id="gestSelectedTitle" class="text-lg font-bold text-white">...</h2>
+            <span id="gestSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">...</span>
+          </div>
+          <p id="gestSelectedSubtitle" class="text-xs text-slate-400 mt-1">Tablero de Control de Gestión, Semáforos de Alerta Temprana y Comparativa Benchmark</p>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-300 font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-building text-indigo-400"></i> Aseguradora:
+            </span>
+            <select id="gestCompanyDropdownSelect" onchange="onCompanyDropdownChange(this.value)"
+                    class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none focus:border-indigo-500 max-w-[240px] truncate"></select>
+          </div>
+
+          <!-- Quick La Segunda Pills -->
+          <div class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
+            <span class="text-[10px] font-bold text-amber-300 mr-1">★ La Segunda:</span>
+            <button onclick="onCompanyDropdownChange('0317')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Seguros Generales">0317</button>
+            <button onclick="onCompanyDropdownChange('0618')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda ART">0618</button>
+            <button onclick="onCompanyDropdownChange('0117')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Personas">0117</button>
+            <button onclick="onCompanyDropdownChange('0436')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Retiro">0436</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scope Selector Pills (Aseguradora vs Todas vs Tipo de Empresa) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-indigo-400"></i> Alcance del Análisis:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setGestScope('cia')" id="gestScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏢 Aseguradora Seleccionada</button>
+            <button onclick="setGestScope('Todos')" id="gestScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-500 text-white font-bold transition-all shadow-md shadow-indigo-500/20">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setGestScope('Patrimoniales y Mixtas')" id="gestScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
+            <button onclick="setGestScope('Riesgos del Trabajo (ART)')" id="gestScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
+            <button onclick="setGestScope('Seguros de Personas')" id="gestScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
+            <button onclick="setGestScope('Seguros de Retiro')" id="gestScopeBtn-Seguros de Retiro" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏦 Seguros de Retiro</button>
+          </div>
+        </div>
+        <div class="text-xs text-slate-400">
+          Entidades analizadas: <span id="gestEntitiesCount" class="font-mono font-bold text-white">185</span>
+        </div>
+      </div>
+
+      <!-- SCORECARD 4 DIMENSIONES CON SEMÁFOROS -->
+      
+      <!-- Dimensión 1: Suscripción & Eficiencia Operativa -->
+      <div class="glass-card p-5 rounded-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider">I. Suscripción y Eficiencia Operativa</h3>
+          </div>
+          <span class="text-[11px] text-slate-400">Base Devengada SSN</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <!-- Ratio Combinado -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Ratio Combinado</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiCombinedVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiCombinedBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiCombinedBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <!-- Loss Ratio -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Loss Ratio (Siniestralidad)</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiLossVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiLossBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiLossBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <!-- Costo de Adquisición -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Costo Adquisición (Prod.)</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiCommVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiCommBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiCommBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <!-- Gastos de Explotación -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Carga Estructura (Admin)</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiExpVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiExpBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiExpBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <!-- Tasa de Retención -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Retención de Riesgo</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiRetVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiRetBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiRetBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dimensión 2 & 3: Financiero & Solvencia -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Dimensión 2: Gestión Financiera -->
+        <div class="glass-card p-5 rounded-xl space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">II. Rendimiento Financiero & Inversiones</h3>
+            </div>
+            <span class="text-[11px] text-slate-400">Asset Management</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Rendimiento Inversiones (ROI)</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="gKpiRoiVal" class="text-lg font-bold font-mono text-white">...</span>
+                <span id="gKpiRoiBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+              </div>
+              <div id="gKpiRoiBench" class="text-[9px] text-slate-400 mt-1">...</div>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Densidad Inversiones / Activo</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="gKpiDensVal" class="text-lg font-bold font-mono text-white">...</span>
+                <span id="gKpiDensBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+              </div>
+              <div id="gKpiDensBench" class="text-[9px] text-slate-400 mt-1">...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dimensión 3: Solvencia & Liquidez -->
+        <div class="glass-card p-5 rounded-xl space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">III. Solvencia, Liquidez & Cobranzas</h3>
+            </div>
+            <span class="text-[11px] text-slate-400">Normativa SSN</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Cobertura SSN</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="gKpiCobVal" class="text-lg font-bold font-mono text-white">...</span>
+                <span id="gKpiCobBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+              </div>
+              <div id="gKpiCobBench" class="text-[9px] text-slate-400 mt-1">...</div>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Apalancamiento</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="gKpiApalVal" class="text-lg font-bold font-mono text-white">...</span>
+                <span id="gKpiApalBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+              </div>
+              <div id="gKpiApalBench" class="text-[9px] text-slate-400 mt-1">...</div>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+              <div class="text-[10px] text-slate-400 uppercase font-semibold">Cartera a Cobrar</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="gKpiCobranzaVal" class="text-lg font-bold font-mono text-white">...</span>
+                <span id="gKpiCobranzaBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+              </div>
+              <div id="gKpiCobranzaBench" class="text-[9px] text-slate-400 mt-1">...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dimensión 4: Rentabilidad & Creación de Valor -->
+      <div class="glass-card p-5 rounded-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider">IV. Rentabilidad Final & Creación de Valor</h3>
+          </div>
+          <span class="text-[11px] text-slate-400">Retorno sobre Capital</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">ROE (Retorno s/ PN)</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiRoeVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiRoeBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiRoeBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">ROA (Retorno s/ Activo)</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiRoaVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiRoaBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiRoaBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Margen Técnico Operativo</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiMargenTecVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiMargenTecBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiMargenTecBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Margen Neto Final</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="gKpiMargenNetoVal" class="text-lg font-bold font-mono text-white">...</span>
+              <span id="gKpiMargenNetoBadge" class="text-[10px] font-bold px-1.5 py-0.5 rounded">...</span>
+            </div>
+            <div id="gKpiMargenNetoBench" class="text-[9px] text-slate-400 mt-1">...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RADAR / SPIDER CHART & DIAGNÓSTICO EJECUTIVO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Radar Chart -->
+        <div class="lg:col-span-7 glass-card p-5 rounded-xl">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-indigo-400"></i> Radar de Eficiencia Aseguradora (6 Ejes)
+            </h3>
+            <span class="text-xs text-slate-400 font-mono">Escala Normalizada 0-100</span>
+          </div>
+          <div id="managementRadarChart" class="w-full h-80"></div>
+        </div>
+
+        <!-- Executive Diagnostic Summary -->
+        <div class="lg:col-span-5 glass-card p-5 rounded-xl flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+              <i class="fa-solid fa-clipboard-check text-emerald-400"></i> Diagnóstico Ejecutivo Automatizado
+            </h3>
+            <div id="execDiagnosticContent" class="space-y-2.5 text-xs text-slate-300">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Traffic light legend -->
+          <div class="p-3 bg-slate-900/90 rounded-lg border border-slate-800 text-[11px] grid grid-cols-3 gap-2 text-center">
+            <div class="text-emerald-400 font-semibold">🟢 Saludable (Óptimo)</div>
+            <div class="text-amber-400 font-semibold">🟡 Precaución (Tolerancia)</div>
+            <div class="text-rose-400 font-semibold">🔴 Alerta (Déficit/Crítico)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLA CLASIFICATORIA CON SEMÁFOROS Y FILTROS RÁPIDOS -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-indigo-400"></i> Matriz General de Ratios de Gestión & Semáforos
+            </h3>
+            <p class="text-xs text-slate-400">Evaluación multidimensional de todas las entidades del segmento</p>
+          </div>
+
+          <!-- Quick Alert Filters -->
+          <div class="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs">
+            <button onclick="setGestFilterMode('all')" id="gestFiltBtn-all" class="px-2.5 py-1 rounded bg-indigo-500 text-white font-bold">Todas</button>
+            <button onclick="setGestFilterMode('loss_high')" id="gestFiltBtn-loss_high" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold">🔴 Pérdida Téc. (>100%)</button>
+            <button onclick="setGestFilterMode('cob_low')" id="gestFiltBtn-cob_low" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold">🔴 Déficit SSN (<1.0x)</button>
+            <button onclick="setGestFilterMode('integral_win')" id="gestFiltBtn-integral_win" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold">🟢 Ganancia Integral</button>
+            <button onclick="setGestFilterMode('slow_collect')" id="gestFiltBtn-slow_collect" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold">🟡 Cobranza Lenta (>35%)</button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-x-auto max-h-[500px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px]">
+              <tr>
+                <th class="py-2 px-2 text-center w-8">#</th>
+                <th class="py-2 px-2 whitespace-nowrap text-left w-44 max-w-[180px]">Razón Social</th>
+                <th class="py-2 px-2 text-center w-12">Tipo</th>
+                <th class="py-2 px-2 text-right">Ratio Comb.</th>
+                <th class="py-2 px-2 text-right">Loss Ratio</th>
+                <th class="py-2 px-2 text-right">Comisiones</th>
+                <th class="py-2 px-2 text-right">Admin</th>
+                <th class="py-2 px-2 text-right">ROI Inv.</th>
+                <th class="py-2 px-2 text-right">Cobertura</th>
+                <th class="py-2 px-2 text-right">Apalanc.</th>
+                <th class="py-2 px-2 text-right">Premios/Primas</th>
+                <th class="py-2 px-2 text-right">ROE</th>
+                <th class="py-2 px-2 text-center w-14">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="managementTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -892,7 +1201,9 @@ def generate_html():
       invScope: 'cia',
       invTopMetric: 'activo',
       solvScope: 'Todos',
-      solvSortMetric: 'cobertura_reservas'
+      solvSortMetric: 'cobertura_reservas',
+      gestScope: 'cia',
+      gestFilterMode: 'all'
     }};
 
     // Standardized Financial Notation:
@@ -937,6 +1248,67 @@ def generate_html():
         return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30" title="Seguros de Retiro">SR</span>';
       }}
       return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">${{tipo}}</span>`;
+    }}
+
+    // Traffic light badge evaluator
+    function getTrafficLightBadge(val, metric) {{
+      if (val === undefined || val === null || isNaN(val)) return '<span class="text-slate-500">-</span>';
+      
+      let status = 'green', label = 'Óptimo';
+
+      if (metric === 'combined_ratio') {{
+        if (val <= 100.0) {{ status = 'green'; label = 'Ganancia'; }}
+        else if (val <= 108.0) {{ status = 'yellow'; label = 'Tolerancia'; }}
+        else {{ status = 'red'; label = 'Pérdida'; }}
+      }} else if (metric === 'loss_ratio') {{
+        if (val <= 65.0) {{ status = 'green'; label = 'Controlado'; }}
+        else if (val <= 75.0) {{ status = 'yellow'; label = 'Atención'; }}
+        else {{ status = 'red'; label = 'Elevado'; }}
+      }} else if (metric === 'comm_ratio') {{
+        if (val <= 20.0) {{ status = 'green'; label = 'Eficiente'; }}
+        else if (val <= 28.0) {{ status = 'yellow'; label = 'Moderado'; }}
+        else {{ status = 'red'; label = 'Alto'; }}
+      }} else if (metric === 'exp_ratio') {{
+        if (val <= 15.0) {{ status = 'green'; label = 'Ligera'; }}
+        else if (val <= 22.0) {{ status = 'yellow'; label = 'Media'; }}
+        else {{ status = 'red'; label = 'Pesada'; }}
+      }} else if (metric === 'retencion_ratio') {{
+        if (val >= 65.0 && val <= 90.0) {{ status = 'green'; label = 'Equilibrada'; }}
+        else if (val >= 50.0 && val <= 95.0) {{ status = 'yellow'; label = 'Atención'; }}
+        else {{ status = 'red'; label = 'Desbalance'; }}
+      }} else if (metric === 'roi_inversiones') {{
+        if (val >= 0.0) {{ status = 'green'; label = 'Positivo'; }}
+        else if (val >= -5.0) {{ status = 'yellow'; label = 'Neutro'; }}
+        else {{ status = 'red'; label = 'Negativo'; }}
+      }} else if (metric === 'densidad_inversiones') {{
+        if (val >= 65.0) {{ status = 'green'; label = 'Alta'; }}
+        else if (val >= 50.0) {{ status = 'yellow'; label = 'Media'; }}
+        else {{ status = 'red'; label = 'Baja'; }}
+      }} else if (metric === 'cobertura_reservas') {{
+        if (val >= 1.15) {{ status = 'green'; label = 'Superávit'; }}
+        else if (val >= 1.00) {{ status = 'yellow'; label = 'Límite SSN'; }}
+        else {{ status = 'red'; label = 'Déficit'; }}
+      }} else if (metric === 'apalancamiento') {{
+        if (val <= 2.50) {{ status = 'green'; label = 'Holgado'; }}
+        else if (val <= 3.50) {{ status = 'yellow'; label = 'Moderado'; }}
+        else {{ status = 'red'; label = 'Exigido'; }}
+      }} else if (metric === 'calidad_cartera') {{
+        if (val <= 30.0) {{ status = 'green'; label = 'Rápida'; }}
+        else if (val <= 42.0) {{ status = 'yellow'; label = 'Regular'; }}
+        else {{ status = 'red'; label = 'Lenta'; }}
+      }} else if (metric === 'roe' || metric === 'margen_neto') {{
+        if (val >= 5.0) {{ status = 'green'; label = 'Rentable'; }}
+        else if (val >= 0.0) {{ status = 'yellow'; label = 'Neutro'; }}
+        else {{ status = 'red'; label = 'Pérdida'; }}
+      }}
+
+      if (status === 'green') {{
+        return `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">🟢 ${{label}}</span>`;
+      }} else if (status === 'yellow') {{
+        return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">🟡 ${{label}}</span>`;
+      }} else {{
+        return `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">🔴 ${{label}}</span>`;
+      }}
     }}
 
     // Initialization
@@ -1044,7 +1416,8 @@ def generate_html():
       const selects = [
         document.getElementById('companyDropdownSelect'),
         document.getElementById('invCompanyDropdownSelect'),
-        document.getElementById('solvCompanyDropdownSelect')
+        document.getElementById('solvCompanyDropdownSelect'),
+        document.getElementById('gestCompanyDropdownSelect')
       ];
 
       const sorted = [...data.companies].sort((a, b) => a.razon_social.localeCompare(b.razon_social));
@@ -1134,7 +1507,7 @@ def generate_html():
       document.getElementById('globalCompanySearch').value = '';
       document.getElementById('searchResultsDropdown').classList.add('hidden');
       
-      ['companyDropdownSelect', 'invCompanyDropdownSelect', 'solvCompanyDropdownSelect'].forEach(id => {{
+      ['companyDropdownSelect', 'invCompanyDropdownSelect', 'solvCompanyDropdownSelect', 'gestCompanyDropdownSelect'].forEach(id => {{
         const el = document.getElementById(id);
         if (el) el.value = code;
       }});
@@ -1146,7 +1519,7 @@ def generate_html():
       state.selectedCompanyCode = code;
       state.highlightedCiaCode = code;
       
-      ['companyDropdownSelect', 'invCompanyDropdownSelect', 'solvCompanyDropdownSelect'].forEach(id => {{
+      ['companyDropdownSelect', 'invCompanyDropdownSelect', 'solvCompanyDropdownSelect', 'gestCompanyDropdownSelect'].forEach(id => {{
         const el = document.getElementById(id);
         if (el) el.value = code;
       }});
@@ -1156,6 +1529,8 @@ def generate_html():
         setInvScope('cia');
       }} else if (state.currentTab === 'solvencia-ratios') {{
         setSolvScope('cia');
+      }} else if (state.currentTab === 'ratios-gestion') {{
+        setGestScope('cia');
       }} else {{
         renderAll();
       }}
@@ -1163,7 +1538,7 @@ def generate_html():
 
     function switchTab(tabId) {{
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'inversiones-finanzas', 'solvencia-ratios'].forEach(id => {{
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion'].forEach(id => {{
         const el = document.getElementById(`tab-${{id}}`);
         const btn = document.getElementById(`tabBtn-${{id}}`);
         if (id === tabId) {{
@@ -1189,6 +1564,7 @@ def generate_html():
       renderRamosTab();
       renderInvestmentsTab();
       renderSolvencyTab();
+      renderManagementTab();
     }}
 
     // ----------------------------------------------------
@@ -1614,7 +1990,7 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 3 RENDER: RAMOS (ESCALA HISPANA Y VISIBILIDAD MEJORADA)
+    // TAB 3 RENDER: RAMOS
     // ----------------------------------------------------
     function setRamosScope(scope) {{
       state.ramosScope = scope;
@@ -1638,7 +2014,6 @@ def generate_html():
       const maxPrimas = Math.max(...topSub.map(s => s.primas), 10);
       const maxSin = Math.max(...topSub.map(s => s['siniestralidad_%'] || 0), 10);
 
-      // Custom Y-axis ticks in exact standard format (B, MM, M, K)
       const tickCount = 5;
       const tickVals = [];
       const tickTexts = [];
@@ -1723,7 +2098,7 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 4 RENDER: INVERSIONES Y FINANZAS (COMPAÑÍA, SEGMENTOS Y TOP 20)
+    // TAB 4 RENDER: INVERSIONES Y FINANZAS
     // ----------------------------------------------------
     function setInvScope(scope) {{
       state.invScope = scope;
@@ -1787,7 +2162,6 @@ def generate_html():
         }});
         invs = data.market_investments || [];
       }} else {{
-        // Segment scope
         const seg = state.invScope;
         title = `Segmento: ${{seg}}`;
         badge = seg;
@@ -1936,7 +2310,7 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 5 RENDER: SOLVENCIA Y RATIOS SSN (SELECTOR DE ALCANCE, AGREGACIÓN Y ORDENAMIENTO)
+    // TAB 5 RENDER: SOLVENCIA Y RATIOS SSN
     // ----------------------------------------------------
     function setSolvScope(scope) {{
       state.solvScope = scope;
@@ -2110,10 +2484,332 @@ def generate_html():
       tbody.innerHTML = rowsHtml;
     }}
 
+    // ----------------------------------------------------
+    // TAB 6 RENDER: RATIOS DE GESTIÓN & SCORECARD (NUEVO)
+    // ----------------------------------------------------
+    function setGestScope(scope) {{
+      state.gestScope = scope;
+      const scopes = ['cia', 'Todos', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'];
+      scopes.forEach(sc => {{
+        const btn = document.getElementById(`gestScopeBtn-${{sc}}`);
+        if (btn) {{
+          if (state.gestScope === sc) {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-500 text-white font-bold transition-all shadow-md shadow-indigo-500/20';
+          }} else {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all';
+          }}
+        }}
+      }});
+      renderManagementTab();
+    }}
+
+    function setGestFilterMode(mode) {{
+      state.gestFilterMode = mode;
+      const modes = ['all', 'loss_high', 'cob_low', 'integral_win', 'slow_collect'];
+      modes.forEach(m => {{
+        const btn = document.getElementById(`gestFiltBtn-${{m}}`);
+        if (btn) {{
+          if (state.gestFilterMode === m) {{
+            btn.className = 'px-2.5 py-1 rounded bg-indigo-500 text-white font-bold';
+          }} else {{
+            btn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold';
+          }}
+        }}
+      }});
+      renderManagementTable();
+    }}
+
+    function renderManagementTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      let title = '', badge = '', subtitle = '', count = 1;
+      let targetMetrics = null, benchmarkMetrics = null;
+
+      const currentCompany = data.companies_by_code[state.selectedCompanyCode];
+      const marketBench = data.market_benchmarks;
+      const segBench = (currentCompany && data.segment_benchmarks) ? data.segment_benchmarks[currentCompany.tipo_entidad] : marketBench;
+
+      if (state.gestScope === 'cia') {{
+        if (!currentCompany) return;
+        title = currentCompany.razon_social;
+        badge = currentCompany.tipo_entidad;
+        subtitle = `Scorecard Individual de Gestión (Cód: ${{currentCompany.cod_cia}}) • Comparado contra Promedio de ${{currentCompany.tipo_entidad}}`;
+        count = 1;
+        targetMetrics = currentCompany;
+        benchmarkMetrics = segBench || marketBench;
+      }} else if (state.gestScope === 'Todos') {{
+        title = 'Mercado Asegurador Argentino Consolidado';
+        badge = 'Total Mercado';
+        subtitle = 'Scorecard Agregado de las 185 Aseguradoras • Promedios y Ratios Ponderados del Mercado';
+        count = data.total_entidades || 185;
+        targetMetrics = marketBench;
+        benchmarkMetrics = marketBench;
+      }} else {{
+        const seg = state.gestScope;
+        title = `Segmento Consolidado: ${{seg}}`;
+        badge = seg;
+        const segObj = data.segment_benchmarks ? data.segment_benchmarks[seg] : null;
+        count = segObj ? segObj.entidades : 0;
+        subtitle = `Scorecard Agregado del Segmento ${{seg}} (${{count}} Aseguradoras) • Comparado contra Mercado Total`;
+        targetMetrics = segObj || marketBench;
+        benchmarkMetrics = marketBench;
+      }}
+
+      // Header update
+      document.getElementById('gestSelectedTitle').innerText = title;
+      document.getElementById('gestSelectedBadge').innerText = badge;
+      document.getElementById('gestEntitiesCount').innerText = count;
+      document.getElementById('gestSelectedSubtitle').innerText = subtitle;
+
+      // Populate Scorecard Cards
+      const populateCard = (prefix, val, metric, benchVal, suffix = '%', isMulti = false) => {{
+        const valEl = document.getElementById(`${{prefix}}Val`);
+        const badgeEl = document.getElementById(`${{prefix}}Badge`);
+        const benchEl = document.getElementById(`${{prefix}}Bench`);
+
+        if (valEl) {{
+          valEl.innerText = isMulti ? `${{val.toFixed(2)}}x` : formatPercent(val);
+        }}
+        if (badgeEl) {{
+          badgeEl.innerHTML = getTrafficLightBadge(val, metric);
+        }}
+        if (benchEl && benchVal !== undefined && benchVal !== null) {{
+          const diff = val - benchVal;
+          const sign = diff >= 0 ? '+' : '';
+          const benchLabel = state.gestScope === 'cia' ? `vs. Prom. ${{currentCompany.tipo_entidad}}` : 'vs. Mercado Total';
+          benchEl.innerText = isMulti ? `${{sign}}${{diff.toFixed(2)}}x ${{benchLabel}} (${{benchVal.toFixed(2)}}x)` : `${{sign}}${{diff.toFixed(1)}}% ${{benchLabel}} (${{benchVal.toFixed(1)}}%)`;
+        }}
+      }};
+
+      populateCard('gKpiCombined', targetMetrics.combined_ratio, 'combined_ratio', benchmarkMetrics.combined_ratio);
+      populateCard('gKpiLoss', targetMetrics.loss_ratio, 'loss_ratio', benchmarkMetrics.loss_ratio);
+      populateCard('gKpiComm', targetMetrics.comm_ratio, 'comm_ratio', benchmarkMetrics.comm_ratio);
+      populateCard('gKpiExp', targetMetrics.exp_ratio, 'exp_ratio', benchmarkMetrics.exp_ratio);
+      populateCard('gKpiRet', targetMetrics.retencion_ratio, 'retencion_ratio', benchmarkMetrics.retencion_ratio);
+
+      populateCard('gKpiRoi', targetMetrics.roi_inversiones, 'roi_inversiones', benchmarkMetrics.roi_inversiones);
+      populateCard('gKpiDens', targetMetrics.densidad_inversiones, 'densidad_inversiones', benchmarkMetrics.densidad_inversiones);
+
+      populateCard('gKpiCob', targetMetrics.cobertura_reservas, 'cobertura_reservas', benchmarkMetrics.cobertura_reservas, 'x', true);
+      populateCard('gKpiApal', targetMetrics.apalancamiento, 'apalancamiento', benchmarkMetrics.apalancamiento, 'x', true);
+      populateCard('gKpiCobranza', targetMetrics.calidad_cartera, 'calidad_cartera', benchmarkMetrics.calidad_cartera);
+
+      populateCard('gKpiRoe', targetMetrics.roe, 'roe', benchmarkMetrics.roe);
+      populateCard('gKpiRoa', targetMetrics.roa, 'roa', benchmarkMetrics.roa);
+      populateCard('gKpiMargenTec', targetMetrics.margen_tecnico, 'margen_neto', benchmarkMetrics.margen_tecnico);
+      populateCard('gKpiMargenNeto', targetMetrics.margen_neto, 'margen_neto', benchmarkMetrics.margen_neto);
+
+      renderManagementRadar(targetMetrics, benchmarkMetrics, title);
+      renderManagementDiagnosis(targetMetrics, benchmarkMetrics, title);
+      renderManagementTable();
+    }}
+
+    function renderManagementRadar(target, bench, title) {{
+      const radarCategories = [
+        'Control Siniestralidad',
+        'Eficiencia Admin',
+        'Disciplina Comercial',
+        'Rendimiento Inversiones',
+        'Solvencia SSN',
+        'Cobranza Premios'
+      ];
+
+      // Normalize 0-100 score (higher is always better)
+      const normScore = m => {{
+        return [
+          Math.max(0, Math.min(100, 100 - (m.loss_ratio || 0) * 0.9)),
+          Math.max(0, Math.min(100, 100 - (m.exp_ratio || 0) * 2.2)),
+          Math.max(0, Math.min(100, 100 - (m.comm_ratio || 0) * 2.0)),
+          Math.max(0, Math.min(100, 50 + (m.roi_inversiones || 0) * 2.5)),
+          Math.max(0, Math.min(100, Math.min(100, (m.cobertura_reservas || 1.0) * 45))),
+          Math.max(0, Math.min(100, 100 - (m.calidad_cartera || 0) * 1.5))
+        ];
+      }};
+
+      const targetVals = normScore(target);
+      const benchVals = normScore(bench);
+
+      const targetLabel = state.gestScope === 'cia' ? (target.razon_social || title) : title;
+      const benchLabel = state.gestScope === 'cia' ? `Promedio ${{target.tipo_entidad || 'Segmento'}}` : 'Promedio Mercado Total';
+
+      const data = [
+        {{
+          type: 'scatterpolar',
+          r: [...benchVals, benchVals[0]],
+          theta: [...radarCategories, radarCategories[0]],
+          fill: 'toself',
+          fillcolor: 'rgba(56, 189, 248, 0.15)',
+          name: benchLabel,
+          line: {{ color: '#38BDF8', width: 2, dash: 'dot' }}
+        }},
+        {{
+          type: 'scatterpolar',
+          r: [...targetVals, targetVals[0]],
+          theta: [...radarCategories, radarCategories[0]],
+          fill: 'toself',
+          fillcolor: 'rgba(226, 0, 57, 0.25)',
+          name: targetLabel,
+          line: {{ color: '#E20039', width: 3 }}
+        }}
+      ];
+
+      const layout = {{
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        margin: {{ l: 40, r: 40, t: 20, b: 20 }},
+        polar: {{
+          bgcolor: 'transparent',
+          radialaxis: {{
+            visible: true,
+            range: [0, 100],
+            color: '#64748B',
+            gridcolor: '#1E293B',
+            showticklabels: false
+          }},
+          angularaxis: {{
+            color: '#94A3B8',
+            gridcolor: '#1E293B',
+            tickfont: {{ size: 10, family: 'Sora', color: '#E2E8F0' }}
+          }}
+        }},
+        legend: {{
+          orientation: 'h',
+          y: -0.15,
+          x: 0.5,
+          xanchor: 'center',
+          font: {{ color: '#E2E8F0', size: 11 }}
+        }}
+      }};
+
+      Plotly.newPlot('managementRadarChart', data, layout, {{ responsive: true, displayModeBar: false }});
+    }}
+
+    function renderManagementDiagnosis(target, bench, title) {{
+      const diagEl = document.getElementById('execDiagnosticContent');
+      if (!diagEl) return;
+
+      const strengths = [];
+      const warnings = [];
+
+      // Suscripcion
+      if (target.combined_ratio <= 100.0) {{
+        strengths.push(`<b>Ganancia Técnica Neta:</b> Ratio Combinado del <b>${{target.combined_ratio.toFixed(1)}}%</b> (operación de suscripción superavitaria).`);
+      }} else {{
+        warnings.push(`<b>Déficit de Suscripción:</b> Ratio Combinado del <b>${{target.combined_ratio.toFixed(1)}}%</b> (costo y gastos superan la emisión devengada).`);
+      }}
+
+      // Siniestralidad
+      if (target.loss_ratio <= 65.0) {{
+        strengths.push(`<b>Excelente Control de Siniestros:</b> Loss Ratio del <b>${{target.loss_ratio.toFixed(1)}}%</b>.`);
+      }} else if (target.loss_ratio > 75.0) {{
+        warnings.push(`<b>Elevada Siniestralidad Devengada:</b> Loss Ratio del <b>${{target.loss_ratio.toFixed(1)}}%</b>.`);
+      }}
+
+      // Financiero
+      if (target.roi_inversiones >= 0.0) {{
+        strengths.push(`<b>Gestión Financiera Positiva:</b> Rendimiento ROI de inversiones del <b>${{target.roi_inversiones.toFixed(1)}}%</b>.`);
+      }} else {{
+        warnings.push(`<b>Rendimiento Financiero Negativo:</b> ROI de inversiones del <b>${{target.roi_inversiones.toFixed(1)}}%</b>.`);
+      }}
+
+      // Cobertura
+      if (target.cobertura_reservas >= 1.15) {{
+        strengths.push(`<b>Solvencia Regulatoria Holgada:</b> Cobertura de Compromisos Técnicos de <b>${{target.cobertura_reservas.toFixed(2)}}x</b>.`);
+      }} else if (target.cobertura_reservas < 1.0) {{
+        warnings.push(`<b>Alerta de Solvencia SSN:</b> Cobertura de <b>${{target.cobertura_reservas.toFixed(2)}}x</b> (por debajo de la exigencia legal de 1.00x).`);
+      }}
+
+      // Cobranza
+      if (target.calidad_cartera <= 30.0) {{
+        strengths.push(`<b>Cobranza Rápida:</b> Cartera a cobrar en <b>${{target.calidad_cartera.toFixed(1)}}%</b> de las primas.`);
+      }} else if (target.calidad_cartera > 42.0) {{
+        warnings.push(`<b>Atraso en Cobranzas:</b> Premios a cobrar representan el <b>${{target.calidad_cartera.toFixed(1)}}%</b> de las primas.`);
+      }}
+
+      let html = '';
+      if (strengths.length > 0) {{
+        html += `
+          <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded-xl space-y-1.5">
+            <div class="text-emerald-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Fortalezas Principales:</div>
+            <ul class="list-disc list-inside space-y-1 text-slate-200">
+              ${{strengths.map(s => `<li>${{s}}</li>`).join('')}}
+            </ul>
+          </div>
+        `;
+      }}
+
+      if (warnings.length > 0) {{
+        html += `
+          <div class="p-3 bg-amber-500/10 border border-amber-500/25 rounded-xl space-y-1.5">
+            <div class="text-amber-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> Puntos de Atención & Desvíos:</div>
+            <ul class="list-disc list-inside space-y-1 text-slate-200">
+              ${{warnings.map(w => `<li>${{w}}</li>`).join('')}}
+            </ul>
+          </div>
+        `;
+      }}
+
+      diagEl.innerHTML = html;
+    }}
+
+    function renderManagementTable() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      let list = data.companies;
+      if (state.gestScope !== 'Todos' && state.gestScope !== 'cia') {{
+        list = data.companies.filter(x => x.tipo_entidad === state.gestScope);
+      }}
+
+      const mode = state.gestFilterMode || 'all';
+      let filtered = [...list];
+      if (mode === 'loss_high') {{
+        filtered = filtered.filter(c => (c.combined_ratio || 0) > 100.0);
+      }} else if (mode === 'cob_low') {{
+        filtered = filtered.filter(c => (c.cobertura_reservas || 0) < 1.0);
+      }} else if (mode === 'integral_win') {{
+        filtered = filtered.filter(c => (c.combined_ratio || 0) <= 100.0 && (c.roi_inversiones || 0) >= 0.0);
+      }} else if (mode === 'slow_collect') {{
+        filtered = filtered.filter(c => (c.calidad_cartera || 0) > 35.0);
+      }}
+
+      filtered.sort((a, b) => (a.combined_ratio || 0) - (b.combined_ratio || 0));
+
+      const isLaSegunda = c => ['0117', '0317', '0436', '0618'].includes(c.cod_cia) || c.razon_social.toUpperCase().includes('SEGUNDA');
+
+      const tbody = document.getElementById('managementTableBody');
+      tbody.innerHTML = filtered.map((c, i) => {{
+        const isLS = isLaSegunda(c);
+        const isHL = (state.selectedCompanyCode === c.cod_cia);
+        return `
+        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}')">
+          <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
+          <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[180px] whitespace-nowrap" title="${{c.razon_social}}">
+            ${{c.razon_social}}
+            ${{isLS ? '<span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+          </td>
+          <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatPercent(c.loss_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatPercent(c.comm_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{formatPercent(c.exp_ratio)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.roi_inversiones >= 0 ? 'text-brand-blue' : 'text-rose-400'}}">${{formatPercent(c.roi_inversiones)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.cobertura_reservas >= 1.0 ? 'text-emerald-400' : 'text-rose-400'}}">${{(c.cobertura_reservas || 0).toFixed(2)}}x</td>
+          <td class="py-1.5 px-2 text-right text-slate-300">${{(c.apalancamiento || 0).toFixed(2)}}x</td>
+          <td class="py-1.5 px-2 text-right text-amber-300">${{formatPercent(c.calidad_cartera)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.roe >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.roe)}}</td>
+          <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
+            <button onclick="onCompanyDropdownChange('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-colors text-[9px] font-bold">Ver</button>
+          </td>
+        </tr>
+      `}}).join('');
+    }}
+
     // Export to CSV
     function exportToCSV() {{
       const list = getFilteredCompanies();
-      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_emitidas', 'primas_devengadas', 'var_reservas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas'];
+      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_emitidas', 'primas_devengadas', 'var_reservas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas', 'comm_ratio', 'exp_ratio', 'roi_inversiones', 'roe', 'roa', 'margen_neto'];
       
       let csv = headers.join(',') + '\\n';
       list.forEach(c => {{
@@ -2133,7 +2829,13 @@ def generate_html():
           c.patrimonio_neto || 0,
           c.loss_ratio || 0,
           c.combined_ratio || 0,
-          c.cobertura_reservas || 0
+          c.cobertura_reservas || 0,
+          c.comm_ratio || 0,
+          c.exp_ratio || 0,
+          c.roi_inversiones || 0,
+          c.roe || 0,
+          c.roa || 0,
+          c.margen_neto || 0
         ];
         csv += row.join(',') + '\\n';
       }});
