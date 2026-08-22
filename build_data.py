@@ -205,6 +205,59 @@ def build_complete_dataset():
     for seg in segments:
         segment_benchmarks[seg] = compute_benchmarks(df_summary[df_summary['tipo_entidad'] == seg])
 
+    # ========================================================
+    # COMPLETE BALANCE PLAN DE CUENTAS & HIERARCHICAL TREES
+    # ========================================================
+    print("Building complete Plan de Cuentas and balance trees...")
+    cat_df = df_raw[['cod_cuenta', 'desc_cuenta', 'nivel', 'id_padre']].drop_duplicates().sort_values('cod_cuenta')
+    plan_de_cuentas = {}
+    for _, r in cat_df.iterrows():
+        plan_de_cuentas[str(r['cod_cuenta'])] = {
+            'desc': str(r['desc_cuenta']),
+            'nivel': int(r['nivel']),
+            'padre': str(r['id_padre']) if pd.notna(r['id_padre']) else ''
+        }
+
+    # General Balance (where cod_subramo is empty)
+    gen_df = df_raw[df_raw['cod_subramo'].fillna('') == '']
+    gen_agg = gen_df.groupby(['cod_cia', 'cod_cuenta'])['importe'].sum().reset_index()
+
+    cias_balances_general = {}
+    for cod_cia, grp in gen_agg.groupby('cod_cia'):
+        cias_balances_general[str(cod_cia)] = {str(r['cod_cuenta']): round(float(r['importe']), 2) for _, r in grp.iterrows()}
+
+    market_balances_general = {str(k): round(float(v), 2) for k, v in gen_df.groupby('cod_cuenta')['importe'].sum().items()}
+
+    segment_balances_general = {}
+    for seg, grp in gen_df.groupby('tipo_entidad'):
+        segment_balances_general[str(seg)] = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+
+    # Subramo technical balances
+    sub_df = df_raw[df_raw['cod_subramo'].fillna('') != '']
+    sub_cat = sub_df[['cod_subramo', 'desc_subramo']].drop_duplicates().sort_values('cod_subramo')
+    subramos_catalog = [{'cod': str(r['cod_subramo']), 'desc': str(r['desc_subramo'])} for _, r in sub_cat.iterrows()]
+
+    sub_agg = sub_df.groupby(['cod_cia', 'cod_subramo', 'cod_cuenta'])['importe'].sum().reset_index()
+    cias_balances_subramos = {}
+    for (cod_cia, cod_sub), grp in sub_agg.groupby(['cod_cia', 'cod_subramo']):
+        cod_cia_str = str(cod_cia)
+        cod_sub_str = str(cod_sub)
+        if cod_cia_str not in cias_balances_subramos:
+            cias_balances_subramos[cod_cia_str] = {}
+        cias_balances_subramos[cod_cia_str][cod_sub_str] = {str(r['cod_cuenta']): round(float(r['importe']), 2) for _, r in grp.iterrows()}
+
+    market_balances_subramos = {}
+    for cod_sub, grp in sub_df.groupby('cod_subramo'):
+        market_balances_subramos[str(cod_sub)] = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+
+    segment_balances_subramos = {}
+    for (seg, cod_sub), grp in sub_df.groupby(['tipo_entidad', 'cod_subramo']):
+        seg_str = str(seg)
+        cod_sub_str = str(cod_sub)
+        if seg_str not in segment_balances_subramos:
+            segment_balances_subramos[seg_str] = {}
+        segment_balances_subramos[seg_str][cod_sub_str] = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
         "total_entidades": len(df_summary),
@@ -218,7 +271,15 @@ def build_complete_dataset():
         "market_benchmarks": market_benchmarks,
         "segment_benchmarks": segment_benchmarks,
         "companies": list(companies_dict.values()),
-        "companies_by_code": companies_dict
+        "companies_by_code": companies_dict,
+        "plan_de_cuentas": plan_de_cuentas,
+        "subramos_catalog": subramos_catalog,
+        "market_balances_general": market_balances_general,
+        "market_balances_subramos": market_balances_subramos,
+        "segment_balances_general": segment_balances_general,
+        "segment_balances_subramos": segment_balances_subramos,
+        "cias_balances_general": cias_balances_general,
+        "cias_balances_subramos": cias_balances_subramos
     }
 
     out_json = r"g:\Mi unidad\IA\Sinensup\data_sinensup.json"
@@ -230,3 +291,4 @@ def build_complete_dataset():
 
 if __name__ == '__main__':
     build_complete_dataset()
+
