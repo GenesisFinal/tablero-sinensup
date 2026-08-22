@@ -1101,7 +1101,7 @@ def generate_html():
             </h3>
             <span class="text-xs text-slate-400 font-mono">Escala Normalizada 0-100</span>
           </div>
-          <div id="managementRadarChart" class="w-full h-80"></div>
+          <div id="managementRadarChart" class="w-full h-[420px]"></div>
         </div>
 
         <!-- Executive Diagnostic Summary -->
@@ -2607,12 +2607,12 @@ def generate_html():
 
     function renderManagementRadar(target, bench, title) {{
       const radarCategories = [
-        'Control Siniestralidad',
-        'Eficiencia Admin',
-        'Disciplina Comercial',
-        'Rendimiento Inversiones',
-        'Solvencia SSN',
-        'Cobranza Premios'
+        'Control de<br>Siniestros',
+        'Eficiencia<br>Administrativa',
+        'Disciplina<br>Comercial',
+        'Rendimiento de<br>Inversiones',
+        'Solvencia<br>Regulatoria',
+        'Cobranza de<br>Premios'
       ];
 
       // Normalize 0-100 score (higher is always better)
@@ -2657,28 +2657,31 @@ def generate_html():
       const layout = {{
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        margin: {{ l: 40, r: 40, t: 20, b: 20 }},
+        margin: {{ l: 75, r: 75, t: 40, b: 45 }},
         polar: {{
-          bgcolor: 'transparent',
+          bgcolor: 'rgba(15, 23, 42, 0.4)',
           radialaxis: {{
             visible: true,
             range: [0, 100],
             color: '#64748B',
-            gridcolor: '#1E293B',
-            showticklabels: false
+            gridcolor: '#334155',
+            showticklabels: true,
+            tickfont: {{ size: 9, color: '#94A3B8', family: 'JetBrains Mono' }}
           }},
           angularaxis: {{
-            color: '#94A3B8',
-            gridcolor: '#1E293B',
-            tickfont: {{ size: 10, family: 'Sora', color: '#E2E8F0' }}
+            color: '#E2E8F0',
+            gridcolor: '#334155',
+            tickfont: {{ size: 11, family: 'Sora', color: '#FFFFFF', weight: 'bold' }},
+            rotation: 90,
+            direction: 'clockwise'
           }}
         }},
         legend: {{
           orientation: 'h',
-          y: -0.15,
+          y: -0.16,
           x: 0.5,
           xanchor: 'center',
-          font: {{ color: '#E2E8F0', size: 11 }}
+          font: {{ color: '#F1F5F9', size: 12, family: 'Sora' }}
         }}
       }};
 
