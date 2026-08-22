@@ -602,6 +602,107 @@ def build_complete_dataset():
     for i, g in enumerate(groups_ranking, 1):
         g['rank'] = i
 
+    RAMOS_TAXONOMY = {
+        "patrimoniales": {
+            "id": "patrimoniales",
+            "name": "Daños Patrimoniales",
+            "icon": "fa-car",
+            "ramos": {
+                "auto": {
+                    "id": "auto",
+                    "name": "Automotores y Motos",
+                    "subramos": ["1.030.01", "1.030.02", "1.030.03", "1.180.01", "1.180.02", "1.180.03"]
+                },
+                "incendio_comb": {
+                    "id": "incendio_comb",
+                    "name": "Incendio y Combinados",
+                    "subramos": ["1.010.99", "1.020.01", "1.020.02", "1.020.99"]
+                },
+                "rc": {
+                    "id": "rc",
+                    "name": "Responsabilidad Civil",
+                    "subramos": ["1.080.01", "1.080.02", "1.080.03", "1.080.99"]
+                },
+                "caucion_credito": {
+                    "id": "caucion_credito",
+                    "name": "Caución y Créditos",
+                    "subramos": ["1.100.01", "1.100.99", "1.110.01", "1.110.02", "1.110.99"]
+                },
+                "agro": {
+                    "id": "agro",
+                    "name": "Agropecuario y Forestal",
+                    "subramos": ["1.070.01", "1.070.02", "1.070.99"]
+                },
+                "transporte": {
+                    "id": "transporte",
+                    "name": "Transporte y Vías",
+                    "subramos": ["1.040.99", "1.120.99", "1.130.01", "1.130.99", "1.140.99", "1.150.99"]
+                },
+                "tecnico_otros": {
+                    "id": "tecnico_otros",
+                    "name": "Seguro Técnico, Robo y Varios",
+                    "subramos": ["1.090.99", "1.160.99", "1.170.01", "1.170.02", "1.170.03", "1.170.99"]
+                }
+            }
+        },
+        "art": {
+            "id": "art",
+            "name": "Riesgos del Trabajo (ART)",
+            "icon": "fa-helmet-safety",
+            "ramos": {
+                "art_total": {
+                    "id": "art_total",
+                    "name": "Riesgos del Trabajo (ART)",
+                    "subramos": ["1.050.01", "1.050.99"]
+                }
+            }
+        },
+        "personas": {
+            "id": "personas",
+            "name": "Seguros de Personas",
+            "icon": "fa-heart-pulse",
+            "ramos": {
+                "vida": {
+                    "id": "vida",
+                    "name": "Seguros de Vida",
+                    "subramos": ["2.030.01", "2.030.02", "2.030.03", "2.030.04", "2.030.05"]
+                },
+                "ap": {
+                    "id": "ap",
+                    "name": "Accidentes Personales",
+                    "subramos": ["2.010.01", "2.010.02"]
+                },
+                "salud": {
+                    "id": "salud",
+                    "name": "Salud",
+                    "subramos": ["2.020.01", "2.020.02"]
+                },
+                "sepelio": {
+                    "id": "sepelio",
+                    "name": "Sepelio",
+                    "subramos": ["2.050.01", "2.050.02"]
+                }
+            }
+        },
+        "retiro": {
+            "id": "retiro",
+            "name": "Retiro y Rentas",
+            "icon": "fa-piggy-bank",
+            "ramos": {
+                "retiro_puro": {
+                    "id": "retiro_puro",
+                    "name": "Seguros de Retiro",
+                    "subramos": ["2.060.01", "2.060.02"]
+                },
+                "rentas": {
+                    "id": "rentas",
+                    "name": "Rentas Previsionales y ART",
+                    "subramos": ["2.070.01", "2.070.02"]
+                }
+            }
+        }
+    }
+
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
         "total_entidades": len(df_summary),
@@ -620,6 +721,7 @@ def build_complete_dataset():
         "groups_by_id": groups_by_id,
         "groups_balances_general": groups_balances_general,
         "groups_balances_subramos": groups_balances_subramos,
+        "ramos_taxonomy": RAMOS_TAXONOMY,
         "plan_de_cuentas": plan_de_cuentas,
         "subramos_catalog": subramos_catalog,
         "market_balances_general": market_balances_general,
