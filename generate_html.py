@@ -3513,7 +3513,7 @@ def generate_html():
       const childrenMap = {{}};
       stmtCodes.forEach(code => {{
         const p = plan[code];
-        const padre = p.padre;
+        const padre = p.padre_codigo || p.padre;
         if (padre && plan[padre]) {{
           if (!childrenMap[padre]) childrenMap[padre] = [];
           childrenMap[padre].push(code);
@@ -3538,10 +3538,10 @@ def generate_html():
           if (c.includes(searchQ) || desc.includes(searchQ)) {{
             matchedCodes.add(c);
             // Add all ancestors
-            let curr = plan[c].padre;
+            let curr = plan[c].padre_codigo || plan[c].padre;
             while (curr && plan[curr]) {{
               matchedCodes.add(curr);
-              curr = plan[curr].padre;
+              curr = plan[curr].padre_codigo || plan[curr].padre;
             }}
           }}
         }});
@@ -3557,10 +3557,10 @@ def generate_html():
         // For tec/fin, level 2 root (e.g. 4.01) is root
         if ((state.balStatement === 'tec' || state.balStatement === 'fin') && p.nivel === 2) return true;
         
-        let curr = p.padre;
+        let curr = p.padre_codigo || p.padre;
         while (curr && plan[curr]) {{
           if (!state.balExpandedNodes.has(curr)) return false;
-          curr = plan[curr].padre;
+          curr = plan[curr].padre_codigo || plan[curr].padre;
         }}
         return true;
       }}
@@ -3588,8 +3588,8 @@ def generate_html():
         let toggleBtn = '';
         if (hasChildren) {{
           toggleBtn = `
-            <button onclick="toggleBalNode('${{code}}')" 
-                    class="w-5 h-5 flex items-center justify-center rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[10px] font-bold ${{isExp ? 'text-amber-400' : 'text-emerald-400'}} transition-colors"
+            <button type="button" onclick="toggleBalNode('${{code}}')" 
+                    class="w-6 h-6 flex items-center justify-center rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold ${{isExp ? 'text-amber-400 border-amber-500/40 bg-amber-500/10' : 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10'}} transition-all cursor-pointer shadow-sm"
                     title="${{isExp ? 'Colapsar subcuentas' : 'Abrir cuentas dependientes'}}">
               <i class="fa-solid ${{isExp ? 'fa-minus' : 'fa-plus'}}"></i>
             </button>
@@ -3612,12 +3612,12 @@ def generate_html():
         let descStyle = '';
         let codeStyle = '';
         if (nivel === 1) {{
-          rowStyle = 'bg-slate-900/90 font-bold border-t-2 border-slate-700';
-          descStyle = 'text-white text-xs tracking-wide uppercase';
+          rowStyle = 'bg-slate-900/95 font-bold border-t-2 border-slate-700';
+          descStyle = 'text-white text-xs tracking-wide uppercase font-bold';
           codeStyle = 'text-amber-400 font-bold';
         }} else if (nivel === 2) {{
-          rowStyle = 'bg-slate-900/40 font-semibold';
-          descStyle = 'text-slate-200 text-xs';
+          rowStyle = 'bg-slate-900/50 font-semibold border-t border-slate-800';
+          descStyle = 'text-slate-200 text-xs font-semibold';
           codeStyle = 'text-emerald-400 font-semibold';
         }} else if (nivel === 3) {{
           rowStyle = 'hover:bg-slate-800/40';
@@ -3634,16 +3634,16 @@ def generate_html():
 
         rowsHtml += `
           <tr class="${{rowStyle}} transition-colors">
-            <td class="py-1.5 px-3 text-center">${{toggleBtn}}</td>
-            <td class="py-1.5 px-3 ${{codeStyle}} font-mono">${{code}}</td>
-            <td class="py-1.5 px-3" style="padding-left: ${{indentPx + 12}}px;">
+            <td class="py-2 px-3 text-center w-12">${{toggleBtn}}</td>
+            <td class="py-2 px-3 ${{codeStyle}} font-mono whitespace-nowrap">${{code}}</td>
+            <td class="py-2 px-3" style="padding-left: ${{indentPx + 12}}px;">
               <span class="${{descStyle}}">${{info.desc}}</span>
             </td>
-            <td class="py-1.5 px-3 text-right font-mono font-bold ${{saldo < 0 ? 'text-rose-400' : (saldo > 0 ? 'text-slate-100' : 'text-slate-500')}}">
+            <td class="py-2 px-3 text-right font-mono font-bold whitespace-nowrap ${{saldo < 0 ? 'text-rose-400' : (saldo > 0 ? 'text-slate-100' : 'text-slate-500')}}">
               ${{saldo === 0 ? '$0' : formatARS(saldo)}}
             </td>
-            <td class="py-1.5 px-3 text-right font-mono text-[10px] text-slate-400">${{pctStr}}</td>
-            <td class="py-1.5 px-3 text-center">${{levelBadge}}</td>
+            <td class="py-2 px-3 text-right font-mono text-[10px] text-slate-400">${{pctStr}}</td>
+            <td class="py-2 px-3 text-center">${{levelBadge}}</td>
           </tr>
         `;
       }});
