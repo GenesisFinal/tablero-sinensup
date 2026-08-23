@@ -1692,7 +1692,7 @@ def generate_html():
             <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-400 border border-red-400"></span> Límite 100%</span>
           </div>
         </div>
-        <div id="analisisRamosStackedChart" class="w-full h-80"></div>
+        <div id="analisisRamosStackedChart" class="w-full min-h-[360px]"></div>
       </div>
 
       <!-- TABLA INTEGRAL DE SUSCRIPCIÓN Y GESTIÓN EN EL RAMO -->
@@ -4441,7 +4441,8 @@ def generate_html():
       }};
 
       const maxVal = Math.max(120, Math.max(...chartList.map(r => r.combined_ratio || 0)) * 1.1);
-      const dynamicHeight = Math.max(340, chartList.length * 26 + 60);
+      const dynamicHeight = Math.max(360, chartList.length * 28 + 60);
+      chartEl.style.height = dynamicHeight + 'px';
 
       const layout = {{
         barmode: 'stack',
