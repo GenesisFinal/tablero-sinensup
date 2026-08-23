@@ -4379,11 +4379,44 @@ def generate_html():
       // 4. Reverse so top ranking appears at top of horizontal stacked chart
       const chartList = [...selectedOperators].reverse();
 
+      const cleanChartName = (rawName, isGroup) => {{
+        if (!rawName) return '';
+        let s = rawName.trim();
+        if (isGroup) {{
+          s = s.replace(/^Grupo Asegurador\\s+/i, 'Grupo ');
+        }} else {{
+          s = s.replace(/\\s+COMPAÑ[IÍ]A\\s+DE\\s+SEGUROS\\s+(S\\.A\\.|S\\.A\\.U\\.)?/gi, '');
+          s = s.replace(/\\s+COOPERATIVA\\s+DE\\s+SEGUROS\\s+LIMITADA/gi, ' Coop.');
+          s = s.replace(/\\s+DE\\s+SEGUROS\\s+(Y\\s+REASEGUROS\\s+)?(S\\.A\\.|S\\.A\\.U\\.)?/gi, '');
+          s = s.replace(/\\s+S\\.A\\.U\\.$/gi, '');
+          s = s.replace(/\\s+S\\.A\\.$/gi, '');
+        }}
+        return s.trim();
+      }};
+
+      const wrapChartLabel = (prefix, name, suffix, maxLen = 22) => {{
+        const full = (prefix ? prefix + ' ' : '') + name + (suffix ? ' ' + suffix : '');
+        if (full.length <= maxLen) return full;
+        const words = full.split(' ');
+        let line1 = '', line2 = '';
+        for (let i = 0; i < words.length; i++) {{
+          if ((line1 + (line1 ? ' ' : '') + words[i]).length <= maxLen || !line1) {{
+            line1 += (line1 ? ' ' : '') + words[i];
+          }} else {{
+            line2 += (line2 ? ' ' : '') + words[i];
+          }}
+        }}
+        return line2 ? `${{line1}}<br>${{line2}}` : line1;
+      }};
+
+      const isGroupsMode = (state.analisisRamosMode === 'groups');
       const names = chartList.map(r => {{
         const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
         const pos = ranking.findIndex(x => x.code === r.code) + 1;
-        const cleanName = r.name.length > 20 ? r.name.slice(0, 18) + '...' : r.name;
-        return isLS ? `★ ${{cleanName}} (#${{pos}})` : `${{pos}}. ${{cleanName}}`;
+        const cleanName = cleanChartName(r.name, isGroupsMode);
+        const prefix = isLS ? '★' : `${{pos}}.`;
+        const suffix = isLS ? `(#${{pos}})` : '';
+        return wrapChartLabel(prefix, cleanName, suffix, 22);
       }});
 
       const lossVals = chartList.map(r => Math.max(0, Math.min(250, r.loss_ratio || 0)));
@@ -4441,7 +4474,7 @@ def generate_html():
       }};
 
       const maxVal = Math.max(120, Math.max(...chartList.map(r => r.combined_ratio || 0)) * 1.1);
-      const dynamicHeight = Math.max(360, chartList.length * 28 + 60);
+      const dynamicHeight = Math.max(420, chartList.length * 36 + 60);
       chartEl.style.height = dynamicHeight + 'px';
 
       const layout = {{
@@ -4450,7 +4483,7 @@ def generate_html():
         plot_bgcolor: 'transparent',
         font: {{ color: '#94A3B8', size: 10 }},
         height: dynamicHeight,
-        margin: {{ t: 20, b: 35, l: 175, r: 40 }},
+        margin: {{ t: 20, b: 35, l: 230, r: 40 }},
         showlegend: false,
         xaxis: {{
           gridcolor: '#1E293B',
@@ -4461,7 +4494,7 @@ def generate_html():
         yaxis: {{
           autorange: true,
           automargin: true,
-          tickfont: {{ size: 10, color: '#E2E8F0' }}
+          tickfont: {{ size: 10, color: '#E2E8F0', family: 'Sora, sans-serif' }}
         }},
         shapes: [
           {{
