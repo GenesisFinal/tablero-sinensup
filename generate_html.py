@@ -1612,9 +1612,9 @@ def generate_html():
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Scorecard Técnico del Ramo (Mercado Consolidado)</h3>
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Scorecard Técnico del Ramo (Total Mercado Consolidado - 100% Aseguradoras)</h3>
           </div>
-          <span class="text-[11px] text-slate-400 font-mono"><span id="arEntitiesCount" class="font-bold text-white">0</span> operadores activos</span>
+          <span class="text-[11px] text-slate-400 font-mono"><span id="arEntitiesCount" class="font-bold text-cyan-300">0</span> aseguradoras activas</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
@@ -3498,41 +3498,52 @@ def generate_html():
       const ciasByCode = data.companies_by_code || {{}};
       const groupsById = data.groups_by_id || {{}};
 
-      const ranking = [];
+      // 1. Process all individual companies and compute 100% Market Consolidated Totals
+      let mktTotEmit = 0.0, mktTotSin = 0.0, mktTotIngTec = 0.0, mktTotEgrTec = 0.0;
+      let mktActiveCiasCount = 0;
+      const companiesRanking = [];
 
-      if (state.ramosRankMode === 'companies') {{
-        Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
-          targetSubs.forEach(s => {{
-            if (sub_map[s]) {{
-              const d = sub_map[s];
-              totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
-              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
-              totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
-              totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
-              totIngFin += (d['5.02.00.00.00.00.00.00'] || 0.0);
-              totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
-            }}
-          }});
-          if (totEmit > 0) {{
-            const c = ciasByCode[cod_cia] || {{}};
-            const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
-            const resTec = totIngTec - totEgrTec;
-            const resFin = (c.resultado_financiero !== undefined) ? c.resultado_financiero : (totIngFin - totEgrFin);
-            ranking.push({{
-              id: cod_cia,
-              code: cod_cia,
-              name: c.razon_social || cod_cia,
-              tipo: c.tipo_entidad || '',
-              emitidas: totEmit,
-              siniestros: totSin,
-              loss_ratio: lossRatio,
-              resultado_tecnico: resTec,
-              resultado_financiero: resFin
-            }});
+      Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
+        let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
+        targetSubs.forEach(s => {{
+          if (sub_map[s]) {{
+            const d = sub_map[s];
+            totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+            totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
+            totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
+            totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+            totIngFin += (d['5.02.00.00.00.00.00.00'] || 0.0);
+            totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
           }}
         }});
-      }} else {{
+        if (totEmit > 0) {{
+          mktActiveCiasCount++;
+          mktTotEmit += totEmit;
+          mktTotSin += totSin;
+          mktTotIngTec += totIngTec;
+          mktTotEgrTec += totEgrTec;
+
+          const c = ciasByCode[cod_cia] || {{}};
+          const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
+          const resTec = totIngTec - totEgrTec;
+          const resFin = (c.resultado_financiero !== undefined) ? c.resultado_financiero : (totIngFin - totEgrFin);
+          companiesRanking.push({{
+            id: cod_cia,
+            code: cod_cia,
+            name: c.razon_social || cod_cia,
+            tipo: c.tipo_entidad || '',
+            emitidas: totEmit,
+            siniestros: totSin,
+            loss_ratio: lossRatio,
+            resultado_tecnico: resTec,
+            resultado_financiero: resFin
+          }});
+        }}
+      }});
+
+      // 2. If mode is groups, build the groups ranking
+      const groupsRanking = [];
+      if (state.ramosRankMode === 'groups') {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
           let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
           targetSubs.forEach(s => {{
@@ -3569,7 +3580,7 @@ def generate_html():
               ? `${{activeCiasCount}} Cías` 
               : `${{activeCiasCount}} de ${{members.length}} Cías`;
 
-            ranking.push({{
+            groupsRanking.push({{
               id: gid,
               code: gid,
               name: g.name || gid,
@@ -3584,22 +3595,21 @@ def generate_html():
         }});
       }}
 
-      const totBranch = ranking.reduce((acc, r) => acc + r.emitidas, 0.0);
-      const totSinBranch = ranking.reduce((acc, r) => acc + r.siniestros, 0.0);
-      const lossBranch = totBranch > 0 ? (totSinBranch / totBranch * 100.0) : 0.0;
-      const resTecBranch = ranking.reduce((acc, r) => acc + r.resultado_tecnico, 0.0);
-
+      const ranking = (state.ramosRankMode === 'groups') ? groupsRanking : companiesRanking;
       ranking.forEach(r => {{
-        r.market_share = totBranch > 0 ? (r.emitidas / totBranch * 100.0) : 0.0;
+        r.market_share = mktTotEmit > 0 ? (r.emitidas / mktTotEmit * 100.0) : 0.0;
       }});
-
       ranking.sort((a, b) => b.emitidas - a.emitidas);
+
+      const mktLoss = mktTotEmit > 0 ? (mktTotSin / mktTotEmit * 100.0) : 0.0;
+      const mktResTec = mktTotIngTec - mktTotEgrTec;
+
       return {{
-        total_emitidas: totBranch,
-        total_siniestros: totSinBranch,
-        loss_ratio: lossBranch,
-        resultado_tecnico: resTecBranch,
-        entities_count: ranking.length,
+        total_emitidas: mktTotEmit,
+        total_siniestros: mktTotSin,
+        loss_ratio: mktLoss,
+        resultado_tecnico: mktResTec,
+        entities_count: mktActiveCiasCount,
         ranking: ranking
       }};
     }}
@@ -4122,21 +4132,40 @@ def generate_html():
         }};
       }};
 
-      if (state.analisisRamosMode === 'companies') {{
-        Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
-          const m = processSubMap(sub_map);
-          if (m.emitidas > 0 || m.devengadas > 0) {{
-            const c = ciasByCode[cod_cia] || {{}};
-            ranking.push({{
-              id: cod_cia,
-              code: cod_cia,
-              name: c.razon_social || cod_cia,
-              tipo: c.tipo_entidad || '',
-              ...m
-            }});
-          }}
-        }});
-      }} else {{
+      // 1. Process all individual companies and compute 100% Market Consolidated Totals
+      let mktTotEmit = 0.0, mktTotCed = 0.0, mktTotAnul = 0.0;
+      let mktTotDev = 0.0, mktTotSin = 0.0, mktTotProd = 0.0, mktTotExpl = 0.0;
+      let mktTotResTec = 0.0;
+      let mktActiveCiasCount = 0;
+      const companiesRanking = [];
+
+      Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
+        const m = processSubMap(sub_map);
+        if (m.emitidas > 0 || m.devengadas > 0) {{
+          mktActiveCiasCount++;
+          mktTotEmit += m.emitidas;
+          mktTotCed += m.cedidas;
+          mktTotAnul += m.anulaciones;
+          mktTotDev += m.devengadas;
+          mktTotSin += m.siniestros;
+          mktTotProd += m.gtos_produccion;
+          mktTotExpl += m.gtos_explotacion;
+          mktTotResTec += m.resultado_tecnico;
+
+          const c = ciasByCode[cod_cia] || {{}};
+          companiesRanking.push({{
+            id: cod_cia,
+            code: cod_cia,
+            name: c.razon_social || cod_cia,
+            tipo: c.tipo_entidad || '',
+            ...m
+          }});
+        }}
+      }});
+
+      // 2. If mode is groups, build the groups ranking
+      const groupsRanking = [];
+      if (state.analisisRamosMode === 'groups') {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
           const m = processSubMap(sub_map);
           if (m.emitidas > 0 || m.devengadas > 0) {{
@@ -4156,7 +4185,7 @@ def generate_html():
               ? `${{activeCiasCount}} Cías` 
               : `${{activeCiasCount}} de ${{members.length}} Cías`;
 
-            ranking.push({{
+            groupsRanking.push({{
               id: gid,
               code: gid,
               name: g.name || gid,
@@ -4167,44 +4196,36 @@ def generate_html():
         }});
       }}
 
-      // Consolidate totals for entire market in this branch
-      const totEmit = ranking.reduce((acc, r) => acc + r.emitidas, 0.0);
-      const totCed = ranking.reduce((acc, r) => acc + r.cedidas, 0.0);
-      const totAnul = ranking.reduce((acc, r) => acc + r.anulaciones, 0.0);
-      const totDev = ranking.reduce((acc, r) => acc + r.devengadas, 0.0);
-      const totSin = ranking.reduce((acc, r) => acc + r.siniestros, 0.0);
-      const totProd = ranking.reduce((acc, r) => acc + r.gtos_produccion, 0.0);
-      const totExpl = ranking.reduce((acc, r) => acc + r.gtos_explotacion, 0.0);
-      const totResTec = ranking.reduce((acc, r) => acc + r.resultado_tecnico, 0.0);
-
-      const baseDevMkt = totDev > 0 ? totDev : (totEmit > 0 ? totEmit : 1.0);
-      const mktLoss = (totSin / baseDevMkt) * 100.0;
-      const mktAcq = (totProd / baseDevMkt) * 100.0;
-      const mktExp = (totExpl / baseDevMkt) * 100.0;
-      const mktCombined = mktLoss + mktAcq + mktExp;
-      const mktMargenTec = (totResTec / baseDevMkt) * 100.0;
-      const mktRetention = totEmit > 0 ? ((totEmit - totCed) / totEmit * 100.0) : 100.0;
-      const mktCession = totEmit > 0 ? (totCed / totEmit * 100.0) : 0.0;
-      const mktCancellation = totEmit > 0 ? (totAnul / totEmit * 100.0) : 0.0;
-
+      const ranking = (state.analisisRamosMode === 'groups') ? groupsRanking : companiesRanking;
       ranking.sort((a, b) => b.devengadas - a.devengadas);
 
+      // Consolidate totals for ENTIRE 100% MARKET in this branch (ALWAYS based on all companies)
+      const baseDevMkt = mktTotDev > 0 ? mktTotDev : (mktTotEmit > 0 ? mktTotEmit : 1.0);
+      const mktLoss = (mktTotSin / baseDevMkt) * 100.0;
+      const mktAcq = (mktTotProd / baseDevMkt) * 100.0;
+      const mktExp = (mktTotExpl / baseDevMkt) * 100.0;
+      const mktCombined = mktLoss + mktAcq + mktExp;
+      const mktMargenTec = (mktTotResTec / baseDevMkt) * 100.0;
+      const mktRetention = mktTotEmit > 0 ? ((mktTotEmit - mktTotCed) / mktTotEmit * 100.0) : 100.0;
+      const mktCession = mktTotEmit > 0 ? (mktTotCed / mktTotEmit * 100.0) : 0.0;
+      const mktCancellation = mktTotEmit > 0 ? (mktTotAnul / mktTotEmit * 100.0) : 0.0;
+
       return {{
-        total_emitidas: totEmit,
-        total_devengadas: totDev,
-        total_siniestros: totSin,
-        total_gtos_produccion: totProd,
-        total_gtos_explotacion: totExpl,
+        total_emitidas: mktTotEmit,
+        total_devengadas: mktTotDev,
+        total_siniestros: mktTotSin,
+        total_gtos_produccion: mktTotProd,
+        total_gtos_explotacion: mktTotExpl,
         loss_ratio: mktLoss,
         acq_ratio: mktAcq,
         exp_ratio: mktExp,
         combined_ratio: mktCombined,
         margen_tecnico: mktMargenTec,
-        resultado_tecnico: totResTec,
+        resultado_tecnico: mktTotResTec,
         retention_rate: mktRetention,
         cession_rate: mktCession,
         cancellation_rate: mktCancellation,
-        entities_count: ranking.length,
+        entities_count: mktActiveCiasCount,
         ranking: ranking
       }};
     }}
