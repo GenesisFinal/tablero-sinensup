@@ -3106,43 +3106,49 @@ def generate_html():
         }}
       }};
 
-      Plotly.newPlot('ciaWaterfallPlot', [trace], layout, {{ responsive: true, displayModeBar: false }});
+      if (document.getElementById('ciaWaterfallPlot')) {{
+        Plotly.newPlot('ciaWaterfallPlot', [trace], layout, {{ responsive: true, displayModeBar: false }});
+      }}
     }}
 
     function renderCompanyDonuts(c) {{
       const assetLabels = ['Disponibilidades', 'Inversiones', 'Créditos', 'Inmuebles', 'Otros Activos'];
       const assetVals = [c.disponibilidades || 0, c.inversiones || 0, c.creditos || 0, c.inmuebles || 0, (c.otros_activos || 0) + (c.bienes_uso || 0)];
 
-      Plotly.newPlot('ciaAssetDonut', [{{
-        labels: assetLabels,
-        values: assetVals,
-        hole: 0.45,
-        type: 'pie',
-        textinfo: 'label+percent',
-        marker: {{ colors: ['#38BDF8', '#10B981', '#F59E0B', '#E20039', '#64748B'] }}
-      }}], {{
-        paper_bgcolor: 'transparent',
-        margin: {{ l: 20, r: 20, t: 20, b: 20 }},
-        showlegend: false,
-        font: {{ color: '#E2E8F0', size: 11 }}
-      }}, {{ responsive: true, displayModeBar: false }});
+      if (document.getElementById('ciaAssetDonut')) {{
+        Plotly.newPlot('ciaAssetDonut', [{{
+          labels: assetLabels,
+          values: assetVals,
+          hole: 0.45,
+          type: 'pie',
+          textinfo: 'label+percent',
+          marker: {{ colors: ['#38BDF8', '#10B981', '#F59E0B', '#E20039', '#64748B'] }}
+        }}], {{
+          paper_bgcolor: 'transparent',
+          margin: {{ l: 20, r: 20, t: 20, b: 20 }},
+          showlegend: false,
+          font: {{ color: '#E2E8F0', size: 11 }}
+        }}, {{ responsive: true, displayModeBar: false }});
+      }}
 
       const liabLabels = ['Deudas', 'Compromisos Técnicos', 'Previsiones', 'Patrimonio Neto'];
       const liabVals = [c.deudas || 0, c.compromisos_tecnicos || 0, c.previsiones || 0, Math.max(0, c.patrimonio_neto || 0)];
 
-      Plotly.newPlot('ciaLiabDonut', [{{
-        labels: liabLabels,
-        values: liabVals,
-        hole: 0.45,
-        type: 'pie',
-        textinfo: 'label+percent',
-        marker: {{ colors: ['#F87171', '#C084FC', '#FB923C', '#2DD4BF'] }}
-      }}], {{
-        paper_bgcolor: 'transparent',
-        margin: {{ l: 20, r: 20, t: 20, b: 20 }},
-        showlegend: false,
-        font: {{ color: '#E2E8F0', size: 11 }}
-      }}, {{ responsive: true, displayModeBar: false }});
+      if (document.getElementById('ciaLiabDonut')) {{
+        Plotly.newPlot('ciaLiabDonut', [{{
+          labels: liabLabels,
+          values: liabVals,
+          hole: 0.45,
+          type: 'pie',
+          textinfo: 'label+percent',
+          marker: {{ colors: ['#F87171', '#C084FC', '#FB923C', '#2DD4BF'] }}
+        }}], {{
+          paper_bgcolor: 'transparent',
+          margin: {{ l: 20, r: 20, t: 20, b: 20 }},
+          showlegend: false,
+          font: {{ color: '#E2E8F0', size: 11 }}
+        }}, {{ responsive: true, displayModeBar: false }});
+      }}
     }}
 
     // ----------------------------------------------------
@@ -3254,7 +3260,9 @@ def generate_html():
         legend: {{ orientation: 'h', y: 1.15, x: 0.5, xanchor: 'center', font: {{ color: '#E2E8F0', size: 11 }} }}
       }};
 
-      Plotly.newPlot('subramosBarChart', [tracePrimas, traceLoss], layout, {{ responsive: true, displayModeBar: false }});
+      if (document.getElementById('subramosBarChart')) {{
+        Plotly.newPlot('subramosBarChart', [tracePrimas, traceLoss], layout, {{ responsive: true, displayModeBar: false }});
+      }}
 
       // Subramos table
       const tbody = document.getElementById('subramosTableBody');
@@ -4084,8 +4092,6 @@ def generate_html():
         '5.01.04.04.04.17.00.00', '5.01.04.04.04.20.00.00'
       ];
 
-      const ranking = [];
-
       const processSubMap = (sub_map) => {{
         let totEmit = 0.0, totCed = 0.0, totAnul = 0.0;
         let totVarCargo = 0.0, totVarLib = 0.0;
@@ -4706,32 +4712,36 @@ def generate_html():
       }}
 
       // Update Donut Chart
-      document.getElementById('invDonutSubtitle').innerText = `${{title}} (${{formatARS(totInv)}})`;
+      const subTitleEl = document.getElementById('invDonutSubtitle');
+      if (subTitleEl) subTitleEl.innerText = `${{title}} (${{formatARS(totInv)}})`;
       
-      if (!invs || invs.length === 0) {{
-        Plotly.newPlot('investmentsPieChart', [], {{
-          paper_bgcolor: 'transparent',
-          annotations: [{{ text: 'Sin datos de inversiones', showarrow: false, font: {{ color: '#94A3B8', size: 14 }} }}]
-        }}, {{ responsive: true, displayModeBar: false }});
-      }} else {{
-        const colors = ['#38BDF8', '#10B981', '#F59E0B', '#C084FC', '#FB923C', '#F43F5E', '#A855F7', '#64748B', '#06B6D4'];
-        Plotly.newPlot('investmentsPieChart', [{{
-          labels: invs.map(i => i.desc_cuenta),
-          values: invs.map(i => i.importe),
-          hole: 0.45,
-          type: 'pie',
-          textinfo: 'label+percent',
-          textposition: 'inside',
-          marker: {{ colors: colors }},
-          customdata: invs.map(i => formatARS(i.importe)),
-          hovertemplate: '<b>%{{label}}</b><br>Importe: <b>%{{customdata}}</b><br>Participación: <b>%{{percent}}</b><extra></extra>'
-        }}], {{
-          paper_bgcolor: 'transparent',
-          plot_bgcolor: 'transparent',
-          margin: {{ l: 15, r: 15, t: 15, b: 15 }},
-          showlegend: false,
-          font: {{ color: '#E2E8F0', size: 11, family: 'Sora' }}
-        }}, {{ responsive: true, displayModeBar: false }});
+      const dChart = document.getElementById('investmentsDonutChart');
+      if (dChart) {{
+        if (!invs || invs.length === 0) {{
+          Plotly.newPlot('investmentsDonutChart', [], {{
+            paper_bgcolor: 'transparent',
+            annotations: [{{ text: 'Sin datos de inversiones', showarrow: false, font: {{ color: '#94A3B8', size: 14 }} }}]
+          }}, {{ responsive: true, displayModeBar: false }});
+        }} else {{
+          const colors = ['#38BDF8', '#10B981', '#F59E0B', '#C084FC', '#FB923C', '#F43F5E', '#A855F7', '#64748B', '#06B6D4'];
+          Plotly.newPlot('investmentsDonutChart', [{{
+            labels: invs.map(i => i.desc_cuenta),
+            values: invs.map(i => i.importe),
+            hole: 0.45,
+            type: 'pie',
+            textinfo: 'label+percent',
+            textposition: 'inside',
+            marker: {{ colors: colors }},
+            customdata: invs.map(i => formatARS(i.importe)),
+            hovertemplate: '<b>%{{label}}</b><br>Importe: <b>%{{customdata}}</b><br>Participación: <b>%{{percent}}</b><extra></extra>'
+          }}], {{
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            margin: {{ l: 15, r: 15, t: 15, b: 15 }},
+            showlegend: false,
+            font: {{ color: '#E2E8F0', size: 11, family: 'Sora' }}
+          }}, {{ responsive: true, displayModeBar: false }});
+        }}
       }}
 
       renderInvTopRankings();
@@ -5261,7 +5271,9 @@ def generate_html():
         }}
       }};
 
-      Plotly.newPlot('managementRadarChart', data, layout, {{ responsive: true, displayModeBar: false }});
+      if (document.getElementById('managementRadarChart')) {{
+        Plotly.newPlot('managementRadarChart', data, layout, {{ responsive: true, displayModeBar: false }});
+      }}
 
       // Populate Axes Breakdown Cards
       const breakdownEl = document.getElementById('radarAxesBreakdown');
