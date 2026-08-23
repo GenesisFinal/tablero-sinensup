@@ -161,17 +161,20 @@ def generate_html():
       <button onclick="switchTab('rankings-ramos')" id="tabBtn-rankings-ramos" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-ranking-star text-amber-400"></i> 4. Rankings por Rama
       </button>
+      <button onclick="switchTab('analisis-ramo')" id="tabBtn-analisis-ramo" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-microscope text-cyan-400"></i> 5. Análisis por Ramo
+      </button>
       <button onclick="switchTab('inversiones-finanzas')" id="tabBtn-inversiones-finanzas" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-chart-line"></i> 5. Inversiones y Finanzas
+        <i class="fa-solid fa-chart-line"></i> 6. Inversiones y Finanzas
       </button>
       <button onclick="switchTab('solvencia-ratios')" id="tabBtn-solvencia-ratios" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-scale-balanced"></i> 6. Solvencia y Ratios SSN
+        <i class="fa-solid fa-scale-balanced"></i> 7. Solvencia y Ratios SSN
       </button>
       <button onclick="switchTab('ratios-gestion')" id="tabBtn-ratios-gestion" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-gauge-high"></i> 7. Ratios de Gestión
+        <i class="fa-solid fa-gauge-high"></i> 8. Ratios de Gestión
       </button>
       <button onclick="switchTab('balances')" id="tabBtn-balances" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 8. Balances Contables
+        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 9. Balances Contables
       </button>
     </div>
   </header>
@@ -1547,6 +1550,197 @@ def generate_html():
           <span><b>* Nota sobre Resultado Financiero:</b> Refleja el Resultado Financiero Global del Balance General de la aseguradora o grupo económico (la SSN no distribuye las rentas de títulos, inversiones ni el RECPAM por subramo).</span>
         </p>
       </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 5: ANÁLISIS TÉCNICO Y GESTIÓN POR RAMO (DEEP DIVE) -->
+    <!-- ======================================================== -->
+    <section id="tab-analisis-ramo" class="hidden space-y-6">
+      
+      <!-- Hierarchical Selector Header (Macro-Sección -> Ramo Agrupado -> Subramo / Todo el Ramo) -->
+      <div class="glass-card header-card-sticky p-5 rounded-xl border-l-4 border-l-cyan-500 flex flex-col gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-3">
+              <h2 id="arSelectedTitle" class="text-lg font-bold text-white">Análisis Técnico y Gestión por Ramo</h2>
+              <span id="arSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Subramos SSN</span>
+            </div>
+            <p id="arSelectedSubtitle" class="text-xs text-slate-400 mt-1">Estructura de costos, ratios de suscripción, Combined Ratio y margen técnico de cada ramo</p>
+          </div>
+
+          <!-- Mode Switch: Grupos vs Aseguradoras -->
+          <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
+            <button type="button" onclick="setAnalisisRamosMode('groups')" id="arModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 transition-all shadow-md shadow-cyan-500/20 flex items-center gap-1.5">
+              <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores
+            </button>
+            <button type="button" onclick="setAnalisisRamosMode('companies')" id="arModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-Tier Navigation Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-800">
+          <!-- 1. Macro Sección -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <i class="fa-solid fa-layer-group text-cyan-400"></i> 1. Macro-Sección:
+            </label>
+            <div id="arSectionButtons" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- 2. Ramo Agrupado -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <i class="fa-solid fa-folder-tree text-emerald-400"></i> 2. Ramo Agrupado:
+            </label>
+            <div id="arGroupButtons" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <!-- 3. Apertura de Subramo -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[11px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <i class="fa-solid fa-filter text-amber-400"></i> 3. Desglose de Subramo:
+            </label>
+            <select id="arSubramoSelect" onchange="setAnalisisSubramo(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400 font-mono"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCORECARD DEL RAMO (8 TARJETAS KPI DE MERCADO CONSOLIDADO) -->
+      <div class="glass-card p-5 rounded-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Scorecard Técnico del Ramo (Mercado Consolidado)</h3>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono"><span id="arEntitiesCount" class="font-bold text-white">0</span> operadores activos</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+          <!-- 1. Primas Devengadas -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Primas Devengadas</div>
+            <div id="arKpiPrimasDev" class="text-sm sm:text-base font-bold font-mono text-cyan-300 mt-1">$0</div>
+            <div id="arKpiPrimasEmitSub" class="text-[9px] text-slate-400 mt-0.5">$0 Emitidas</div>
+          </div>
+
+          <!-- 2. Ratio Combinado -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Ratio Combinado</div>
+            <div id="arKpiCombined" class="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">0.0%</div>
+            <div id="arKpiCombinedStatus" class="text-[9px] font-bold text-emerald-400 mt-0.5">● Superávit</div>
+          </div>
+
+          <!-- 3. Loss Ratio -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Loss Ratio</div>
+            <div id="arKpiLoss" class="text-sm sm:text-base font-bold font-mono text-rose-300 mt-1">0.0%</div>
+            <div id="arKpiSiniestrosSub" class="text-[9px] text-slate-400 mt-0.5">$0 Siniestros</div>
+          </div>
+
+          <!-- 4. Costo Adquisición -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Costo Adquisición</div>
+            <div id="arKpiAcq" class="text-sm sm:text-base font-bold font-mono text-amber-300 mt-1">0.0%</div>
+            <div id="arKpiComisSub" class="text-[9px] text-slate-400 mt-0.5">Comisiones PAS</div>
+          </div>
+
+          <!-- 5. Costo Explotación -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Costo Explotación</div>
+            <div id="arKpiExp" class="text-sm sm:text-base font-bold font-mono text-sky-300 mt-1">0.0%</div>
+            <div id="arKpiAdminSub" class="text-[9px] text-slate-400 mt-0.5">Gastos Admin</div>
+          </div>
+
+          <!-- 6. Margen Técnico -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Margen Técnico</div>
+            <div id="arKpiMargenTec" class="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">0.0%</div>
+            <div id="arKpiResTecSub" class="text-[9px] text-slate-400 mt-0.5">$0 Resultado</div>
+          </div>
+
+          <!-- 7. Tasa Retención Reaseguro -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Retención Reaseg.</div>
+            <div id="arKpiRetencion" class="text-sm sm:text-base font-bold font-mono text-indigo-300 mt-1">0.0%</div>
+            <div id="arKpiCesionSub" class="text-[9px] text-slate-400 mt-0.5">0.0% Cesión</div>
+          </div>
+
+          <!-- 8. Tasa Anulación -->
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Anulaciones</div>
+            <div id="arKpiAnulacion" class="text-sm sm:text-base font-bold font-mono text-slate-300 mt-1">0.0%</div>
+            <div id="arKpiAnulSub" class="text-[9px] text-slate-400 mt-0.5">s/ Primas Emit.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRÁFICO DE BARRAS APILADAS: DESGLOSE DEL RATIO COMBINADO (TOP 15 OPERADORES) -->
+      <div class="glass-card p-5 rounded-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-column text-cyan-400"></i> Desglose de Eficiencia Técnica y Ratio Combinado (Top 15 Operadores del Ramo)
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Siniestralidad Neta + Comisiones de Producción + Gastos de Explotación vs Línea de Equilibrio del 100%</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Siniestros %</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Comisiones %</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-sky-400"></span> Admin %</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-400 border border-red-400"></span> Límite 100%</span>
+          </div>
+        </div>
+        <div id="analisisRamosStackedChart" class="w-full h-80"></div>
+      </div>
+
+      <!-- TABLA INTEGRAL DE SUSCRIPCIÓN Y GESTIÓN EN EL RAMO -->
+      <div class="glass-card p-5 rounded-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-cyan-400"></i> Tabla Integral de Suscripción y Ratios de Gestión en el Ramo
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Desempeño técnico completo de todas las entidades con producción en los subramos seleccionados</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="relative w-56">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input type="text" id="arTableSearch" oninput="filterAnalisisRankingTable(this.value)" placeholder="Filtrar operador..." 
+                     class="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 font-normal">
+            </div>
+            <button onclick="exportAnalisisRamosCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+              <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-x-auto max-h-[600px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px] font-mono">
+              <tr>
+                <th class="py-2.5 px-2 text-center w-8">#</th>
+                <th class="py-2.5 px-2 text-left w-52">Aseguradora / Grupo Económico</th>
+                <th class="py-2.5 px-2 text-center w-20">Tipo / Cías</th>
+                <th class="py-2.5 px-2 text-right font-bold text-white">Primas Emitidas</th>
+                <th class="py-2.5 px-2 text-right font-bold text-cyan-300">Primas Devengadas</th>
+                <th class="py-2.5 px-2 text-right w-16">Loss Ratio</th>
+                <th class="py-2.5 px-2 text-right w-16">Costo Adq.</th>
+                <th class="py-2.5 px-2 text-right w-16">Costo Expl.</th>
+                <th class="py-2.5 px-2 text-right w-20 font-bold">Combined Ratio</th>
+                <th class="py-2.5 px-2 text-right font-bold">Res. Técnico</th>
+                <th class="py-2.5 px-2 text-right w-16">Margen Téc.</th>
+                <th class="py-2.5 px-2 text-right w-16">Retención</th>
+                <th class="py-2.5 px-2 text-center w-16">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="arTableBody" class="divide-y divide-slate-800/60 font-mono text-[11px]"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
     <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador (Universal) -->
     <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1628,6 +1822,11 @@ def generate_html():
       ramosRankSubramo: 'all',
       ramosRankMode: 'groups',
       ramosRankSearchQuery: '',
+      analisisRamosSections: ['patrimoniales'],
+      analisisRamosGroups: ['autos'],
+      analisisRamosSubramo: 'all',
+      analisisRamosMode: 'groups',
+      analisisRamosSearchQuery: '',
       ramosScope: 'cia',
       invScope: 'cia',
       invTopMetric: 'activo',
@@ -1834,6 +2033,7 @@ def generate_html():
       setupSearchAutocomplete();
       initBalancesSubramos();
       initRamosRankingsTab();
+      initAnalisisRamosTab();
       renderAll();
     }}
 
@@ -2244,7 +2444,7 @@ def generate_html():
 
     function switchTab(tabId) {{
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances'].forEach(id => {{
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances'].forEach(id => {{
         const el = document.getElementById(`tab-${{id}}`);
         const btn = document.getElementById(`tabBtn-${{id}}`);
         if (!el || !btn) return;
@@ -2270,6 +2470,7 @@ def generate_html():
       renderCompanyDetails();
       renderRamosTab();
       renderRamosRankingsTab();
+      renderAnalisisRamosTab();
       renderInvestmentsTab();
       renderSolvencyTab();
       renderManagementTab();
@@ -3618,7 +3819,689 @@ def generate_html():
     }}
 
     // ----------------------------------------------------
-    // TAB 5 RENDER: INVERSIONES Y FINANZAS
+    // TAB 5 RENDER: ANÁLISIS TÉCNICO Y GESTIÓN POR RAMO
+    // ----------------------------------------------------
+    function initAnalisisRamosTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return;
+
+      const tax = data.ramos_taxonomy;
+      const allSecKeys = Object.keys(tax);
+
+      // Validate selected sections
+      if (!state.analisisRamosSections || state.analisisRamosSections.length === 0) {{
+        state.analisisRamosSections = ['patrimoniales'];
+      }}
+
+      // 1. Render Section Buttons (Multi-Select)
+      const secContainer = document.getElementById('arSectionButtons');
+      if (secContainer) {{
+        const isAllSelected = allSecKeys.every(k => state.analisisRamosSections.includes(k));
+        let secHtml = `
+          <button onclick="toggleAnalisisSection('all')" 
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${{
+                    isAllSelected ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }}">
+            <i class="fa-solid fa-globe"></i>
+            <span>TODAS</span>
+          </button>
+        `;
+
+        secHtml += allSecKeys.map(secKey => {{
+          const sec = tax[secKey];
+          const isSelected = state.analisisRamosSections.includes(secKey);
+          return `
+            <button onclick="toggleAnalisisSection('${{secKey}}')" 
+                    class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${{
+                      isSelected ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    }}">
+              <i class="fa-solid ${{sec.icon || 'fa-folder'}}"></i>
+              <span>${{sec.name}}</span>
+              <span class="text-[10px] opacity-70">${{isSelected ? '✓' : '+'}}</span>
+            </button>
+          `;
+        }}).join('');
+        secContainer.innerHTML = secHtml;
+      }}
+
+      // 2. Render Group Buttons for active sections (Multi-Select)
+      let availableGroups = [];
+      state.analisisRamosSections.forEach(secKey => {{
+        const sec = tax[secKey];
+        if (sec && sec.ramos) {{
+          Object.entries(sec.ramos).forEach(([gid, g]) => {{
+            if (!availableGroups.some(x => x.id === gid)) {{
+              availableGroups.push(g);
+            }}
+          }});
+        }}
+      }});
+
+      const validGroupIds = availableGroups.map(g => g.id);
+      state.analisisRamosGroups = state.analisisRamosGroups.filter(gid => validGroupIds.includes(gid));
+      if (state.analisisRamosGroups.length === 0 && availableGroups.length > 0) {{
+        state.analisisRamosGroups = [availableGroups[0].id];
+      }}
+
+      const grpContainer = document.getElementById('arGroupButtons');
+      if (grpContainer) {{
+        const isAllGroupsSelected = availableGroups.length > 0 && availableGroups.every(g => state.analisisRamosGroups.includes(g.id));
+        let grpHtml = `
+          <button onclick="toggleAnalisisGroup('all')" 
+                  class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${{
+                    isAllGroupsSelected ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }}">
+            <span>🌟 TODOS (${{availableGroups.length}})</span>
+          </button>
+        `;
+
+        grpHtml += availableGroups.map(g => {{
+          const isSelected = state.analisisRamosGroups.includes(g.id);
+          return `
+            <button onclick="toggleAnalisisGroup('${{g.id}}')" 
+                    class="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${{
+                      isSelected ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    }}">
+              <span>${{g.name}}</span>
+              <span class="text-[10px] opacity-70">${{isSelected ? '✓' : '+'}}</span>
+            </button>
+          `;
+        }}).join('');
+        grpContainer.innerHTML = grpHtml;
+      }}
+
+      // 3. Populate Subramo Select dropdown
+      const subSelect = document.getElementById('arSubramoSelect');
+      if (subSelect) {{
+        const catalog = {{}};
+        (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+
+        let activeSubramos = [];
+        availableGroups.filter(g => state.analisisRamosGroups.includes(g.id)).forEach(g => {{
+          (g.subramos || []).forEach(scod => {{
+            if (!activeSubramos.includes(scod)) activeSubramos.push(scod);
+          }});
+        }});
+        activeSubramos.sort();
+
+        let opts = `<option value="all">🌟 CONSOLIDADO: TODOS LOS SUBRAMOS SELECCIONADOS (${{activeSubramos.length}})</option>`;
+        activeSubramos.forEach(scod => {{
+          const sdesc = catalog[scod] || scod;
+          opts += `<option value="${{scod}}">${{scod}} - ${{sdesc}}</option>`;
+        }});
+        subSelect.innerHTML = opts;
+        subSelect.value = state.analisisRamosSubramo || 'all';
+      }}
+    }}
+
+    function toggleAnalisisSection(sectionId) {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return;
+      const allSecKeys = Object.keys(data.ramos_taxonomy);
+
+      if (sectionId === 'all') {{
+        const isAll = allSecKeys.every(k => state.analisisRamosSections.includes(k));
+        state.analisisRamosSections = isAll ? ['patrimoniales'] : [...allSecKeys];
+      }} else {{
+        if (state.analisisRamosSections.includes(sectionId)) {{
+          if (state.analisisRamosSections.length > 1) {{
+            state.analisisRamosSections = state.analisisRamosSections.filter(k => k !== sectionId);
+          }}
+        }} else {{
+          state.analisisRamosSections.push(sectionId);
+        }}
+      }}
+      state.analisisRamosSubramo = 'all';
+      initAnalisisRamosTab();
+      renderAnalisisRamosTab();
+    }}
+
+    function toggleAnalisisGroup(groupId) {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return;
+
+      let availableGroupIds = [];
+      state.analisisRamosSections.forEach(secKey => {{
+        const sec = data.ramos_taxonomy[secKey];
+        if (sec && sec.ramos) {{
+          Object.keys(sec.ramos).forEach(gid => {{
+            if (!availableGroupIds.includes(gid)) availableGroupIds.push(gid);
+          }});
+        }}
+      }});
+
+      if (groupId === 'all') {{
+        const isAll = availableGroupIds.every(gid => state.analisisRamosGroups.includes(gid));
+        state.analisisRamosGroups = isAll ? (availableGroupIds.length > 0 ? [availableGroupIds[0]] : []) : [...availableGroupIds];
+      }} else {{
+        if (state.analisisRamosGroups.includes(groupId)) {{
+          if (state.analisisRamosGroups.length > 1) {{
+            state.analisisRamosGroups = state.analisisRamosGroups.filter(g => g !== groupId);
+          }}
+        }} else {{
+          state.analisisRamosGroups.push(groupId);
+        }}
+      }}
+      state.analisisRamosSubramo = 'all';
+      initAnalisisRamosTab();
+      renderAnalisisRamosTab();
+    }}
+
+    function setAnalisisSubramo(subramoCode) {{
+      state.analisisRamosSubramo = subramoCode;
+      renderAnalisisRamosTab();
+    }}
+
+    function setAnalisisRamosMode(mode) {{
+      state.analisisRamosMode = mode;
+      const btnG = document.getElementById('arModeBtn-groups');
+      const btnC = document.getElementById('arModeBtn-companies');
+
+      if (mode === 'groups') {{
+        if (btnG) btnG.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 transition-all shadow-md shadow-cyan-500/20 flex items-center gap-1.5';
+        if (btnC) btnC.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5';
+      }} else {{
+        if (btnG) btnG.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5';
+        if (btnC) btnC.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 text-slate-950 transition-all shadow-md shadow-cyan-500/20 flex items-center gap-1.5';
+      }}
+      renderAnalisisRamosTab();
+    }}
+
+    function filterAnalisisRankingTable(query) {{
+      state.analisisRamosSearchQuery = query || '';
+      renderAnalisisRankingTableOnly();
+    }}
+
+    function getTargetAnalisisSubramos() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return [];
+      const tax = data.ramos_taxonomy;
+
+      if (state.analisisRamosSubramo && state.analisisRamosSubramo !== 'all') {{
+        return [state.analisisRamosSubramo];
+      }}
+
+      let allSubs = [];
+      state.analisisRamosSections.forEach(secKey => {{
+        const sec = tax[secKey];
+        if (sec && sec.ramos) {{
+          Object.entries(sec.ramos).forEach(([gid, g]) => {{
+            if (state.analisisRamosGroups.includes(gid)) {{
+              (g.subramos || []).forEach(scod => {{
+                if (!allSubs.includes(scod)) allSubs.push(scod);
+              }});
+            }}
+          }});
+        }}
+      }});
+      return allSubs;
+    }}
+
+    function computeAnalisisRamosData() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return {{ total_emitidas: 0, total_devengadas: 0, total_siniestros: 0, loss_ratio: 0, combined_ratio: 0, acq_ratio: 0, exp_ratio: 0, margen_tecnico: 0, resultado_tecnico: 0, retention_rate: 0, cancellation_rate: 0, entities_count: 0, ranking: [] }};
+
+      const targetSubs = getTargetAnalisisSubramos();
+      const ciasSub = data.cias_balances_subramos || {{}};
+      const groupsSub = data.groups_balances_subramos || {{}};
+      const ciasByCode = data.companies_by_code || {{}};
+      const groupsById = data.groups_by_id || {{}};
+
+      const recupKeys = [
+        '5.01.04.04.04.01.00.00', '5.01.04.04.04.06.00.00', '5.01.04.04.04.07.00.00',
+        '5.01.04.04.04.08.00.00', '5.01.04.04.04.09.00.00', '5.01.04.04.04.10.00.00',
+        '5.01.04.04.04.14.00.00', '5.01.04.04.04.15.00.00', '5.01.04.04.04.16.00.00',
+        '5.01.04.04.04.17.00.00', '5.01.04.04.04.20.00.00'
+      ];
+
+      const ranking = [];
+
+      const processSubMap = (sub_map) => {{
+        let totEmit = 0.0, totCed = 0.0, totAnul = 0.0;
+        let totVarCargo = 0.0, totVarLib = 0.0;
+        let totSinCargo = 0.0, totRescates = 0.0, totSinRecup = 0.0;
+        let totGtosProdCargo = 0.0, totRecupProd = 0.0, totGtosExpl = 0.0;
+        let totIngTec = 0.0, totEgrTec = 0.0;
+
+        targetSubs.forEach(s => {{
+          if (sub_map[s]) {{
+            const d = sub_map[s];
+            totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+            totCed += (d['4.01.03.00.00.00.00.00'] || 0.0);
+            totAnul += (d['4.01.04.00.00.00.00.00'] || 0.0);
+            totVarCargo += (d['4.01.05.00.00.00.00.00'] || 0.0);
+            totVarLib += ((d['5.01.04.04.04.11.00.00'] || 0.0) + (d['5.01.04.04.04.12.00.00'] || 0.0) + (d['5.01.04.04.04.13.00.00'] || 0.0));
+            
+            totSinCargo += (d['4.01.01.00.00.00.00.00'] || 0.0);
+            totRescates += (d['4.01.02.00.00.00.00.00'] || 0.0);
+            recupKeys.forEach(rk => {{ totSinRecup += (d[rk] || 0.0); }});
+
+            totGtosProdCargo += (d['4.01.06.00.00.00.00.00'] || 0.0);
+            totRecupProd += (d['5.01.03.00.00.00.00.00'] || 0.0);
+            totGtosExpl += (d['4.01.07.00.00.00.00.00'] || 0.0);
+
+            totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
+            totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+          }}
+        }});
+
+        const varCompTec = totVarCargo - totVarLib;
+        const primasDev = totEmit - (totCed + totAnul) - varCompTec;
+        const sinNetos = Math.max(0.0, (totSinCargo + totRescates) - totSinRecup);
+        const gtosProd = Math.max(0.0, totGtosProdCargo - totRecupProd);
+        const gtosExpl = totGtosExpl;
+        const resTec = totIngTec - totEgrTec;
+
+        const baseDev = primasDev > 0 ? primasDev : (totEmit > 0 ? totEmit : 1.0);
+        const lossRatio = (sinNetos / baseDev) * 100.0;
+        const acqRatio = (gtosProd / baseDev) * 100.0;
+        const expRatio = (gtosExpl / baseDev) * 100.0;
+        const combinedRatio = lossRatio + acqRatio + expRatio;
+        const margenTec = (resTec / baseDev) * 100.0;
+        const retentionRate = totEmit > 0 ? ((totEmit - totCed) / totEmit * 100.0) : 100.0;
+        const cessionRate = totEmit > 0 ? (totCed / totEmit * 100.0) : 0.0;
+        const cancellationRate = totEmit > 0 ? (totAnul / totEmit * 100.0) : 0.0;
+
+        return {{
+          emitidas: totEmit,
+          cedidas: totCed,
+          anulaciones: totAnul,
+          devengadas: primasDev,
+          siniestros: sinNetos,
+          gtos_produccion: gtosProd,
+          gtos_explotacion: gtosExpl,
+          resultado_tecnico: resTec,
+          loss_ratio: lossRatio,
+          acq_ratio: acqRatio,
+          exp_ratio: expRatio,
+          combined_ratio: combinedRatio,
+          margen_tecnico: margenTec,
+          retention_rate: retentionRate,
+          cession_rate: cessionRate,
+          cancellation_rate: cancellationRate
+        }};
+      }};
+
+      if (state.analisisRamosMode === 'companies') {{
+        Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
+          const m = processSubMap(sub_map);
+          if (m.emitidas > 0 || m.devengadas > 0) {{
+            const c = ciasByCode[cod_cia] || {{}};
+            ranking.push({{
+              id: cod_cia,
+              code: cod_cia,
+              name: c.razon_social || cod_cia,
+              tipo: c.tipo_entidad || '',
+              ...m
+            }});
+          }}
+        }});
+      }} else {{
+        Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
+          const m = processSubMap(sub_map);
+          if (m.emitidas > 0 || m.devengadas > 0) {{
+            const g = groupsById[gid] || {{}};
+
+            let activeCiasCount = 0;
+            const members = g.members || [];
+            members.forEach(mbr => {{
+              const mCode = mbr.cod_cia;
+              if (ciasSub[mCode]) {{
+                const sM = ciasSub[mCode];
+                const emitM = targetSubs.reduce((acc, s) => acc + (sM[s] ? (sM[s]['5.01.01.00.00.00.00.00'] || 0.0) : 0.0), 0.0);
+                if (emitM > 0) activeCiasCount++;
+              }}
+            }});
+            const tipoLabel = (activeCiasCount === members.length) 
+              ? `${{activeCiasCount}} Cías` 
+              : `${{activeCiasCount}} de ${{members.length}} Cías`;
+
+            ranking.push({{
+              id: gid,
+              code: gid,
+              name: g.name || gid,
+              tipo: tipoLabel,
+              ...m
+            }});
+          }}
+        }});
+      }}
+
+      // Consolidate totals for entire market in this branch
+      const totEmit = ranking.reduce((acc, r) => acc + r.emitidas, 0.0);
+      const totCed = ranking.reduce((acc, r) => acc + r.cedidas, 0.0);
+      const totAnul = ranking.reduce((acc, r) => acc + r.anulaciones, 0.0);
+      const totDev = ranking.reduce((acc, r) => acc + r.devengadas, 0.0);
+      const totSin = ranking.reduce((acc, r) => acc + r.siniestros, 0.0);
+      const totProd = ranking.reduce((acc, r) => acc + r.gtos_produccion, 0.0);
+      const totExpl = ranking.reduce((acc, r) => acc + r.gtos_explotacion, 0.0);
+      const totResTec = ranking.reduce((acc, r) => acc + r.resultado_tecnico, 0.0);
+
+      const baseDevMkt = totDev > 0 ? totDev : (totEmit > 0 ? totEmit : 1.0);
+      const mktLoss = (totSin / baseDevMkt) * 100.0;
+      const mktAcq = (totProd / baseDevMkt) * 100.0;
+      const mktExp = (totExpl / baseDevMkt) * 100.0;
+      const mktCombined = mktLoss + mktAcq + mktExp;
+      const mktMargenTec = (totResTec / baseDevMkt) * 100.0;
+      const mktRetention = totEmit > 0 ? ((totEmit - totCed) / totEmit * 100.0) : 100.0;
+      const mktCession = totEmit > 0 ? (totCed / totEmit * 100.0) : 0.0;
+      const mktCancellation = totEmit > 0 ? (totAnul / totEmit * 100.0) : 0.0;
+
+      ranking.sort((a, b) => b.devengadas - a.devengadas);
+
+      return {{
+        total_emitidas: totEmit,
+        total_devengadas: totDev,
+        total_siniestros: totSin,
+        total_gtos_produccion: totProd,
+        total_gtos_explotacion: totExpl,
+        loss_ratio: mktLoss,
+        acq_ratio: mktAcq,
+        exp_ratio: mktExp,
+        combined_ratio: mktCombined,
+        margen_tecnico: mktMargenTec,
+        resultado_tecnico: totResTec,
+        retention_rate: mktRetention,
+        cession_rate: mktCession,
+        cancellation_rate: mktCancellation,
+        entities_count: ranking.length,
+        ranking: ranking
+      }};
+    }}
+
+    let currentAnalisisRamosData = null;
+
+    function renderAnalisisRamosTab() {{
+      initAnalisisRamosTab();
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const tax = data.ramos_taxonomy || {{}};
+      const titleEl = document.getElementById('arSelectedTitle');
+      const badgeEl = document.getElementById('arSelectedBadge');
+      const subTitleEl = document.getElementById('arSelectedSubtitle');
+
+      if (titleEl) {{
+        if (state.analisisRamosSubramo && state.analisisRamosSubramo !== 'all') {{
+          const catalog = {{}};
+          (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+          titleEl.innerText = `${{state.analisisRamosSubramo}} - ${{catalog[state.analisisRamosSubramo] || 'Subramo'}}`;
+          if (badgeEl) badgeEl.innerText = 'Subramo Específico';
+        }} else {{
+          const grpNames = state.analisisRamosGroups.map(gid => {{
+            for (const secKey of state.analisisRamosSections) {{
+              if (tax[secKey] && tax[secKey].ramos && tax[secKey].ramos[gid]) {{
+                return tax[secKey].ramos[gid].name;
+              }}
+            }}
+            return gid;
+          }});
+          titleEl.innerText = `Análisis Técnico: ${{grpNames.join(' + ') || 'Ramos Seleccionados'}}`;
+          if (badgeEl) badgeEl.innerText = `${{state.analisisRamosGroups.length}} Ramo(s) Consolidados`;
+        }}
+      }}
+
+      currentAnalisisRamosData = computeAnalisisRamosData();
+      const rData = currentAnalisisRamosData;
+
+      // Update KPI Cards
+      const countEl = document.getElementById('arEntitiesCount');
+      if (countEl) countEl.innerText = rData.entities_count;
+
+      const kpiDevEl = document.getElementById('arKpiPrimasDev');
+      if (kpiDevEl) kpiDevEl.innerText = formatARS(rData.total_devengadas);
+
+      const kpiEmitSubEl = document.getElementById('arKpiPrimasEmitSub');
+      if (kpiEmitSubEl) kpiEmitSubEl.innerText = `${{formatARS(rData.total_emitidas)}} Emitidas`;
+
+      const kpiCombEl = document.getElementById('arKpiCombined');
+      if (kpiCombEl) {{
+        kpiCombEl.innerText = formatPercent(rData.combined_ratio);
+        kpiCombEl.className = `text-sm sm:text-base font-bold font-mono mt-1 ${{rData.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      const kpiCombStatEl = document.getElementById('arKpiCombinedStatus');
+      if (kpiCombStatEl) {{
+        kpiCombStatEl.innerText = rData.combined_ratio <= 100 ? '● Superávit Técnico' : '● Déficit Técnico';
+        kpiCombStatEl.className = `text-[9px] font-bold mt-0.5 ${{rData.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      const kpiLossEl = document.getElementById('arKpiLoss');
+      if (kpiLossEl) kpiLossEl.innerText = formatPercent(rData.loss_ratio);
+
+      const kpiSinSubEl = document.getElementById('arKpiSiniestrosSub');
+      if (kpiSinSubEl) kpiSinSubEl.innerText = `${{formatARS(rData.total_siniestros)}} Siniestros`;
+
+      const kpiAcqEl = document.getElementById('arKpiAcq');
+      if (kpiAcqEl) kpiAcqEl.innerText = formatPercent(rData.acq_ratio);
+
+      const kpiComisSubEl = document.getElementById('arKpiComisSub');
+      if (kpiComisSubEl) kpiComisSubEl.innerText = `${{formatARS(rData.total_gtos_produccion)}} Comisiones`;
+
+      const kpiExpEl = document.getElementById('arKpiExp');
+      if (kpiExpEl) kpiExpEl.innerText = formatPercent(rData.exp_ratio);
+
+      const kpiAdminSubEl = document.getElementById('arKpiAdminSub');
+      if (kpiAdminSubEl) kpiAdminSubEl.innerText = `${{formatARS(rData.total_gtos_explotacion)}} Gastos Adm`;
+
+      const kpiMargenEl = document.getElementById('arKpiMargenTec');
+      if (kpiMargenEl) {{
+        kpiMargenEl.innerText = formatPercent(rData.margen_tecnico);
+        kpiMargenEl.className = `text-sm sm:text-base font-bold font-mono mt-1 ${{rData.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      const kpiResSubEl = document.getElementById('arKpiResTecSub');
+      if (kpiResSubEl) kpiResSubEl.innerText = `${{formatARS(rData.resultado_tecnico)}} Resultado`;
+
+      const kpiRetEl = document.getElementById('arKpiRetencion');
+      if (kpiRetEl) kpiRetEl.innerText = formatPercent(rData.retention_rate);
+
+      const kpiCesSubEl = document.getElementById('arKpiCesionSub');
+      if (kpiCesSubEl) kpiCesSubEl.innerText = `${{formatPercent(rData.cession_rate)}} Cesión Reaseg.`;
+
+      const kpiAnulEl = document.getElementById('arKpiAnulacion');
+      if (kpiAnulEl) kpiAnulEl.innerText = formatPercent(rData.cancellation_rate);
+
+      // Render Stacked Bar Chart & Table
+      renderAnalisisRamosChart(rData.ranking);
+      renderAnalisisRankingTableOnly();
+    }}
+
+    function renderAnalisisRamosChart(ranking) {{
+      const chartEl = document.getElementById('analisisRamosStackedChart');
+      if (!chartEl) return;
+
+      const top15 = (ranking || []).slice(0, 15).reverse();
+      if (top15.length === 0) {{
+        chartEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs">Sin datos disponibles para graficar</div>';
+        return;
+      }}
+
+      const names = top15.map(r => r.name.length > 22 ? r.name.slice(0, 20) + '...' : r.name);
+      const lossVals = top15.map(r => Math.max(0, Math.min(250, r.loss_ratio || 0)));
+      const acqVals = top15.map(r => Math.max(0, Math.min(250, r.acq_ratio || 0)));
+      const expVals = top15.map(r => Math.max(0, Math.min(250, r.exp_ratio || 0)));
+
+      const traceLoss = {{
+        x: lossVals,
+        y: names,
+        name: 'Siniestralidad Devengada %',
+        type: 'bar',
+        orientation: 'h',
+        marker: {{ color: '#F43F5E' }},
+        hovertemplate: '%{{y}}<br>Loss Ratio: %{{x:.1f}}%<extra></extra>'
+      }};
+
+      const traceAcq = {{
+        x: acqVals,
+        y: names,
+        name: 'Comisiones / Adquisición %',
+        type: 'bar',
+        orientation: 'h',
+        marker: {{ color: '#FBBF24' }},
+        hovertemplate: '%{{y}}<br>Comisiones: %{{x:.1f}}%<extra></extra>'
+      }};
+
+      const traceExp = {{
+        x: expVals,
+        y: names,
+        name: 'Gastos Administración %',
+        type: 'bar',
+        orientation: 'h',
+        marker: {{ color: '#38BDF8' }},
+        hovertemplate: '%{{y}}<br>Admin: %{{x:.1f}}%<extra></extra>'
+      }};
+
+      const maxVal = Math.max(120, Math.max(...top15.map(r => r.combined_ratio || 0)) * 1.1);
+
+      const layout = {{
+        barmode: 'stack',
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        font: {{ color: '#94A3B8', size: 10 }},
+        margin: {{ t: 20, b: 35, l: 150, r: 40 }},
+        showlegend: false,
+        xaxis: {{
+          gridcolor: '#1E293B',
+          zerolinecolor: '#334155',
+          ticksuffix: '%',
+          range: [0, Math.min(280, maxVal)]
+        }},
+        yaxis: {{
+          autorange: true,
+          automargin: true,
+          tickfont: {{ size: 10, color: '#E2E8F0' }}
+        }},
+        shapes: [
+          {{
+            type: 'line',
+            x0: 100,
+            x1: 100,
+            y0: -0.5,
+            y1: top15.length - 0.5,
+            line: {{ color: '#EF4444', width: 2, dash: 'dash' }}
+          }}
+        ],
+        annotations: [
+          {{
+            x: 100,
+            y: top15.length - 0.5,
+            text: '<b>Límite 100%</b>',
+            showarrow: false,
+            font: {{ color: '#EF4444', size: 9 }},
+            yshift: 12
+          }}
+        ]
+      }};
+
+      Plotly.newPlot('analisisRamosStackedChart', [traceLoss, traceAcq, traceExp], layout, {{ responsive: true, displayModeBar: false }});
+    }}
+
+    function renderAnalisisRankingTableOnly() {{
+      const tbody = document.getElementById('arTableBody');
+      if (!tbody || !currentAnalisisRamosData) return;
+
+      const q = (state.analisisRamosSearchQuery || '').toLowerCase().trim();
+      const filtered = currentAnalisisRamosData.ranking.filter(r => {{
+        if (!q) return true;
+        return r.name.toLowerCase().includes(q) || r.code.toLowerCase().includes(q);
+      }});
+
+      if (filtered.length === 0) {{
+        tbody.innerHTML = '<tr><td colspan="13" class="text-center py-6 text-slate-500">No se encontraron entidades con producción en este ramo</td></tr>';
+        return;
+      }}
+
+      tbody.innerHTML = filtered.map((r, i) => {{
+        const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
+        const isSelected = (state.analisisRamosMode === 'companies' && state.selectedCompanyCode === r.code) ||
+                           (state.analisisRamosMode === 'groups' && state.selectedGroupId === r.code);
+
+        let entityNameHtml = '';
+        if (state.analisisRamosMode === 'groups') {{
+          entityNameHtml = `
+            <div class="font-bold text-cyan-300 flex items-center gap-1.5">
+              <span class="truncate max-w-[260px]" title="${{r.name}}">${{r.name}}</span>
+              ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+            </div>
+          `;
+        }} else {{
+          entityNameHtml = `
+            <div class="font-bold text-white flex items-center gap-1.5">
+              <span class="font-mono text-xs text-slate-400 font-normal mr-1">[${{r.code}}]</span>
+              <span class="truncate max-w-[220px]" title="${{r.name}}">${{r.name}}</span>
+              ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+            </div>
+          `;
+        }}
+
+        const isSuperavit = (r.combined_ratio <= 100.0);
+
+        return `
+          <tr class="hover:bg-slate-800/60 ${{isSelected ? 'bg-cyan-500/20 border-l-4 border-l-cyan-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70 font-semibold' : '')}} cursor-pointer transition-colors">
+            <td class="py-2.5 px-2 text-center text-slate-400 font-mono">${{i + 1}}</td>
+            <td class="py-2.5 px-2">${{entityNameHtml}}</td>
+            <td class="py-2.5 px-2 text-center text-[10px] text-slate-300">${{r.tipo}}</td>
+            <td class="py-2.5 px-2 text-right font-bold text-white font-mono">${{formatARS(r.emitidas)}}</td>
+            <td class="py-2.5 px-2 text-right font-bold text-cyan-300 font-mono">${{formatARS(r.devengadas)}}</td>
+            <td class="py-2.5 px-2 text-right text-rose-300 font-mono">${{formatPercent(r.loss_ratio)}}</td>
+            <td class="py-2.5 px-2 text-right text-amber-300 font-mono">${{formatPercent(r.acq_ratio)}}</td>
+            <td class="py-2.5 px-2 text-right text-sky-300 font-mono">${{formatPercent(r.exp_ratio)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono">
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${{isSuperavit ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'}}">
+                ${{formatPercent(r.combined_ratio)}}
+              </span>
+            </td>
+            <td class="py-2.5 px-2 text-right font-mono font-bold ${{r.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(r.resultado_tecnico)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono font-semibold ${{r.margen_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(r.margen_tecnico)}}</td>
+            <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatPercent(r.retention_rate)}}</td>
+            <td class="py-2.5 px-2 text-center" onclick="event.stopPropagation()">
+              ${{state.analisisRamosMode === 'groups' ? `
+                <button onclick="openGroupModal('${{r.code}}')" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 transition-colors text-[9px] font-bold cursor-pointer">Ver Grupo</button>
+              ` : `
+                <button onclick="selectCompany('${{r.code}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold cursor-pointer">Ver Ficha</button>
+              `}}
+            </td>
+          </tr>
+        `;
+      }}).join('');
+    }}
+
+    function exportAnalisisRamosCSV() {{
+      if (!currentAnalisisRamosData || !currentAnalisisRamosData.ranking) return;
+
+      const headers = ['rank', 'codigo', 'nombre', 'tipo', 'primas_emitidas', 'primas_devengadas', 'loss_ratio', 'costo_adquisicion', 'costo_explotacion', 'combined_ratio', 'resultado_tecnico', 'margen_tecnico', 'retention_rate'];
+      let csv = headers.join(',') + '\\n';
+
+      currentAnalisisRamosData.ranking.forEach((r, idx) => {{
+        const row = [
+          idx + 1,
+          `"${{r.code}}"`,
+          `"${{r.name.replace(/"/g, '""')}}"`,
+          `"${{r.tipo}}"`,
+          r.emitidas || 0,
+          r.devengadas || 0,
+          (r.loss_ratio || 0).toFixed(2),
+          (r.acq_ratio || 0).toFixed(2),
+          (r.exp_ratio || 0).toFixed(2),
+          (r.combined_ratio || 0).toFixed(2),
+          r.resultado_tecnico || 0,
+          (r.margen_tecnico || 0).toFixed(2),
+          (r.retention_rate || 0).toFixed(2)
+        ];
+        csv += row.join(',') + '\\n';
+      }});
+
+      const blob = new Blob([csv], {{ type: 'text/csv;charset=utf-8;' }});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analisis_tecnico_ramos_${{state.analisisRamosSections.join('_')}}_${{state.analisisRamosMode}}.csv`;
+      a.click();
+    }}
+
+    // ----------------------------------------------------
+    // TAB 6 RENDER: INVERSIONES Y FINANZAS
     // ----------------------------------------------------
     function setInvScope(scope) {{
       state.invScope = scope;
@@ -5042,6 +5925,16 @@ def generate_html():
     window.filterRamosRankingTable = filterRamosRankingTable;
     window.renderRamosRankingsTab = renderRamosRankingsTab;
     window.exportRamosRankCSV = exportRamosRankCSV;
+    window.initAnalisisRamosTab = initAnalisisRamosTab;
+    window.toggleAnalisisSection = toggleAnalisisSection;
+    window.toggleAnalisisGroup = toggleAnalisisGroup;
+    window.setAnalisisSection = toggleAnalisisSection;
+    window.setAnalisisGroup = toggleAnalisisGroup;
+    window.setAnalisisSubramo = setAnalisisSubramo;
+    window.setAnalisisRamosMode = setAnalisisRamosMode;
+    window.filterAnalisisRankingTable = filterAnalisisRankingTable;
+    window.renderAnalisisRamosTab = renderAnalisisRamosTab;
+    window.exportAnalisisRamosCSV = exportAnalisisRamosCSV;
     window.setBalScope = setBalScope;
     window.setBalStatement = setBalStatement;
     window.setBalSubramo = setBalSubramo;
