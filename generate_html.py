@@ -1705,13 +1705,19 @@ def generate_html():
             <p class="text-xs text-slate-400 mt-0.5">Desempeño técnico completo de todas las entidades con producción en los subramos seleccionados</p>
           </div>
 
-          <div class="flex items-center gap-3">
-            <div class="relative w-56">
+          <div class="flex items-center gap-2">
+            <div class="relative w-48">
               <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
               <input type="text" id="arTableSearch" oninput="filterAnalisisRankingTable(this.value)" placeholder="Filtrar operador..." 
                      class="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 font-normal">
             </div>
-            <button onclick="exportAnalisisRamosCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+            <button onclick="document.getElementById('arTableSearch').value='La Segunda'; filterAnalisisRankingTable('La Segunda');" class="px-2.5 py-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-950 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer" title="Filtrar por La Segunda">
+              ★ La Segunda
+            </button>
+            <button onclick="document.getElementById('arTableSearch').value=''; filterAnalisisRankingTable('');" class="px-2 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs transition-all cursor-pointer">
+              Todos
+            </button>
+            <button onclick="exportAnalisisRamosCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
               <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar
             </button>
           </div>
@@ -3689,18 +3695,32 @@ def generate_html():
       const plotEl = document.getElementById('rrMarketSharePlot');
       if (!plotEl) return;
 
-      const top10 = ranking.slice(0, 10);
-      if (top10.length === 0) {{
+      if (!ranking || ranking.length === 0) {{
         plotEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs">No hay datos para graficar en esta selección</div>';
         return;
       }}
 
-      const othersEmit = ranking.slice(10).reduce((acc, r) => acc + r.emitidas, 0.0);
+      let top10 = ranking.slice(0, 10);
+      const rest = ranking.slice(10);
+      
+      // Check if La Segunda is outside top 10
+      const lsOutsideTop10 = rest.filter(r => (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda'));
+      let othersEmit = rest.filter(r => !(r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda')).reduce((acc, r) => acc + r.emitidas, 0.0);
+
       const labels = top10.map(r => r.name);
       const values = top10.map(r => r.emitidas);
+      const colors = ['#F59E0B', '#3B82F6', '#10B981', '#EC4899', '#8B5CF6', '#06B6D4', '#E11D48', '#84CC16', '#F97316', '#6366F1'];
+
+      lsOutsideTop10.forEach(ls => {{
+        labels.push(`★ ${{ls.name}}`);
+        values.push(ls.emitidas);
+        colors.push('#F59E0B');
+      }});
+
       if (othersEmit > 0) {{
         labels.push('Resto del Mercado');
         values.push(othersEmit);
+        colors.push('#475569');
       }}
 
       const data = [{{
@@ -3711,7 +3731,7 @@ def generate_html():
         hoverinfo: 'label+value+percent',
         hole: 0.45,
         marker: {{
-          colors: ['#F59E0B', '#3B82F6', '#10B981', '#EC4899', '#8B5CF6', '#06B6D4', '#E11D48', '#84CC16', '#F97316', '#6366F1', '#475569']
+          colors: colors
         }}
       }}];
 
@@ -4332,16 +4352,39 @@ def generate_html():
       const chartEl = document.getElementById('analisisRamosStackedChart');
       if (!chartEl) return;
 
-      const top15 = (ranking || []).slice(0, 15).reverse();
-      if (top15.length === 0) {{
+      if (!ranking || ranking.length === 0) {{
         chartEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs">Sin datos disponibles para graficar</div>';
         return;
       }}
 
-      const names = top15.map(r => r.name.length > 22 ? r.name.slice(0, 20) + '...' : r.name);
-      const lossVals = top15.map(r => Math.max(0, Math.min(250, r.loss_ratio || 0)));
-      const acqVals = top15.map(r => Math.max(0, Math.min(250, r.acq_ratio || 0)));
-      const expVals = top15.map(r => Math.max(0, Math.min(250, r.exp_ratio || 0)));
+      // 1. Identify all active La Segunda entities in this branch
+      const lsEntities = ranking.filter(r => (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda'));
+      
+      // 2. Select top 15 operators
+      let selectedOperators = ranking.slice(0, 15);
+
+      // 3. Guarantee that ANY active La Segunda entity is included in the comparison even if outside top 15
+      lsEntities.forEach(ls => {{
+        if (!selectedOperators.some(op => op.code === ls.code)) {{
+          selectedOperators.push(ls);
+        }}
+      }});
+
+      // 4. Reverse so top ranking appears at top of horizontal stacked chart
+      const chartList = [...selectedOperators].reverse();
+
+      const names = chartList.map(r => {{
+        const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
+        const pos = ranking.findIndex(x => x.code === r.code) + 1;
+        const cleanName = r.name.length > 20 ? r.name.slice(0, 18) + '...' : r.name;
+        return isLS ? `★ ${{cleanName}} (#${{pos}})` : `${{pos}}. ${{cleanName}}`;
+      }});
+
+      const lossVals = chartList.map(r => Math.max(0, Math.min(250, r.loss_ratio || 0)));
+      const acqVals = chartList.map(r => Math.max(0, Math.min(250, r.acq_ratio || 0)));
+      const expVals = chartList.map(r => Math.max(0, Math.min(250, r.exp_ratio || 0)));
+
+      const isLSArray = chartList.map(r => (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda'));
 
       const traceLoss = {{
         x: lossVals,
@@ -4349,7 +4392,13 @@ def generate_html():
         name: 'Siniestralidad Devengada %',
         type: 'bar',
         orientation: 'h',
-        marker: {{ color: '#F43F5E' }},
+        marker: {{ 
+          color: '#F43F5E',
+          line: {{
+            color: isLSArray.map(isLS => isLS ? '#F59E0B' : 'transparent'),
+            width: isLSArray.map(isLS => isLS ? 2 : 0)
+          }}
+        }},
         hovertemplate: '%{{y}}<br>Loss Ratio: %{{x:.1f}}%<extra></extra>'
       }};
 
@@ -4359,7 +4408,13 @@ def generate_html():
         name: 'Comisiones / Adquisición %',
         type: 'bar',
         orientation: 'h',
-        marker: {{ color: '#FBBF24' }},
+        marker: {{ 
+          color: '#FBBF24',
+          line: {{
+            color: isLSArray.map(isLS => isLS ? '#F59E0B' : 'transparent'),
+            width: isLSArray.map(isLS => isLS ? 2 : 0)
+          }}
+        }},
         hovertemplate: '%{{y}}<br>Comisiones: %{{x:.1f}}%<extra></extra>'
       }};
 
@@ -4369,18 +4424,26 @@ def generate_html():
         name: 'Gastos Administración %',
         type: 'bar',
         orientation: 'h',
-        marker: {{ color: '#38BDF8' }},
+        marker: {{ 
+          color: '#38BDF8',
+          line: {{
+            color: isLSArray.map(isLS => isLS ? '#F59E0B' : 'transparent'),
+            width: isLSArray.map(isLS => isLS ? 2 : 0)
+          }}
+        }},
         hovertemplate: '%{{y}}<br>Admin: %{{x:.1f}}%<extra></extra>'
       }};
 
-      const maxVal = Math.max(120, Math.max(...top15.map(r => r.combined_ratio || 0)) * 1.1);
+      const maxVal = Math.max(120, Math.max(...chartList.map(r => r.combined_ratio || 0)) * 1.1);
+      const dynamicHeight = Math.max(340, chartList.length * 26 + 60);
 
       const layout = {{
         barmode: 'stack',
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
         font: {{ color: '#94A3B8', size: 10 }},
-        margin: {{ t: 20, b: 35, l: 150, r: 40 }},
+        height: dynamicHeight,
+        margin: {{ t: 20, b: 35, l: 175, r: 40 }},
         showlegend: false,
         xaxis: {{
           gridcolor: '#1E293B',
@@ -4399,14 +4462,14 @@ def generate_html():
             x0: 100,
             x1: 100,
             y0: -0.5,
-            y1: top15.length - 0.5,
+            y1: chartList.length - 0.5,
             line: {{ color: '#EF4444', width: 2, dash: 'dash' }}
           }}
         ],
         annotations: [
           {{
             x: 100,
-            y: top15.length - 0.5,
+            y: chartList.length - 0.5,
             text: '<b>Límite 100%</b>',
             showarrow: false,
             font: {{ color: '#EF4444', size: 9 }},
