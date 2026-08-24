@@ -168,10 +168,11 @@ def compute_all_companies_summary(df):
         margen_neto = (res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
         densidad_inversiones = (inv / activo_tot * 100.0) if activo_tot > 0 else 0.0
 
-        # VPP (Valor Patrimonial Proporcional / Acciones Grupo Económico)
-        vpp_tenencia = get_account_value(df_c, '5.02.03.03.01.02.00.00', exact=True)
-        vpp_realizacion = get_account_value(df_c, '5.02.02.02.01.02.00.00', exact=True)
-        vpp_resultado = vpp_tenencia + vpp_realizacion
+        # VPP (Valor Patrimonial Proporcional / Acciones Grupo Económico y Otras Participaciones)
+        vpp_tenencia_acc = get_account_value(df_c, '5.02.03.03.01.02.00.00', exact=True)
+        vpp_tenencia_otr = get_account_value(df_c, '5.02.03.03.02.01.00.00', exact=True)
+        vpp_realizacion_acc = get_account_value(df_c, '5.02.02.02.01.02.00.00', exact=True)
+        vpp_resultado = vpp_tenencia_acc + vpp_tenencia_otr + vpp_realizacion_acc
         
         vpp_activo_sin = get_account_value(df_c, '1.02.01.02.02.02.00.00', exact=True)
         vpp_activo_con = get_account_value(df_c, '1.02.01.02.01.02.00.00', exact=True)
