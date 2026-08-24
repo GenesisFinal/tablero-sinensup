@@ -168,6 +168,18 @@ def compute_all_companies_summary(df):
         margen_neto = (res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
         densidad_inversiones = (inv / activo_tot * 100.0) if activo_tot > 0 else 0.0
 
+        # VPP (Valor Patrimonial Proporcional / Acciones Grupo Económico)
+        vpp_tenencia = get_account_value(df_c, '5.02.03.03.01.02.00.00', exact=True)
+        vpp_realizacion = get_account_value(df_c, '5.02.02.02.01.02.00.00', exact=True)
+        vpp_resultado = vpp_tenencia + vpp_realizacion
+        
+        vpp_activo_sin = get_account_value(df_c, '1.02.01.02.02.02.00.00', exact=True)
+        vpp_activo_con = get_account_value(df_c, '1.02.01.02.01.02.00.00', exact=True)
+        vpp_activo = vpp_activo_sin + vpp_activo_con
+        
+        vpp_pct_neto = round((vpp_resultado / res_neto * 100.0), 1) if res_neto != 0 else 0.0
+        vpp_pct_fin = round((vpp_resultado / res_fin * 100.0), 1) if res_fin != 0 else 0.0
+
         records.append({
             'cod_cia': cod,
             'razon_social': cia['razon_social'],
@@ -214,7 +226,11 @@ def compute_all_companies_summary(df):
             'roe': roe,
             'roa': roa,
             'margen_neto': margen_neto,
-            'densidad_inversiones': densidad_inversiones
+            'densidad_inversiones': densidad_inversiones,
+            'vpp_resultado': vpp_resultado,
+            'vpp_activo': vpp_activo,
+            'vpp_pct_neto': vpp_pct_neto,
+            'vpp_pct_fin': vpp_pct_fin
         })
 
     return pd.DataFrame(records)
