@@ -3616,7 +3616,7 @@ def generate_html():
             totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
           }}
         }});
-        if (totEmit > 0) {{
+        if (totEmit > 0 || totSin > 0 || totIngTec > 0 || totEgrTec > 0) {{
           mktActiveCiasCount++;
           mktTotEmit += totEmit;
           mktTotSin += totSin;
@@ -3624,7 +3624,7 @@ def generate_html():
           mktTotEgrTec += totEgrTec;
 
           const c = ciasByCode[cod_cia] || {{}};
-          const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
+          const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : (totIngTec > 0 ? (totSin / totIngTec * 100.0) : 0.0);
           const resTec = totIngTec - totEgrTec;
           const resFin = (c.resultado_financiero !== undefined) ? c.resultado_financiero : (totIngFin - totEgrFin);
           companiesRanking.push({{
@@ -3655,9 +3655,9 @@ def generate_html():
               totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
             }}
           }});
-          if (totEmit > 0) {{
+          if (totEmit > 0 || totSin > 0 || totIngTec > 0 || totEgrTec > 0) {{
             const g = groupsById[gid] || {{}};
-            const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : 0.0;
+            const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : (totIngTec > 0 ? (totSin / totIngTec * 100.0) : 0.0);
             const resTec = totIngTec - totEgrTec;
 
             // Compute active member companies and aggregate their general financial result
@@ -3668,8 +3668,13 @@ def generate_html():
               const mCode = m.cod_cia;
               if (ciasSub[mCode]) {{
                 const subM = ciasSub[mCode];
-                const emitM = targetSubs.reduce((acc, s) => acc + (subM[s] ? (subM[s]['5.01.01.00.00.00.00.00'] || 0.0) : 0.0), 0.0);
-                if (emitM > 0) {{
+                const hasActivity = targetSubs.some(s => subM[s] && (
+                  (subM[s]['5.01.01.00.00.00.00.00'] || 0) > 0 ||
+                  (subM[s]['4.01.01.00.00.00.00.00'] || 0) > 0 ||
+                  (subM[s]['5.01.00.00.00.00.00.00'] || 0) > 0 ||
+                  (subM[s]['4.01.00.00.00.00.00.00'] || 0) > 0
+                ));
+                if (hasActivity) {{
                   activeCiasCount++;
                   const mCia = ciasByCode[mCode] || {{}};
                   activeResFin += (mCia.resultado_financiero || 0);
@@ -3699,7 +3704,7 @@ def generate_html():
       ranking.forEach(r => {{
         r.market_share = mktTotEmit > 0 ? (r.emitidas / mktTotEmit * 100.0) : 0.0;
       }});
-      ranking.sort((a, b) => b.emitidas - a.emitidas);
+      ranking.sort((a, b) => (b.emitidas - a.emitidas) || (b.siniestros - a.siniestros) || (Math.abs(b.resultado_tecnico) - Math.abs(a.resultado_tecnico)));
 
       const mktLoss = mktTotEmit > 0 ? (mktTotSin / mktTotEmit * 100.0) : 0.0;
       const mktResTec = mktTotIngTec - mktTotEgrTec;
@@ -4253,7 +4258,7 @@ def generate_html():
 
       Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
         const m = processSubMap(sub_map);
-        if (m.emitidas > 0 || m.devengadas > 0) {{
+        if (m.emitidas > 0 || m.devengadas > 0 || m.siniestros > 0 || m.resultado_tecnico !== 0) {{
           mktActiveCiasCount++;
           mktTotEmit += m.emitidas;
           mktTotCed += m.cedidas;
@@ -4280,7 +4285,7 @@ def generate_html():
       if (state.analisisRamosMode === 'groups') {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
           const m = processSubMap(sub_map);
-          if (m.emitidas > 0 || m.devengadas > 0) {{
+          if (m.emitidas > 0 || m.devengadas > 0 || m.siniestros > 0 || m.resultado_tecnico !== 0) {{
             const g = groupsById[gid] || {{}};
 
             let activeCiasCount = 0;
@@ -4289,8 +4294,13 @@ def generate_html():
               const mCode = mbr.cod_cia;
               if (ciasSub[mCode]) {{
                 const sM = ciasSub[mCode];
-                const emitM = targetSubs.reduce((acc, s) => acc + (sM[s] ? (sM[s]['5.01.01.00.00.00.00.00'] || 0.0) : 0.0), 0.0);
-                if (emitM > 0) activeCiasCount++;
+                const hasActivity = targetSubs.some(s => sM[s] && (
+                  (sM[s]['5.01.01.00.00.00.00.00'] || 0) > 0 ||
+                  (sM[s]['4.01.01.00.00.00.00.00'] || 0) > 0 ||
+                  (sM[s]['5.01.00.00.00.00.00.00'] || 0) > 0 ||
+                  (sM[s]['4.01.00.00.00.00.00.00'] || 0) > 0
+                ));
+                if (hasActivity) activeCiasCount++;
               }}
             }});
             const tipoLabel = (activeCiasCount === members.length) 
@@ -4309,7 +4319,7 @@ def generate_html():
       }}
 
       const ranking = (state.analisisRamosMode === 'groups') ? groupsRanking : companiesRanking;
-      ranking.sort((a, b) => b.devengadas - a.devengadas);
+      ranking.sort((a, b) => (b.devengadas - a.devengadas) || (b.emitidas - a.emitidas) || (b.siniestros - a.siniestros) || (Math.abs(b.resultado_tecnico) - Math.abs(a.resultado_tecnico)));
 
       // Consolidate totals for ENTIRE 100% MARKET in this branch (ALWAYS based on all companies)
       const baseDevMkt = mktTotDev > 0 ? mktTotDev : (mktTotEmit > 0 ? mktTotEmit : 1.0);
