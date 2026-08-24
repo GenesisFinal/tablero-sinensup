@@ -2572,6 +2572,7 @@ def generate_html():
       tbody.innerHTML = data.groups.map((g, idx) => {{
         const isLS = g.id === 'la_segunda';
         const barWidth = Math.min(100, Math.max(4, g.market_share * 7));
+        const totVpp = (g.members || []).reduce((acc, m) => acc + (m.vpp_resultado || 0), 0);
         return `
           <tr class="hover:bg-slate-800/70 ${{isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/80 font-semibold' : ''}} cursor-pointer transition-colors" onclick="openGroupModal('${{g.id}}')">
             <td class="py-2.5 px-2 text-center text-slate-400 font-mono font-bold">${{idx + 1}}</td>
@@ -2597,11 +2598,14 @@ def generate_html():
             <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(g.combined_ratio)}}</td>
             <td class="py-2.5 px-2 text-right font-mono ${{g.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_tecnico)}}</td>
             <td class="py-2.5 px-2 text-right font-mono ${{g.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_financiero)}}</td>
-            <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_neto)}}</td>
+            <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} whitespace-nowrap" title="${{totVpp !== 0 ? `Rdo Neto: ${{formatARS(g.resultado_neto)}} (del cual VPP Cías en balances de controlantes: ${{formatARS(totVpp)}})` : `Rdo Neto: ${{formatARS(g.resultado_neto)}}`}}">
+              ${{formatARS(g.resultado_neto)}}
+              ${{totVpp !== 0 ? `<span class="block text-[8px] font-normal text-amber-300">VPP: ${{formatARS(totVpp)}}</span>` : ''}}
+            </td>
             <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.activo)}}</td>
             <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.patrimonio_neto)}}</td>
             <td class="py-2.5 px-2 text-center" onclick="event.stopPropagation()">
-              <button onclick="openGroupModal('${{g.id}}')" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[10px] font-bold">
+              <button onclick="openGroupModal('${{g.id}}')" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[10px] font-bold cursor-pointer">
                 Ver Cías
               </button>
             </td>
