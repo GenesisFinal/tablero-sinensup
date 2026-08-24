@@ -588,7 +588,7 @@ def generate_html():
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
           <div class="text-[11px] font-semibold text-slate-400 uppercase">RESULTADO NETO</div>
           <div id="ciaKpiResNeto" class="text-base font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Final del Período</div>
+          <div id="ciaKpiResNetoSub" class="text-[10px] text-slate-400 mt-1">Final del Período</div>
         </div>
       </div>
 
@@ -736,12 +736,12 @@ def generate_html():
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-400">
           <div class="text-[11px] font-semibold uppercase text-slate-400">TOTAL INVERSIONES (1.02)</div>
           <div id="invTotalVal" class="text-base font-bold font-mono text-amber-300 mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Cartera de Activos Financieros</div>
+          <div id="invTotalSub" class="text-[10px] text-slate-400 mt-1">Cartera de Activos Financieros</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
           <div class="text-[11px] font-semibold uppercase text-slate-400">RESULTADO FINANCIERO NETO</div>
           <div id="invResFinVal" class="text-base font-bold font-mono text-white mt-1">...</div>
-          <div class="text-[10px] text-slate-400 mt-1">Ganancias - Pérdidas Fin.</div>
+          <div id="invResFinSub" class="text-[10px] text-slate-400 mt-1">Ganancias - Pérdidas Fin.</div>
         </div>
         <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-blue">
           <div class="text-[11px] font-semibold uppercase text-slate-400">RENDIMIENTO FINANCIERO (ROI)</div>
@@ -2618,6 +2618,8 @@ def generate_html():
 
       state.selectedGroupId = gid;
 
+      const totVppGroup = g.members.reduce((acc, m) => acc + (m.vpp_resultado || 0), 0);
+
       document.getElementById('groupModalTitle').innerText = g.name;
       document.getElementById('groupModalSubtitle').innerText = `${{g.description}} • ${{g.entities_count}} entidades aseguradoras consolidadas`;
 
@@ -2635,7 +2637,7 @@ def generate_html():
         <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
           <div class="text-[10px] font-semibold text-slate-400 uppercase">Resultado Neto</div>
           <div class="text-base font-bold font-mono ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-0.5">${{formatARS(g.resultado_neto)}}</div>
-          <div class="text-[10px] text-slate-400">Téc: ${{formatARS(g.resultado_tecnico)}}</div>
+          <div class="text-[10px] text-slate-400">Téc: ${{formatARS(g.resultado_tecnico)}} ${{totVppGroup !== 0 ? `<span class="block text-[9px] text-amber-300 font-semibold" title="Suma de VPP registrado en los balances individuales">(VPP Cías: ${{formatARS(totVppGroup)}})</span>` : ''}}</div>
         </div>
         <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
           <div class="text-[10px] font-semibold text-slate-400 uppercase">Activo Consolidado</div>
@@ -2656,10 +2658,12 @@ def generate_html():
               <span>Primas: <b class="text-slate-200 font-mono">${{formatARS(m.primas_emitidas)}}</b> (${{m.share_of_group}}% del grupo)</span>
               <span>Siniestros: <b class="text-rose-300 font-mono">${{formatARS(m.siniestros)}}</b></span>
               <span>Comb. Ratio: <b class="${{m.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{formatPercent(m.combined_ratio)}}</b></span>
+              <span>Rdo. Neto: <b class="${{m.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{formatARS(m.resultado_neto)}}</b></span>
+              ${{(m.vpp_resultado && m.vpp_resultado !== 0) ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades del grupo asegurador">↳ VPP Cías: ${{formatARS(m.vpp_resultado)}} (${{m.vpp_pct_neto}}%)</span>` : ''}}
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="selectCompany('${{m.cod_cia}}'); closeGroupModal();" class="px-3 py-1 rounded-lg bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-xs font-bold">
+            <button onclick="selectCompany('${{m.cod_cia}}'); closeGroupModal();" class="px-3 py-1 rounded-lg bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-xs font-bold cursor-pointer">
               Ver Ficha Individual
             </button>
           </div>
@@ -2789,7 +2793,10 @@ def generate_html():
             <td class="py-1.5 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
             <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
             <td class="py-1.5 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
-            <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} whitespace-nowrap" title="${{(c.vpp_resultado && c.vpp_resultado !== 0) ? `Rdo Neto: ${{formatARS(c.resultado_neto)}} (del cual VPP Cías: ${{formatARS(c.vpp_resultado)}} / ${{c.vpp_pct_neto}}%)` : `Rdo Neto: ${{formatARS(c.resultado_neto)}}`}}">
+              ${{formatARS(c.resultado_neto)}}
+              ${{(c.vpp_resultado && c.vpp_resultado !== 0) ? `<span class="block text-[8px] font-normal text-amber-300">VPP: ${{formatARS(c.vpp_resultado)}}</span>` : ''}}
+            </td>
             <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
             <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
               <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold">Ver</button>
@@ -3063,7 +3070,10 @@ def generate_html():
           <td class="py-1.5 px-2 text-right ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
           <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
           <td class="py-1.5 px-2 text-right ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
-          <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_neto)}}</td>
+          <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} whitespace-nowrap" title="${{(c.vpp_resultado && c.vpp_resultado !== 0) ? `Rdo Neto: ${{formatARS(c.resultado_neto)}} (del cual VPP Cías: ${{formatARS(c.vpp_resultado)}} / ${{c.vpp_pct_neto}}%)` : `Rdo Neto: ${{formatARS(c.resultado_neto)}}`}}">
+            ${{formatARS(c.resultado_neto)}}
+            ${{(c.vpp_resultado && c.vpp_resultado !== 0) ? `<span class="block text-[8px] font-normal text-amber-300">VPP: ${{formatARS(c.vpp_resultado)}}</span>` : ''}}
+          </td>
           <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.activo)}}</td>
           <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
             <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-semibold">Ver</button>
@@ -3114,6 +3124,22 @@ def generate_html():
 
       document.getElementById('ciaKpiResNeto').innerText = formatARS(c.resultado_neto);
       document.getElementById('ciaKpiResNeto').className = `text-base font-bold font-mono mt-1 ${{c.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+
+      const resNetoSub = document.getElementById('ciaKpiResNetoSub');
+      if (resNetoSub) {{
+        if (!isGroup && c.vpp_resultado && c.vpp_resultado !== 0) {{
+          resNetoSub.innerHTML = `Final del Período<br><span class="text-amber-400 font-bold" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades del grupo asegurador">↳ del cual VPP Cías: ${{formatARS(c.vpp_resultado)}} (${{c.vpp_pct_neto}}%)</span>`;
+        }} else if (isGroup) {{
+          const totVppGroup = (c.members || []).reduce((acc, m) => acc + (m.vpp_resultado || 0), 0);
+          if (totVppGroup !== 0) {{
+            resNetoSub.innerHTML = `Consolidado Grupo<br><span class="text-amber-400 font-bold" title="Suma de resultados por VPP registrados entre empresas del grupo">↳ VPP Intra-Grupo: ${{formatARS(totVppGroup)}}</span>`;
+          }} else {{
+            resNetoSub.innerText = 'Consolidado Grupo';
+          }}
+        }} else {{
+          resNetoSub.innerText = 'Final del Período';
+        }}
+      }}
 
       renderCompanyWaterfall(c);
       renderCompanyDonuts(c);
@@ -5014,6 +5040,33 @@ def generate_html():
       document.getElementById('invResFinVal').innerText = formatARS(resFin);
       document.getElementById('invResFinVal').className = `text-base font-bold font-mono mt-1 ${{resFin >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
       
+      const invResFinSub = document.getElementById('invResFinSub');
+      const invTotalSub = document.getElementById('invTotalSub');
+      if (invResFinSub) {{
+        if (state.invScope === 'cia') {{
+          const c = (state.entityScope === 'group') ? null : data.companies_by_code[state.selectedCompanyCode];
+          if (c && c.vpp_resultado && c.vpp_resultado !== 0) {{
+            invResFinSub.innerHTML = `Ganancias - Pérdidas Fin.<br><span class="text-amber-400 font-bold" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades del grupo asegurador">↳ del cual VPP Cías: ${{formatARS(c.vpp_resultado)}} (${{c.vpp_pct_fin}}%)</span>`;
+          }} else {{
+            invResFinSub.innerText = 'Ganancias - Pérdidas Fin.';
+          }}
+        }} else {{
+          invResFinSub.innerText = 'Ganancias - Pérdidas Fin.';
+        }}
+      }}
+      if (invTotalSub) {{
+        if (state.invScope === 'cia') {{
+          const c = (state.entityScope === 'group') ? null : data.companies_by_code[state.selectedCompanyCode];
+          if (c && c.vpp_activo && c.vpp_activo !== 0) {{
+            invTotalSub.innerHTML = `Cartera de Activos Financieros<br><span class="text-amber-400 font-bold" title="Tenencia en Acciones de Grupo Económico / Filiales">↳ Acc. Grupo (VPP): ${{formatARS(c.vpp_activo)}}</span>`;
+          }} else {{
+            invTotalSub.innerText = 'Cartera de Activos Financieros';
+          }}
+        }} else {{
+          invTotalSub.innerText = 'Cartera de Activos Financieros';
+        }}
+      }}
+
       document.getElementById('invRoiVal').innerText = formatPercent(roi);
       document.getElementById('invRoiVal').className = `text-base font-bold font-mono mt-1 ${{roi >= 0 ? 'text-brand-blue' : 'text-rose-400'}}`;
       
