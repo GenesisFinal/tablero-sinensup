@@ -477,6 +477,9 @@ def build_complete_dataset():
         tot_comp_tec = 0.0
         tot_pn = 0.0
 
+        vpp_equity_elim = 0.0
+        vpp_income_elim = 0.0
+
         for cd in codes:
             if cd in companies_dict:
                 c = companies_dict[cd]
@@ -499,8 +502,28 @@ def build_complete_dataset():
                 tot_comp_tec += float(c.get('compromisos_tecnicos', 0.0))
                 tot_pn += float(c.get('patrimonio_neto', 0.0))
 
+                bal = cias_balances_general.get(cd, {})
+                # Asset VPP / Grupo Económico accounts
+                acc_ge_con = bal.get("1.02.01.02.01.02.00.00", 0.0)
+                acc_ge_sin = bal.get("1.02.01.02.02.02.00.00", 0.0)
+                acc_ge_dif = bal.get("1.02.01.02.01.03.00.00", 0.0)
+                vpp_equity_elim += (acc_ge_con + acc_ge_sin + acc_ge_dif)
+
+                # Income / Financial VPP accounts
+                ten_acc = bal.get("5.02.03.03.01.02.00.00", 0.0)
+                real_acc = bal.get("5.02.02.02.01.02.00.00", 0.0)
+                part_terc = bal.get("4.03.03.03.03.01.00.00", 0.0)
+                vpp_income_elim += (ten_acc + real_acc - part_terc)
+
         if len(members) == 0:
             continue
+
+        # Adjust financial results, net results, and balance sheet for intra-group VPP
+        tot_res_fin -= vpp_income_elim
+        tot_res_neto -= vpp_income_elim
+        tot_activo -= vpp_equity_elim
+        tot_inv -= vpp_equity_elim
+        tot_pn -= vpp_equity_elim
 
         # Weighted consolidated ratios
         loss_ratio = (tot_sin / tot_dev * 100.0) if tot_dev > 0 else 0.0
@@ -574,6 +597,9 @@ def build_complete_dataset():
             "margen_neto": round(margen_neto, 2),
             "margen_tecnico": round((tot_res_tec / tot_dev * 100.0) if tot_dev > 0 else 0.0, 2),
             "market_share": round(mkt_share, 2),
+            "vpp_equity_elim": vpp_equity_elim,
+            "vpp_income_elim": vpp_income_elim,
+            "vpp_adjusted": True if (vpp_equity_elim != 0 or vpp_income_elim != 0) else False,
             "waterfall": [
                 {"name": "Primas Emitidas", "amount": tot_emit, "type": "relative"},
                 {"name": "Variación Reservas", "amount": tot_var, "type": "relative"},
@@ -591,11 +617,13 @@ def build_complete_dataset():
         groups_ranking.append(g_obj)
         groups_by_id[gid] = g_obj
 
-        # Consolidate General Balances for this group
+        # Consolidate General Balances for this group (with VPP accounts eliminated)
         group_gen_raw = {}
         for cd in codes:
             if cd in cias_balances_general:
                 for acc_code, acc_val in cias_balances_general[cd].items():
+                    if acc_code in ["1.02.01.02.01.02.00.00", "1.02.01.02.02.02.00.00", "1.02.01.02.01.03.00.00", "5.02.03.03.01.02.00.00", "5.02.02.02.01.02.00.00", "4.03.03.03.03.01.00.00"]:
+                        continue
                     group_gen_raw[acc_code] = group_gen_raw.get(acc_code, 0.0) + acc_val
         groups_balances_general[gid] = compute_hierarchical_rollup(group_gen_raw, is_subramo=False)
 
