@@ -1676,79 +1676,78 @@ def generate_html():
         </div>
       </div>
 
-      <!-- GRÁFICOS COMPARATIVOS: BARRAS APILADAS + RADAR TÉCNICO BENCHMARK -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <!-- COLUMNA IZQUIERDA (7 cols): DESGLOSE DEL RATIO COMBINADO (TOP 15) -->
-        <div class="lg:col-span-7 glass-card p-5 rounded-xl space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
-            <div>
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-chart-column text-cyan-400"></i> Desglose de Eficiencia Técnica (Top 15)
-              </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Siniestros + Comisiones + Gastos vs Línea 100%</p>
-            </div>
-            <div class="flex items-center gap-2 text-[11px] font-mono">
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-rose-500"></span> Sin. %</span>
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-amber-400"></span> Com. %</span>
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-sky-400"></span> Adm. %</span>
-              <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-red-400 border border-red-400"></span> 100%</span>
-            </div>
+      <!-- 1. GRÁFICO DE BARRAS APILADAS: DESGLOSE DEL RATIO COMBINADO (TOP 15) -->
+      <div class="glass-card p-5 rounded-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-column text-cyan-400"></i> Desglose de Eficiencia Técnica y Ratio Combinado (Top 15 Operadores del Ramo)
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Siniestralidad Neta + Comisiones de Producción + Gastos de Explotación vs Línea de Equilibrio del 100%</p>
           </div>
-          <div id="analisisRamosStackedChart" class="w-full min-h-[360px]"></div>
+          <div class="flex items-center gap-2 text-xs font-mono">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Siniestros %</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Comisiones %</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-sky-400"></span> Admin %</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-400 border border-red-400"></span> Límite 100%</span>
+          </div>
         </div>
+        <div id="analisisRamosStackedChart" class="w-full min-h-[380px]"></div>
+      </div>
 
-        <!-- COLUMNA DERECHA (5 cols): RADAR COMPARATIVO vs BENCHMARK MERCADO -->
-        <div class="lg:col-span-5 glass-card p-5 rounded-xl space-y-4 flex flex-col justify-between">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
-                  <i class="fa-solid fa-chart-pie text-cyan-400"></i> Radar: Entidad vs Mercado
-                </h3>
-                <button onclick="toggleRadarGuide()" class="px-1.5 py-0.5 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-[10px] font-semibold border border-cyan-500/30 flex items-center gap-1 transition-colors cursor-pointer" title="Ver explicación metodológica de cómo interpretar el Radar">
-                  <i class="fa-solid fa-circle-question text-[11px]"></i> ¿Cómo leer?
-                </button>
-              </div>
-              <p id="arRadarSubtitle" class="text-xs text-slate-400 mt-0.5 truncate max-w-[240px]">Comparativa en 6 dimensiones</p>
+      <!-- 2. RADAR COMPARATIVO: ENTIDAD vs BENCHMARK MERCADO -->
+      <div class="glass-card p-5 rounded-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-pie text-cyan-400"></i> Radar de Suscripción: Entidad vs Benchmark Mercado Consolidado
+              </h3>
+              <button onclick="toggleRadarGuide()" class="px-2 py-0.5 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-xs font-semibold border border-cyan-500/30 flex items-center gap-1.5 transition-colors cursor-pointer" title="Ver explicación metodológica de cómo interpretar el Radar">
+                <i class="fa-solid fa-circle-question"></i> ¿Cómo leer?
+              </button>
             </div>
-            <!-- Entity selector dropdown for radar -->
+            <p id="arRadarSubtitle" class="text-xs text-slate-400 mt-0.5">Comparativa en 6 dimensiones de eficiencia y suscripción</p>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 font-semibold">Seleccionar operador:</span>
             <select id="arRadarEntitySelect" onchange="setAnalisisRadarEntity(this.value)" 
-                    class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1 focus:border-cyan-400 focus:outline-none font-semibold max-w-[160px]">
+                    class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:border-cyan-400 focus:outline-none font-semibold min-w-[200px]">
             </select>
           </div>
+        </div>
 
-          <!-- PANEL EXPLICATIVO DESPLEGABLE DE CÓMO LEER EL RADAR -->
-          <div id="arRadarGuideBox" class="hidden p-3.5 bg-slate-900/95 border border-cyan-500/30 rounded-xl text-xs space-y-2 text-slate-200">
-            <div class="flex items-center justify-between font-bold text-cyan-300 border-b border-slate-800 pb-1.5">
-              <span>📖 Guía de Interpretación del Radar Técnico</span>
-              <button onclick="toggleRadarGuide()" class="text-slate-400 hover:text-white text-sm cursor-pointer">&times;</button>
+        <!-- PANEL EXPLICATIVO DESPLEGABLE DE CÓMO LEER EL RADAR -->
+        <div id="arRadarGuideBox" class="hidden p-4 bg-slate-900/95 border border-cyan-500/30 rounded-xl text-xs space-y-3 text-slate-200">
+          <div class="flex items-center justify-between font-bold text-cyan-300 border-b border-slate-800 pb-2">
+            <span class="text-sm">📖 Guía de Interpretación del Radar Técnico</span>
+            <button onclick="toggleRadarGuide()" class="text-slate-400 hover:text-white text-base cursor-pointer">&times;</button>
+          </div>
+          <p class="leading-relaxed text-slate-300">
+            El Radar evalúa la <b>huella de eficiencia técnica (escala 0 a 100)</b> de la entidad seleccionada frente al <b>promedio consolidado del 100% de empresas del mercado</b> en los subramos seleccionados.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800">
+              <div class="text-cyan-300 font-bold text-xs flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-cyan-400"></span> Polígono Cian (Entidad)</div>
+              <p class="text-[11px] text-slate-400 mt-1">Representa el desempeño técnico y ratios de la aseguradora o grupo económico seleccionado.</p>
             </div>
-            <p class="text-[11px] leading-relaxed text-slate-300">
-              El Radar mide la <b>huella de eficiencia técnica (0 a 100)</b> de la entidad seleccionada en comparación con el <b>promedio consolidado de todas las empresas del mercado</b> en este ramo.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] pt-1">
-              <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
-                <span class="text-cyan-300 font-bold">🔷 Polígono Cian:</span> Entidad seleccionada.
-              </div>
-              <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
-                <span class="text-amber-400 font-bold">🔶 Polígono Ámbar:</span> Promedio Total Mercado.
-              </div>
-            </div>
-            <div class="text-[10px] text-slate-400 space-y-1 pt-1">
-              <div>• <b>Hacia afuera (100 pts):</b> Mayor eficiencia / mejor desempeño técnico.</div>
-              <div>• <b>Hacia el centro (0 pts):</b> Mayor ineficiencia o desbalance técnico.</div>
-              <div>• <b>Mercado (Consolidado):</b> Suma del 100% de empresas con primas en los subramos elegidos.</div>
+            <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800">
+              <div class="text-amber-400 font-bold text-xs flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Polígono Ámbar Punteado (Mercado)</div>
+              <p class="text-[11px] text-slate-400 mt-1">Representa el promedio ponderado del mercado consolidado para este ramo específico.</p>
             </div>
           </div>
-
-          <div id="analisisRamosRadarChart" class="w-full min-h-[340px] flex items-center justify-center"></div>
-
-          <!-- Radar metric pills / comparison breakdown -->
-          <div id="arRadarBreakdown" class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-[10px]">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 pt-1 border-t border-slate-800/80">
+            <div>• <b>Hacia el exterior (100):</b> Máxima eficiencia / excelencia técnica.</div>
+            <div>• <b>Hacia el centro (0):</b> Menor eficiencia o desbalance operativo.</div>
+            <div>• <b>Mercado Consolidado:</b> Suma del 100% de operadores del ramo.</div>
           </div>
         </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div id="analisisRamosRadarChart" class="lg:col-span-6 w-full min-h-[380px] flex items-center justify-center"></div>
+          <div id="arRadarBreakdown" class="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        </div>
       </div>
 
       <!-- TABLA INTEGRAL DE SUSCRIPCIÓN Y GESTIÓN EN EL RAMO -->
@@ -4752,19 +4751,19 @@ def generate_html():
           angularaxis: {{
             gridcolor: '#1E293B',
             linecolor: '#334155',
-            tickfont: {{ size: 9, family: 'Sora, sans-serif', color: '#E2E8F0', weight: 'bold' }},
+            tickfont: {{ size: 10, family: 'Sora, sans-serif', color: '#E2E8F0', weight: 'bold' }},
             rotation: 90,
             direction: 'clockwise'
           }}
         }},
         paper_bgcolor: 'transparent',
         plot_bgcolor: 'transparent',
-        margin: {{ l: 25, r: 25, t: 20, b: 20 }},
-        height: 330,
+        margin: {{ l: 35, r: 35, t: 25, b: 25 }},
+        height: 380,
         showlegend: true,
         legend: {{
           orientation: 'h',
-          y: -0.12,
+          y: -0.10,
           x: 0.5,
           xanchor: 'center',
           font: {{ color: '#F1F5F9', size: 11, family: 'Sora' }}
