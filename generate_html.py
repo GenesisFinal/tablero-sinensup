@@ -1676,23 +1676,50 @@ def generate_html():
         </div>
       </div>
 
-      <!-- GRÁFICO DE BARRAS APILADAS: DESGLOSE DEL RATIO COMBINADO (TOP 15 OPERADORES) -->
-      <div class="glass-card p-5 rounded-xl space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
-          <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-chart-column text-cyan-400"></i> Desglose de Eficiencia Técnica y Ratio Combinado (Top 15 Operadores del Ramo)
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Siniestralidad Neta + Comisiones de Producción + Gastos de Explotación vs Línea de Equilibrio del 100%</p>
+      <!-- GRÁFICOS COMPARATIVOS: BARRAS APILADAS + RADAR TÉCNICO BENCHMARK -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- COLUMNA IZQUIERDA (7 cols): DESGLOSE DEL RATIO COMBINADO (TOP 15) -->
+        <div class="lg:col-span-7 glass-card p-5 rounded-xl space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-cyan-400"></i> Desglose de Eficiencia Técnica (Top 15)
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Siniestros + Comisiones + Gastos vs Línea 100%</p>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] font-mono">
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-rose-500"></span> Sin. %</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-amber-400"></span> Com. %</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-sky-400"></span> Adm. %</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-red-400 border border-red-400"></span> 100%</span>
+            </div>
           </div>
-          <div class="flex items-center gap-2 text-xs font-mono">
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Siniestros %</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Comisiones %</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-sky-400"></span> Admin %</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-400 border border-red-400"></span> Límite 100%</span>
+          <div id="analisisRamosStackedChart" class="w-full min-h-[360px]"></div>
+        </div>
+
+        <!-- COLUMNA DERECHA (5 cols): RADAR COMPARATIVO vs BENCHMARK MERCADO -->
+        <div class="lg:col-span-5 glass-card p-5 rounded-xl space-y-4 flex flex-col justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-cyan-400"></i> Radar: Entidad vs Benchmark
+              </h3>
+              <p id="arRadarSubtitle" class="text-xs text-slate-400 mt-0.5 truncate max-w-[220px]">Comparativa en 6 dimensiones</p>
+            </div>
+            <!-- Entity selector dropdown for radar -->
+            <select id="arRadarEntitySelect" onchange="setAnalisisRadarEntity(this.value)" 
+                    class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1 focus:border-cyan-400 focus:outline-none font-semibold max-w-[170px]">
+            </select>
+          </div>
+
+          <div id="analisisRamosRadarChart" class="w-full min-h-[340px] flex items-center justify-center"></div>
+
+          <!-- Radar metric pills / comparison breakdown -->
+          <div id="arRadarBreakdown" class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-[10px]">
           </div>
         </div>
-        <div id="analisisRamosStackedChart" class="w-full min-h-[360px]"></div>
+
       </div>
 
       <!-- TABLA INTEGRAL DE SUSCRIPCIÓN Y GESTIÓN EN EL RAMO -->
@@ -1829,10 +1856,11 @@ def generate_html():
       ramosRankMode: 'groups',
       ramosRankSearchQuery: '',
       analisisRamosSections: ['patrimoniales'],
-      analisisRamosGroups: ['autos'],
+      analisisRamosGroups: ['auto'],
       analisisRamosSubramo: 'all',
       analisisRamosMode: 'groups',
       analisisRamosSearchQuery: '',
+      analisisRamosRadarEntity: null,
       ramosScope: 'cia',
       invScope: 'cia',
       invTopMetric: 'activo',
@@ -4349,8 +4377,9 @@ def generate_html():
       const kpiAnulEl = document.getElementById('arKpiAnulacion');
       if (kpiAnulEl) kpiAnulEl.innerText = formatPercent(rData.cancellation_rate);
 
-      // Render Stacked Bar Chart & Table
+      // Render Stacked Bar Chart, Radar Benchmark & Table
       renderAnalisisRamosChart(rData.ranking);
+      renderAnalisisRamosRadarChart(rData.ranking, rData);
       renderAnalisisRankingTableOnly();
     }}
 
@@ -4518,7 +4547,195 @@ def generate_html():
         ]
       }};
 
-      Plotly.newPlot('analisisRamosStackedChart', [traceLoss, traceAcq, traceExp], layout, {{ responsive: true, displayModeBar: false }});
+      if (document.getElementById('analisisRamosStackedChart')) {{
+        Plotly.newPlot('analisisRamosStackedChart', [traceLoss, traceAcq, traceExp], layout, {{ responsive: true, displayModeBar: false }});
+      }}
+    }}
+
+    function setAnalisisRadarEntity(code) {{
+      state.analisisRamosRadarEntity = code;
+      if (currentAnalisisRamosData) {{
+        renderAnalisisRamosRadarChart(currentAnalisisRamosData.ranking, currentAnalisisRamosData);
+        renderAnalisisRankingTableOnly();
+      }}
+    }}
+
+    function renderAnalisisRamosRadarChart(ranking, mktTotals) {{
+      const radarEl = document.getElementById('analisisRamosRadarChart');
+      const selectEl = document.getElementById('arRadarEntitySelect');
+      const breakdownEl = document.getElementById('arRadarBreakdown');
+      const subtitleEl = document.getElementById('arRadarSubtitle');
+      if (!radarEl || !ranking || ranking.length === 0 || !mktTotals) return;
+
+      // Populate entity select options
+      if (selectEl) {{
+        selectEl.innerHTML = ranking.map(r => {{
+          const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
+          const clean = r.name.length > 22 ? r.name.slice(0, 20) + '...' : r.name;
+          return `<option value="${{r.code}}">${{isLS ? '★ ' : ''}}${{clean}}</option>`;
+        }}).join('');
+      }}
+
+      // Determine active target entity
+      let target = null;
+      if (state.analisisRamosRadarEntity) {{
+        target = ranking.find(r => r.code === state.analisisRamosRadarEntity);
+      }}
+      if (!target) {{
+        target = ranking.find(r => (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda')) || ranking[0];
+        state.analisisRamosRadarEntity = target.code;
+      }}
+      if (selectEl) selectEl.value = target.code;
+      if (subtitleEl) subtitleEl.innerText = `${{target.name.length > 24 ? target.name.slice(0, 22) + '...' : target.name}} vs Total Mercado`;
+
+      // 6 Dimension Scores (0-100 where 100 is best)
+      const axesConfig = [
+        {{
+          name: '1. Siniestros',
+          sub: 'Loss Ratio',
+          targetVal: target.loss_ratio || 0,
+          benchVal: mktTotals.loss_ratio || 0,
+          targetStr: `${{(target.loss_ratio || 0).toFixed(1)}}%`,
+          benchStr: `${{(mktTotals.loss_ratio || 0).toFixed(1)}}%`,
+          targetScore: Math.max(10, Math.min(100, 100 - (target.loss_ratio || 0) * 0.9)),
+          benchScore: Math.max(10, Math.min(100, 100 - (mktTotals.loss_ratio || 0) * 0.9)),
+          betterHigher: false
+        }},
+        {{
+          name: '2. Comisiones',
+          sub: 'Costo Adq.',
+          targetVal: target.acq_ratio || 0,
+          benchVal: mktTotals.acq_ratio || 0,
+          targetStr: `${{(target.acq_ratio || 0).toFixed(1)}}%`,
+          benchStr: `${{(mktTotals.acq_ratio || 0).toFixed(1)}}%`,
+          targetScore: Math.max(10, Math.min(100, 100 - (target.acq_ratio || 0) * 1.8)),
+          benchScore: Math.max(10, Math.min(100, 100 - (mktTotals.acq_ratio || 0) * 1.8)),
+          betterHigher: false
+        }},
+        {{
+          name: '3. Admin',
+          sub: 'Costo Expl.',
+          targetVal: target.exp_ratio || 0,
+          benchVal: mktTotals.exp_ratio || 0,
+          targetStr: `${{(target.exp_ratio || 0).toFixed(1)}}%`,
+          benchStr: `${{(mktTotals.exp_ratio || 0).toFixed(1)}}%`,
+          targetScore: Math.max(10, Math.min(100, 100 - (target.exp_ratio || 0) * 1.8)),
+          benchScore: Math.max(10, Math.min(100, 100 - (mktTotals.exp_ratio || 0) * 1.8)),
+          betterHigher: false
+        }},
+        {{
+          name: '4. Retención',
+          sub: 'Retención %',
+          targetVal: target.retention_rate || 0,
+          benchVal: mktTotals.retention_rate || 0,
+          targetStr: `${{(target.retention_rate || 0).toFixed(1)}}%`,
+          benchStr: `${{(mktTotals.retention_rate || 0).toFixed(1)}}%`,
+          targetScore: Math.max(10, Math.min(100, target.retention_rate || 0)),
+          benchScore: Math.max(10, Math.min(100, mktTotals.retention_rate || 0)),
+          betterHigher: true
+        }},
+        {{
+          name: '5. Margen Téc.',
+          sub: 'Margen Téc. %',
+          targetVal: target.margen_tecnico || 0,
+          benchVal: mktTotals.margen_tecnico || 0,
+          targetStr: `${{(target.margen_tecnico || 0).toFixed(1)}}%`,
+          benchStr: `${{(mktTotals.margen_tecnico || 0).toFixed(1)}}%`,
+          targetScore: Math.max(10, Math.min(100, 50 + (target.margen_tecnico || 0) * 2.5)),
+          benchScore: Math.max(10, Math.min(100, 50 + (mktTotals.margen_tecnico || 0) * 2.5)),
+          betterHigher: true
+        }},
+        {{
+          name: '6. Persistencia',
+          sub: 'No Anulación',
+          targetVal: 100 - (target.cancellation_rate || 0),
+          benchVal: 100 - (mktTotals.cancellation_rate || 0),
+          targetStr: `${{(100 - (target.cancellation_rate || 0)).toFixed(1)}}%`,
+          benchStr: `${{(100 - (mktTotals.cancellation_rate || 0)).toFixed(1)}}%`,
+          targetScore: Math.max(10, Math.min(100, 100 - (target.cancellation_rate || 0) * 4.0)),
+          benchScore: Math.max(10, Math.min(100, 100 - (mktTotals.cancellation_rate || 0) * 4.0)),
+          betterHigher: true
+        }}
+      ];
+
+      const thetaLabels = axesConfig.map(a => a.name);
+      const targetScores = axesConfig.map(a => a.targetScore);
+      const benchScores = axesConfig.map(a => a.benchScore);
+
+      const targetShortName = target.name.length > 18 ? target.name.slice(0, 16) + '...' : target.name;
+
+      const data = [
+        {{
+          type: 'scatterpolar',
+          r: [...benchScores, benchScores[0]],
+          theta: [...thetaLabels, thetaLabels[0]],
+          fill: 'toself',
+          name: 'Mercado (Consolidado)',
+          line: {{ color: '#F59E0B', width: 2, dash: 'dot' }},
+          fillcolor: 'rgba(245, 158, 11, 0.15)',
+          marker: {{ size: 5, color: '#FBBF24' }}
+        }},
+        {{
+          type: 'scatterpolar',
+          r: [...targetScores, targetScores[0]],
+          theta: [...thetaLabels, thetaLabels[0]],
+          fill: 'toself',
+          name: targetShortName,
+          line: {{ color: '#06B6D4', width: 2.5 }},
+          fillcolor: 'rgba(6, 182, 212, 0.28)',
+          marker: {{ size: 6, color: '#22D3EE' }}
+        }}
+      ];
+
+      const layout = {{
+        polar: {{
+          bgcolor: 'transparent',
+          radialaxis: {{
+            visible: true,
+            range: [0, 100],
+            showticklabels: false,
+            gridcolor: '#1E293B',
+            linecolor: '#334155'
+          }},
+          angularaxis: {{
+            gridcolor: '#1E293B',
+            linecolor: '#334155',
+            tickfont: {{ size: 9, family: 'Sora, sans-serif', color: '#E2E8F0', weight: 'bold' }},
+            rotation: 90,
+            direction: 'clockwise'
+          }}
+        }},
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        margin: {{ l: 25, r: 25, t: 20, b: 20 }},
+        height: 330,
+        showlegend: true,
+        legend: {{
+          orientation: 'h',
+          y: -0.12,
+          x: 0.5,
+          xanchor: 'center',
+          font: {{ color: '#F1F5F9', size: 11, family: 'Sora' }}
+        }}
+      }};
+
+      Plotly.newPlot('analisisRamosRadarChart', data, layout, {{ responsive: true, displayModeBar: false }});
+
+      // Populate breakdown cards
+      if (breakdownEl) {{
+        breakdownEl.innerHTML = axesConfig.map(a => {{
+          const isBetter = a.betterHigher ? (a.targetVal >= a.benchVal) : (a.targetVal <= a.benchVal);
+          return `
+            <div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="text-[10px] text-slate-400 font-semibold truncate">${{a.name}}</div>
+              <div class="flex items-baseline justify-between mt-1">
+                <span class="font-bold text-xs ${{isBetter ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{a.targetStr}}</span>
+                <span class="text-[9px] text-slate-500 font-mono">Mkt: ${{a.benchStr}}</span>
+              </div>
+            </div>
+          `;
+        }}).join('');
+      }}
     }}
 
     function renderAnalisisRankingTableOnly() {{
@@ -4538,8 +4755,7 @@ def generate_html():
 
       tbody.innerHTML = filtered.map((r, i) => {{
         const isLS = (r.code === '0317' || r.code === '0618' || r.code === '0117' || r.code === '0436' || r.code === 'la_segunda');
-        const isSelected = (state.analisisRamosMode === 'companies' && state.selectedCompanyCode === r.code) ||
-                           (state.analisisRamosMode === 'groups' && state.selectedGroupId === r.code);
+        const isRadarActive = (state.analisisRamosRadarEntity === r.code);
 
         let entityNameHtml = '';
         if (state.analisisRamosMode === 'groups') {{
@@ -4547,6 +4763,7 @@ def generate_html():
             <div class="font-bold text-cyan-300 flex items-center gap-1.5">
               <span class="truncate max-w-[260px]" title="${{r.name}}">${{r.name}}</span>
               ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+              ${{isRadarActive ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">RADAR</span>' : ''}}
             </div>
           `;
         }} else {{
@@ -4555,6 +4772,7 @@ def generate_html():
               <span class="font-mono text-xs text-slate-400 font-normal mr-1">[${{r.code}}]</span>
               <span class="truncate max-w-[220px]" title="${{r.name}}">${{r.name}}</span>
               ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+              ${{isRadarActive ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">RADAR</span>' : ''}}
             </div>
           `;
         }}
@@ -4562,7 +4780,7 @@ def generate_html():
         const isSuperavit = (r.combined_ratio <= 100.0);
 
         return `
-          <tr class="hover:bg-slate-800/60 ${{isSelected ? 'bg-cyan-500/20 border-l-4 border-l-cyan-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70 font-semibold' : '')}} cursor-pointer transition-colors">
+          <tr onclick="setAnalisisRadarEntity('${{r.code}}')" class="hover:bg-slate-800/70 ${{isRadarActive ? 'bg-cyan-500/15 border-l-4 border-l-cyan-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70 font-semibold' : '')}} cursor-pointer transition-colors" title="Clic para enfocar en Radar Técnico">
             <td class="py-2.5 px-2 text-center text-slate-400 font-mono">${{i + 1}}</td>
             <td class="py-2.5 px-2">${{entityNameHtml}}</td>
             <td class="py-2.5 px-2 text-center text-[10px] text-slate-300">${{r.tipo}}</td>
@@ -4581,9 +4799,9 @@ def generate_html():
             <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatPercent(r.retention_rate)}}</td>
             <td class="py-2.5 px-2 text-center" onclick="event.stopPropagation()">
               ${{state.analisisRamosMode === 'groups' ? `
-                <button onclick="openGroupModal('${{r.code}}')" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 transition-colors text-[9px] font-bold cursor-pointer">Ver Grupo</button>
+                <button onclick="openGroupModal('${{r.code}}')" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 transition-colors text-[9px] font-bold cursor-pointer">Grupo</button>
               ` : `
-                <button onclick="selectCompany('${{r.code}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold cursor-pointer">Ver Ficha</button>
+                <button onclick="selectCompany('${{r.code}}')" class="px-2 py-0.5 rounded bg-brand-red/20 text-brand-red hover:bg-brand-red hover:text-white transition-colors text-[9px] font-bold cursor-pointer">Ficha</button>
               `}}
             </td>
           </tr>
@@ -6064,6 +6282,8 @@ def generate_html():
     window.setAnalisisRamosMode = setAnalisisRamosMode;
     window.filterAnalisisRankingTable = filterAnalisisRankingTable;
     window.renderAnalisisRamosTab = renderAnalisisRamosTab;
+    window.renderAnalisisRamosRadarChart = renderAnalisisRamosRadarChart;
+    window.setAnalisisRadarEntity = setAnalisisRadarEntity;
     window.exportAnalisisRamosCSV = exportAnalisisRamosCSV;
     window.setBalScope = setBalScope;
     window.setBalStatement = setBalStatement;
