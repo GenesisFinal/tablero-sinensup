@@ -1702,15 +1702,44 @@ def generate_html():
         <div class="lg:col-span-5 glass-card p-5 rounded-xl space-y-4 flex flex-col justify-between">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <div>
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-chart-pie text-cyan-400"></i> Radar: Entidad vs Benchmark
-              </h3>
-              <p id="arRadarSubtitle" class="text-xs text-slate-400 mt-0.5 truncate max-w-[220px]">Comparativa en 6 dimensiones</p>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                  <i class="fa-solid fa-chart-pie text-cyan-400"></i> Radar: Entidad vs Mercado
+                </h3>
+                <button onclick="toggleRadarGuide()" class="px-1.5 py-0.5 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-[10px] font-semibold border border-cyan-500/30 flex items-center gap-1 transition-colors cursor-pointer" title="Ver explicación metodológica de cómo interpretar el Radar">
+                  <i class="fa-solid fa-circle-question text-[11px]"></i> ¿Cómo leer?
+                </button>
+              </div>
+              <p id="arRadarSubtitle" class="text-xs text-slate-400 mt-0.5 truncate max-w-[240px]">Comparativa en 6 dimensiones</p>
             </div>
             <!-- Entity selector dropdown for radar -->
             <select id="arRadarEntitySelect" onchange="setAnalisisRadarEntity(this.value)" 
-                    class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1 focus:border-cyan-400 focus:outline-none font-semibold max-w-[170px]">
+                    class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1 focus:border-cyan-400 focus:outline-none font-semibold max-w-[160px]">
             </select>
+          </div>
+
+          <!-- PANEL EXPLICATIVO DESPLEGABLE DE CÓMO LEER EL RADAR -->
+          <div id="arRadarGuideBox" class="hidden p-3.5 bg-slate-900/95 border border-cyan-500/30 rounded-xl text-xs space-y-2 text-slate-200">
+            <div class="flex items-center justify-between font-bold text-cyan-300 border-b border-slate-800 pb-1.5">
+              <span>📖 Guía de Interpretación del Radar Técnico</span>
+              <button onclick="toggleRadarGuide()" class="text-slate-400 hover:text-white text-sm cursor-pointer">&times;</button>
+            </div>
+            <p class="text-[11px] leading-relaxed text-slate-300">
+              El Radar mide la <b>huella de eficiencia técnica (0 a 100)</b> de la entidad seleccionada en comparación con el <b>promedio consolidado de todas las empresas del mercado</b> en este ramo.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] pt-1">
+              <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
+                <span class="text-cyan-300 font-bold">🔷 Polígono Cian:</span> Entidad seleccionada.
+              </div>
+              <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
+                <span class="text-amber-400 font-bold">🔶 Polígono Ámbar:</span> Promedio Total Mercado.
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-400 space-y-1 pt-1">
+              <div>• <b>Hacia afuera (100 pts):</b> Mayor eficiencia / mejor desempeño técnico.</div>
+              <div>• <b>Hacia el centro (0 pts):</b> Mayor ineficiencia o desbalance técnico.</div>
+              <div>• <b>Mercado (Consolidado):</b> Suma del 100% de empresas con primas en los subramos elegidos.</div>
+            </div>
           </div>
 
           <div id="analisisRamosRadarChart" class="w-full min-h-[340px] flex items-center justify-center"></div>
@@ -4662,7 +4691,7 @@ def generate_html():
       const targetScores = axesConfig.map(a => a.targetScore);
       const benchScores = axesConfig.map(a => a.benchScore);
 
-      const targetShortName = target.name.length > 18 ? target.name.slice(0, 16) + '...' : target.name;
+      const targetShortName = target.name.length > 20 ? target.name.slice(0, 18) + '...' : target.name;
 
       const data = [
         {{
@@ -4673,7 +4702,18 @@ def generate_html():
           name: 'Mercado (Consolidado)',
           line: {{ color: '#F59E0B', width: 2, dash: 'dot' }},
           fillcolor: 'rgba(245, 158, 11, 0.15)',
-          marker: {{ size: 5, color: '#FBBF24' }}
+          marker: {{ size: 6, color: '#FBBF24' }},
+          customdata: [...axesConfig.map(a => ({{ name: a.name, val: a.benchStr, sub: a.sub }})), {{ name: axesConfig[0].name, val: axesConfig[0].benchStr, sub: axesConfig[0].sub }}],
+          hovertemplate: 
+            '<b style="color:#FBBF24; font-size:13px;">%{{customdata.name}} (%{{customdata.sub}})</b><br>' +
+            '<span style="color:#CBD5E1;">Total Mercado:</span> <b style="color:#FFFFFF; font-size:13px;">%{{customdata.val}}</b><br>' +
+            '<span style="color:#94A3B8; font-size:11px;">Eficiencia Mercado:</span> <b style="color:#FBBF24;">%{{r:.1f}} / 100</b><extra></extra>',
+          hoverlabel: {{
+            bgcolor: '#020617',
+            bordercolor: '#F59E0B',
+            font: {{ color: '#FFFFFF', size: 12, family: 'Sora, sans-serif' }},
+            align: 'left'
+          }}
         }},
         {{
           type: 'scatterpolar',
@@ -4683,7 +4723,19 @@ def generate_html():
           name: targetShortName,
           line: {{ color: '#06B6D4', width: 2.5 }},
           fillcolor: 'rgba(6, 182, 212, 0.28)',
-          marker: {{ size: 6, color: '#22D3EE' }}
+          marker: {{ size: 7, color: '#22D3EE' }},
+          customdata: [...axesConfig.map(a => ({{ name: a.name, targetVal: a.targetStr, benchVal: a.benchStr, sub: a.sub }})), {{ name: axesConfig[0].name, targetVal: axesConfig[0].targetStr, benchVal: axesConfig[0].benchStr, sub: axesConfig[0].sub }}],
+          hovertemplate: 
+            '<b style="color:#38BDF8; font-size:13px;">%{{customdata.name}} (%{{customdata.sub}})</b><br>' +
+            '<span style="color:#CBD5E1;">%{{data.name}}:</span> <b style="color:#22D3EE; font-size:13px;">%{{customdata.targetVal}}</b><br>' +
+            '<span style="color:#CBD5E1;">Total Mercado:</span> <b style="color:#FBBF24;">%{{customdata.benchVal}}</b><br>' +
+            '<span style="color:#94A3B8; font-size:11px;">Score Normalizado:</span> <b style="color:#38BDF8;">%{{r:.1f}} / 100</b><extra></extra>',
+          hoverlabel: {{
+            bgcolor: '#020617',
+            bordercolor: '#06B6D4',
+            font: {{ color: '#FFFFFF', size: 12, family: 'Sora, sans-serif' }},
+            align: 'left'
+          }}
         }}
       ];
 
@@ -4725,17 +4777,36 @@ def generate_html():
       if (breakdownEl) {{
         breakdownEl.innerHTML = axesConfig.map(a => {{
           const isBetter = a.betterHigher ? (a.targetVal >= a.benchVal) : (a.targetVal <= a.benchVal);
+          const badgeText = isBetter ? '✓ Favorable' : '⚠ Desfavorable';
+          const badgeClass = isBetter ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border-rose-500/40';
           return `
-            <div class="p-2 rounded-lg bg-slate-900/80 border border-slate-800">
-              <div class="text-[10px] text-slate-400 font-semibold truncate">${{a.name}}</div>
-              <div class="flex items-baseline justify-between mt-1">
-                <span class="font-bold text-xs ${{isBetter ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{a.targetStr}}</span>
-                <span class="text-[9px] text-slate-500 font-mono">Mkt: ${{a.benchStr}}</span>
+            <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between" title="${{a.name}} (${{a.sub}}): ${{a.targetStr}} vs Mercado ${{a.benchStr}}">
+              <div>
+                <div class="flex items-center justify-between gap-1">
+                  <span class="text-[10px] text-slate-200 font-bold truncate">${{a.name}}</span>
+                  <span class="px-1 py-0.2 rounded text-[7px] font-bold border ${{badgeClass}}">${{badgeText}}</span>
+                </div>
+                <div class="text-[9px] text-slate-400">${{a.sub}}</div>
+              </div>
+              <div class="mt-1 pt-1 border-t border-slate-800/80">
+                <div class="flex items-baseline justify-between font-mono">
+                  <span class="text-[8px] text-slate-400">Entidad:</span>
+                  <span class="font-bold text-xs ${{isBetter ? 'text-emerald-400' : 'text-rose-400'}}">${{a.targetStr}}</span>
+                </div>
+                <div class="flex items-baseline justify-between font-mono mt-0.5">
+                  <span class="text-[8px] text-slate-500">Mercado:</span>
+                  <span class="font-semibold text-[9px] text-amber-300/90">${{a.benchStr}}</span>
+                </div>
               </div>
             </div>
           `;
         }}).join('');
       }}
+    }}
+
+    function toggleRadarGuide() {{
+      const box = document.getElementById('arRadarGuideBox');
+      if (box) box.classList.toggle('hidden');
     }}
 
     function renderAnalisisRankingTableOnly() {{
@@ -6284,6 +6355,7 @@ def generate_html():
     window.renderAnalisisRamosTab = renderAnalisisRamosTab;
     window.renderAnalisisRamosRadarChart = renderAnalisisRamosRadarChart;
     window.setAnalisisRadarEntity = setAnalisisRadarEntity;
+    window.toggleRadarGuide = toggleRadarGuide;
     window.exportAnalisisRamosCSV = exportAnalisisRamosCSV;
     window.setBalScope = setBalScope;
     window.setBalStatement = setBalStatement;
