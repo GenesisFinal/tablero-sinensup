@@ -19,7 +19,11 @@ def generate_html():
   <meta http-equiv="Expires" content="0">
 
   <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.png">
   <meta name="theme-color" content="#0F172A">
 
   <!-- Google Fonts: Sora & JetBrains Mono -->
@@ -48,8 +52,8 @@ def generate_html():
           }},
           colors: {{
             brand: {{
-              red: '#E20039',
-              blue: '#38BDF8',
+              red: '#BE002F',
+              blue: '#0284C7',
               navy: '#0F172A',
               card: '#1E293B',
               border: '#334155',
@@ -67,6 +71,7 @@ def generate_html():
       font-family: 'Sora', sans-serif;
       background-color: #0B1120;
       color: #F1F5F9;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }}
     .font-mono {{
       font-family: 'JetBrains Mono', monospace;
@@ -75,6 +80,7 @@ def generate_html():
       background: rgba(30, 41, 59, 0.7);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(51, 65, 85, 0.6);
+      transition: background 0.25s ease, border-color 0.25s ease;
     }}
     .combobox-dropdown-menu {{
       z-index: 99999 !important;
@@ -90,8 +96,8 @@ def generate_html():
       z-index: 1 !important;
     }}
     .tab-btn.active {{
-      background-color: #E20039;
-      color: #FFFFFF;
+      background-color: #E20039 !important;
+      color: #FFFFFF !important;
       box-shadow: 0 4px 14px rgba(226, 0, 57, 0.4);
     }}
     /* Custom Scrollbars */
@@ -109,9 +115,630 @@ def generate_html():
     ::-webkit-scrollbar-thumb:hover {{
       background: #475569;
     }}
+
+    /* ======================================================== */
+    /* LIGHT MODE STYLES & HIGH CONTRAST (html:not(.dark))      */
+    /* Regla Fundamental: Fondo claro -> Letra oscura           */
+    /*                    Fondo oscuro -> Letra clara           */
+    /* ======================================================== */
+    ::selection {{
+      background-color: #BE002F;
+      color: #FFFFFF;
+    }}
+
+    html:not(.dark) body {{
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+    }}
+
+    html:not(.dark) header {{
+      background-color: rgba(255, 255, 255, 0.96) !important;
+      border-bottom-color: #CBD5E1 !important;
+      box-shadow: 0 1px 4px 0 rgba(15, 23, 42, 0.08);
+    }}
+
+    html:not(.dark) header .border-slate-800,
+    html:not(.dark) header .border-slate-800\/60 {{
+      border-color: #E2E8F0 !important;
+    }}
+
+    html:not(.dark) .glass-card {{
+      background: #FFFFFF !important;
+      backdrop-filter: none !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    }}
+
+    html:not(.dark) footer {{
+      background-color: #FFFFFF !important;
+      border-top-color: #CBD5E1 !important;
+      color: #334155 !important;
+    }}
+
+    /* Backgrounds oscuros que se transforman en claros en Light Mode */
+    html:not(.dark) .bg-slate-950,
+    html:not(.dark) .bg-slate-950\/80,
+    html:not(.dark) .bg-slate-950\/90 {{
+      background-color: #F8FAFC !important;
+    }}
+    html:not(.dark) .bg-slate-900,
+    html:not(.dark) .bg-slate-900\/90,
+    html:not(.dark) .bg-slate-900\/80,
+    html:not(.dark) .bg-slate-900\/60,
+    html:not(.dark) .bg-slate-900\/50 {{
+      background-color: #FFFFFF !important;
+    }}
+    html:not(.dark) .bg-slate-800,
+    html:not(.dark) .bg-slate-800\/80,
+    html:not(.dark) .bg-slate-800\/70,
+    html:not(.dark) .bg-slate-800\/60,
+    html:not(.dark) .bg-slate-800\/50,
+    html:not(.dark) .bg-slate-800\/40 {{
+      background-color: #F1F5F9 !important;
+    }}
+    html:not(.dark) .bg-slate-700 {{
+      background-color: #E2E8F0 !important;
+    }}
+
+    /* Cancelar gradientes oscuros en contenedores generales */
+    html:not(.dark) .from-slate-900,
+    html:not(.dark) .from-slate-950 {{
+      --tw-gradient-from: #FFFFFF var(--tw-gradient-from-position) !important;
+    }}
+    html:not(.dark) .via-slate-900 {{
+      --tw-gradient-stops: var(--tw-gradient-from), #F8FAFC var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+    }}
+    html:not(.dark) .to-slate-950 {{
+      --tw-gradient-to: #F1F5F9 var(--tw-gradient-to-position) !important;
+    }}
+
+    /* Bordes generales en Modo Claro */
+    html:not(.dark) .border-slate-800,
+    html:not(.dark) .border-slate-800\/80,
+    html:not(.dark) .border-slate-800\/60,
+    html:not(.dark) .border-slate-800\/40,
+    html:not(.dark) .border-slate-700,
+    html:not(.dark) .border-slate-700\/80,
+    html:not(.dark) .border-slate-700\/60,
+    html:not(.dark) .border-slate-700\/50 {{
+      border-color: #CBD5E1 !important;
+    }}
+
+    /* ======================================================== */
+    /* REGLA 1: TEXTOS SOBRE FONDOS CLAROS (POR DEFECTO OSCUROS)*/
+    /* ======================================================== */
+    html:not(.dark) .text-white {{
+      color: #020617 !important; /* Negro profundo */
+    }}
+    html:not(.dark) .text-slate-100,
+    html:not(.dark) .text-slate-200 {{
+      color: #0F172A !important;
+    }}
+    html:not(.dark) .text-slate-300 {{
+      color: #1E293B !important;
+    }}
+    html:not(.dark) .text-slate-400 {{
+      color: #334155 !important; /* Carbón oscuro nítido */
+    }}
+    html:not(.dark) .text-slate-500 {{
+      color: #475569 !important;
+    }}
+
+    /* Celestes y Azules sobre fondo claro -> Azul marino (#0369A1) */
+    html:not(.dark) .text-sky-400,
+    html:not(.dark) .text-sky-300,
+    html:not(.dark) .text-cyan-400,
+    html:not(.dark) .text-cyan-300,
+    html:not(.dark) .text-brand-blue {{
+      color: #0369A1 !important;
+    }}
+    html:not(.dark) .border-sky-500\/30,
+    html:not(.dark) .border-sky-500\/40,
+    html:not(.dark) .border-sky-500\/50,
+    html:not(.dark) .border-cyan-500\/30,
+    html:not(.dark) .border-cyan-500\/40,
+    html:not(.dark) .border-cyan-500\/50 {{
+      border-color: rgba(3, 105, 161, 0.4) !important;
+    }}
+
+    /* Rojos sobre fondo claro -> Rojo institucional (#BE002F) */
+    html:not(.dark) .text-rose-400,
+    html:not(.dark) .text-rose-300,
+    html:not(.dark) .text-red-400,
+    html:not(.dark) .text-brand-red {{
+      color: #BE002F !important;
+    }}
+    html:not(.dark) [class*="border-rose-500"],
+    html:not(.dark) [class*="border-brand-red"] {{
+      border-color: rgba(190, 0, 47, 0.4) !important;
+    }}
+
+    /* Verdes sobre fondo claro -> Verde esmeralda bosque (#047857) */
+    html:not(.dark) .text-emerald-400,
+    html:not(.dark) .text-emerald-300,
+    html:not(.dark) .text-green-400,
+    html:not(.dark) .text-green-300,
+    html:not(.dark) .text-brand-green {{
+      color: #047857 !important;
+    }}
+    html:not(.dark) [class*="border-emerald-500"] {{
+      border-color: rgba(4, 120, 87, 0.4) !important;
+    }}
+
+    /* Purpuras e Indigos profundos sobre fondo claro */
+    html:not(.dark) .text-purple-300,
+    html:not(.dark) .text-purple-400,
+    html:not(.dark) .text-purple-500,
+    html:not(.dark) .text-indigo-300,
+    html:not(.dark) .text-indigo-400 {{
+      color: #6B21A8 !important; /* Royal purple de alto contraste (>7:1) */
+    }}
+
+    /* Filas de tablas con fondos oscuros convertidas a claras */
+    html:not(.dark) tr[class*="bg-slate-900"] {{
+      background-color: #F1F5F9 !important;
+      border-color: #CBD5E1 !important;
+    }}
+    html:not(.dark) tr[class*="bg-slate-900"] td,
+    html:not(.dark) tr[class*="bg-slate-900"] span {{
+      color: #0F172A !important;
+    }}
+    html:not(.dark) tr[class*="bg-slate-900"] i {{
+      color: #C2410C !important;
+    }}
+
+    /* Tab 10: Filas de Capítulos y Rubros del Árbol de Balances */
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/95"] {{
+      background-color: #E2E8F0 !important;
+      border-top: 2px solid #94A3B8 !important;
+      border-bottom: 2px solid #CBD5E1 !important;
+    }}
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/95"] span,
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/95"] td {{
+      color: #020617 !important;
+    }}
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/95"] .text-amber-400 {{
+      color: #C2410C !important;
+    }}
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/50"] {{
+      background-color: #F8FAFC !important;
+      border-top: 1px solid #E2E8F0 !important;
+    }}
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/50"] span,
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/50"] td {{
+      color: #0F172A !important;
+    }}
+    html:not(.dark) #balanceTreeTableBody tr[class*="bg-slate-900/50"] .text-emerald-400 {{
+      color: #047857 !important;
+    }}
+
+    /* Sustituir Amarillo por Naranja Oscuro (#C2410C) en modo claro */
+    html:not(.dark) .text-amber-300,
+    html:not(.dark) .text-amber-400,
+    html:not(.dark) .text-amber-500,
+    html:not(.dark) .text-yellow-300,
+    html:not(.dark) .text-yellow-400,
+    html:not(.dark) .text-yellow-500 {{
+      color: #C2410C !important;
+    }}
+    html:not(.dark) [class*="border-amber-"],
+    html:not(.dark) [class*="border-yellow-"] {{
+      border-color: #C2410C !important;
+    }}
+
+    /* Badges / Pill Tags sobre fondo claro */
+    html:not(.dark) span[class*="bg-amber-500\/"],
+    html:not(.dark) span[class*="bg-amber-400\/"],
+    html:not(.dark) div[class*="bg-amber-500\/"]:not(button) {{
+      background-color: rgba(194, 65, 12, 0.12) !important;
+      color: #9A3412 !important;
+      border-color: rgba(194, 65, 12, 0.35) !important;
+    }}
+    html:not(.dark) span[class*="bg-emerald-500\/"],
+    html:not(.dark) div[class*="bg-emerald-500\/"]:not(button) {{
+      background-color: rgba(4, 120, 87, 0.12) !important;
+      color: #047857 !important;
+      border-color: rgba(4, 120, 87, 0.35) !important;
+    }}
+    html:not(.dark) span[class*="bg-cyan-500\/"],
+    html:not(.dark) span[class*="bg-sky-500\/"],
+    html:not(.dark) div[class*="bg-cyan-500\/"]:not(button) {{
+      background-color: rgba(2, 132, 199, 0.12) !important;
+      color: #0369A1 !important;
+      border-color: rgba(2, 132, 199, 0.35) !important;
+    }}
+    html:not(.dark) span[class*="bg-rose-500\/"],
+    html:not(.dark) span[class*="bg-brand-red\/"],
+    html:not(.dark) div[class*="bg-rose-500\/"]:not(button) {{
+      background-color: rgba(190, 0, 47, 0.12) !important;
+      color: #9F1239 !important;
+      border-color: rgba(190, 0, 47, 0.35) !important;
+    }}
+
+    /* ======================================================== */
+    /* TAB 1: BANNERS 1 Y 2                                     */
+    /* ======================================================== */
+    html:not(.dark) #bannerInstitucional,
+    html:not(.dark) #bannerTecnico {{
+      background: #FFFFFF !important;
+      background-image: none !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06) !important;
+    }}
+
+    /* Títulos principales Banner 1 y 2 en negro absoluto */
+    html:not(.dark) #bannerInstitucional > div:first-child span:first-child,
+    html:not(.dark) #bannerTecnico > div:first-child span:first-child {{
+      color: #020617 !important;
+    }}
+
+    html:not(.dark) #bannerInstitucional .grid > div,
+    html:not(.dark) #bannerTecnico .grid > div {{
+      background-color: #F8FAFC !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    }}
+    html:not(.dark) #bannerInstitucional .grid > div:hover,
+    html:not(.dark) #bannerTecnico .grid > div:hover {{
+      background-color: #F1F5F9 !important;
+    }}
+
+    /* Encabezados coloreados dentro de las tarjetas */
+    html:not(.dark) #bannerInstitucional .grid > div:nth-child(1) span:first-child,
+    html:not(.dark) #bannerTecnico .grid > div:nth-child(1) div:first-child {{
+      color: #0369A1 !important;
+    }}
+    html:not(.dark) #bannerInstitucional .grid > div:nth-child(2) span:first-child,
+    html:not(.dark) #bannerInstitucional .grid > div:nth-child(2) i,
+    html:not(.dark) #bannerTecnico .grid > div:nth-child(2) div:first-child,
+    html:not(.dark) #bannerTecnico .grid > div:nth-child(2) i {{
+      color: #C2410C !important;
+    }}
+    html:not(.dark) #bannerInstitucional .grid > div:nth-child(3) span:first-child,
+    html:not(.dark) #bannerTecnico .grid > div:nth-child(3) div:first-child {{
+      color: #BE002F !important;
+    }}
+    html:not(.dark) #bannerInstitucional .grid > div:nth-child(4) span:first-child,
+    html:not(.dark) #bannerTecnico .grid > div:nth-child(4) div:first-child {{
+      color: #7E22CE !important;
+    }}
+
+    html:not(.dark) #bannerTecnico .fa-boxes-stacked {{
+      color: #C2410C !important;
+    }}
+
+    /* Valores y subtítulos en ambos banners: negros y carbón */
+    html:not(.dark) #bannerInstitucional .grid > div #macroPatrimVal,
+    html:not(.dark) #bannerInstitucional .grid > div #macroArtVal,
+    html:not(.dark) #bannerInstitucional .grid > div #macroPersonasVal,
+    html:not(.dark) #bannerInstitucional .grid > div #macroRetiroVal,
+    html:not(.dark) #bannerTecnico .grid > div #prodPatrimPrimas,
+    html:not(.dark) #bannerTecnico .grid > div #prodArtPrimas,
+    html:not(.dark) #bannerTecnico .grid > div #prodPersonasPrimas,
+    html:not(.dark) #bannerTecnico .grid > div #prodRetiroPrimas,
+    html:not(.dark) #macroTotalVal {{
+      color: #020617 !important;
+    }}
+
+    html:not(.dark) #bannerInstitucional .grid > div #macroPatrimSub,
+    html:not(.dark) #bannerInstitucional .grid > div #macroArtSub,
+    html:not(.dark) #bannerInstitucional .grid > div #macroPersonasSub,
+    html:not(.dark) #bannerInstitucional .grid > div #macroRetiroSub,
+    html:not(.dark) #bannerTecnico .grid > div #prodPatrimDetails,
+    html:not(.dark) #bannerTecnico .grid > div #prodArtDetails,
+    html:not(.dark) #bannerTecnico .grid > div #prodPersonasDetails,
+    html:not(.dark) #bannerTecnico .grid > div #prodRetiroDetails {{
+      color: #334155 !important;
+    }}
+
+    html:not(.dark) #personasInsightBox {{
+      background-color: #F1F5F9 !important;
+      border-color: #CBD5E1 !important;
+      color: #0F172A !important;
+    }}
+    html:not(.dark) #personasInsightBox b {{
+      color: #020617 !important;
+    }}
+
+    /* ======================================================== */
+    /* BOTONES ACTIVOS E INACTIVOS                              */
+    /* ======================================================== */
+    html:not(.dark) button.bg-brand-red,
+    html:not(.dark) .tab-btn.active {{
+      background-color: #BE002F !important;
+      color: #FFFFFF !important;
+      border-color: #BE002F !important;
+      box-shadow: 0 1px 3px rgba(190, 0, 47, 0.35) !important;
+    }}
+    html:not(.dark) button.bg-brand-red *,
+    html:not(.dark) .tab-btn.active * {{
+      color: #FFFFFF !important;
+    }}
+
+    html:not(.dark) button.bg-amber-500,
+    html:not(.dark) button.bg-amber-400 {{
+      background-color: #C2410C !important;
+      color: #FFFFFF !important;
+      border-color: #C2410C !important;
+      box-shadow: 0 1px 3px rgba(194, 65, 12, 0.35) !important;
+    }}
+    html:not(.dark) button.bg-amber-500 *,
+    html:not(.dark) button.bg-amber-400 * {{
+      color: #FFFFFF !important;
+    }}
+
+    html:not(.dark) button.bg-emerald-500,
+    html:not(.dark) button.bg-emerald-600 {{
+      background-color: #047857 !important;
+      color: #FFFFFF !important;
+      border-color: #047857 !important;
+      box-shadow: 0 1px 3px rgba(4, 120, 87, 0.35) !important;
+    }}
+    html:not(.dark) button.bg-emerald-500 *,
+    html:not(.dark) button.bg-emerald-600 * {{
+      color: #FFFFFF !important;
+    }}
+
+    html:not(.dark) button.bg-cyan-500,
+    html:not(.dark) button.bg-sky-500 {{
+      background-color: #0284C7 !important;
+      color: #FFFFFF !important;
+      border-color: #0284C7 !important;
+      box-shadow: 0 1px 3px rgba(2, 132, 199, 0.35) !important;
+    }}
+    html:not(.dark) button.bg-cyan-500 *,
+    html:not(.dark) button.bg-sky-500 * {{
+      color: #FFFFFF !important;
+    }}
+
+    html:not(.dark) button.bg-indigo-500 {{
+      background-color: #4338CA !important;
+      color: #FFFFFF !important;
+      border-color: #4338CA !important;
+      box-shadow: 0 1px 3px rgba(67, 56, 202, 0.35) !important;
+    }}
+    html:not(.dark) button.bg-indigo-500 * {{
+      color: #FFFFFF !important;
+    }}
+
+    /* Botones inactivos: fondo claro y letra oscura */
+    html:not(.dark) button.bg-slate-800,
+    html:not(.dark) button.bg-slate-700,
+    html:not(.dark) #ciaComboboxBtn {{
+      background-color: #F1F5F9 !important;
+      border: 1px solid #CBD5E1 !important;
+      color: #1E293B !important;
+    }}
+    html:not(.dark) button.bg-slate-800 *,
+    html:not(.dark) button.bg-slate-700 *,
+    html:not(.dark) #ciaComboboxBtn * {{
+      color: #1E293B !important;
+    }}
+    html:not(.dark) button.bg-slate-800:hover,
+    html:not(.dark) button.bg-slate-700:hover,
+    html:not(.dark) #ciaComboboxBtn:hover {{
+      background-color: #E2E8F0 !important;
+      color: #020617 !important;
+      border-color: #94A3B8 !important;
+    }}
+
+    html:not(.dark) .tab-btn:not(.active) {{
+      color: #334155 !important;
+      background-color: transparent !important;
+    }}
+    html:not(.dark) .tab-btn:not(.active):hover {{
+      color: #020617 !important;
+      background-color: #E2E8F0 !important;
+    }}
+
+    /* Logo del encabezado */
+    html:not(.dark) #headerLogo,
+    html:not(.dark) #headerLogo *,
+    html:not(.dark) header .fa-shield-halved {{
+      color: #FFFFFF !important;
+    }}
+
+    /* ======================================================== */
+    /* REGLA 2: TARJETAS Y CONTENEDORES OSCUROS (LETRA CLARA)   */
+    /* Scorecard Técnico del Ramo (#arScorecardCard en Tab 5)   */
+    /* y Modal de Grupos (#groupDetailModal)                    */
+    /* ======================================================== */
+    html:not(.dark) #arScorecardCard,
+    html:not(.dark) #groupDetailModal .glass-card,
+    html:not(.dark) .dark-kpi-tile,
+    html:not(.dark) #arScorecardGrid > div,
+    html:not(.dark) #groupModalKpis > div,
+    html:not(.dark) #groupModalMembersList {{
+      background-color: #0F172A !important; /* Preservado oscuro */
+      border-color: #334155 !important;
+      color: #F8FAFC !important;
+    }}
+
+    /* Títulos y textos en tarjetas oscuras: BLANCO PURO */
+    html:not(.dark) #arScorecardCard h3,
+    html:not(.dark) #groupDetailModal h3,
+    html:not(.dark) #groupDetailModal h4,
+    html:not(.dark) #arScorecardCard .text-white,
+    html:not(.dark) #groupDetailModal .text-white,
+    html:not(.dark) #groupModalMembersList .text-white {{
+      color: #FFFFFF !important;
+    }}
+
+    /* Subtítulos y etiquetas en tarjetas oscuras: SLATE CLARO LEGIBLE */
+    html:not(.dark) #arScorecardCard .text-slate-400,
+    html:not(.dark) #arScorecardCard .text-slate-300,
+    html:not(.dark) #groupDetailModal .text-slate-400,
+    html:not(.dark) #groupDetailModal .text-slate-300,
+    html:not(.dark) #arScorecardGrid > div div:first-child,
+    html:not(.dark) #arScorecardGrid > div div:last-child,
+    html:not(.dark) .dark-kpi-tile div:first-child,
+    html:not(.dark) .dark-kpi-tile div:last-child,
+    html:not(.dark) #groupModalKpis > div div:first-child,
+    html:not(.dark) #groupModalKpis > div div:last-child {{
+      color: #94A3B8 !important;
+    }}
+
+    /* Métricas vivas y luminosas en tarjetas oscuras */
+    html:not(.dark) #arScorecardGrid #arKpiPrimasDev,
+    html:not(.dark) #arScorecardCard #arEntitiesCount,
+    html:not(.dark) #arScorecardCard .text-cyan-300,
+    html:not(.dark) #arScorecardCard .text-cyan-400,
+    html:not(.dark) #arScorecardCard .text-sky-300,
+    html:not(.dark) #arScorecardCard .text-sky-400,
+    html:not(.dark) #groupDetailModal .text-cyan-400,
+    html:not(.dark) #groupDetailModal .text-sky-400,
+    html:not(.dark) .dark-kpi-tile .text-cyan-400,
+    html:not(.dark) .dark-kpi-tile .text-cyan-300,
+    html:not(.dark) .dark-kpi-tile .text-sky-300 {{
+      color: #38BDF8 !important;
+    }}
+
+    html:not(.dark) #arScorecardGrid #arKpiCombined,
+    html:not(.dark) #arScorecardGrid #arKpiCombinedStatus,
+    html:not(.dark) #arScorecardGrid #arKpiMargenTec,
+    html:not(.dark) #arScorecardCard .text-emerald-400,
+    html:not(.dark) #arScorecardCard .text-emerald-300,
+    html:not(.dark) #groupDetailModal .text-emerald-400,
+    html:not(.dark) .dark-kpi-tile .text-emerald-400 {{
+      color: #34D399 !important;
+    }}
+
+    html:not(.dark) #arScorecardGrid #arKpiLoss,
+    html:not(.dark) #arScorecardCard .text-rose-400,
+    html:not(.dark) #arScorecardCard .text-rose-300,
+    html:not(.dark) #groupDetailModal .text-rose-400,
+    html:not(.dark) .dark-kpi-tile .text-rose-400,
+    html:not(.dark) .dark-kpi-tile .text-rose-300 {{
+      color: #F87171 !important;
+    }}
+
+    html:not(.dark) #arScorecardGrid #arKpiAcq,
+    html:not(.dark) #arScorecardCard .text-amber-400,
+    html:not(.dark) #groupModalKpis .text-amber-400,
+    html:not(.dark) .dark-kpi-tile .text-amber-400 {{
+      color: #FB923C !important;
+    }}
+
+    html:not(.dark) #arScorecardGrid #arKpiExp {{
+      color: #38BDF8 !important;
+    }}
+    html:not(.dark) #arScorecardGrid #arKpiRetencion {{
+      color: #A5B4FC !important;
+    }}
+    html:not(.dark) #arScorecardGrid #arKpiAnulacion {{
+      color: #F1F5F9 !important;
+    }}
+
+    html:not(.dark) #groupModalMembersList > div:hover {{
+      background-color: rgba(30, 41, 59, 0.7) !important;
+    }}
+    html:not(.dark) #groupModalMembersList .text-slate-200 {{
+      color: #E2E8F0 !important;
+    }}
+
+    /* Inputs, selects and search dropdowns */
+    html:not(.dark) input,
+    html:not(.dark) select {{
+      background-color: #FFFFFF !important;
+      border-color: #94A3B8 !important;
+      color: #020617 !important;
+    }}
+    html:not(.dark) input::placeholder {{
+      color: #64748B !important;
+    }}
+    html:not(.dark) .combobox-dropdown-menu,
+    html:not(.dark) #searchResultsDropdown {{
+      background-color: #FFFFFF !important;
+      border-color: #94A3B8 !important;
+      color: #020617 !important;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2), 0 8px 10px -6px rgba(15, 23, 42, 0.15) !important;
+    }}
+    html:not(.dark) .combobox-dropdown-menu div:hover,
+    html:not(.dark) #searchResultsDropdown div:hover {{
+      background-color: #F1F5F9 !important;
+    }}
+
+    /* ======================================================== */
+    /* TAB 11: FLUJO DE RESULTADOS (SANKEY) EN MODO CLARO       */
+    /* ======================================================== */
+    html:not(.dark) #tab-flujo-sankey .glass-card {{
+      background: #FFFFFF !important;
+      background-image: none !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06) !important;
+    }}
+    html:not(.dark) #tab-flujo-sankey .sankey-kpi-card {{
+      background-color: #F8FAFC !important;
+      border-color: #CBD5E1 !important;
+    }}
+    html:not(.dark) #tab-flujo-sankey .sankey-kpi-card .text-white,
+    html:not(.dark) #sankeySelectedTitle,
+    html:not(.dark) #sankeyEntitiesCount {{
+      color: #020617 !important;
+    }}
+    html:not(.dark) #tab-flujo-sankey button[id^="sankeyScopeBtn-"]:not(.bg-indigo-600) {{
+      background-color: #F1F5F9 !important;
+      color: #334155 !important;
+      border-color: #CBD5E1 !important;
+    }}
+    html:not(.dark) #tab-flujo-sankey button[id^="sankeyScopeBtn-"]:not(.bg-indigo-600):hover {{
+      background-color: #E2E8F0 !important;
+      color: #0F172A !important;
+    }}
+    html:not(.dark) #sankeyDiagnosisGrid > div {{
+      background-color: #F8FAFC !important;
+      border-color: #CBD5E1 !important;
+    }}
+    html:not(.dark) #sankeyDiagnosisGrid p {{
+      color: #334155 !important;
+    }}
+    html:not(.dark) #sankeyDiagnosisGrid span.text-slate-300 {{
+      color: #0F172A !important;
+    }}
+    html:not(.dark) #tab-flujo-sankey h3,
+    html:not(.dark) #tab-flujo-sankey h4 {{
+      color: #0F172A !important;
+    }}
+    html:not(.dark) #tab-flujo-sankey .text-slate-400 {{
+      color: #475569 !important;
+    }}
+
+    /* Tablas en Modo Claro */
+    html:not(.dark) thead {{
+      background-color: #F1F5F9 !important;
+      border-bottom-color: #CBD5E1 !important;
+    }}
+    html:not(.dark) thead th {{
+      color: #1E293B !important;
+    }}
+    html:not(.dark) tfoot {{
+      background-color: #F1F5F9 !important;
+      border-top-color: #CBD5E1 !important;
+    }}
+    html:not(.dark) tfoot td,
+    html:not(.dark) tfoot th {{
+      color: #0F172A !important;
+    }}
+    html:not(.dark) tr:hover {{
+      background-color: #F1F5F9 !important;
+    }}
+    html:not(.dark) td {{
+      border-color: #E2E8F0 !important;
+    }}
+
+    /* Scrollbars in light mode */
+    html:not(.dark)::-webkit-scrollbar-track {{
+      background: #F1F5F9;
+    }}
+    html:not(.dark)::-webkit-scrollbar-thumb {{
+      background: #94A3B8;
+    }}
+    html:not(.dark)::-webkit-scrollbar-thumb:hover {{
+      background: #64748B;
+    }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-brand-red selection:text-white">
+<body class="min-h-screen flex flex-col antialiased">
 
   <!-- TOP NAVIGATION HEADER -->
   <header class="sticky top-0 z-50 bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800">
@@ -119,7 +746,7 @@ def generate_html():
       
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3.5">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-red to-rose-700 flex items-center justify-center shadow-lg shadow-brand-red/30">
+        <div id="headerLogo" class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-red to-rose-700 flex items-center justify-center shadow-lg shadow-brand-red/30">
           <i class="fa-solid fa-shield-halved text-white text-lg"></i>
         </div>
         <div>
@@ -143,6 +770,12 @@ def generate_html():
         <button onclick="exportToCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-2">
           <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar CSV
         </button>
+
+        <!-- Light/Dark Mode Toggle -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-2" title="Cambiar tema claro / oscuro">
+          <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
+          <span id="themeToggleText">Modo Claro</span>
+        </button>
       </div>
 
     </div>
@@ -164,17 +797,23 @@ def generate_html():
       <button onclick="switchTab('analisis-ramo')" id="tabBtn-analisis-ramo" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-microscope text-cyan-400"></i> 5. Análisis por Ramo
       </button>
+      <button onclick="switchTab('comparativo-mercado')" id="tabBtn-comparativo-mercado" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-code-compare text-amber-400"></i> 6. Comparativo de Mercado
+      </button>
       <button onclick="switchTab('inversiones-finanzas')" id="tabBtn-inversiones-finanzas" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-chart-line"></i> 6. Inversiones y Finanzas
+        <i class="fa-solid fa-chart-line"></i> 7. Inversiones y Finanzas
       </button>
       <button onclick="switchTab('solvencia-ratios')" id="tabBtn-solvencia-ratios" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-scale-balanced"></i> 7. Solvencia y Ratios SSN
+        <i class="fa-solid fa-scale-balanced"></i> 8. Solvencia y Ratios SSN
       </button>
       <button onclick="switchTab('ratios-gestion')" id="tabBtn-ratios-gestion" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-gauge-high"></i> 8. Ratios de Gestión
+        <i class="fa-solid fa-gauge-high"></i> 9. Ratios de Gestión
       </button>
       <button onclick="switchTab('balances')" id="tabBtn-balances" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 9. Balances Contables
+        <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i> 10. Balances Contables
+      </button>
+      <button onclick="switchTab('flujo-sankey')" id="tabBtn-flujo-sankey" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-diagram-project text-indigo-400"></i> 11. Flujo de Resultados
       </button>
     </div>
   </header>
@@ -188,7 +827,7 @@ def generate_html():
     <section id="tab-vision-mercado" class="space-y-6">
       
       <!-- 1. BANNER: DISTRIBUCIÓN POR TIPO DE ASEGURADORA (185 ENTIDADES) -->
-      <div class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
+      <div id="bannerInstitucional" class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-building-columns text-brand-blue"></i> 1. Clasificación Institucional por Tipo de Aseguradora
@@ -243,7 +882,7 @@ def generate_html():
       </div>
 
       <!-- 2. BANNER: DISTRIBUCIÓN POR CONJUNTO DE PRODUCTOS (SUBRAMOS REALES) -->
-      <div class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+      <div id="bannerTecnico" class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-boxes-stacked text-amber-400"></i> 2. Clasificación Técnica por Línea Real de Producto (Subramos)
@@ -399,8 +1038,8 @@ def generate_html():
               <button onclick="resetScatterPlotZoom()" title="Restablecer vista / Reset Axes" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-arrows-rotate text-emerald-400"></i> Centrar
               </button>
-              <button onclick="downloadScatterPlotPNG()" title="Descargar imagen PNG" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
-                <i class="fa-solid fa-camera text-sky-400"></i> PNG
+              <button onclick="downloadPlotAsPNG('marketScatterPlot', 'mapa_estrategico_mercado')" data-plot-target="marketScatterPlot" title="Descargar imagen PNG" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
               </button>
             </div>
           </div>
@@ -601,6 +1240,9 @@ def generate_html():
             </h3>
             <p class="text-xs text-slate-400">Evolución contable desde Primas Emitidas y Variación de Reservas Matemáticas / Riesgos en Curso hasta Resultado Neto (SSN Moneda Homogénea)</p>
           </div>
+          <button onclick="downloadPlotAsPNG('ciaWaterfallPlot', 'cascada_rentabilidad')" data-plot-target="ciaWaterfallPlot" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como imagen PNG">
+            <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+          </button>
         </div>
         <div id="ciaWaterfallPlot" class="w-full h-96"></div>
       </div>
@@ -608,16 +1250,26 @@ def generate_html():
       <!-- Balance Sheet Breakdown Donuts -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="glass-card p-5 rounded-xl">
-          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-chart-pie text-emerald-400"></i> Composición del Activo
-          </h3>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-emerald-400"></i> Composición del Activo
+            </h3>
+            <button onclick="downloadPlotAsPNG('ciaAssetDonut', 'composicion_activo')" data-plot-target="ciaAssetDonut" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+          </div>
           <div id="ciaAssetDonut" class="w-full h-72"></div>
         </div>
 
         <div class="glass-card p-5 rounded-xl">
-          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-chart-pie text-purple-400"></i> Composición de Pasivo y Patrimonio Neto
-          </h3>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-purple-400"></i> Composición de Pasivo y Patrimonio Neto
+            </h3>
+            <button onclick="downloadPlotAsPNG('ciaLiabDonut', 'composicion_pasivo_pn')" data-plot-target="ciaLiabDonut" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+          </div>
           <div id="ciaLiabDonut" class="w-full h-72"></div>
         </div>
       </div>
@@ -636,9 +1288,14 @@ def generate_html():
             </h3>
             <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS) | Línea y Etiquetas = Siniestralidad s/ Emisión (%)</p>
           </div>
-          <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs">
-            <button onclick="setRamosScope('cia')" id="ramosScopeCiaBtn" class="px-3 py-1 rounded bg-brand-red text-white font-semibold">Aseguradora Seleccionada</button>
-            <button onclick="setRamosScope('market')" id="ramosScopeMarketBtn" class="px-3 py-1 rounded text-slate-400 hover:text-white font-semibold">Mercado Consolidado</button>
+          <div class="flex items-center gap-2">
+            <button onclick="downloadPlotAsPNG('subramosBarChart', 'produccion_siniestros_subramos')" data-plot-target="subramosBarChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+            <div class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs">
+              <button onclick="setRamosScope('cia')" id="ramosScopeCiaBtn" class="px-3 py-1 rounded bg-brand-red text-white font-semibold">Aseguradora Seleccionada</button>
+              <button onclick="setRamosScope('market')" id="ramosScopeMarketBtn" class="px-3 py-1 rounded text-slate-400 hover:text-white font-semibold">Mercado Consolidado</button>
+            </div>
           </div>
         </div>
         
@@ -784,7 +1441,12 @@ def generate_html():
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-chart-pie text-emerald-400"></i> Composición y Asset Allocation del Portafolio
             </h3>
-            <span id="invDonutSubtitle" class="text-xs text-slate-400 font-mono">...</span>
+            <div class="flex items-center gap-2">
+              <span id="invDonutSubtitle" class="text-xs text-slate-400 font-mono">...</span>
+              <button onclick="downloadPlotAsPNG('investmentsDonutChart', 'asset_allocation_inversiones')" data-plot-target="investmentsDonutChart" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+                <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+              </button>
+            </div>
           </div>
           <div id="investmentsDonutChart" class="w-full h-72"></div>
         </div>
@@ -1209,7 +1871,12 @@ def generate_html():
             </h3>
             <p class="text-xs text-slate-400">Evaluación multidimensional: silueta de la aseguradora vs. promedio benchmark del segmento</p>
           </div>
-          <span class="text-xs text-slate-400 font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700">Escala 0 (Centro / Déficit) a 100 (Borde / Óptimo)</span>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 font-mono bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700">Escala 0 (Centro / Déficit) a 100 (Borde / Óptimo)</span>
+            <button onclick="downloadPlotAsPNG('managementRadarChart', 'radar_eficiencia_aseguradora')" data-plot-target="managementRadarChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como imagen PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+          </div>
         </div>
 
         <div id="managementRadarChart" class="w-full h-[460px]"></div>
@@ -1494,17 +2161,39 @@ def generate_html():
       <!-- KPI Summary Cards of Selected Branch -->
       <div id="rrKpiBanner" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5"></div>
 
-      <!-- Concentration & Market Share Chart -->
-      <div class="glass-card p-5 rounded-xl">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-chart-pie text-amber-400"></i> Concentración de Mercado (Top 10 de la Rama)
-            </h3>
-            <p class="text-xs text-slate-400">Distribución de Primas Emitidas y Cuotas de Mercado de los líderes en esta rama</p>
+      <!-- Concentration & Subramos Weight Dual Visual Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 1. Concentración de Mercado (Top 10) -->
+        <div class="glass-card p-5 rounded-xl flex flex-col justify-between">
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-amber-400"></i> Concentración de Mercado (Top 10)
+              </h3>
+              <p class="text-xs text-slate-400">Participación de mercado de los principales operadores</p>
+            </div>
+            <button onclick="downloadPlotAsPNG('rrMarketSharePlot', 'concentracion_mercado_top10')" data-plot-target="rrMarketSharePlot" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
           </div>
+          <div id="rrMarketSharePlot" class="w-full h-80"></div>
         </div>
-        <div id="rrMarketSharePlot" class="w-full h-72"></div>
+
+        <!-- 2. Distribución y Peso de Subramos en el Ramo -->
+        <div class="glass-card p-5 rounded-xl flex flex-col justify-between">
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-diagram-project text-cyan-400"></i> Peso de Subramos en el Ramo
+              </h3>
+              <p class="text-xs text-slate-400">Apertura y participación de cada subramo sobre el total de la rama</p>
+            </div>
+            <button onclick="downloadPlotAsPNG('rrSubramosWeightPlot', 'peso_subramos_ramo')" data-plot-target="rrSubramosWeightPlot" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+          </div>
+          <div id="rrSubramosWeightPlot" class="w-full h-80"></div>
+        </div>
       </div>
 
       <!-- Branch Ranking Table -->
@@ -1608,7 +2297,7 @@ def generate_html():
       </div>
 
       <!-- SCORECARD DEL RAMO (8 TARJETAS KPI DE MERCADO CONSOLIDADO) -->
-      <div class="glass-card p-5 rounded-xl space-y-3">
+      <div id="arScorecardCard" class="glass-card p-5 rounded-xl space-y-3">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
@@ -1617,58 +2306,58 @@ def generate_html():
           <span class="text-[11px] text-slate-400 font-mono"><span id="arEntitiesCount" class="font-bold text-cyan-300">0</span> aseguradoras activas</span>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div id="arScorecardGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
           <!-- 1. Primas Devengadas -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Primas Devengadas</div>
             <div id="arKpiPrimasDev" class="text-sm sm:text-base font-bold font-mono text-cyan-300 mt-1">$0</div>
             <div id="arKpiPrimasEmitSub" class="text-[9px] text-slate-400 mt-0.5">$0 Emitidas</div>
           </div>
 
           <!-- 2. Ratio Combinado -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Ratio Combinado</div>
             <div id="arKpiCombined" class="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">0.0%</div>
             <div id="arKpiCombinedStatus" class="text-[9px] font-bold text-emerald-400 mt-0.5">● Superávit</div>
           </div>
 
           <!-- 3. Loss Ratio -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Loss Ratio</div>
             <div id="arKpiLoss" class="text-sm sm:text-base font-bold font-mono text-rose-300 mt-1">0.0%</div>
             <div id="arKpiSiniestrosSub" class="text-[9px] text-slate-400 mt-0.5">$0 Siniestros</div>
           </div>
 
           <!-- 4. Costo Adquisición -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Costo Adquisición</div>
             <div id="arKpiAcq" class="text-sm sm:text-base font-bold font-mono text-amber-300 mt-1">0.0%</div>
             <div id="arKpiComisSub" class="text-[9px] text-slate-400 mt-0.5">Comisiones PAS</div>
           </div>
 
           <!-- 5. Costo Explotación -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Costo Explotación</div>
             <div id="arKpiExp" class="text-sm sm:text-base font-bold font-mono text-sky-300 mt-1">0.0%</div>
             <div id="arKpiAdminSub" class="text-[9px] text-slate-400 mt-0.5">Gastos Admin</div>
           </div>
 
           <!-- 6. Margen Técnico -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Margen Técnico</div>
             <div id="arKpiMargenTec" class="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">0.0%</div>
             <div id="arKpiResTecSub" class="text-[9px] text-slate-400 mt-0.5">$0 Resultado</div>
           </div>
 
           <!-- 7. Tasa Retención Reaseguro -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Retención Reaseg.</div>
             <div id="arKpiRetencion" class="text-sm sm:text-base font-bold font-mono text-indigo-300 mt-1">0.0%</div>
             <div id="arKpiCesionSub" class="text-[9px] text-slate-400 mt-0.5">0.0% Cesión</div>
           </div>
 
           <!-- 8. Tasa Anulación -->
-          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Anulaciones</div>
             <div id="arKpiAnulacion" class="text-sm sm:text-base font-bold font-mono text-slate-300 mt-1">0.0%</div>
             <div id="arKpiAnulSub" class="text-[9px] text-slate-400 mt-0.5">s/ Primas Emit.</div>
@@ -1685,11 +2374,16 @@ def generate_html():
             </h3>
             <p class="text-xs text-slate-400 mt-0.5">Siniestralidad Neta + Comisiones de Producción + Gastos de Explotación vs Línea de Equilibrio del 100%</p>
           </div>
-          <div class="flex items-center gap-2 text-xs font-mono">
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Siniestros %</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Comisiones %</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-sky-400"></span> Admin %</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-400 border border-red-400"></span> Límite 100%</span>
+          <div class="flex items-center gap-3">
+            <button onclick="downloadPlotAsPNG('analisisRamosStackedChart', 'desglose_costos_siniestros')" data-plot-target="analisisRamosStackedChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como imagen PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+            <div class="flex items-center gap-2 text-xs font-mono">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Siniestros %</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-amber-400"></span> Comisiones %</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-sky-400"></span> Admin %</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-red-400 border border-red-400"></span> Límite 100%</span>
+            </div>
           </div>
         </div>
         <div id="analisisRamosStackedChart" class="w-full min-h-[380px]"></div>
@@ -1715,6 +2409,9 @@ def generate_html():
             <select id="arRadarEntitySelect" onchange="setAnalisisRadarEntity(this.value)" 
                     class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:border-cyan-400 focus:outline-none font-semibold min-w-[200px]">
             </select>
+            <button onclick="downloadPlotAsPNG('analisisRamosRadarChart', 'radar_suscripcion_benchmark')" data-plot-target="analisisRamosRadarChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como imagen PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
           </div>
         </div>
 
@@ -1803,6 +2500,414 @@ def generate_html():
       </div>
     </section>
 
+
+    <!-- ======================================================== -->
+    <!-- TAB: COMPARATIVO DE MERCADO INTERANUAL (NOMINAL vs AXI) -->
+    <!-- ======================================================== -->
+    <section id="tab-comparativo-mercado" class="hidden space-y-6">
+
+      <!-- 1. HEADER & CONTROL PANEL -->
+      <div class="glass-card p-5 rounded-2xl border border-slate-700/80 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 shadow-xl header-card-sticky">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20">
+              <i class="fa-solid fa-code-compare text-white"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h2 class="text-lg font-bold text-white tracking-tight">Comparativo de Mercado</h2>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">INTERANUAL JUN-26 vs JUN-25</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Producción Directa Neta, Crecimiento Interanual, Evolución de Market Share y Ratios Técnicos</p>
+            </div>
+          </div>
+
+          <!-- Dual Mode Toggle: Nominal vs AXI -->
+          <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+            <button id="compModeNominalBtn" onclick="setCompAjusteMode('nominal')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-md">
+              <i class="fa-solid fa-money-bill-1-wave"></i> Cifras Nominales
+            </button>
+            <button id="compModeAxiBtn" onclick="setCompAjusteMode('axi')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
+              <i class="fa-solid fa-arrow-trend-up"></i> Moneda Homogénea (AXI)
+            </button>
+            <div id="compAxiInputContainer" class="hidden flex items-center gap-1.5 pl-2 border-l border-slate-800 text-xs">
+              <span class="text-[11px] text-slate-400">Inflación:</span>
+              <input type="number" id="compInflationInput" value="45.0" step="1.0" min="0" max="300" onchange="setCompInflationRate(this.value)" class="w-14 px-1.5 py-0.5 bg-slate-900 border border-slate-700 rounded text-center text-amber-300 font-mono font-bold text-xs focus:outline-none focus:border-amber-400">
+              <span class="text-slate-400 font-mono text-xs">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macro-Section & Branch Filter Selectors -->
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Macro-Sección:</span>
+            <div id="compMacroButtons" class="flex flex-wrap items-center gap-1.5"></div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Ámbito:</span>
+            <div class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+              <button id="compScopeGroupsBtn" onclick="setCompScope('groups')" class="px-2.5 py-1 rounded font-bold bg-brand-red text-white">🏛️ Grupos</button>
+              <button id="compScopeCiasBtn" onclick="setCompScope('cias')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold">🏢 Aseguradoras</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ramos and Subramo Pills -->
+        <div class="mt-3 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-semibold text-slate-400">Ramo:</span>
+            <div id="compRamosButtons" class="flex flex-wrap items-center gap-1.5"></div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-400">Subramo:</span>
+            <select id="compSubramoSelect" onchange="onCompSubramoChange(this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-brand-red max-w-[240px]"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. EXECUTIVE KPI BANNER -->
+      <div id="compKpiBanner" class="grid grid-cols-2 sm:grid-cols-4 gap-4 content-card-lower"></div>
+
+      <!-- 3. MAIN COMPARATIVE TABLE (EXACT LA SEGUNDA FORMAT) -->
+      <div class="glass-card p-5 rounded-2xl w-full border border-slate-800 bg-slate-900/60 shadow-xl content-card-lower">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 id="compTableTitle" class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-amber-400"></i> Comparativo de Mercado
+            </h3>
+            <p id="compTableSubtitle" class="text-xs text-slate-400 mt-0.5">Ranking oficial por Primas Emitidas y Ratios de Eficiencia Técnica</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <input type="text" id="compTableSearch" oninput="filterCompTable(this.value)" placeholder="Buscar aseguradora o grupo..." class="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 w-64">
+            <button onclick="exportCompTableToCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition-all flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-file-csv text-emerald-400"></i> Exportar
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead class="text-slate-400 bg-slate-950/90 border-b border-slate-700 text-[11px]">
+              <tr>
+                <th class="py-2.5 px-2.5 text-center w-10 font-bold">Ranking</th>
+                <th class="py-2.5 px-3 text-left w-56 font-bold">Empresa</th>
+                <th class="py-2.5 px-3 text-right font-bold" id="compThEjAnt">Prima Emitida Ej. Ant.</th>
+                <th class="py-2.5 px-3 text-right font-bold text-white">Prima Emitida</th>
+                <th class="py-2.5 px-3 text-right font-bold">Crecimiento Interanual</th>
+                <th class="py-2.5 px-3 text-right font-bold text-amber-300">Part. de Mercado</th>
+                <th class="py-2.5 px-3 text-right font-bold">Δ Share</th>
+                <th class="py-2.5 px-3 text-right font-bold">Siniestralidad</th>
+                <th class="py-2.5 px-3 text-right font-bold">Gastos Prod. y Expl. (%)</th>
+                <th class="py-2.5 px-3 text-right font-bold">Ratio Combinado</th>
+              </tr>
+            </thead>
+            <tbody id="compTableBody" class="divide-y divide-slate-800/70 font-mono text-[11px]"></tbody>
+            <tfoot id="compTableFoot" class="bg-slate-950 font-mono text-[11px] font-bold border-t-2 border-slate-600"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. VISUAL CHARTS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 content-card-lower">
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-amber-400"></i> Distribución de Participación de Mercado (Top 10 + Resto)
+            </h4>
+            <button onclick="downloadPlotAsPNG('compMarketSharePlot', 'distribucion_participacion_mercado')" data-plot-target="compMarketSharePlot" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+          </div>
+          <div id="compMarketSharePlot" class="h-80 w-full"></div>
+        </div>
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-chart-bar text-cyan-400"></i> Crecimiento Interanual vs. Promedio del Mercado (%)
+            </h4>
+            <button onclick="downloadPlotAsPNG('compGrowthPlot', 'crecimiento_interanual_vs_mercado')" data-plot-target="compGrowthPlot" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+            </button>
+          </div>
+          <div id="compGrowthPlot" class="h-80 w-full"></div>
+        </div>
+      </div>
+
+    </section>
+
+
+
+    <!-- ======================================================== -->
+    <!-- TAB 11: FLUJO DE RESULTADOS (DIAGRAMA DE SANKEY) -->
+    <!-- ======================================================== -->
+    <section id="tab-flujo-sankey" class="hidden space-y-6">
+
+      <!-- Header & Scope Control Panel -->
+      <div class="glass-card header-card-sticky p-5 rounded-2xl border-l-4 border-l-indigo-500 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold">
+              <i class="fa-solid fa-diagram-project text-lg"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 id="sankeySelectedTitle" class="text-lg font-bold text-white">Mercado Total Consolidado</h2>
+                <span id="sankeySelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">185 Cías</span>
+              </div>
+              <p id="sankeySelectedSubtitle" class="text-xs text-slate-400 mt-0.5">Trazabilidad Integral del Estado de Resultados: Primas, Siniestralidad, Gastos Operativos, Margen Financiero y Resultado Neto</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entity Selector & Quick Shortcuts -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Entity Combobox (Active when cia or group) -->
+          <div class="relative w-64 sm:w-80" id="sankeyComboboxContainer">
+            <button type="button" onclick="toggleCombobox('sankeyCombobox')" id="sankeyComboboxBtn" class="w-full flex items-center justify-between px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-semibold focus:outline-none hover:border-indigo-400 transition-all">
+              <span id="sankeyComboboxLabel" class="truncate">Seleccionar aseguradora o grupo...</span>
+              <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-2 flex-shrink-0"></i>
+            </button>
+            <div id="sankeyComboboxDropdown" class="hidden combobox-dropdown-menu top-full right-0 w-full sm:w-96 mt-1 bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs max-h-80 flex flex-col z-50 shadow-2xl">
+              <div class="relative mb-2">
+                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="sankeyComboboxInput" oninput="filterCombobox('sankeyCombobox', this.value)" placeholder="Buscar aseguradora o grupo..." class="w-full pl-7 pr-2 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-normal">
+              </div>
+              <div id="sankeyComboboxList" class="overflow-y-auto max-h-64 divide-y divide-slate-800/40"></div>
+            </div>
+          </div>
+
+          <!-- Quick La Segunda Shortcuts -->
+          <div class="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/30">
+            <span class="text-[10px] font-bold text-amber-300 mr-1">★ La Segunda:</span>
+            <button onclick="onSankeyCompanyShortcut('0317')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Seguros Generales">0317</button>
+            <button onclick="onSankeyCompanyShortcut('0618')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda ART">0618</button>
+            <button onclick="onSankeyCompanyShortcut('0117')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Personas">0117</button>
+            <button onclick="onSankeyCompanyShortcut('0436')" class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors" title="La Segunda Retiro">0436</button>
+            <button onclick="onSankeyGroupShortcut('la_segunda')" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-600/30 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition-colors" title="Grupo La Segunda (Consolidado)">Grupo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scope Selector Pills (Mercado vs Grupo vs Agrupación por Ramo SSN vs Cía Individual) -->
+      <div class="content-card-lower flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-indigo-400"></i> Alcance del Flujo:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setSankeyScope('market')" id="sankeyScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white transition-all shadow-md shadow-indigo-600/30 flex items-center gap-1.5">
+              <i class="fa-solid fa-globe"></i> Mercado Total (185 Cías)
+            </button>
+            <button onclick="setSankeyScope('group')" id="sankeyScopeBtn-group" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-building-columns text-amber-400"></i> Grupo Asegurador
+            </button>
+            <button onclick="setSankeyScope('Patrimoniales y Mixtas')" id="sankeyScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
+              🚗 Patrimoniales y Mixtas (91)
+            </button>
+            <button onclick="setSankeyScope('Riesgos del Trabajo (ART)')" id="sankeyScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
+              🦺 Riesgos del Trabajo / ART (19)
+            </button>
+            <button onclick="setSankeyScope('Seguros de Personas')" id="sankeyScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
+              ❤️ Seguros de Personas (60)
+            </button>
+            <button onclick="setSankeyScope('Seguros de Retiro')" id="sankeyScopeBtn-Seguros de Retiro" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
+              🏦 Seguros de Retiro (15)
+            </button>
+            <button onclick="setSankeyScope('cia')" id="sankeyScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
+              🏢 Empresa Seleccionada
+            </button>
+          </div>
+        </div>
+        <div class="text-xs text-slate-400">
+          Entidades consolidadas: <span id="sankeyEntitiesCount" class="font-mono font-bold text-white">185</span>
+        </div>
+      </div>
+
+      <!-- Executive KPI Scorecard Bar (6 Cards) -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        
+        <!-- KPI 1: Primas Devengadas -->
+        <div class="glass-card p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/60 sankey-kpi-card flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+            <span class="font-semibold uppercase tracking-wider text-[10px]">Primas Devengadas</span>
+            <i class="fa-solid fa-money-bill-transfer text-sky-400"></i>
+          </div>
+          <div class="text-base sm:text-lg font-bold font-mono text-white" id="sankeyKpiPrimasDev">$ 0</div>
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>Retención:</span>
+            <span class="font-mono font-bold text-sky-300" id="sankeyKpiRetencionPct">0.0%</span>
+          </div>
+        </div>
+
+        <!-- KPI 2: Siniestros Netos -->
+        <div class="glass-card p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/60 sankey-kpi-card flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+            <span class="font-semibold uppercase tracking-wider text-[10px]">Siniestros Netos</span>
+            <i class="fa-solid fa-car-burst text-rose-400"></i>
+          </div>
+          <div class="text-base sm:text-lg font-bold font-mono text-rose-300" id="sankeyKpiSiniestros">$ 0</div>
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>Loss Ratio:</span>
+            <span class="font-mono font-bold text-rose-400" id="sankeyKpiLossRatio">0.0%</span>
+          </div>
+        </div>
+
+        <!-- KPI 3: Gastos Operativos Totales -->
+        <div class="glass-card p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/60 sankey-kpi-card flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+            <span class="font-semibold uppercase tracking-wider text-[10px]">Gastos Operativos</span>
+            <i class="fa-solid fa-receipt text-amber-400"></i>
+          </div>
+          <div class="text-base sm:text-lg font-bold font-mono text-amber-300" id="sankeyKpiGastos">$ 0</div>
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>Combined:</span>
+            <span class="font-mono font-bold" id="sankeyKpiCombinedRatio">0.0%</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: Resultado Técnico -->
+        <div class="glass-card p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/60 sankey-kpi-card flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+            <span class="font-semibold uppercase tracking-wider text-[10px]">Resultado Técnico</span>
+            <i class="fa-solid fa-calculator text-indigo-400"></i>
+          </div>
+          <div class="text-base sm:text-lg font-bold font-mono" id="sankeyKpiResTec">$ 0</div>
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>Margen Téc:</span>
+            <span class="font-mono font-bold" id="sankeyKpiMargenTec">0.0%</span>
+          </div>
+        </div>
+
+        <!-- KPI 5: Resultado Financiero -->
+        <div class="glass-card p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/60 sankey-kpi-card flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+            <span class="font-semibold uppercase tracking-wider text-[10px]">Rdo. Financiero</span>
+            <i class="fa-solid fa-chart-line text-emerald-400"></i>
+          </div>
+          <div class="text-base sm:text-lg font-bold font-mono" id="sankeyKpiResFin">$ 0</div>
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>ROI Inversión:</span>
+            <span class="font-mono font-bold" id="sankeyKpiRoiFin">0.0%</span>
+          </div>
+        </div>
+
+        <!-- KPI 6: Resultado Neto Final -->
+        <div class="glass-card p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/60 sankey-kpi-card flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
+            <span class="font-semibold uppercase tracking-wider text-[10px]">Resultado Neto</span>
+            <i class="fa-solid fa-trophy text-purple-400"></i>
+          </div>
+          <div class="text-base sm:text-lg font-bold font-mono" id="sankeyKpiResNeto">$ 0</div>
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+            <span>Margen Neto:</span>
+            <span class="font-mono font-bold" id="sankeyKpiMargenNeto">0.0%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Main Sankey Chart Card -->
+      <div class="glass-card p-5 rounded-2xl border border-slate-800/80 bg-slate-900/40 space-y-4 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-network-wired text-indigo-400"></i> Trazabilidad del Flujo Económico
+            </h3>
+            <span class="text-[11px] px-2 py-0.5 rounded font-mono bg-slate-800 text-slate-300 border border-slate-700 hidden sm:inline-block">
+              Plotly Interactive • Nodos Arrastrables
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Detailed vs Synthetic Flow Mode Switch -->
+            <div class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 text-[11px]">
+              <button onclick="toggleSankeyDetailed(true)" id="sankeyDetailedBtn-on" class="px-2.5 py-1 rounded font-semibold bg-indigo-600 text-white transition-all">
+                Apertura Completa
+              </button>
+              <button onclick="toggleSankeyDetailed(false)" id="sankeyDetailedBtn-off" class="px-2.5 py-1 rounded font-semibold text-slate-400 hover:text-white transition-all">
+                Sintético (Grandes Masas)
+              </button>
+            </div>
+
+            <!-- Export Button -->
+            <button onclick="downloadPlotAsPNG('sankeyPlot', 'flujo_estado_resultados_sankey')" data-plot-target="sankeyPlot" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 cursor-pointer shadow-sm" title="Descargar Diagrama de Sankey como PNG en alta resolución">
+              <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">Descargar PNG</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Plotly Container -->
+        <div id="sankeyPlot" class="w-full h-[640px] rounded-xl"></div>
+
+        <!-- Interactive Note / Legend -->
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 pt-2 border-t border-slate-800/60 font-mono">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#0284C7] inline-block"></span> Primas Devengadas</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#EF4444] inline-block"></span> Siniestros</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#F97316] inline-block"></span> Gastos Producción</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#D97706] inline-block"></span> Gastos Explotación</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#059669] inline-block"></span> Rendimiento Financiero</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#10B981] inline-block"></span> Ganancia Neta</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#BE123C] inline-block"></span> Pérdida Neta</span>
+          </div>
+          <div class="text-slate-500 italic">
+            * Pasa el cursor por las cintas para ver montos exactos y porcentajes del flujo. Arrastra los nodos verticalmente para reordenar.
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytical Diagnosis Card ("El Diagnóstico del Ejercicio Asegurador") -->
+      <div class="glass-card p-5 rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 shadow-xl space-y-4" id="sankeyDiagnosisCard">
+        <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+          <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm border border-indigo-500/30">
+            <i class="fa-solid fa-stethoscope"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white uppercase tracking-wider">Diagnóstico Técnico y Financiero del Ejercicio</h4>
+            <p class="text-xs text-slate-400">Interpretación de la estructura de rentabilidad y equilibrio entre suscripción e inversiones</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="sankeyDiagnosisGrid">
+          <!-- Col 1: Eficiencia Técnica -->
+          <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-scale-unbalanced text-sky-400"></i> Eficiencia Técnica
+              </span>
+              <span id="sankeyDiagBadgeTec" class="text-[10px] font-bold px-2 py-0.5 rounded-full">...</span>
+            </div>
+            <p id="sankeyDiagTextTec" class="text-xs text-slate-300 leading-relaxed">...</p>
+          </div>
+
+          <!-- Col 2: Subsidio / Margen Financiero -->
+          <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-coins text-amber-400"></i> Rol Financiero
+              </span>
+              <span id="sankeyDiagBadgeFin" class="text-[10px] font-bold px-2 py-0.5 rounded-full">...</span>
+            </div>
+            <p id="sankeyDiagTextFin" class="text-xs text-slate-300 leading-relaxed">...</p>
+          </div>
+
+          <!-- Col 3: Balance Final y Retorno -->
+          <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-award text-emerald-400"></i> Destino del Flujo
+              </span>
+              <span id="sankeyDiagBadgeNet" class="text-[10px] font-bold px-2 py-0.5 rounded-full">...</span>
+            </div>
+            <p id="sankeyDiagTextNet" class="text-xs text-slate-300 leading-relaxed">...</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
     <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador (Universal) -->
     <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -1868,8 +2973,76 @@ def generate_html():
 
   <!-- APPLICATION LOGIC -->
   <script>
+    // Theme Management (Light / Dark Mode)
+    function isDarkMode() {{
+      return document.documentElement.classList.contains('dark');
+    }}
+
+    function getPlotlyTheme() {{
+      const dark = isDarkMode();
+      return {{
+        isDark: dark,
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        textColor: dark ? '#CBD5E1' : '#0F172A',
+        titleColor: dark ? '#FFFFFF' : '#020617',
+        legendColor: dark ? '#E2E8F0' : '#0F172A',
+        gridColor: dark ? 'rgba(51, 65, 85, 0.45)' : 'rgba(203, 213, 225, 0.95)',
+        zerolineColor: dark ? 'rgba(71, 85, 105, 0.7)' : 'rgba(148, 163, 184, 0.95)',
+        tickColor: dark ? '#CBD5E1' : '#0F172A',
+        polarBg: dark ? 'rgba(15, 23, 42, 0.55)' : 'rgba(241, 245, 249, 0.85)',
+        polarGrid: dark ? '#334155' : '#94A3B8',
+        polarAngular: dark ? '#FFFFFF' : '#020617'
+      }};
+    }}
+
+    function updateThemeUI(isDark) {{
+      const icon = document.getElementById('themeToggleIcon');
+      const text = document.getElementById('themeToggleText');
+      if (icon && text) {{
+        if (isDark) {{
+          icon.className = 'fa-solid fa-sun text-amber-400';
+          text.innerText = 'Modo Claro';
+        }} else {{
+          icon.className = 'fa-solid fa-moon text-slate-700';
+          text.innerText = 'Modo Oscuro';
+        }}
+      }}
+    }}
+
+    function toggleTheme() {{
+      const htmlEl = document.documentElement;
+      const currentlyDark = htmlEl.classList.contains('dark');
+      const newDark = !currentlyDark;
+      if (newDark) {{
+        htmlEl.classList.add('dark');
+        localStorage.setItem('sinensup_theme', 'dark');
+      }} else {{
+        htmlEl.classList.remove('dark');
+        localStorage.setItem('sinensup_theme', 'light');
+      }}
+      state.theme = newDark ? 'dark' : 'light';
+      updateThemeUI(newDark);
+      renderAll();
+    }}
+
+    function initTheme() {{
+      const savedTheme = localStorage.getItem('sinensup_theme');
+      const htmlEl = document.documentElement;
+      if (savedTheme === 'light') {{
+        htmlEl.classList.remove('dark');
+        state.theme = 'light';
+        updateThemeUI(false);
+      }} else {{
+        htmlEl.classList.add('dark');
+        state.theme = 'dark';
+        updateThemeUI(true);
+      }}
+    }}
+
     // State management
     let state = {{
+      theme: 'dark',
       currentTab: 'vision-mercado',
       selectedSegment: 'Todos',
       entityScope: 'cia',
@@ -1889,6 +3062,13 @@ def generate_html():
       analisisRamosMode: 'groups',
       analisisRamosSearchQuery: '',
       analisisRamosRadarEntity: null,
+      compSection: 'personas',
+      compGroup: 'ap',
+      compSubramo: 'all',
+      compMode: 'groups',
+      compAjusteMode: 'nominal',
+      compInflationRate: 45.0,
+      compSearchQuery: '',
       ramosScope: 'cia',
       invScope: 'cia',
       invTopMetric: 'activo',
@@ -1900,6 +3080,8 @@ def generate_html():
       balStatement: 'patrimonial',
       balSubramo: '1.030.01',
       balSearchQuery: '',
+      sankeyScope: 'market',
+      sankeyDetailed: true,
       balExpandedNodes: new Set([
         '1.00.00.00.00.00.00.00', '2.00.00.00.00.00.00.00', '3.00.00.00.00.00.00.00',
         '4.00.00.00.00.00.00.00', '5.00.00.00.00.00.00.00',
@@ -1946,15 +3128,15 @@ def generate_html():
 
     function getTipoBadge(tipo) {{
       if (tipo === 'Patrimoniales y Mixtas') {{
-        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30" title="Patrimoniales y Mixtas">PM</span>';
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/40" title="Patrimoniales y Mixtas">PM</span>';
       }} else if (tipo === 'Riesgos del Trabajo (ART)') {{
-        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="Riesgos del Trabajo (ART)">ART</span>';
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40" title="Riesgos del Trabajo (ART)">ART</span>';
       }} else if (tipo === 'Seguros de Personas') {{
-        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30" title="Seguros de Personas">SP</span>';
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40" title="Seguros de Personas">SP</span>';
       }} else if (tipo === 'Seguros de Retiro') {{
-        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30" title="Seguros de Retiro">SR</span>';
+        return '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/40" title="Seguros de Retiro">SR</span>';
       }}
-      return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">${{tipo}}</span>`;
+      return `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-200">${{tipo}}</span>`;
     }}
 
     // Traffic light badge evaluator
@@ -2010,16 +3192,17 @@ def generate_html():
       }}
 
       if (status === 'green') {{
-        return `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">🟢 ${{label}}</span>`;
+        return `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🟢 ${{label}}</span>`;
       }} else if (status === 'yellow') {{
-        return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">🟡 ${{label}}</span>`;
+        return `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🟡 ${{label}}</span>`;
       }} else {{
-        return `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">🔴 ${{label}}</span>`;
+        return `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🔴 ${{label}}</span>`;
       }}
     }}
 
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {{
+      initTheme();
       initDashboard();
       lucide.createIcons();
     }});
@@ -2096,6 +3279,7 @@ def generate_html():
       initBalancesSubramos();
       initRamosRankingsTab();
       initAnalisisRamosTab();
+      initComparativoTab();
       renderAll();
     }}
 
@@ -2139,7 +3323,7 @@ def generate_html():
     // ========================================================
     // UNIVERSAL SEARCHABLE COMBOBOX CONTROLLER
     // ========================================================
-    const COMBOBOX_IDS = ['scatterCombobox', 'ciaCombobox', 'invCombobox', 'solvCombobox', 'gestCombobox', 'balCombobox'];
+    const COMBOBOX_IDS = ['scatterCombobox', 'ciaCombobox', 'invCombobox', 'solvCombobox', 'gestCombobox', 'balCombobox', 'sankeyCombobox'];
 
     function toggleCombobox(idPrefix) {{
       const dropdown = document.getElementById(`${{idPrefix}}Dropdown`);
@@ -2335,6 +3519,8 @@ def generate_html():
       state.selectedGroupId = gid;
       if (state.currentTab === 'balances') {{
         setBalScope('group');
+      }} else if (state.currentTab === 'flujo-sankey') {{
+        setSankeyScope('group');
       }}
       updateAllComboboxLabels();
       renderAll();
@@ -2364,6 +3550,20 @@ def generate_html():
           balLabel.innerText = `🏛️ ${{data.groups_by_id[state.selectedGroupId].name}} (Consolidado)`;
         }} else {{
           balLabel.innerText = currentLabel;
+        }}
+      }}
+
+      const sankeyLabel = document.getElementById('sankeyComboboxLabel');
+      if (sankeyLabel) {{
+        if (state.sankeyScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
+          sankeyLabel.innerText = `🏛️ ${{data.groups_by_id[state.selectedGroupId].name}} (Consolidado)`;
+        }} else if (state.sankeyScope === 'market') {{
+          sankeyLabel.innerText = '🌐 Mercado Total (185 Cías)';
+        }} else if (['Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'].includes(state.sankeyScope)) {{
+          const cCount = (data.companies || []).filter(c => c.tipo_entidad === state.sankeyScope).length;
+          sankeyLabel.innerText = `📂 ${{state.sankeyScope}} (${{cCount}} Cías)`;
+        }} else {{
+          sankeyLabel.innerText = currentLabel;
         }}
       }}
 
@@ -2506,7 +3706,7 @@ def generate_html():
 
     function switchTab(tabId) {{
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances'].forEach(id => {{
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'comparativo-mercado', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances', 'flujo-sankey'].forEach(id => {{
         const el = document.getElementById(`tab-${{id}}`);
         const btn = document.getElementById(`tabBtn-${{id}}`);
         if (!el || !btn) return;
@@ -2533,10 +3733,12 @@ def generate_html():
       renderRamosTab();
       renderRamosRankingsTab();
       renderAnalisisRamosTab();
+      renderComparativoTab();
       renderInvestmentsTab();
       renderSolvencyTab();
       renderManagementTab();
       renderBalancesTab();
+      renderSankeyTab();
     }}
 
     // ----------------------------------------------------
@@ -2946,22 +4148,23 @@ def generate_html():
         }}
       }}
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
         margin: {{ l: 50, r: 30, t: 25, b: 55 }},
         xaxis: {{
           title: 'Margen Técnico (%) = Resultado Técnico / Primas Devengadas',
-          color: '#94A3B8',
-          gridcolor: '#1E293B',
-          zerolinecolor: '#475569',
+          color: pTheme.textColor,
+          gridcolor: pTheme.gridColor,
+          zerolinecolor: pTheme.zerolineColor,
           zerolinewidth: 2
         }},
         yaxis: {{
           title: 'Rendimiento Financiero (%) = Res. Financiero / Inversiones',
-          color: '#94A3B8',
-          gridcolor: '#1E293B',
-          zerolinecolor: '#475569',
+          color: pTheme.textColor,
+          gridcolor: pTheme.gridColor,
+          zerolinecolor: pTheme.zerolineColor,
           zerolinewidth: 2
         }},
         annotations: annotations
@@ -3016,16 +4219,49 @@ def generate_html():
       }}
     }}
 
-    function downloadScatterPlotPNG() {{
-      const plotEl = document.getElementById('marketScatterPlot');
-      if (plotEl) {{
-        Plotly.downloadImage(plotEl, {{
-          format: 'png',
-          width: 1400,
-          height: 800,
-          filename: 'matriz_estrategica_mercado_asegurador_ssn'
-        }});
+
+    // ----------------------------------------------------
+    // UNIVERSAL CHART PNG CAPTURE ENGINE
+    // ----------------------------------------------------
+    function downloadPlotAsPNG(plotId, title) {{
+      const el = document.getElementById(plotId);
+      if (!el) {{
+        console.warn(`Plot element not found: ${{plotId}}`);
+        return;
       }}
+      
+      const cleanName = (title || plotId)
+        .replace(/[^a-zA-Z0-9_-]/g, '_')
+        .replace(/_+/g, '_')
+        .toLowerCase();
+
+      // Visual feedback on target button if any
+      const btn = document.querySelector(`button[data-plot-target="${{plotId}}"]`);
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {{
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-400"></i>';
+      }}
+
+      // Plotly high resolution PNG export (1400x850 px)
+      Plotly.downloadImage(el, {{
+        format: 'png',
+        width: 1400,
+        height: 850,
+        filename: `${{cleanName}}_${{new Date().toISOString().slice(0,10)}}`
+      }}).then(() => {{
+        if (btn) {{
+          btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i>';
+          setTimeout(() => {{ btn.innerHTML = origHtml; }}, 1800);
+        }}
+      }}).catch((err) => {{
+        console.error("Error exporting chart PNG:", err);
+        if (btn) btn.innerHTML = origHtml;
+      }});
+    }}
+    window.downloadPlotAsPNG = downloadPlotAsPNG;
+
+    function downloadScatterPlotPNG() {{
+      downloadPlotAsPNG('marketScatterPlot', 'matriz_estrategica_mercado_asegurador_ssn');
     }}
 
     function zoomScatterPlot(factor) {{
@@ -3177,15 +4413,16 @@ def generate_html():
         tickTexts.push(formatARS(v));
       }}
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
         margin: {{ l: 80, r: 30, t: 30, b: 80 }},
-        xaxis: {{ color: '#94A3B8', tickangle: -25, tickfont: {{ size: 10 }} }},
+        xaxis: {{ color: pTheme.textColor, tickangle: -25, tickfont: {{ size: 10 }} }},
         yaxis: {{
           title: 'Importe (ARS)',
-          color: '#94A3B8',
-          gridcolor: '#1E293B',
+          color: pTheme.textColor,
+          gridcolor: pTheme.gridColor,
           tickmode: 'array',
           tickvals: tickVals,
           ticktext: tickTexts
@@ -3198,6 +4435,7 @@ def generate_html():
     }}
 
     function renderCompanyDonuts(c) {{
+      const pTheme = getPlotlyTheme();
       const assetLabels = ['Disponibilidades', 'Inversiones', 'Créditos', 'Inmuebles', 'Otros Activos'];
       const assetVals = [c.disponibilidades || 0, c.inversiones || 0, c.creditos || 0, c.inmuebles || 0, (c.otros_activos || 0) + (c.bienes_uso || 0)];
 
@@ -3210,10 +4448,10 @@ def generate_html():
           textinfo: 'label+percent',
           marker: {{ colors: ['#38BDF8', '#10B981', '#F59E0B', '#E20039', '#64748B'] }}
         }}], {{
-          paper_bgcolor: 'transparent',
+          paper_bgcolor: pTheme.paper_bgcolor,
           margin: {{ l: 20, r: 20, t: 20, b: 20 }},
           showlegend: false,
-          font: {{ color: '#E2E8F0', size: 11 }}
+          font: {{ color: pTheme.legendColor, size: 11 }}
         }}, {{ responsive: true, displayModeBar: false }});
       }}
 
@@ -3229,10 +4467,10 @@ def generate_html():
           textinfo: 'label+percent',
           marker: {{ colors: ['#F87171', '#C084FC', '#FB923C', '#2DD4BF'] }}
         }}], {{
-          paper_bgcolor: 'transparent',
+          paper_bgcolor: pTheme.paper_bgcolor,
           margin: {{ l: 20, r: 20, t: 20, b: 20 }},
           showlegend: false,
-          font: {{ color: '#E2E8F0', size: 11 }}
+          font: {{ color: pTheme.legendColor, size: 11 }}
         }}, {{ responsive: true, displayModeBar: false }});
       }}
     }}
@@ -3318,15 +4556,16 @@ def generate_html():
         hovertemplate: '<b>%{{x}}</b><br>Siniestralidad s/ Emisión: <b>%{{y:.1f}}%</b><extra></extra>'
       }};
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
         margin: {{ l: 85, r: 65, t: 25, b: 120 }},
-        xaxis: {{ tickangle: -30, color: '#94A3B8', tickfont: {{ size: 10 }} }},
+        xaxis: {{ tickangle: -30, color: pTheme.textColor, tickfont: {{ size: 10 }} }},
         yaxis: {{
           title: 'Primas Emitidas (ARS)',
-          color: '#94A3B8',
-          gridcolor: '#1E293B',
+          color: pTheme.textColor,
+          gridcolor: pTheme.gridColor,
           tickmode: 'array',
           tickvals: tickVals,
           ticktext: tickTexts,
@@ -3340,10 +4579,10 @@ def generate_html():
           ticksuffix: '%',
           showgrid: false,
           zeroline: true,
-          zerolinecolor: '#334155',
+          zerolinecolor: pTheme.zerolineColor,
           range: [0, Math.max(105, maxSin * 1.35)]
         }},
-        legend: {{ orientation: 'h', y: 1.15, x: 0.5, xanchor: 'center', font: {{ color: '#E2E8F0', size: 11 }} }}
+        legend: {{ orientation: 'h', y: 1.15, x: 0.5, xanchor: 'center', font: {{ color: pTheme.legendColor, size: 11 }} }}
       }};
 
       if (document.getElementById('subramosBarChart')) {{
@@ -3387,7 +4626,7 @@ def generate_html():
                   class="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all ${{
                     isAllSec ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                   }}">
-            🌟 Todas
+            <i class="fa-solid fa-layer-group text-xs"></i> Todas
           </button>
         `;
 
@@ -3440,7 +4679,7 @@ def generate_html():
                   class="px-2 py-0.5 rounded-lg text-xs font-semibold transition-all ${{
                     isAllGrp ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                   }}">
-            🌟 Todos (${{availableGroups.length}})
+            <i class="fa-solid fa-list-check text-xs"></i> Todos (${{availableGroups.length}})
           </button>
         `;
 
@@ -3474,7 +4713,7 @@ def generate_html():
         }});
         activeSubramos.sort();
 
-        let opts = `<option value="all">🌟 CONSOLIDADO: TODOS LOS SUBRAMOS SELECCIONADOS (${{activeSubramos.length}})</option>`;
+        let opts = `<option value="all">CONSOLIDADO: TODOS LOS SUBRAMOS SELECCIONADOS (${{activeSubramos.length}})</option>`;
         activeSubramos.forEach(scod => {{
           const sdesc = catalog[scod] || scod;
           opts += `<option value="${{scod}}">${{scod}} - ${{sdesc}}</option>`;
@@ -3608,7 +4847,7 @@ def generate_html():
         targetSubs.forEach(s => {{
           if (sub_map[s]) {{
             const d = sub_map[s];
-            totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+            totEmit += (d._net_emit !== undefined ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0));
             totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
             totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
             totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
@@ -3649,7 +4888,7 @@ def generate_html():
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
-              totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+              totEmit += (d._net_emit !== undefined ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0));
               totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
               totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
               totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
@@ -3669,7 +4908,7 @@ def generate_html():
               if (ciasSub[mCode]) {{
                 const subM = ciasSub[mCode];
                 const hasActivity = targetSubs.some(s => subM[s] && (
-                  (subM[s]['5.01.01.00.00.00.00.00'] || 0) > 0 ||
+                  ((subM[s]._net_emit !== undefined ? subM[s]._net_emit : (subM[s]['5.01.01.00.00.00.00.00'] || 0)) > 0) ||
                   (subM[s]['4.01.01.00.00.00.00.00'] || 0) > 0 ||
                   (subM[s]['5.01.00.00.00.00.00.00'] || 0) > 0 ||
                   (subM[s]['4.01.00.00.00.00.00.00'] || 0) > 0
@@ -3783,8 +5022,9 @@ def generate_html():
         `;
       }}
 
-      // Render Plot
+      // Render Plots
       renderRamosMarketSharePlot(res.ranking);
+      renderRamosSubramosWeightPlot();
 
       // Render Table
       renderRamosRankingTableOnly();
@@ -3813,7 +5053,7 @@ def generate_html():
       lsOutsideTop10.forEach(ls => {{
         labels.push(`★ ${{ls.name}}`);
         values.push(ls.emitidas);
-        colors.push('#F59E0B');
+        colors.push('#E20039');
       }});
 
       if (othersEmit > 0) {{
@@ -3822,28 +5062,177 @@ def generate_html():
         colors.push('#475569');
       }}
 
+      const formattedValues = values.map(v => formatARS(v));
+
       const data = [{{
         type: 'pie',
         labels: labels,
         values: values,
-        textinfo: 'label+percent',
-        hoverinfo: 'label+value+percent',
+        customdata: formattedValues,
+        textinfo: 'percent',
+        textposition: 'inside',
         hole: 0.45,
         marker: {{
           colors: colors
-        }}
+        }},
+        hovertemplate: '<b>%{{label}}</b><br>Prima Emitida: <b>%{{customdata}}</b><br>Participación de Mercado: <b>%{{percent}}</b><extra></extra>'
       }}];
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
-        font: {{ color: '#94A3B8', size: 11 }},
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
+        font: {{ color: pTheme.textColor, size: 10 }},
         margin: {{ t: 10, b: 10, l: 10, r: 10 }},
         showlegend: true,
-        legend: {{ orientation: 'h', x: 0, y: -0.1, font: {{ size: 10, color: '#cbd5e1' }} }}
+        legend: {{ orientation: 'h', x: 0, y: -0.15, font: {{ size: 9, color: pTheme.legendColor }} }}
       }};
 
       Plotly.newPlot('rrMarketSharePlot', data, layout, {{ responsive: true, displayModeBar: false }});
+    }}
+
+    function renderRamosSubramosWeightPlot() {{
+      const plotEl = document.getElementById('rrSubramosWeightPlot');
+      if (!plotEl) return;
+
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const tax = data.ramos_taxonomy || {{}};
+      const catalog = {{}};
+      (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+      const mktSub = data.market_balances_subramos || {{}};
+
+      const getMktSubEmit = (sc) => (mktSub[sc] ? (mktSub[sc]._net_emit !== undefined ? mktSub[sc]._net_emit : (mktSub[sc]['5.01.01.00.00.00.00.00'] || 0.0)) : 0.0);
+
+      let items = [];
+      let totalRamoEmit = 0.0;
+
+      const isPersonas = state.ramosRankSections.includes('personas');
+      const selectedGroups = state.ramosRankGroups || [];
+      const isAllGroups = selectedGroups.includes('all');
+
+      if (isPersonas) {{
+        // Gather all codes across selected persona groups
+        let relevantGroups = isAllGroups ? ['ap', 'salud', 'vida', 'sepelio', 'otros_pers'] : selectedGroups;
+
+        // 1. AP (2.010.01 + 2.010.02)
+        if (relevantGroups.includes('ap')) {{
+          const apEmit = getMktSubEmit('2.010.01') + getMktSubEmit('2.010.02');
+          if (apEmit > 0) items.push({{ code: '2.010.*', name: 'Accidentes Personales (Indiv + Colect)', emit: apEmit }});
+        }}
+
+        // 2. Salud (2.020.01 + 2.020.02)
+        if (relevantGroups.includes('salud')) {{
+          const saludEmit = getMktSubEmit('2.020.01') + getMktSubEmit('2.020.02');
+          if (saludEmit > 0) items.push({{ code: '2.020.*', name: 'Salud (Indiv + Colect)', emit: saludEmit }});
+        }}
+
+        // 3. Sepelio (2.050.01 + 2.050.02)
+        if (relevantGroups.includes('sepelio')) {{
+          const sepelioEmit = getMktSubEmit('2.050.01') + getMktSubEmit('2.050.02');
+          if (sepelioEmit > 0) items.push({{ code: '2.050.*', name: 'Sepelio (Indiv + Colect)', emit: sepelioEmit }});
+        }}
+
+        // 4. Vida: keep all individual subramos
+        if (relevantGroups.includes('vida')) {{
+          const vidaCodes = ['2.030.01', '2.030.02', '2.030.03', '2.040.01', '2.040.02', '2.040.03', '2.040.04', '2.040.05'];
+          vidaCodes.forEach(sc => {{
+            const emit = getMktSubEmit(sc);
+            if (emit > 0) items.push({{ code: sc, name: catalog[sc] || sc, emit: emit }});
+          }});
+        }}
+
+        // 5. Otros Personas
+        if (relevantGroups.includes('otros_pers')) {{
+          const emit = getMktSubEmit('2.060.01');
+          if (emit > 0) items.push({{ code: '2.060.01', name: catalog['2.060.01'] || 'Otros Seguros de Personas', emit: emit }});
+        }}
+      }} else {{
+        // General logic for Patrimoniales, ART, Retiro
+        const secKeys = state.ramosRankSections.includes('all') ? ['patrimoniales', 'art', 'personas', 'retiro'] : state.ramosRankSections;
+        const subCodesSet = new Set();
+
+        secKeys.forEach(secKey => {{
+          const secObj = tax[secKey];
+          if (!secObj || !secObj.grupos) return;
+          const grpKeys = isAllGroups ? Object.keys(secObj.grupos) : selectedGroups;
+          grpKeys.forEach(gKey => {{
+            const grp = secObj.grupos[gKey];
+            if (grp && grp.subramos) {{
+              grp.subramos.forEach(sc => subCodesSet.add(sc));
+            }}
+          }});
+        }});
+
+        subCodesSet.forEach(sc => {{
+          const emit = getMktSubEmit(sc);
+          if (emit > 0) {{
+            items.push({{ code: sc, name: catalog[sc] || sc, emit: emit }});
+          }}
+        }});
+      }}
+
+      // Sort descending by emission
+      items.sort((a, b) => b.emit - a.emit);
+      totalRamoEmit = items.reduce((acc, it) => acc + it.emit, 0.0);
+
+      const titleEl = document.getElementById('rrSubramosTitle');
+      if (titleEl) {{
+        titleEl.innerText = `Peso de Subramos en el Ramo (${{formatARS(totalRamoEmit)}})`;
+      }}
+
+      if (items.length === 0 || totalRamoEmit <= 0) {{
+        plotEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs">Sin datos para la selección</div>';
+        return;
+      }}
+
+      // Top 7 + Otros if more than 8
+      let displayItems = [];
+      if (items.length <= 8) {{
+        displayItems = items;
+      }} else {{
+        displayItems = items.slice(0, 7);
+        const otrosEmit = items.slice(7).reduce((acc, it) => acc + it.emit, 0.0);
+        if (otrosEmit > 0) {{
+          displayItems.push({{ code: 'otros', name: 'Resto de Subramos', emit: otrosEmit }});
+        }}
+      }}
+
+      const labels = displayItems.map(it => it.name.length > 28 ? it.name.slice(0, 26) + '...' : it.name);
+      const values = displayItems.map(it => it.emit);
+      const customdata = displayItems.map(it => formatARS(it.emit));
+
+      const palette = [
+        '#E20039', '#38BDF8', '#10B981', '#F59E0B', '#A855F7', 
+        '#EC4899', '#06B6D4', '#64748B', '#F97316', '#84CC16'
+      ];
+
+      const plotData = [{{
+        type: 'pie',
+        labels: labels,
+        values: values,
+        customdata: customdata,
+        hole: 0.45,
+        textinfo: 'percent',
+        textposition: 'inside',
+        marker: {{
+          colors: palette.slice(0, displayItems.length)
+        }},
+        hovertemplate: '<b>%{{label}}</b><br>Prima Emitida Mercado: <b>%{{customdata}}</b><br>Participación en la Selección: <b>%{{percent}}</b><extra></extra>'
+      }}];
+
+      const pThemeWeight = getPlotlyTheme();
+      const layoutWeight = {{
+        paper_bgcolor: pThemeWeight.paper_bgcolor,
+        plot_bgcolor: pThemeWeight.plot_bgcolor,
+        font: {{ color: pThemeWeight.textColor, size: 10 }},
+        margin: {{ t: 10, b: 10, l: 10, r: 10 }},
+        showlegend: true,
+        legend: {{ orientation: 'h', x: 0, y: -0.15, font: {{ size: 9, color: pThemeWeight.legendColor }} }}
+      }};
+
+      Plotly.newPlot('rrSubramosWeightPlot', plotData, layoutWeight, {{ responsive: true, displayModeBar: false }});
     }}
 
     function renderRamosRankingTableOnly() {{
@@ -4020,7 +5409,7 @@ def generate_html():
                   class="px-2 py-0.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${{
                     isAllGroupsSelected ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                   }}">
-            <span>🌟 TODOS (${{availableGroups.length}})</span>
+            <span>TODOS (${{availableGroups.length}})</span>
           </button>
         `;
 
@@ -4053,7 +5442,7 @@ def generate_html():
         }});
         activeSubramos.sort();
 
-        let opts = `<option value="all">🌟 CONSOLIDADO: TODOS LOS SUBRAMOS SELECCIONADOS (${{activeSubramos.length}})</option>`;
+        let opts = `<option value="all">CONSOLIDADO: TODOS LOS SUBRAMOS SELECCIONADOS (${{activeSubramos.length}})</option>`;
         activeSubramos.forEach(scod => {{
           const sdesc = catalog[scod] || scod;
           opts += `<option value="${{scod}}">${{scod}} - ${{sdesc}}</option>`;
@@ -4193,7 +5582,7 @@ def generate_html():
         targetSubs.forEach(s => {{
           if (sub_map[s]) {{
             const d = sub_map[s];
-            totEmit += (d['5.01.01.00.00.00.00.00'] || 0.0);
+            totEmit += (d._net_emit !== undefined ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0));
             totCed += (d['4.01.03.00.00.00.00.00'] || 0.0);
             totAnul += (d['4.01.04.00.00.00.00.00'] || 0.0);
             totVarCargo += (d['4.01.05.00.00.00.00.00'] || 0.0);
@@ -4213,7 +5602,7 @@ def generate_html():
         }});
 
         const varCompTec = totVarCargo - totVarLib;
-        const primasDev = totEmit - (totCed + totAnul) - varCompTec;
+        const primasDev = totEmit - totCed - varCompTec;
         const sinNetos = Math.max(0.0, (totSinCargo + totRescates) - totSinRecup);
         const gtosProd = Math.max(0.0, totGtosProdCargo - totRecupProd);
         const gtosExpl = totGtosExpl;
@@ -4295,7 +5684,7 @@ def generate_html():
               if (ciasSub[mCode]) {{
                 const sM = ciasSub[mCode];
                 const hasActivity = targetSubs.some(s => sM[s] && (
-                  (sM[s]['5.01.01.00.00.00.00.00'] || 0) > 0 ||
+                  ((sM[s]._net_emit !== undefined ? sM[s]._net_emit : (sM[s]['5.01.01.00.00.00.00.00'] || 0)) > 0) ||
                   (sM[s]['4.01.01.00.00.00.00.00'] || 0) > 0 ||
                   (sM[s]['5.01.00.00.00.00.00.00'] || 0) > 0 ||
                   (sM[s]['4.01.00.00.00.00.00.00'] || 0) > 0
@@ -4574,24 +5963,25 @@ def generate_html():
       const dynamicHeight = Math.max(420, chartList.length * 36 + 60);
       chartEl.style.height = dynamicHeight + 'px';
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
         barmode: 'stack',
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
-        font: {{ color: '#94A3B8', size: 10 }},
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
+        font: {{ color: pTheme.textColor, size: 10 }},
         height: dynamicHeight,
         margin: {{ t: 20, b: 35, l: 230, r: 40 }},
         showlegend: false,
         xaxis: {{
-          gridcolor: '#1E293B',
-          zerolinecolor: '#334155',
+          gridcolor: pTheme.gridColor,
+          zerolinecolor: pTheme.zerolineColor,
           ticksuffix: '%',
           range: [0, Math.min(280, maxVal)]
         }},
         yaxis: {{
           autorange: true,
           automargin: true,
-          tickfont: {{ size: 10, color: '#E2E8F0', family: 'Sora, sans-serif' }}
+          tickfont: {{ size: 10, color: pTheme.legendColor, family: 'Sora, sans-serif' }}
         }},
         shapes: [
           {{
@@ -4778,26 +6168,27 @@ def generate_html():
         }}
       ];
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
         polar: {{
-          bgcolor: 'transparent',
+          bgcolor: pTheme.polarBg,
           radialaxis: {{
             visible: true,
             range: [0, 100],
             showticklabels: false,
-            gridcolor: '#1E293B',
-            linecolor: '#334155'
+            gridcolor: pTheme.polarGrid,
+            linecolor: pTheme.polarGrid
           }},
           angularaxis: {{
-            gridcolor: '#1E293B',
-            linecolor: '#334155',
-            tickfont: {{ size: 10, family: 'Sora, sans-serif', color: '#E2E8F0', weight: 'bold' }},
+            gridcolor: pTheme.polarGrid,
+            linecolor: pTheme.polarGrid,
+            tickfont: {{ size: 10, family: 'Sora, sans-serif', color: pTheme.polarAngular, weight: 'bold' }},
             rotation: 90,
             direction: 'clockwise'
           }}
         }},
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
         margin: {{ l: 35, r: 35, t: 25, b: 25 }},
         height: 380,
         showlegend: true,
@@ -4806,7 +6197,7 @@ def generate_html():
           y: -0.10,
           x: 0.5,
           xanchor: 'center',
-          font: {{ color: '#F1F5F9', size: 11, family: 'Sora' }}
+          font: {{ color: pTheme.legendColor, size: 11, family: 'Sora' }}
         }}
       }};
 
@@ -4951,6 +6342,558 @@ def generate_html():
       a.download = `analisis_tecnico_ramos_${{state.analisisRamosSections.join('_')}}_${{state.analisisRamosMode}}.csv`;
       a.click();
     }}
+
+    // ----------------------------------------------------
+    
+    
+    // ====================================================
+    // TAB: COMPARATIVO DE MERCADO INTERANUAL (NOMINAL vs AXI)
+    // ====================================================
+    function initComparativoTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return;
+
+      const tax = data.ramos_taxonomy;
+      const macroContainer = document.getElementById('compMacroButtons');
+      if (macroContainer) {{
+        macroContainer.innerHTML = Object.entries(tax).map(([secKey, sec]) => {{
+          const isSelected = (state.compSection === secKey);
+          return `
+            <button onclick="setCompMacroSection('${{secKey}}')" class="px-3 py-1 rounded-lg text-xs font-bold transition-all ${{isSelected ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20' : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-700'}} cursor-pointer">
+              <i class="fa-solid ${{sec.icon || 'fa-folder'}} mr-1"></i> ${{sec.name}}
+            </button>
+          `;
+        }}).join('');
+      }}
+
+      const curSec = tax[state.compSection];
+      const ramosContainer = document.getElementById('compRamosButtons');
+      if (ramosContainer && curSec && curSec.ramos) {{
+        const ramosList = Object.entries(curSec.ramos);
+        ramosContainer.innerHTML = `
+          <button onclick="setCompRamo('all')" class="px-2.5 py-1 rounded text-xs font-semibold transition-all ${{state.compGroup === 'all' ? 'bg-amber-400 text-slate-950 font-bold shadow' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}} cursor-pointer">
+            Todos los Ramos de ${{curSec.name}}
+          </button>
+        ` + ramosList.map(([rKey, rObj]) => {{
+          const isSel = (state.compGroup === rKey);
+          return `
+            <button onclick="setCompRamo('${{rKey}}')" class="px-2.5 py-1 rounded text-xs font-semibold transition-all ${{isSel ? 'bg-amber-400 text-slate-950 font-bold shadow' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}} cursor-pointer">
+              ${{rObj.name}}
+            </button>
+          `;
+        }}).join('');
+      }}
+
+      // Populate Subramo dropdown
+      const subSelect = document.getElementById('compSubramoSelect');
+      if (subSelect && curSec && curSec.ramos) {{
+        let availableSubs = [];
+        if (state.compGroup === 'all') {{
+          Object.values(curSec.ramos).forEach(r => {{
+            availableSubs.push(...(r.subramos || []));
+          }});
+        }} else if (curSec.ramos[state.compGroup]) {{
+          availableSubs = curSec.ramos[state.compGroup].subramos || [];
+        }}
+
+        const catalog = {{}};
+        (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+
+        subSelect.innerHTML = `<option value="all">Consolidado (${{availableSubs.length}} Subramos)</option>` +
+          availableSubs.map(scod => `<option value="${{scod}}" ${{state.compSubramo === scod ? 'selected' : ''}}>${{scod}} - ${{catalog[scod] || 'Subramo'}}</option>`).join('');
+      }}
+
+      // Update Scope buttons
+      const groupsBtn = document.getElementById('compScopeGroupsBtn');
+      const ciasBtn = document.getElementById('compScopeCiasBtn');
+      if (groupsBtn && ciasBtn) {{
+        if (state.compMode === 'groups') {{
+          groupsBtn.className = 'px-2.5 py-1 rounded font-bold bg-brand-red text-white cursor-pointer';
+          ciasBtn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold cursor-pointer';
+        }} else {{
+          groupsBtn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white font-semibold cursor-pointer';
+          ciasBtn.className = 'px-2.5 py-1 rounded font-bold bg-brand-red text-white cursor-pointer';
+        }}
+      }}
+
+      // Update Dual Mode buttons
+      const nomBtn = document.getElementById('compModeNominalBtn');
+      const axiBtn = document.getElementById('compModeAxiBtn');
+      const axiContainer = document.getElementById('compAxiInputContainer');
+      const thEjAnt = document.getElementById('compThEjAnt');
+      if (nomBtn && axiBtn) {{
+        if (state.compAjusteMode === 'nominal') {{
+          nomBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-md cursor-pointer';
+          axiBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all cursor-pointer';
+          if (axiContainer) axiContainer.classList.add('hidden');
+          if (thEjAnt) thEjAnt.innerText = 'Prima Emitida Ej. Ant. (Jun-25)';
+        }} else {{
+          nomBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all cursor-pointer';
+          axiBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-md cursor-pointer';
+          if (axiContainer) axiContainer.classList.remove('hidden');
+          if (thEjAnt) thEjAnt.innerText = `Prima Ej. Ant. Reexp. (+${{state.compInflationRate}}%)`;
+        }}
+      }}
+    }}
+
+    function setCompMacroSection(secKey) {{
+      state.compSection = secKey;
+      const data = window.DATA_SINENSUP;
+      if (data && data.ramos_taxonomy && data.ramos_taxonomy[secKey]) {{
+        const rKeys = Object.keys(data.ramos_taxonomy[secKey].ramos || {{}});
+        state.compGroup = rKeys.length > 0 ? rKeys[0] : 'all';
+      }} else {{
+        state.compGroup = 'all';
+      }}
+      state.compSubramo = 'all';
+      initComparativoTab();
+      renderComparativoTab();
+    }}
+
+    function setCompRamo(rKey) {{
+      state.compGroup = rKey;
+      state.compSubramo = 'all';
+      initComparativoTab();
+      renderComparativoTab();
+    }}
+
+    function onCompSubramoChange(val) {{
+      state.compSubramo = val || 'all';
+      renderComparativoTab();
+    }}
+
+    function setCompScope(scope) {{
+      state.compMode = scope;
+      initComparativoTab();
+      renderComparativoTab();
+    }}
+
+    function setCompAjusteMode(mode) {{
+      state.compAjusteMode = mode;
+      initComparativoTab();
+      renderComparativoTab();
+    }}
+
+    function setCompInflationRate(val) {{
+      state.compInflationRate = parseFloat(val) || 45.0;
+      initComparativoTab();
+      renderComparativoTab();
+    }}
+
+    function filterCompTable(query) {{
+      state.compSearchQuery = (query || '').toLowerCase().trim();
+      renderComparativoTableOnly();
+    }}
+
+    function getCompTargetSubramos() {{
+      const data = window.DATA_SINENSUP;
+      if (!data || !data.ramos_taxonomy) return [];
+      const tax = data.ramos_taxonomy;
+
+      if (state.compSubramo && state.compSubramo !== 'all') {{
+        return [state.compSubramo];
+      }}
+
+      const curSec = tax[state.compSection];
+      if (!curSec || !curSec.ramos) return [];
+
+      let subs = [];
+      if (state.compGroup === 'all') {{
+        Object.values(curSec.ramos).forEach(r => {{
+          (r.subramos || []).forEach(scod => {{ if (!subs.includes(scod)) subs.push(scod); }});
+        }});
+      }} else if (curSec.ramos[state.compGroup]) {{
+        subs = curSec.ramos[state.compGroup].subramos || [];
+      }}
+      return subs;
+    }}
+
+    let currentComparativeData = null;
+
+    function computeComparativeTableData() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return {{ rows: [], totalMkt: {{}} }};
+
+      const targetSubs = getCompTargetSubramos();
+      const isGroups = (state.compMode === 'groups');
+      const compMap = isGroups ? (data.groups_comparative_subramos || {{}}) : (data.cias_comparative_subramos || {{}});
+      const ciasByCode = data.companies_by_code || {{}};
+      const groupsById = data.groups_by_id || {{}};
+      const axiFactor = (state.compAjusteMode === 'axi') ? (1.0 + (parseFloat(state.compInflationRate) || 0.0) / 100.0) : 1.0;
+
+      let mktE26 = 0.0, mktE25 = 0.0, mktS26 = 0.0, mktG26 = 0.0, mktD26 = 0.0;
+      const rawRows = [];
+
+      Object.entries(compMap).forEach(([entityId, subDict]) => {{
+        let e26 = 0.0, e25 = 0.0, s26 = 0.0, g26 = 0.0, d26 = 0.0;
+        targetSubs.forEach(scod => {{
+          if (subDict[scod]) {{
+            const sd = subDict[scod];
+            e26 += (sd.e26 || 0.0);
+            e25 += (sd.e25 || 0.0) * axiFactor;
+            s26 += (sd.s26 || 0.0);
+            g26 += (sd.g26 || 0.0);
+            d26 += (sd.d26 || 0.0);
+          }}
+        }});
+
+        if (e26 > 0 || e25 > 0 || s26 > 0 || g26 > 0) {{
+          mktE26 += e26;
+          mktE25 += e25;
+          mktS26 += s26;
+          mktG26 += g26;
+          mktD26 += d26;
+
+          let name = entityId;
+          let tipo = '';
+          if (isGroups) {{
+            const g = groupsById[entityId];
+            name = g ? g.name : entityId;
+            tipo = g ? `${{g.entities_count}} Cías` : 'Grupo';
+          }} else {{
+            const c = ciasByCode[entityId];
+            name = c ? c.razon_social : entityId;
+            tipo = c ? c.tipo_entidad : '';
+          }}
+
+          rawRows.push({{
+            id: entityId,
+            name: name,
+            tipo: tipo,
+            e26: e26,
+            e25: e25,
+            s26: s26,
+            g26: g26,
+            d26: d26
+          }});
+        }}
+      }});
+
+      const isLS = id => (id === 'la_segunda' || id === '0117' || id === '0317' || id === '0436' || id === '0618');
+      
+      const rows = rawRows.map(r => {{
+        const growth = r.e25 > 0 ? ((r.e26 - r.e25) / r.e25 * 100.0) : (r.e26 > 0 ? 100.0 : 0.0);
+        const share26 = mktE26 > 0 ? (r.e26 / mktE26 * 100.0) : 0.0;
+        const share25 = mktE25 > 0 ? (r.e25 / mktE25 * 100.0) : 0.0;
+        const deltaShare = share26 - share25;
+
+        const baseRatio = r.d26 > 0 ? r.d26 : (r.e26 > 0 ? r.e26 : 1.0);
+        const lossRatio = (r.s26 / baseRatio * 100.0);
+        const expRatio = (r.g26 / baseRatio * 100.0);
+        const combinedRatio = lossRatio + expRatio;
+
+        return {{
+          ...r,
+          growth: growth,
+          share26: share26,
+          share25: share25,
+          deltaShare: deltaShare,
+          lossRatio: lossRatio,
+          expRatio: expRatio,
+          combinedRatio: combinedRatio,
+          isLS: isLS(r.id)
+        }};
+      }});
+
+      rows.sort((a, b) => (b.e26 - a.e26) || (b.e25 - a.e25));
+
+      const mktGrowth = mktE25 > 0 ? ((mktE26 - mktE25) / mktE25 * 100.0) : 0.0;
+      const mktBase = mktD26 > 0 ? mktD26 : (mktE26 > 0 ? mktE26 : 1.0);
+      const mktLoss = (mktS26 / mktBase * 100.0);
+      const mktExp = (mktG26 / mktBase * 100.0);
+      const mktCombined = mktLoss + mktExp;
+
+      const totalMkt = {{
+        name: 'TOTAL MERCADO',
+        e26: mktE26,
+        e25: mktE25,
+        growth: mktGrowth,
+        share26: 100.0,
+        deltaShare: 0.0,
+        lossRatio: mktLoss,
+        expRatio: mktExp,
+        combinedRatio: mktCombined,
+        entities_count: rows.length
+      }};
+
+      return {{ rows, totalMkt }};
+    }}
+
+    function renderComparativoTab() {{
+      initComparativoTab();
+      const res = computeComparativeTableData();
+      currentComparativeData = res;
+
+      const data = window.DATA_SINENSUP;
+      const tax = data.ramos_taxonomy || {{}};
+      const curSec = tax[state.compSection] || {{ name: state.compSection }};
+
+      // Update titles
+      let rName = 'Consolidado de Ramos';
+      if (state.compGroup === 'all') {{
+        rName = `Todos los Ramos de ${{curSec.name}}`;
+      }} else if (curSec.ramos && curSec.ramos[state.compGroup]) {{
+        rName = curSec.ramos[state.compGroup].name;
+      }}
+      if (state.compSubramo && state.compSubramo !== 'all') {{
+        const catalog = {{}};
+        (data.subramos_catalog || []).forEach(s => {{ catalog[s.cod] = s.desc; }});
+        rName = `${{state.compSubramo}} - ${{catalog[state.compSubramo] || 'Subramo'}}`;
+      }}
+
+      const titleEl = document.getElementById('compTableTitle');
+      const subEl = document.getElementById('compTableSubtitle');
+      if (titleEl) {{
+        titleEl.innerHTML = `<i class="fa-solid fa-table-list text-amber-400"></i> ${{rName}}`;
+      }}
+      if (subEl) {{
+        const modeLabel = (state.compAjusteMode === 'axi') ? `Moneda Homogénea a Jun-26 (AXI +${{state.compInflationRate}}%)` : 'Cifras Nominales de Balances';
+        subEl.innerText = `${{curSec.name}} • ${{state.compMode === 'groups' ? 'Grupos Económicos' : 'Aseguradoras Directas'}} • ${{modeLabel}}`;
+      }}
+
+      // Render KPI Banner
+      const banner = document.getElementById('compKpiBanner');
+      if (banner) {{
+        const tm = res.totalMkt;
+        const lsRow = res.rows.find(r => r.isLS);
+        const top5Share = res.rows.slice(0, 5).reduce((acc, r) => acc + r.share26, 0.0);
+
+        banner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">PRIMAS EMITIDAS SELECCIÓN</div>
+            <div class="text-lg font-bold font-mono text-white mt-1">${{formatARS(tm.e26)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">Ej. Ant: <b class="text-slate-300 font-mono">${{formatARS(tm.e25)}}</b></div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 ${{tm.growth >= 0 ? 'border-l-emerald-500' : 'border-l-rose-500'}}">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">CRECIMIENTO DEL MERCADO</div>
+            <div class="text-lg font-bold font-mono ${{tm.growth >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-1">${{tm.growth >= 0 ? '+' : ''}}${{formatPercent(tm.growth)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{state.compAjusteMode === 'axi' ? 'Crecimiento Real Interanual' : 'Crecimiento Nominal'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-red bg-rose-950/20">
+            <div class="text-[11px] font-semibold text-rose-300 uppercase flex items-center justify-between">
+              <span>★ GRUPO LA SEGUNDA</span>
+              ${{lsRow ? `<span class="font-mono text-amber-300 text-xs">#${{res.rows.indexOf(lsRow) + 1}}</span>` : ''}}
+            </div>
+            <div class="text-lg font-bold font-mono text-white mt-1">${{lsRow ? formatARS(lsRow.e26) : '$0'}}</div>
+            <div class="text-[10px] text-slate-300 mt-1 flex items-center justify-between">
+              <span>Share: <b class="text-amber-300">${{lsRow ? formatPercent(lsRow.share26) : '0%'}}</b></span>
+              <span>Crec: <b class="${{lsRow && lsRow.growth >= tm.growth ? 'text-emerald-400' : 'text-amber-400'}}">${{lsRow ? `${{lsRow.growth >= 0 ? '+' : ''}}${{formatPercent(lsRow.growth)}}` : '0%'}}</b></span>
+            </div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-purple-500">
+            <div class="text-[11px] font-semibold text-slate-400 uppercase">CONCENTRACIÓN TOP 5</div>
+            <div class="text-lg font-bold font-mono text-purple-300 mt-1">${{formatPercent(top5Share)}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{res.rows.length}} Entidades Operativas</div>
+          </div>
+        `;
+      }}
+
+      renderComparativoTableOnly();
+      renderComparativoPlots(res);
+    }}
+
+    function renderComparativoTableOnly() {{
+      if (!currentComparativeData) return;
+      const res = currentComparativeData;
+      const q = state.compSearchQuery;
+      const filtered = q ? res.rows.filter(r => r.name.toLowerCase().includes(q) || (r.id && r.id.toLowerCase().includes(q))) : res.rows;
+      const mktGrowth = res.totalMkt.growth || 0.0;
+
+      const tbody = document.getElementById('compTableBody');
+      if (tbody) {{
+        if (filtered.length === 0) {{
+          tbody.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-slate-500 text-xs font-sans">No se encontraron entidades para esta selección o búsqueda</td></tr>';
+        }} else {{
+          tbody.innerHTML = filtered.map((r, i) => {{
+            const isLS = r.isLS;
+            const rankNum = res.rows.indexOf(r) + 1;
+            const deltaColor = r.deltaShare >= 0 ? 'text-emerald-400' : 'text-rose-400';
+            const deltaSign = r.deltaShare >= 0 ? '+' : '';
+            const growthBadge = r.growth >= mktGrowth 
+              ? '<span class="ml-1 text-[9px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">▲ Sup</span>' 
+              : '<span class="ml-1 text-[9px] px-1 py-0.2 rounded bg-rose-500/20 text-rose-300 font-bold">▼ Inf</span>';
+
+            return `
+              <tr class="hover:bg-slate-800/80 ${{isLS ? 'bg-brand-red/15 border-l-4 border-l-brand-red font-semibold' : ''}} transition-colors">
+                <td class="py-2 px-2.5 text-center text-slate-400 font-bold">${{rankNum}}</td>
+                <td class="py-2 px-3 text-left">
+                  <div class="font-bold text-white flex items-center gap-1.5 truncate max-w-[230px]" title="${{r.name}}">
+                    <span>${{r.name}}</span>
+                    ${{isLS ? '<span class="px-1.5 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : ''}}
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-sans">${{r.tipo}}</div>
+                </td>
+                <td class="py-2 px-3 text-right text-slate-300">${{formatARS(r.e25)}}</td>
+                <td class="py-2 px-3 text-right font-bold text-white">${{formatARS(r.e26)}}</td>
+                <td class="py-2 px-3 text-right font-bold ${{r.growth >= 0 ? 'text-emerald-400' : 'text-rose-400'}} whitespace-nowrap">
+                  ${{r.growth >= 0 ? '+' : ''}}${{formatPercent(r.growth)}} ${{growthBadge}}
+                </td>
+                <td class="py-2 px-3 text-right font-bold text-amber-300">${{formatPercent(r.share26)}}</td>
+                <td class="py-2 px-3 text-right font-bold ${{deltaColor}} whitespace-nowrap">${{deltaSign}}${{r.deltaShare.toFixed(2)}}%</td>
+                <td class="py-2 px-3 text-right ${{r.lossRatio <= 65 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(r.lossRatio)}}</td>
+                <td class="py-2 px-3 text-right text-slate-300">${{formatPercent(r.expRatio)}}</td>
+                <td class="py-2 px-3 text-right font-bold ${{r.combinedRatio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(r.combinedRatio)}}</td>
+              </tr>
+            `;
+          }}).join('');
+        }}
+      }}
+
+      // Render Table Foot (TOTAL MERCADO)
+      const tfoot = document.getElementById('compTableFoot');
+      if (tfoot) {{
+        const tm = res.totalMkt;
+        tfoot.innerHTML = `
+          <tr class="bg-slate-950 text-white font-bold border-t-2 border-slate-700">
+            <td class="py-2.5 px-2.5 text-center text-slate-400">Σ</td>
+            <td class="py-2.5 px-3 text-left uppercase text-amber-300 tracking-wider">TOTAL MERCADO (${{tm.entities_count}} Cías)</td>
+            <td class="py-2.5 px-3 text-right text-slate-200">${{formatARS(tm.e25)}}</td>
+            <td class="py-2.5 px-3 text-right text-amber-400 font-bold">${{formatARS(tm.e26)}}</td>
+            <td class="py-2.5 px-3 text-right ${{tm.growth >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{tm.growth >= 0 ? '+' : ''}}${{formatPercent(tm.growth)}}</td>
+            <td class="py-2.5 px-3 text-right text-amber-300">100.0%</td>
+            <td class="py-2.5 px-3 text-right text-slate-400">0.0%</td>
+            <td class="py-2.5 px-3 text-right ${{tm.lossRatio <= 65 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(tm.lossRatio)}}</td>
+            <td class="py-2.5 px-3 text-right text-slate-300">${{formatPercent(tm.expRatio)}}</td>
+            <td class="py-2.5 px-3 text-right ${{tm.combinedRatio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(tm.combinedRatio)}}</td>
+          </tr>
+        `;
+      }}
+    }}
+
+    function renderComparativoPlots(res) {{
+      if (!res || !res.rows || res.rows.length === 0) return;
+
+      const top10 = res.rows.slice(0, 10);
+      const rest = res.rows.slice(10);
+      const lsOutsideTop10 = rest.filter(r => r.isLS);
+      const othersEmit = rest.filter(r => !r.isLS).reduce((acc, r) => acc + r.e26, 0.0);
+
+      // Plot 1: Market Share Pie
+      const pieEl = document.getElementById('compMarketSharePlot');
+      if (pieEl) {{
+        const labels = top10.map(r => r.name);
+        const values = top10.map(r => r.e26);
+        const colors = ['#F59E0B', '#3B82F6', '#10B981', '#EC4899', '#8B5CF6', '#06B6D4', '#E11D48', '#84CC16', '#F97316', '#6366F1'];
+
+        lsOutsideTop10.forEach(ls => {{
+          labels.push(`★ ${{ls.name}}`);
+          values.push(ls.e26);
+          colors.push('#E20039');
+        }});
+
+        if (othersEmit > 0) {{
+          labels.push('Resto del Mercado');
+          values.push(othersEmit);
+          colors.push('#475569');
+        }}
+
+        const formattedValues = values.map(v => formatARS(v));
+        const pieData = [{{
+          labels: labels,
+          values: values,
+          customdata: formattedValues,
+          type: 'pie',
+          hole: 0.5,
+          textinfo: 'label+percent',
+          textposition: 'inside',
+          marker: {{ colors: colors }},
+          hovertemplate: '<b>%{{label}}</b><br>Prima Emitida: <b>%{{customdata}}</b><br>Participación: <b>%{{percent}}</b><extra></extra>'
+        }}];
+
+        const pTheme = getPlotlyTheme();
+        const pieLayout = {{
+          paper_bgcolor: pTheme.paper_bgcolor,
+          plot_bgcolor: pTheme.plot_bgcolor,
+          showlegend: false,
+          margin: {{ t: 10, b: 10, l: 10, r: 10 }},
+          font: {{ color: pTheme.textColor, family: 'sans-serif', size: 10 }}
+        }};
+
+        Plotly.newPlot('compMarketSharePlot', pieData, pieLayout, {{ responsive: true, displayModeBar: false }});
+      }}
+
+      // Plot 2: Crecimiento Interanual Bar Chart
+      const growthEl = document.getElementById('compGrowthPlot');
+      if (growthEl) {{
+        const plotItems = [...top10].reverse();
+        const yNames = plotItems.map(r => r.name.length > 20 ? r.name.slice(0, 18) + '...' : r.name);
+        const xGrowth = plotItems.map(r => r.growth);
+        const barColors = plotItems.map(r => r.isLS ? '#E20039' : (r.growth >= res.totalMkt.growth ? '#10B981' : '#F59E0B'));
+
+        const fullNames = plotItems.map(r => r.name);
+        const barData = [{{
+          y: yNames,
+          x: xGrowth,
+          customdata: fullNames,
+          type: 'bar',
+          orientation: 'h',
+          marker: {{ color: barColors }},
+          text: xGrowth.map(v => `${{v.toFixed(1)}}%`),
+          textposition: 'auto',
+          hovertemplate: '<b>%{{customdata}}</b><extra></extra>'
+        }}];
+
+        const pTheme = getPlotlyTheme();
+        const barLayout = {{
+          paper_bgcolor: pTheme.paper_bgcolor,
+          plot_bgcolor: pTheme.plot_bgcolor,
+          margin: {{ t: 10, b: 30, l: 140, r: 20 }},
+          xaxis: {{
+            title: 'Crecimiento Interanual (%)',
+            titlefont: {{ size: 10, color: pTheme.textColor }},
+            tickfont: {{ size: 9, color: pTheme.textColor }},
+            gridcolor: pTheme.gridColor,
+            zerolinecolor: pTheme.zerolineColor
+          }},
+          yaxis: {{
+            tickfont: {{ size: 9, color: pTheme.legendColor }}
+          }},
+          shapes: [{{
+            type: 'line',
+            x0: res.totalMkt.growth,
+            x1: res.totalMkt.growth,
+            y0: -0.5,
+            y1: plotItems.length - 0.5,
+            line: {{ color: '#38BDF8', width: 2, dash: 'dash' }}
+          }}],
+          annotations: [{{
+            x: res.totalMkt.growth,
+            y: plotItems.length - 0.5,
+            text: `Promedio Mkt: ${{res.totalMkt.growth.toFixed(1)}}%`,
+            showarrow: false,
+            font: {{ size: 9, color: '#38BDF8', family: 'sans-serif' }},
+            bgcolor: pTheme.isDark ? '#0F172A' : '#FFFFFF',
+            bordercolor: '#38BDF8',
+            borderwidth: 1
+          }}],
+          font: {{ color: pTheme.textColor, family: 'sans-serif' }}
+        }};
+
+        Plotly.newPlot('compGrowthPlot', barData, barLayout, {{ responsive: true, displayModeBar: false }});
+      }}
+    }}
+
+    function exportCompTableToCSV() {{
+      if (!currentComparativeData || !currentComparativeData.rows) return;
+      const res = currentComparativeData;
+      const headers = ['Ranking', 'Empresa/Grupo', 'Prima Emitida Ej Ant', 'Prima Emitida', 'Crecimiento Interanual (%)', 'Part de Mercado (%)', 'Delta Share (pp)', 'Siniestralidad (%)', 'Gastos Prod y Expl (%)', 'Ratio Combinado (%)'];
+      
+      const lines = [headers.join(',')];
+      res.rows.forEach((r, i) => {{
+        lines.push(`${{i+1}},"${{r.name.replace(/"/g, '""')}}",${{r.e25.toFixed(2)}},${{r.e26.toFixed(2)}},${{r.growth.toFixed(2)}}%,${{r.share26.toFixed(2)}}%,${{r.deltaShare.toFixed(2)}}%,${{r.lossRatio.toFixed(2)}}%,${{r.expRatio.toFixed(2)}}%,${{r.combinedRatio.toFixed(2)}}%`);
+      }});
+      lines.push(`TOTAL,"TOTAL MERCADO",${{res.totalMkt.e25.toFixed(2)}},${{res.totalMkt.e26.toFixed(2)}},${{res.totalMkt.growth.toFixed(2)}}%,100.0%,0.0%,${{res.totalMkt.lossRatio.toFixed(2)}}%,${{res.totalMkt.expRatio.toFixed(2)}}%,${{res.totalMkt.combinedRatio.toFixed(2)}}%`);
+
+      const csvContent = lines.join(String.fromCharCode(10));
+      const blob = new Blob([csvContent], {{ type: 'text/csv;charset=utf-8;' }});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `comparativo_mercado_${{state.compSection}}_${{state.compGroup}}_${{state.compAjusteMode}}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }}
+
 
     // ----------------------------------------------------
     // TAB 6 RENDER: INVERSIONES Y FINANZAS
@@ -5106,10 +7049,11 @@ def generate_html():
       
       const dChart = document.getElementById('investmentsDonutChart');
       if (dChart) {{
+        const pTheme = getPlotlyTheme();
         if (!invs || invs.length === 0) {{
           Plotly.newPlot('investmentsDonutChart', [], {{
-            paper_bgcolor: 'transparent',
-            annotations: [{{ text: 'Sin datos de inversiones', showarrow: false, font: {{ color: '#94A3B8', size: 14 }} }}]
+            paper_bgcolor: pTheme.paper_bgcolor,
+            annotations: [{{ text: 'Sin datos de inversiones', showarrow: false, font: {{ color: pTheme.textColor, size: 14 }} }}]
           }}, {{ responsive: true, displayModeBar: false }});
         }} else {{
           const colors = ['#38BDF8', '#10B981', '#F59E0B', '#C084FC', '#FB923C', '#F43F5E', '#A855F7', '#64748B', '#06B6D4'];
@@ -5124,11 +7068,11 @@ def generate_html():
             customdata: invs.map(i => formatARS(i.importe)),
             hovertemplate: '<b>%{{label}}</b><br>Importe: <b>%{{customdata}}</b><br>Participación: <b>%{{percent}}</b><extra></extra>'
           }}], {{
-            paper_bgcolor: 'transparent',
-            plot_bgcolor: 'transparent',
+            paper_bgcolor: pTheme.paper_bgcolor,
+            plot_bgcolor: pTheme.plot_bgcolor,
             margin: {{ l: 15, r: 15, t: 15, b: 15 }},
             showlegend: false,
-            font: {{ color: '#E2E8F0', size: 11, family: 'Sora' }}
+            font: {{ color: pTheme.legendColor, size: 11, family: 'Sora' }}
           }}, {{ responsive: true, displayModeBar: false }});
         }}
       }}
@@ -5152,7 +7096,7 @@ def generate_html():
         const isLS = isLaSegunda(c);
         const isHL = state.selectedCompanyCode === c.cod_cia;
         return `
-        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}')">
+        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}'); window.scrollTo({{top: 0, behavior: 'smooth'}});" title="Click en la fila para analizar cartera en esta pestaña">
           <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
           <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">
             ${{c.razon_social}}
@@ -5165,7 +7109,7 @@ def generate_html():
           <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
           <td class="py-1.5 px-2 text-right font-bold ${{c.roi_inversiones >= 0 ? 'text-brand-blue' : 'text-rose-400'}}">${{formatPercent(c.roi_inversiones)}}</td>
           <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
-            <button onclick="onCompanyDropdownChange('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver</button>
+            <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white transition-colors text-[9px] font-bold" title="Abrir Ficha Integral 360° de la Aseguradora (Pestaña 2)">Ficha</button>
           </td>
         </tr>
       `}}).join('');
@@ -5184,7 +7128,7 @@ def generate_html():
           const rank = sorted.findIndex(x => x.cod_cia === c.cod_cia) + 1;
           const isHL = state.selectedCompanyCode === c.cod_cia;
           return `
-          <tr class="hover:bg-amber-500/15 ${{isHL ? 'bg-amber-500/25 border-l-4 border-l-amber-400 font-bold' : 'bg-amber-500/5 border-l-4 border-l-amber-400/80'}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}')">
+          <tr class="hover:bg-amber-500/15 ${{isHL ? 'bg-amber-500/25 border-l-4 border-l-amber-400 font-bold' : 'bg-amber-500/5 border-l-4 border-l-amber-400/80'}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}'); window.scrollTo({{top: 0, behavior: 'smooth'}});" title="Click en la fila para analizar cartera en esta pestaña">
             <td class="py-1.5 px-2 text-center text-amber-300 font-mono font-bold">#${{rank}}</td>
             <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{c.razon_social}}">
               ${{c.razon_social}}
@@ -5197,7 +7141,7 @@ def generate_html():
             <td class="py-1.5 px-2 text-right font-bold ${{c.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_financiero)}}</td>
             <td class="py-1.5 px-2 text-right font-bold ${{c.roi_inversiones >= 0 ? 'text-brand-blue' : 'text-rose-400'}}">${{formatPercent(c.roi_inversiones)}}</td>
             <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
-              <button onclick="onCompanyDropdownChange('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver</button>
+              <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white transition-colors text-[9px] font-bold" title="Abrir Ficha Integral 360° de la Aseguradora (Pestaña 2)">Ficha</button>
             </td>
           </tr>
         `}}).join('');
@@ -5376,7 +7320,7 @@ def generate_html():
         const isLS = isLaSegunda(item);
         const isHL = (state.selectedCompanyCode === item.cod_cia);
         return `
-        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{item.cod_cia}}')">
+        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{item.cod_cia}}'); window.scrollTo({{top: 0, behavior: 'smooth'}});" title="Click en la fila para analizar solvencia en esta pestaña">
           <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
           <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[190px] whitespace-nowrap" title="${{item.razon_social}}">
             ${{item.razon_social}}
@@ -5390,7 +7334,7 @@ def generate_html():
           <td class="py-1.5 px-2 text-right text-slate-200 font-bold">${{formatARS(item.patrimonio_neto)}}</td>
           <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(item.activo)}}</td>
           <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
-            <button onclick="onCompanyDropdownChange('${{item.cod_cia}}')" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-slate-950 transition-colors text-[9px] font-bold">Ver</button>
+            <button onclick="selectCompany('${{item.cod_cia}}')" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-colors text-[9px] font-bold" title="Abrir Ficha Integral 360° de la Aseguradora (Pestaña 2)">Ficha</button>
           </td>
         </tr>
       `}}).join('');
@@ -5628,25 +7572,26 @@ def generate_html():
         }}
       ];
 
+      const pTheme = getPlotlyTheme();
       const layout = {{
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
         margin: {{ l: 95, r: 95, t: 40, b: 50 }},
         polar: {{
           domain: {{ x: [0.12, 0.88], y: [0.08, 0.92] }},
-          bgcolor: 'rgba(15, 23, 42, 0.5)',
+          bgcolor: pTheme.polarBg,
           radialaxis: {{
             visible: true,
             range: [0, 100],
-            color: '#94A3B8',
-            gridcolor: '#334155',
+            color: pTheme.textColor,
+            gridcolor: pTheme.polarGrid,
             showticklabels: true,
-            tickfont: {{ size: 9, color: '#94A3B8', family: 'JetBrains Mono' }}
+            tickfont: {{ size: 9, color: pTheme.textColor, family: 'JetBrains Mono' }}
           }},
           angularaxis: {{
-            color: '#F8FAFC',
-            gridcolor: '#334155',
-            tickfont: {{ size: 12, family: 'Sora', color: '#FFFFFF', weight: 'bold' }},
+            color: pTheme.polarAngular,
+            gridcolor: pTheme.polarGrid,
+            tickfont: {{ size: 12, family: 'Sora', color: pTheme.polarAngular, weight: 'bold' }},
             rotation: 90,
             direction: 'clockwise'
           }}
@@ -5656,7 +7601,7 @@ def generate_html():
           y: -0.18,
           x: 0.5,
           xanchor: 'center',
-          font: {{ color: '#F1F5F9', size: 12, family: 'Sora' }}
+          font: {{ color: pTheme.legendColor, size: 12, family: 'Sora' }}
         }}
       }};
 
@@ -5814,7 +7759,7 @@ def generate_html():
         const isLS = isLaSegunda(c);
         const isHL = (state.selectedCompanyCode === c.cod_cia);
         return `
-        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}')">
+        <tr class="hover:bg-slate-800/60 ${{isHL ? 'bg-amber-500/20 border-l-4 border-l-amber-400 font-bold' : (isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/70' : '')}} cursor-pointer" onclick="onCompanyDropdownChange('${{c.cod_cia}}'); window.scrollTo({{top: 0, behavior: 'smooth'}});" title="Click en la fila para analizar ratios en esta pestaña">
           <td class="py-1.5 px-2 text-center text-slate-400 font-mono">${{i+1}}</td>
           <td class="py-1.5 px-2 font-semibold text-white truncate max-w-[180px] whitespace-nowrap" title="${{c.razon_social}}">
             ${{c.razon_social}}
@@ -5831,7 +7776,7 @@ def generate_html():
           <td class="py-1.5 px-2 text-right text-amber-300">${{formatPercent(c.calidad_cartera)}}</td>
           <td class="py-1.5 px-2 text-right font-bold ${{c.roe >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.roe)}}</td>
           <td class="py-1.5 px-2 text-center" onclick="event.stopPropagation()">
-            <button onclick="onCompanyDropdownChange('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-colors text-[9px] font-bold">Ver</button>
+            <button onclick="selectCompany('${{c.cod_cia}}')" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-colors text-[9px] font-bold" title="Abrir Ficha Integral 360° de la Aseguradora (Pestaña 2)">Ficha</button>
           </td>
         </tr>
       `}}).join('');
@@ -6417,6 +8362,540 @@ def generate_html():
     window.setAnalisisGroup = toggleAnalisisGroup;
     window.setAnalisisSubramo = setAnalisisSubramo;
     window.setAnalisisRamosMode = setAnalisisRamosMode;
+    // ========================================================
+    // TAB 11: FLUJO DE RESULTADOS (DIAGRAMA DE SANKEY)
+    // ========================================================
+    function setSankeyScope(scope) {{
+      state.sankeyScope = scope;
+      const allScopes = ['market', 'group', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro', 'cia'];
+      allScopes.forEach(s => {{
+        const btn = document.getElementById(`sankeyScopeBtn-${{s}}`);
+        if (btn) {{
+          if (s === scope) {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center gap-1.5';
+          }} else {{
+            btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5';
+          }}
+        }}
+      }});
+      updateAllComboboxLabels();
+      renderSankeyTab();
+    }}
+
+    function toggleSankeyDetailed(isDetailed) {{
+      state.sankeyDetailed = isDetailed;
+      const btnOn = document.getElementById('sankeyDetailedBtn-on');
+      const btnOff = document.getElementById('sankeyDetailedBtn-off');
+      if (btnOn && btnOff) {{
+        if (isDetailed) {{
+          btnOn.className = 'px-2.5 py-1 rounded font-semibold bg-indigo-600 text-white transition-all';
+          btnOff.className = 'px-2.5 py-1 rounded font-semibold text-slate-400 hover:text-white transition-all';
+        }} else {{
+          btnOff.className = 'px-2.5 py-1 rounded font-semibold bg-indigo-600 text-white transition-all';
+          btnOn.className = 'px-2.5 py-1 rounded font-semibold text-slate-400 hover:text-white transition-all';
+        }}
+      }}
+      renderSankeyTab();
+    }}
+
+    function onSankeyCompanyShortcut(code) {{
+      state.sankeyScope = 'cia';
+      onCompanyDropdownChange(code);
+      setSankeyScope('cia');
+    }}
+
+    function onSankeyGroupShortcut(gid) {{
+      state.sankeyScope = 'group';
+      selectGroup(gid);
+      setSankeyScope('group');
+    }}
+
+    function renderSankeyTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const titleEl = document.getElementById('sankeySelectedTitle');
+      const badgeEl = document.getElementById('sankeySelectedBadge');
+      const subTitleEl = document.getElementById('sankeySelectedSubtitle');
+      const countEl = document.getElementById('sankeyEntitiesCount');
+
+      let metrics = {{}};
+      let entityName = '';
+
+      if (state.sankeyScope === 'market') {{
+        const bm = data.market_benchmarks || {{}};
+        const cias = data.companies || [];
+        const gp_mkt = cias.reduce((acc, c) => acc + (c.gtos_produccion || 0), 0);
+        const ge_mkt = cias.reduce((acc, c) => acc + (c.gtos_explotacion || 0), 0);
+        const sin_mkt = cias.reduce((acc, c) => acc + ((c.siniestros || 0) + (c.rescates || 0)), 0);
+        
+        const cesion_mkt = cias.reduce((acc, c) => acc + ((c.primas_cedidas && c.primas_cedidas > 0) ? c.primas_cedidas : 0), 0);
+        const vr_mkt = cias.reduce((acc, c) => acc + (c.var_reservas || 0), 0);
+        metrics = {{
+          pe: bm.primas_emitidas || 0,
+          pd: bm.primas_devengadas || 0,
+          var_res: vr_mkt,
+          cesion: cesion_mkt,
+          sin: sin_mkt,
+          gp: gp_mkt,
+          ge: ge_mkt,
+          rt: bm.resultado_tecnico || 0,
+          rf: bm.resultado_financiero || 0,
+          ig: 0,
+          rn: bm.resultado_neto || 0,
+          loss_ratio: bm.loss_ratio || 0,
+          comm_ratio: bm.comm_ratio || 0,
+          exp_ratio: bm.exp_ratio || 0,
+          combined_ratio: bm.combined_ratio || 0,
+          roi_inversiones: bm.roi_inversiones || 0
+        }};
+        entityName = 'Mercado Total Consolidado';
+        if (titleEl) titleEl.innerText = entityName;
+        if (badgeEl) {{
+          badgeEl.className = 'text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+          badgeEl.innerText = '185 Aseguradoras';
+        }}
+        if (subTitleEl) subTitleEl.innerText = 'Trazabilidad Consolidada del Sistema Asegurador Argentino • 100% Entidades SSN';
+        if (countEl) countEl.innerText = '185';
+
+      }} else if (state.sankeyScope === 'group') {{
+        const g = (data.groups_by_id && data.groups_by_id[state.selectedGroupId]) || (data.groups && data.groups[0]);
+        if (!g) return;
+        const members = g.members || [];
+        const gp_g = members.reduce((acc, m) => acc + ((data.companies_by_code[m.cod_cia] && data.companies_by_code[m.cod_cia].gtos_produccion) || 0), 0);
+        const ge_g = members.reduce((acc, m) => acc + ((data.companies_by_code[m.cod_cia] && data.companies_by_code[m.cod_cia].gtos_explotacion) || 0), 0);
+        
+        const cesion_g = members.reduce((acc, m) => {{
+          const cia = data.companies_by_code[m.cod_cia];
+          return acc + ((cia && cia.primas_cedidas && cia.primas_cedidas > 0) ? cia.primas_cedidas : 0);
+        }}, 0);
+        metrics = {{
+          pe: g.primas_emitidas || 0,
+          pd: g.primas_devengadas || 0,
+          var_res: g.var_reservas || 0,
+          cesion: cesion_g,
+          sin: g.siniestros || 0,
+          gp: gp_g,
+          ge: ge_g,
+          rt: g.resultado_tecnico || 0,
+          rf: g.resultado_financiero || 0,
+          ig: 0,
+          rn: g.resultado_neto || 0,
+          loss_ratio: g.loss_ratio || 0,
+          comm_ratio: g.comm_ratio || 0,
+          exp_ratio: g.exp_ratio || 0,
+          combined_ratio: g.combined_ratio || 0,
+          roi_inversiones: g.roi_inversiones || 0
+        }};
+        entityName = g.name;
+        if (titleEl) titleEl.innerText = `${{g.name}} (Consolidado)`;
+        if (badgeEl) {{
+          badgeEl.className = 'text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+          badgeEl.innerText = `🏛️ Grupo (${{g.entities_count}} Cías)`;
+        }}
+        if (subTitleEl) subTitleEl.innerText = `Estructura Financiera Consolidada del Grupo • ${{g.description}}`;
+        if (countEl) countEl.innerText = (g.entities_count || 1).toString();
+
+      }} else if (['Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'].includes(state.sankeyScope)) {{
+        const seg = state.sankeyScope;
+        const cias = data.companies.filter(c => c.tipo_entidad === seg);
+        const bm = (data.segment_benchmarks && data.segment_benchmarks[seg]) || {{}};
+
+        const gp_seg = cias.reduce((acc, c) => acc + (c.gtos_produccion || 0), 0);
+        const ge_seg = cias.reduce((acc, c) => acc + (c.gtos_explotacion || 0), 0);
+        const sin_seg = cias.reduce((acc, c) => acc + ((c.siniestros || 0) + (c.rescates || 0)), 0);
+        const cesion_seg = cias.reduce((acc, c) => acc + ((c.primas_cedidas && c.primas_cedidas > 0) ? c.primas_cedidas : 0), 0);
+        const vr_seg = cias.reduce((acc, c) => acc + (c.var_reservas || 0), 0);
+
+        metrics = {{
+          pe: bm.primas_emitidas || cias.reduce((acc, c) => acc + (c.primas_emitidas || 0), 0),
+          pd: bm.primas_devengadas || cias.reduce((acc, c) => acc + (c.primas_devengadas || 0), 0),
+          var_res: vr_seg,
+          cesion: cesion_seg,
+          sin: sin_seg,
+          gp: gp_seg,
+          ge: ge_seg,
+          rt: bm.resultado_tecnico !== undefined ? bm.resultado_tecnico : cias.reduce((acc, c) => acc + (c.resultado_tecnico || 0), 0),
+          rf: bm.resultado_financiero !== undefined ? bm.resultado_financiero : cias.reduce((acc, c) => acc + (c.resultado_financiero || 0), 0),
+          ig: cias.reduce((acc, c) => acc + (c.impuesto_ganancias || 0), 0),
+          rn: bm.resultado_neto !== undefined ? bm.resultado_neto : cias.reduce((acc, c) => acc + (c.resultado_neto || 0), 0),
+          loss_ratio: bm.loss_ratio || 0,
+          comm_ratio: bm.comm_ratio || 0,
+          exp_ratio: bm.exp_ratio || 0,
+          combined_ratio: bm.combined_ratio || 0,
+          roi_inversiones: bm.roi_inversiones || 0
+        }};
+        entityName = `${{seg}} (Consolidado)`;
+        if (titleEl) titleEl.innerText = entityName;
+        if (badgeEl) {{
+          badgeEl.className = 'text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+          badgeEl.innerText = `${{cias.length}} Aseguradoras`;
+        }}
+        if (subTitleEl) subTitleEl.innerText = `Flujo Consolidado del Ramo ${{seg}} • Balances Oficiales SSN SINENSUP`;
+        if (countEl) countEl.innerText = cias.length.toString();
+
+      }} else {{
+        const c = (data.companies_by_code && data.companies_by_code[state.selectedCompanyCode]) || (data.companies && data.companies[0]);
+        if (!c) return;
+        const sin_c = (c.siniestros || 0) + (c.rescates || 0);
+
+        const cesion_c = (c.primas_cedidas !== undefined && c.primas_cedidas !== null && c.primas_cedidas > 0) ? c.primas_cedidas : 0;
+        metrics = {{
+          pe: c.primas_emitidas || 0,
+          pd: c.primas_devengadas || 0,
+          var_res: c.var_reservas || 0,
+          cesion: cesion_c,
+          sin: sin_c,
+          gp: c.gtos_produccion || 0,
+          ge: c.gtos_explotacion || 0,
+          rt: c.resultado_tecnico || 0,
+          rf: c.resultado_financiero || 0,
+          ig: c.impuesto_ganancias || 0,
+          rn: c.resultado_neto || 0,
+          loss_ratio: c.loss_ratio || (metrics.pd > 0 ? (sin_c / metrics.pd * 100) : 0),
+          comm_ratio: c.comm_ratio || 0,
+          exp_ratio: c.exp_ratio || 0,
+          combined_ratio: c.combined_ratio || 0,
+          roi_inversiones: c.roi_inversiones || 0
+        }};
+        entityName = c.razon_social;
+        if (titleEl) titleEl.innerText = c.razon_social;
+        if (badgeEl) {{
+          badgeEl.className = 'text-xs px-2.5 py-0.5 rounded-full font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30';
+          badgeEl.innerText = `${{c.cod_cia}} • ${{c.tipo_entidad}}`;
+        }}
+        if (subTitleEl) subTitleEl.innerText = 'Desglose Oficial del Estado de Resultados • Fuente Balance SSN SINENSUP';
+        if (countEl) countEl.innerText = '1';
+      }}
+
+      // 1. Update Executive KPI Cards
+      const retencionPct = (metrics.pe > 0) ? ((metrics.pd / metrics.pe) * 100) : 100;
+      const lossPct = (metrics.pd > 0) ? ((metrics.sin / metrics.pd) * 100) : metrics.loss_ratio;
+      const gastosTot = metrics.gp + metrics.ge;
+      const combinedPct = (metrics.pd > 0) ? (((metrics.sin + gastosTot) / metrics.pd) * 100) : metrics.combined_ratio;
+      const margTecPct = (metrics.pd > 0) ? ((metrics.rt / metrics.pd) * 100) : 0;
+      const margNetoPct = (metrics.pd > 0) ? ((metrics.rn / metrics.pd) * 100) : 0;
+
+      const kpiPd = document.getElementById('sankeyKpiPrimasDev');
+      const kpiRet = document.getElementById('sankeyKpiRetencionPct');
+      if (kpiPd) kpiPd.innerText = formatARS(metrics.pd);
+      if (kpiRet) kpiRet.innerText = `${{retencionPct.toFixed(1)}}%`;
+
+      const kpiSin = document.getElementById('sankeyKpiSiniestros');
+      const kpiLoss = document.getElementById('sankeyKpiLossRatio');
+      if (kpiSin) kpiSin.innerText = formatARS(metrics.sin);
+      if (kpiLoss) kpiLoss.innerText = `${{lossPct.toFixed(1)}}%`;
+
+      const kpiGtos = document.getElementById('sankeyKpiGastos');
+      const kpiComb = document.getElementById('sankeyKpiCombinedRatio');
+      if (kpiGtos) kpiGtos.innerText = formatARS(gastosTot);
+      if (kpiComb) {{
+        kpiComb.innerText = `${{combinedPct.toFixed(1)}}%`;
+        kpiComb.className = `font-mono font-bold ${{combinedPct <= 100 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      const kpiRt = document.getElementById('sankeyKpiResTec');
+      const kpiMargTec = document.getElementById('sankeyKpiMargenTec');
+      if (kpiRt) {{
+        kpiRt.innerText = formatARS(metrics.rt);
+        kpiRt.className = `text-base sm:text-lg font-bold font-mono ${{metrics.rt >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+      if (kpiMargTec) {{
+        kpiMargTec.innerText = `${{margTecPct.toFixed(1)}}%`;
+        kpiMargTec.className = `font-mono font-bold ${{metrics.rt >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      const kpiRf = document.getElementById('sankeyKpiResFin');
+      const kpiRoi = document.getElementById('sankeyKpiRoiFin');
+      if (kpiRf) {{
+        kpiRf.innerText = formatARS(metrics.rf);
+        kpiRf.className = `text-base sm:text-lg font-bold font-mono ${{metrics.rf >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+      if (kpiRoi) {{
+        kpiRoi.innerText = `${{metrics.roi_inversiones ? metrics.roi_inversiones.toFixed(1) : '0.0'}}%`;
+        kpiRoi.className = `font-mono font-bold ${{metrics.roi_inversiones >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      const kpiRn = document.getElementById('sankeyKpiResNeto');
+      const kpiMargNeto = document.getElementById('sankeyKpiMargenNeto');
+      if (kpiRn) {{
+        kpiRn.innerText = formatARS(metrics.rn);
+        kpiRn.className = `text-base sm:text-lg font-bold font-mono ${{metrics.rn >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+      if (kpiMargNeto) {{
+        kpiMargNeto.innerText = `${{margNetoPct.toFixed(1)}}%`;
+        kpiMargNeto.className = `font-mono font-bold ${{metrics.rn >= 0 ? 'text-emerald-400' : 'text-rose-400'}}`;
+      }}
+
+      // 2. Update Analytical Diagnosis Cards
+      const badgeTec = document.getElementById('sankeyDiagBadgeTec');
+      const textTec = document.getElementById('sankeyDiagTextTec');
+      if (metrics.rt >= 0) {{
+        if (badgeTec) {{
+          badgeTec.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+          badgeTec.innerText = 'Superávit de Suscripción';
+        }}
+        if (textTec) textTec.innerHTML = `Las primas devengadas netas (<b>${{formatARS(metrics.pd)}}</b>) absorbieron con holgura la siniestralidad devengada (${{lossPct.toFixed(1)}}%) y los costos operativos (${{(gastosTot / metrics.pd * 100).toFixed(1)}}%), arrojando un resultado técnico superavitario de <b>${{formatARS(metrics.rt)}}</b> (Margen ${{margTecPct.toFixed(1)}}%).`;
+      }} else {{
+        if (badgeTec) {{
+          badgeTec.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badgeTec.innerText = 'Déficit de Suscripción';
+        }}
+        if (textTec) textTec.innerHTML = `La carga combinada de siniestros (${{lossPct.toFixed(1)}}%) y gastos operativos superó el 100% de la prima devengada (Ratio Combinado: <b>${{combinedPct.toFixed(1)}}%</b>), generando un déficit técnico de <b>${{formatARS(metrics.rt)}}</b> que debió ser financiado con rentas de inversión o patrimonio.`;
+      }}
+
+      const badgeFin = document.getElementById('sankeyDiagBadgeFin');
+      const textFin = document.getElementById('sankeyDiagTextFin');
+      if (metrics.rf > 0) {{
+        if (badgeFin) {{
+          badgeFin.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+          badgeFin.innerText = 'Rendimiento Positivo';
+        }}
+        if (textFin) {{
+          if (metrics.rt < 0) {{
+            const cubre = metrics.rf >= Math.abs(metrics.rt);
+            textFin.innerHTML = `La cartera de inversiones generó una renta de <b>${{formatARS(metrics.rf)}}</b>. ${{cubre ? 'Logró neutralizar completamente el déficit operativo técnico de suscripción y transferir remanente positivo a la última línea.' : 'Aportó liquidez para absorber parcialmente el déficit operativo de suscripción, aunque no alcanzó a neutralizarlo totalmente.'}}`;
+          }} else {{
+            textFin.innerHTML = `La cartera de inversiones sumó <b>${{formatARS(metrics.rf)}}</b>, potenciando el margen operativo y fortaleciendo el retorno total sobre el capital invertido.`;
+          }}
+        }}
+      }} else {{
+        if (badgeFin) {{
+          badgeFin.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badgeFin.innerText = 'Quebranto Financiero / RECPAM';
+        }}
+        if (textFin) textFin.innerHTML = `El resultado financiero arrojó un saldo negativo de <b>${{formatARS(metrics.rf)}}</b>, condicionado por el impacto de inflación sobre activos monetarios (RECPAM) y variaciones de cotización.`;
+      }}
+
+      const badgeNet = document.getElementById('sankeyDiagBadgeNet');
+      const textNet = document.getElementById('sankeyDiagTextNet');
+      if (metrics.rn >= 0) {{
+        if (badgeNet) {{
+          badgeNet.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+          badgeNet.innerText = 'Ganancia Neta Final';
+        }}
+        if (textNet) textNet.innerHTML = `${{entityName}} finalizó el período con una ganancia neta consolidada de <b>${{formatARS(metrics.rn)}}</b>, representando un margen neto del <b>${{margNetoPct.toFixed(1)}}%</b> sobre primas devengadas, incrementando su patrimonio neto y solvencia.`;
+      }} else {{
+        if (badgeNet) {{
+          badgeNet.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badgeNet.innerText = 'Pérdida Neta del Ejercicio';
+        }}
+        if (textNet) textNet.innerHTML = `El resultado integral consolidado reflejó una pérdida de <b>${{formatARS(metrics.rn)}}</b> (Margen Neto ${{margNetoPct.toFixed(1)}}%), la cual es absorbida íntegramente por el Patrimonio Neto de la entidad.`;
+      }}
+
+      // 3. Render Plotly Sankey Chart
+      renderSankeyPlot(metrics, state.sankeyDetailed);
+    }}
+
+    function renderSankeyPlot(m, isDetailed) {{
+      const plotEl = document.getElementById('sankeyPlot');
+      if (!plotEl) return;
+
+      const nodes = [];
+      const nodeIndexMap = {{}};
+      const nodeColors = [];
+
+      function getNode(name, defaultColor) {{
+        if (nodeIndexMap[name] === undefined) {{
+          nodeIndexMap[name] = nodes.length;
+          nodes.push(name);
+          nodeColors.push(defaultColor);
+        }}
+        return nodeIndexMap[name];
+      }}
+
+      const sources = [];
+      const targets = [];
+      const values = [];
+      const linkColors = [];
+      const linkTooltips = [];
+
+      function addFlow(src, dst, val, color, label) {{
+        if (val === null || val === undefined || val <= 0) return;
+        const s = getNode(src, '#38BDF8');
+        const t = getNode(dst, '#38BDF8');
+        sources.push(s);
+        targets.push(t);
+        values.push(val);
+        linkColors.push(color);
+        linkTooltips.push(label || formatARS(val));
+      }}
+
+      const pe = Math.max(0, m.pe || 0);
+      const pd = Math.max(0, m.pd || 0);
+      const cesion = Math.max(0, m.cesion || 0);
+      const varRes = m.var_res || 0;
+      const sin = Math.max(0, m.sin || 0);
+      const gp = Math.max(0, m.gp || 0);
+      const ge = Math.max(0, m.ge || 0);
+      const rt = m.rt || 0;
+      const rf = m.rf || 0;
+      const ig = Math.max(0, m.ig || 0);
+      const rn = m.rn || 0;
+      const totCostos = sin + gp + ge;
+
+      if (isDetailed) {{
+        // Stage 1: Gross Production
+        if (cesion > 0) addFlow('Primas Emitidas', 'Cesión a Reaseguros', cesion, 'rgba(244, 63, 94, 0.45)', `Cesión Reaseguro: ${{formatARS(cesion)}}`);
+        if (varRes > 0) addFlow('Primas Emitidas', 'Constitución de Reservas', varRes, 'rgba(245, 158, 11, 0.45)', `Constitución Reservas: ${{formatARS(varRes)}}`);
+        
+        const resPos = Math.max(0, varRes);
+        const flowToPd = (pe > 0) ? Math.max(0, pe - cesion - resPos) : pd;
+        if (flowToPd > 0) addFlow('Primas Emitidas', 'Primas Devengadas (Retenidas)', flowToPd, 'rgba(14, 165, 233, 0.5)', `Prima Retenida Directa: ${{formatARS(flowToPd)}}`);
+        if (varRes < 0) addFlow('Liberación de Reservas', 'Primas Devengadas (Retenidas)', Math.abs(varRes), 'rgba(16, 185, 129, 0.45)', `Liberación Reservas: ${{formatARS(Math.abs(varRes))}}`);
+
+        const totalInflowToPd = flowToPd + (varRes < 0 ? Math.abs(varRes) : 0);
+        if (pd > totalInflowToPd + 1000) {{
+          const diffPd = pd - totalInflowToPd;
+          addFlow('Otros Ajustes Técnicos', 'Primas Devengadas (Retenidas)', diffPd, 'rgba(56, 189, 248, 0.45)', `Ajustes Técnicos: ${{formatARS(diffPd)}}`);
+        }}
+      }}
+
+      // Stage 2: Technical Costs & Margin
+      if (rt >= 0) {{
+        // Profitable Underwriting
+        addFlow('Primas Devengadas (Retenidas)', 'Siniestros y Prestaciones', sin, 'rgba(239, 68, 68, 0.55)', `Siniestros: ${{formatARS(sin)}}`);
+        addFlow('Primas Devengadas (Retenidas)', 'Gastos de Producción', gp, 'rgba(249, 115, 22, 0.55)', `Comisiones: ${{formatARS(gp)}}`);
+        addFlow('Primas Devengadas (Retenidas)', 'Gastos de Explotación', ge, 'rgba(217, 119, 6, 0.55)', `Administración: ${{formatARS(ge)}}`);
+        if (rt > 0) {{
+          addFlow('Primas Devengadas (Retenidas)', 'Superávit Técnico (Underwriting)', rt, 'rgba(16, 185, 129, 0.6)', `Superávit: ${{formatARS(rt)}}`);
+        }}
+      }} else {{
+        // Underwriting Deficit
+        const pdAvail = Math.min(pd, totCostos);
+        if (totCostos > 0) {{
+          const sinFromPd = pdAvail * (sin / totCostos);
+          const gpFromPd = pdAvail * (gp / totCostos);
+          const geFromPd = pdAvail * (ge / totCostos);
+          addFlow('Primas Devengadas (Retenidas)', 'Siniestros y Prestaciones', sinFromPd, 'rgba(239, 68, 68, 0.55)', `Siniestros (de Primas): ${{formatARS(sinFromPd)}}`);
+          addFlow('Primas Devengadas (Retenidas)', 'Gastos de Producción', gpFromPd, 'rgba(249, 115, 22, 0.55)', `Gastos Prod. (de Primas): ${{formatARS(gpFromPd)}}`);
+          addFlow('Primas Devengadas (Retenidas)', 'Gastos de Explotación', geFromPd, 'rgba(217, 119, 6, 0.55)', `Gastos Expl. (de Primas): ${{formatARS(geFromPd)}}`);
+
+          const def = Math.abs(rt);
+          if (rf > 0) {{
+            const rfToDef = Math.min(rf, def);
+            addFlow('Rendimiento Financiero e Inversiones', 'Absorción Déficit Técnico', rfToDef, 'rgba(234, 88, 12, 0.6)', `Subsidio Inversiones: ${{formatARS(rfToDef)}}`);
+            const remDef = def - rfToDef;
+            if (remDef > 0) {{
+              addFlow('Absorción Patrimonial / Capital', 'Absorción Déficit Técnico', remDef, 'rgba(190, 18, 60, 0.55)', `Déficit no cubierto: ${{formatARS(remDef)}}`);
+            }}
+          }} else {{
+            addFlow('Absorción Patrimonial / Capital', 'Absorción Déficit Técnico', def, 'rgba(190, 18, 60, 0.55)', `Déficit Técnico a Capital: ${{formatARS(def)}}`);
+          }}
+
+          const sinFromDef = def * (sin / totCostos);
+          const gpFromDef = def * (gp / totCostos);
+          const geFromDef = def * (ge / totCostos);
+          addFlow('Absorción Déficit Técnico', 'Siniestros y Prestaciones', sinFromDef, 'rgba(239, 68, 68, 0.45)', `Siniestros (Déficit): ${{formatARS(sinFromDef)}}`);
+          addFlow('Absorción Déficit Técnico', 'Gastos de Producción', gpFromDef, 'rgba(249, 115, 22, 0.45)', `Gastos Prod. (Déficit): ${{formatARS(gpFromDef)}}`);
+          addFlow('Absorción Déficit Técnico', 'Gastos de Explotación', geFromDef, 'rgba(217, 119, 6, 0.45)', `Gastos Expl. (Déficit): ${{formatARS(geFromDef)}}`);
+        }}
+      }}
+
+      // Stage 3: Financial Results & Remainder
+      if (rf > 0) {{
+        const remRf = (rt < 0) ? Math.max(0, rf - Math.abs(rt)) : rf;
+        if (remRf > 0) {{
+          addFlow('Rendimiento Financiero e Inversiones', 'Resultado Operativo Global', remRf, 'rgba(16, 185, 129, 0.55)', `Remanente Financiero: ${{formatARS(remRf)}}`);
+        }}
+      }} else if (rf < 0) {{
+        addFlow('Pérdida Financiera / RECPAM', 'Resultado Operativo Global', Math.abs(rf), 'rgba(244, 63, 94, 0.55)', `Quebranto Financiero: ${{formatARS(Math.abs(rf))}}`);
+      }}
+
+      if (rt > 0) {{
+        addFlow('Superávit Técnico (Underwriting)', 'Resultado Operativo Global', rt, 'rgba(16, 185, 129, 0.55)', `Aporte Técnico: ${{formatARS(rt)}}`);
+      }}
+
+      // Stage 4: Bottom Line
+      if (rn >= 0) {{
+        if (ig > 0) addFlow('Resultado Operativo Global', 'Impuesto a las Ganancias', ig, 'rgba(244, 63, 94, 0.5)', `Impuestos: ${{formatARS(ig)}}`);
+        addFlow('Resultado Operativo Global', 'RESULTADO NETO (Ganancia)', rn, 'rgba(16, 185, 129, 0.8)', `Ganancia Neta: ${{formatARS(rn)}}`);
+      }} else {{
+        addFlow('Resultado Operativo Global', 'PÉRDIDA NETA DEL EJERCICIO', Math.abs(rn), 'rgba(225, 29, 72, 0.8)', `Pérdida Neta: ${{formatARS(Math.abs(rn))}}`);
+      }}
+
+      // Explicit Node Palette
+      const palette = {{
+        'Primas Emitidas': '#0284C7',
+        'Cesión a Reaseguros': '#F43F5E',
+        'Constitución de Reservas': '#F59E0B',
+        'Liberación de Reservas': '#10B981',
+        'Primas Devengadas (Retenidas)': '#0EA5E9',
+        'Siniestros y Prestaciones': '#EF4444',
+        'Gastos de Producción': '#F97316',
+        'Gastos de Explotación': '#D97706',
+        'Superávit Técnico (Underwriting)': '#10B981',
+        'Absorción Déficit Técnico': '#EA580C',
+        'Rendimiento Financiero e Inversiones': '#059669',
+        'Pérdida Financiera / RECPAM': '#E11D48',
+        'Absorción Patrimonial / Capital': '#BE123C',
+        'Resultado Operativo Global': '#3B82F6',
+        'Impuesto a las Ganancias': '#BE185D',
+        'RESULTADO NETO (Ganancia)': '#059669',
+        'PÉRDIDA NETA DEL EJERCICIO': '#BE123C'
+      }};
+
+      const finalColors = nodes.map(n => palette[n] || '#64748B');
+      const isDark = document.documentElement.classList.contains('dark');
+
+      // Calculate total flow passing through each node for Latin notation tooltips
+      const nodeFlowIn = new Array(nodes.length).fill(0);
+      const nodeFlowOut = new Array(nodes.length).fill(0);
+      for (let i = 0; i < sources.length; i++) {{
+        nodeFlowOut[sources[i]] += values[i];
+        nodeFlowIn[targets[i]] += values[i];
+      }}
+      const nodeCustomData = nodes.map((n, i) => {{
+        const total = Math.max(nodeFlowIn[i], nodeFlowOut[i]);
+        return formatARS(total);
+      }});
+
+      const sankeyTrace = {{
+        type: 'sankey',
+        orientation: 'h',
+        arrangement: 'snap',
+        node: {{
+          pad: 18,
+          thickness: 22,
+          line: {{
+            color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
+            width: 1
+          }},
+          label: nodes,
+          color: finalColors,
+          customdata: nodeCustomData,
+          hovertemplate: '<b>%{{label}}</b><br>Flujo Total: <b>%{{customdata}}</b><extra></extra>'
+        }},
+        link: {{
+          source: sources,
+          target: targets,
+          value: values,
+          color: linkColors,
+          customdata: linkTooltips,
+          hovertemplate: '<b>%{{source.label}}</b> ➔ <b>%{{target.label}}</b><br>%{{customdata}}<extra></extra>'
+        }}
+      }};
+
+      const layout = {{
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        font: {{
+          size: 11,
+          color: isDark ? '#F8FAFC' : '#0F172A',
+          family: 'Sora, sans-serif'
+        }},
+        margin: {{ t: 25, b: 25, l: 20, r: 20 }}
+      }};
+
+      Plotly.newPlot('sankeyPlot', [sankeyTrace], layout, {{ responsive: true, displayModeBar: false }});
+    }}
+
+    window.setSankeyScope = setSankeyScope;
+    window.toggleSankeyDetailed = toggleSankeyDetailed;
+    window.onSankeyCompanyShortcut = onSankeyCompanyShortcut;
+    window.onSankeyGroupShortcut = onSankeyGroupShortcut;
+    window.renderSankeyTab = renderSankeyTab;
+
     window.filterAnalisisRankingTable = filterAnalisisRankingTable;
     window.renderAnalisisRamosTab = renderAnalisisRamosTab;
     window.renderAnalisisRamosRadarChart = renderAnalisisRamosRadarChart;
@@ -6446,3 +8925,5 @@ def generate_html():
 
 if __name__ == '__main__':
     generate_html()
+
+    
