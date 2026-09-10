@@ -1,5 +1,6 @@
 import json
 import os
+import pyodbc
 import pandas as pd
 import numpy as np
 from db_engine import get_balance_data
@@ -53,15 +54,21 @@ def build_complete_dataset():
         "retiro_entidades": retiro_ent['entidades']
     }
 
-    # 2. Macro Branch Totals BY REAL PRODUCT LINE (Unified with Directas + Derechos + Recargos + Reaseguros)
-    accounts_primas = (
+    # 2. Macro Branch Totals BY REAL PRODUCT LINE (Emisión Directa Neta Total: Directas + Derechos + Recargos - Anulaciones)
+    pos_accounts = (
         '5.01.01.01.01.01.01', '5.01.01.01.01.01.99',
         '5.01.01.01.01.02.01', '5.01.01.01.01.02.99',
-        '5.01.01.01.01.03.02', '5.01.01.01.01.03.99',
-        '5.01.01.01.01.04.01', '5.01.01.01.01.04.99'
+        '5.01.01.01.01.03.02', '5.01.01.01.01.03.99'
     )
-    primas_sub = df_raw[df_raw['cod_cuenta'].str.startswith(accounts_primas) & (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())]
-    sin_sub = df_raw[df_raw['cod_cuenta'].str.startswith(('4.01.01.01.01.01', '4.01.01.01.01.99', '4.01.01.01.02.01', '4.01.01.01.02.99', '4.01.01.01.03.01', '4.01.01.01.03.99', '4.01.01.01.04.01', '4.01.01.01.04.99', '4.01.02.01', '4.01.02.02', '4.01.02.03')) & (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())]
+    neg_accounts = (
+        '4.01.04.04.04.01.01', '4.01.04.04.04.01.99',
+        '4.01.04.04.04.02.01', '4.01.04.04.04.02.99'
+    )
+    sin_accounts = (
+        '4.01.01.01.01.01', '4.01.01.01.01.99', '4.01.01.01.02.01', '4.01.01.01.02.99',
+        '4.01.01.01.03.01', '4.01.01.01.03.99', '4.01.01.01.04.01', '4.01.01.01.04.99',
+        '4.01.02.01', '4.01.02.02', '4.01.02.03'
+    )
 
     def get_macro_product(cod_sub):
         cod_str = str(cod_sub).strip()
@@ -75,33 +82,41 @@ def build_complete_dataset():
             return 'personas'
         return 'otros'
 
-    p_df = primas_sub.copy()
-    s_df = sin_sub.copy()
-    p_df['macro_prod'] = p_df['cod_subramo'].apply(get_macro_product)
-    s_df['macro_prod'] = s_df['cod_subramo'].apply(get_macro_product)
-
-    tot_prod_p = float(p_df['importe'].sum())
-    tot_prod_s = float(s_df['importe'].sum())
+    sub_clean = df_raw[(df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())].copy()
+    sub_clean['macro_prod'] = sub_clean['cod_subramo'].apply(get_macro_product)
 
     macro_productos = {}
+    tot_prod_p = 0.0
     for k in ['patrimoniales', 'art', 'personas', 'retiro']:
-        p_val = float(p_df[p_df['macro_prod'] == k]['importe'].sum())
-        s_val = float(s_df[s_df['macro_prod'] == k]['importe'].sum())
+        k_df = sub_clean[sub_clean['macro_prod'] == k]
+        p_pos = float(k_df[k_df['cod_cuenta'].str.startswith(pos_accounts)]['importe'].sum())
+        p_neg = float(k_df[k_df['cod_cuenta'].str.startswith(neg_accounts)]['importe'].sum())
+        p_val = p_pos - p_neg
+        s_val = float(k_df[k_df['cod_cuenta'].str.startswith(sin_accounts)]['importe'].sum())
+        tot_prod_p += p_val
         sin_pct = (s_val / p_val * 100) if p_val > 0 else 0.0
-        part_pct = (p_val / tot_prod_p * 100) if tot_prod_p > 0 else 0.0
 
         macro_productos[k] = {
             "primas": round(p_val, 2),
             "siniestros": round(s_val, 2),
             "siniestralidad": round(sin_pct, 1),
-            "participacion": round(part_pct, 1)
+            "participacion": 0.0
         }
 
+    for k in ['patrimoniales', 'art', 'personas', 'retiro']:
+        macro_productos[k]["participacion"] = round((macro_productos[k]['primas'] / tot_prod_p * 100) if tot_prod_p > 0 else 0.0, 1)
+
     # Cross-selling breakdown for personas
-    pers_p_df = p_df[p_df['macro_prod'] == 'personas']
-    pers_in_mixtas = float(pers_p_df[pers_p_df['tipo_entidad'] == 'Patrimoniales y Mixtas']['importe'].sum())
-    pers_in_personas = float(pers_p_df[pers_p_df['tipo_entidad'] == 'Seguros de Personas']['importe'].sum())
-    pers_in_art = float(pers_p_df[pers_p_df['tipo_entidad'] == 'Riesgos del Trabajo (ART)']['importe'].sum())
+    pers_k_df = sub_clean[sub_clean['macro_prod'] == 'personas']
+    def get_pers_net_by_tipo(t_name):
+        t_df = pers_k_df[pers_k_df['tipo_entidad'] == t_name]
+        pos = float(t_df[t_df['cod_cuenta'].str.startswith(pos_accounts)]['importe'].sum())
+        neg = float(t_df[t_df['cod_cuenta'].str.startswith(neg_accounts)]['importe'].sum())
+        return pos - neg
+
+    pers_in_mixtas = get_pers_net_by_tipo('Patrimoniales y Mixtas')
+    pers_in_personas = get_pers_net_by_tipo('Seguros de Personas')
+    pers_in_art = get_pers_net_by_tipo('Riesgos del Trabajo (ART)')
 
     macro_productos['personas_cross_selling'] = {
         "en_mixtas": round(pers_in_mixtas, 2),
@@ -110,6 +125,8 @@ def build_complete_dataset():
         "pct_en_mixtas": round((pers_in_mixtas / macro_productos['personas']['primas'] * 100), 1) if macro_productos['personas']['primas'] > 0 else 0.0,
         "pct_en_personas": round((pers_in_personas / macro_productos['personas']['primas'] * 100), 1) if macro_productos['personas']['primas'] > 0 else 0.0
     }
+
+    tot_prod_s = sum(macro_productos[k]['siniestros'] for k in ['patrimoniales', 'art', 'personas', 'retiro'])
 
     macro_productos['total'] = {
         "primas": round(tot_prod_p, 2),
@@ -270,6 +287,16 @@ def build_complete_dataset():
             tot = get_total(code)
             if tot != 0:
                 rolled[code] = round(tot, 2)
+
+        if is_subramo:
+            # Emisión Directa Neta Total: (Directas + Derechos + Recargos) - (Anulaciones Directas + Anulaciones Recargos)
+            p_dir = float(raw_dict.get('5.01.01.01.01.01.01.00', 0.0)) + float(raw_dict.get('5.01.01.01.01.01.99.00', 0.0))
+            der = float(raw_dict.get('5.01.01.01.01.02.01.00', 0.0)) + float(raw_dict.get('5.01.01.01.01.02.99.00', 0.0))
+            rec = float(raw_dict.get('5.01.01.01.01.03.02.00', 0.0)) + float(raw_dict.get('5.01.01.01.01.03.99.00', 0.0))
+            a_dir = float(raw_dict.get('4.01.04.04.04.01.01.00', 0.0)) + float(raw_dict.get('4.01.04.04.04.01.99.00', 0.0))
+            a_rec = float(raw_dict.get('4.01.04.04.04.02.01.00', 0.0)) + float(raw_dict.get('4.01.04.04.04.02.99.00', 0.0))
+            rolled['_net_emit'] = round((p_dir + der + rec) - (a_dir + a_rec), 2)
+
         return rolled
 
     # General Balance (where cod_subramo is empty)
@@ -617,7 +644,7 @@ def build_complete_dataset():
             if group_sub_raw:
                 sub_rollup = compute_hierarchical_rollup(group_sub_raw, is_subramo=True)
                 groups_balances_subramos[gid][scod] = sub_rollup
-                sub_emit = sub_rollup.get('5.01.01.00.00.00.00.00', 0.0)
+                sub_emit = sub_rollup.get('_net_emit', sub_rollup.get('5.01.01.00.00.00.00.00', 0.0))
                 sub_sin = sub_rollup.get('4.01.01.00.00.00.00.00', 0.0) + sub_rollup.get('4.01.02.00.00.00.00.00', 0.0)
                 if sub_emit > 0:
                     g_subramos_list.append({
@@ -735,8 +762,145 @@ def build_complete_dataset():
         }
     }
 
+    # ----------------------------------------------------
+    # COMPARATIVE MARKET DATASET (2026-2 vs 2025-2)
+    # ----------------------------------------------------
+    print("Building comparative subramos dataset (2026 vs 2025)...")
+    cias_comparative_subramos = {}
+    groups_comparative_subramos = {}
+    market_comparative_subramos = {}
+
+    mdb_2026 = r"g:\Mi unidad\IA\Sinensup\2026-2.mdb"
+    mdb_2025 = r"g:\Mi unidad\IA\Sinensup\2025-2.mdb"
+
+    if os.path.exists(mdb_2026) and os.path.exists(mdb_2025):
+        try:
+            conn26 = pyodbc.connect(f"DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={mdb_2026};")
+            df_c26 = pd.read_sql("SELECT cod_cia, cod_subramo, cod_cuenta, importe FROM Balance WHERE cod_subramo IS NOT NULL AND cod_subramo <> ''", conn26)
+            conn26.close()
+
+            conn25 = pyodbc.connect(f"DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={mdb_2025};")
+            df_c25 = pd.read_sql("SELECT cod_cia, cod_subramo, cod_cuenta, importe FROM Balance WHERE cod_subramo IS NOT NULL AND cod_subramo <> ''", conn25)
+            conn25.close()
+
+            def process_comp_df(df_in):
+                df_c = df_in.copy()
+                df_c['cod_cia'] = df_c['cod_cia'].astype(str).str.strip().str.zfill(4)
+                df_c['cod_subramo'] = df_c['cod_subramo'].astype(str).str.strip()
+                df_c['cod_cuenta'] = df_c['cod_cuenta'].astype(str).str.strip()
+                df_c['importe'] = df_c['importe'].fillna(0.0)
+
+                # Primas Directas Netas y Adicionales (Emisión Directa Neta Total)
+                p_dir_01 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                p_dir_99 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.01.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                der_01 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.02.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                der_99 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.02.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                rec_02 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.03.02.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                rec_99 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.03.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+
+                a_dir_01 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                a_dir_99 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.01.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                a_rec_01 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.02.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                a_rec_99 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.02.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+
+                # Siniestros Netos
+                s_pag_01 = df_c[df_c['cod_cuenta'] == '4.01.01.01.01.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_pag_99 = df_c[df_c['cod_cuenta'] == '4.01.01.01.01.99.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_pend_01 = df_c[df_c['cod_cuenta'] == '4.01.01.01.06.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_liq_01 = df_c[df_c['cod_cuenta'] == '4.01.01.01.04.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_liq_99 = df_c[df_c['cod_cuenta'] == '4.01.01.01.04.99.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_resc = df_c[df_c['cod_cuenta'] == '4.01.02.00.00.00.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                
+                s_pend_ant_01 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.06.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_pend_ant_99 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.06.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_recup_reag_01 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_recup_reag_99 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.01.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_recup_terc_01 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.03.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                s_recup_terc_99 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.03.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+
+                # Gastos
+                g_prod = df_c[df_c['cod_cuenta'].str.startswith('4.01.06')].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                g_expl = df_c[df_c['cod_cuenta'].str.startswith('4.01.07')].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+
+                # Devengadas
+                rva_ej = df_c[df_c['cod_cuenta'] == '4.01.05.05.01.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                rva_ant = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.12.01.01'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                p_ced = df_c[df_c['cod_cuenta'] == '4.01.03.03.03.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+
+                # Res Tecnico
+                ing_tec = df_c[df_c['cod_cuenta'] == '5.01.00.00.00.00.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                egr_tec = df_c[df_c['cod_cuenta'] == '4.01.00.00.00.00.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+
+                res_df = pd.DataFrame({
+                    'p_dir_01': p_dir_01, 'p_dir_99': p_dir_99,
+                    'der_01': der_01, 'der_99': der_99,
+                    'rec_02': rec_02, 'rec_99': rec_99,
+                    'a_dir_01': a_dir_01, 'a_dir_99': a_dir_99,
+                    'a_rec_01': a_rec_01, 'a_rec_99': a_rec_99,
+                    's_pag_01': s_pag_01, 's_pag_99': s_pag_99, 's_pend_01': s_pend_01, 's_liq_01': s_liq_01, 's_liq_99': s_liq_99, 's_resc': s_resc,
+                    's_pend_ant_01': s_pend_ant_01, 's_pend_ant_99': s_pend_ant_99, 's_recup_reag_01': s_recup_reag_01, 's_recup_reag_99': s_recup_reag_99,
+                    's_recup_terc_01': s_recup_terc_01, 's_recup_terc_99': s_recup_terc_99,
+                    'g_prod': g_prod, 'g_expl': g_expl, 'rva_ej': rva_ej, 'rva_ant': rva_ant, 'p_ced': p_ced,
+                    'ing_tec': ing_tec, 'egr_tec': egr_tec
+                }).fillna(0.0)
+
+                res_df['emit'] = (res_df['p_dir_01'] + res_df['p_dir_99'] + res_df['der_01'] + res_df['der_99'] + res_df['rec_02'] + res_df['rec_99']) - (res_df['a_dir_01'] + res_df['a_dir_99'] + res_df['a_rec_01'] + res_df['a_rec_99'])
+                res_df['sin'] = (res_df['s_pag_01'] + res_df['s_pag_99'] + res_df['s_pend_01'] + res_df['s_liq_01'] + res_df['s_liq_99'] + res_df['s_resc']) - (res_df['s_pend_ant_01'] + res_df['s_pend_ant_99'] + res_df['s_recup_reag_01'] + res_df['s_recup_reag_99'] + res_df['s_recup_terc_01'] + res_df['s_recup_terc_99'])
+                res_df['gtos'] = res_df['g_prod'] + res_df['g_expl']
+                res_df['dev'] = res_df['emit'] - res_df['p_ced'] - (res_df['rva_ej'] - res_df['rva_ant'])
+                res_df['res_tec'] = res_df['ing_tec'] - res_df['egr_tec']
+                return res_df[['emit', 'sin', 'gtos', 'dev', 'res_tec']]
+
+            p26 = process_comp_df(df_c26)
+            p25 = process_comp_df(df_c25)
+
+            merged_comp = p26.merge(p25, on=['cod_cia', 'cod_subramo'], how='outer', suffixes=('_26', '_25')).fillna(0.0)
+
+            for (cod_cia, cod_sub), r in merged_comp.iterrows():
+                if cod_cia not in cias_comparative_subramos:
+                    cias_comparative_subramos[cod_cia] = {}
+                cias_comparative_subramos[cod_cia][cod_sub] = {
+                    'e26': round(float(r['emit_26']), 2),
+                    'e25': round(float(r['emit_25']), 2),
+                    's26': round(float(r['sin_26']), 2),
+                    's25': round(float(r['sin_25']), 2),
+                    'g26': round(float(r['gtos_26']), 2),
+                    'g25': round(float(r['gtos_25']), 2),
+                    'd26': round(float(r['dev_26']), 2),
+                    'd25': round(float(r['dev_25']), 2),
+                    't26': round(float(r['res_tec_26']), 2),
+                    't25': round(float(r['res_tec_25']), 2)
+                }
+
+            # Group rollup
+            for gdef in GROUPS_DEFINITIONS:
+                gid = gdef['id']
+                g_subs = {}
+                for m_cod in gdef['codes']:
+                    m_data = cias_comparative_subramos.get(m_cod, {})
+                    for scod, sval in m_data.items():
+                        if scod not in g_subs:
+                            g_subs[scod] = {'e26': 0.0, 'e25': 0.0, 's26': 0.0, 's25': 0.0, 'g26': 0.0, 'g25': 0.0, 'd26': 0.0, 'd25': 0.0, 't26': 0.0, 't25': 0.0}
+                        for k in g_subs[scod]:
+                            g_subs[scod][k] = round(g_subs[scod][k] + sval[k], 2)
+                groups_comparative_subramos[gid] = g_subs
+
+            # Market rollup
+            for cod_cia, c_subs in cias_comparative_subramos.items():
+                for scod, sval in c_subs.items():
+                    if scod not in market_comparative_subramos:
+                        market_comparative_subramos[scod] = {'e26': 0.0, 'e25': 0.0, 's26': 0.0, 's25': 0.0, 'g26': 0.0, 'g25': 0.0, 'd26': 0.0, 'd25': 0.0, 't26': 0.0, 't25': 0.0}
+                    for k in market_comparative_subramos[scod]:
+                        market_comparative_subramos[scod][k] = round(market_comparative_subramos[scod][k] + sval[k], 2)
+
+            print(f"Comparative subramos ready: {len(cias_comparative_subramos)} cias, {len(groups_comparative_subramos)} groups, {len(market_comparative_subramos)} subramos.")
+        except Exception as e:
+            print(f"Error building comparative subramos dataset: {e}")
+
     payload = {
         "periodo": str(df_raw['periodo'].iloc[0]),
+        "periodo_comparativo": "2025-2",
+        "default_inflation_rate": 45.0,
         "total_entidades": len(df_summary),
         "segmentos": segments,
         "macro_ramos": macro_entidades,
@@ -761,7 +925,10 @@ def build_complete_dataset():
         "segment_balances_general": segment_balances_general,
         "segment_balances_subramos": segment_balances_subramos,
         "cias_balances_general": cias_balances_general,
-        "cias_balances_subramos": cias_balances_subramos
+        "cias_balances_subramos": cias_balances_subramos,
+        "cias_comparative_subramos": cias_comparative_subramos,
+        "groups_comparative_subramos": groups_comparative_subramos,
+        "market_comparative_subramos": market_comparative_subramos
     }
 
     out_json = r"g:\Mi unidad\IA\Sinensup\data_sinensup.json"
