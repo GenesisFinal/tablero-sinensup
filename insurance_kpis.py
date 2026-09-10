@@ -48,12 +48,26 @@ def compute_all_companies_summary(df):
         tipo_entidad = cia['tipo_entidad']
         is_retiro = (tipo_entidad == 'Seguros de Retiro')
 
-        # Paso 1: Primas y Recargos Emitidos
-        primas_emit = get_account_value(df_c, '5.01.01.00.00.00.00.00', exact=True)
+        # Paso 1: Emisión Directa Neta Total (Fórmula de Producción Directa con Adicionales Netos)
+        # Positivas: Primas directas + Derechos de emisión + Recargos técnicos y administrativos
+        p_dir = get_account_value(df_c, '5.01.01.01.01.01.01.00', exact=True) + get_account_value(df_c, '5.01.01.01.01.01.99.00', exact=True)
+        derechos = get_account_value(df_c, '5.01.01.01.01.02.01.00', exact=True) + get_account_value(df_c, '5.01.01.01.01.02.99.00', exact=True)
+        recargos = get_account_value(df_c, '5.01.01.01.01.03.02.00', exact=True) + get_account_value(df_c, '5.01.01.01.01.03.99.00', exact=True)
 
-        # Paso 2: Cesiones y Anulaciones
+        # Negativas: Anulaciones directas + Anulaciones de recargos
+        a_dir = get_account_value(df_c, '4.01.04.04.04.01.01.00', exact=True) + get_account_value(df_c, '4.01.04.04.04.01.99.00', exact=True)
+        a_rec = get_account_value(df_c, '4.01.04.04.04.02.01.00', exact=True) + get_account_value(df_c, '4.01.04.04.04.02.99.00', exact=True)
+
+        primas_emit = (p_dir + derechos + recargos) - (a_dir + a_rec)
+
+        # Reaseguro activo tomado neto (para cuadre exacto de devengadas de balance)
+        reaseg_act = get_account_value(df_c, '5.01.01.01.01.04.01.00', exact=True) + get_account_value(df_c, '5.01.01.01.01.04.99.00', exact=True)
+        a_reaseg = get_account_value(df_c, '4.01.04.04.04.03.01.00', exact=True) + get_account_value(df_c, '4.01.04.04.04.03.99.00', exact=True)
+        reaseg_neto = reaseg_act - a_reaseg
+
+        # Paso 2: Cesiones a Reaseguro (las anulaciones ya están neteadas en primas_emit)
         primas_cedidas = get_account_value(df_c, '4.01.03.00.00.00.00.00', exact=True)
-        anulaciones = get_account_value(df_c, '4.01.04.00.00.00.00.00', exact=True)
+        anulaciones = a_dir + a_rec
         cesiones_anul = primas_cedidas + anulaciones
 
         # Paso 3: Variación Neta de Compromisos Técnicos / Reservas Matemáticas
@@ -76,8 +90,8 @@ def compute_all_companies_summary(df):
                 )
             var_comp_tec = var_riesgos_cargo - var_riesgos_lib
 
-        # Primas Devengadas Técnicas
-        primas_dev = primas_emit - cesiones_anul - var_comp_tec
+        # Primas Devengadas Técnicas Oficiales
+        primas_dev = primas_emit + reaseg_neto - primas_cedidas - var_comp_tec
 
         # Paso 4: Siniestros Devengados Netos
         if is_retiro:
@@ -247,13 +261,22 @@ def get_company_waterfall_data(df_cia):
     tipo_entidad = df_cia['tipo_entidad'].iloc[0] if 'tipo_entidad' in df_cia.columns else ''
     is_retiro = (tipo_entidad == 'Seguros de Retiro')
 
-    # Paso 1: Primas y Recargos Emitidos
-    primas_emit = get_account_value(df_cia, '5.01.01.00.00.00.00.00', exact=True)
+    # Paso 1: Emisión Directa Neta Total
+    p_dir = get_account_value(df_cia, '5.01.01.01.01.01.01.00', exact=True) + get_account_value(df_cia, '5.01.01.01.01.01.99.00', exact=True)
+    derechos = get_account_value(df_cia, '5.01.01.01.01.02.01.00', exact=True) + get_account_value(df_cia, '5.01.01.01.01.02.99.00', exact=True)
+    recargos = get_account_value(df_cia, '5.01.01.01.01.03.02.00', exact=True) + get_account_value(df_cia, '5.01.01.01.01.03.99.00', exact=True)
 
-    # Paso 2: Cesiones y Anulaciones
+    a_dir = get_account_value(df_cia, '4.01.04.04.04.01.01.00', exact=True) + get_account_value(df_cia, '4.01.04.04.04.01.99.00', exact=True)
+    a_rec = get_account_value(df_cia, '4.01.04.04.04.02.01.00', exact=True) + get_account_value(df_cia, '4.01.04.04.04.02.99.00', exact=True)
+
+    primas_emit = (p_dir + derechos + recargos) - (a_dir + a_rec)
+
+    reaseg_act = get_account_value(df_cia, '5.01.01.01.01.04.01.00', exact=True) + get_account_value(df_cia, '5.01.01.01.01.04.99.00', exact=True)
+    a_reaseg = get_account_value(df_cia, '4.01.04.04.04.03.01.00', exact=True) + get_account_value(df_cia, '4.01.04.04.04.03.99.00', exact=True)
+    reaseg_neto = reaseg_act - a_reaseg
+
+    # Paso 2: Cesiones a Reaseguro
     primas_cedidas = get_account_value(df_cia, '4.01.03.00.00.00.00.00', exact=True)
-    anulaciones = get_account_value(df_cia, '4.01.04.00.00.00.00.00', exact=True)
-    cesiones_anul = primas_cedidas + anulaciones
 
     # Paso 3: Variación Neta de Reservas Matemáticas / Riesgos en Curso
     if is_retiro:
@@ -335,11 +358,14 @@ def get_company_waterfall_data(df_cia):
     res_neto = get_account_value(df_cia, '5.00.00.00.00.00.00.00', exact=True) - get_account_value(df_cia, '4.00.00.00.00.00.00.00', exact=True)
 
     steps = [
-        {"name": "Primas y Recargos Emitidos", "amount": round(primas_emit, 2), "type": "relative"}
+        {"name": "Emisión Directa Neta Total", "amount": round(primas_emit, 2), "type": "relative"}
     ]
 
-    if cesiones_anul > 0:
-        steps.append({"name": "Cesiones y Anulaciones", "amount": round(-cesiones_anul, 2), "type": "relative"})
+    if reaseg_neto != 0:
+        steps.append({"name": "Reaseguros Activos Netos", "amount": round(reaseg_neto, 2), "type": "relative"})
+
+    if primas_cedidas > 0:
+        steps.append({"name": "Cesión a Reaseguradores", "amount": round(-primas_cedidas, 2), "type": "relative"})
 
     if var_comp_tec != 0:
         steps.append({"name": reserva_label, "amount": round(-var_comp_tec, 2), "type": "relative"})
@@ -373,34 +399,43 @@ def get_company_waterfall_data(df_cia):
 def get_company_subramos(df, cod_cia=None):
     """
     Extracts subramos breakdown for a company or the entire market.
-    Includes full emitted premiums: Directas + Derechos de Emisión + Recargos Técnicos/Admin + Reaseguros Activos.
+    Calculates Emisión Directa Neta Total:
+    (Primas Directas + Derechos de Emisión + Recargos Técnicos/Admin) - (Anulaciones Directas + Anulaciones Recargos).
     """
     if cod_cia:
         sub_df = df[df['cod_cia'] == cod_cia]
     else:
         sub_df = df
 
-    accounts_primas = (
+    pos_accounts = (
         '5.01.01.01.01.01.01', '5.01.01.01.01.01.99',
         '5.01.01.01.01.02.01', '5.01.01.01.01.02.99',
-        '5.01.01.01.01.03.02', '5.01.01.01.01.03.99',
-        '5.01.01.01.01.04.01', '5.01.01.01.04.99'
+        '5.01.01.01.01.03.02', '5.01.01.01.01.03.99'
     )
-    primas_rows = sub_df[sub_df['cod_cuenta'].str.startswith(accounts_primas) & (sub_df['desc_subramo'] != '') & (sub_df['desc_subramo'].notna())]
+    neg_accounts = (
+        '4.01.04.04.04.01.01', '4.01.04.04.04.01.99',
+        '4.01.04.04.04.02.01', '4.01.04.04.04.02.99'
+    )
+
+    pos_rows = sub_df[sub_df['cod_cuenta'].str.startswith(pos_accounts) & (sub_df['desc_subramo'] != '') & (sub_df['desc_subramo'].notna())]
+    neg_rows = sub_df[sub_df['cod_cuenta'].str.startswith(neg_accounts) & (sub_df['desc_subramo'] != '') & (sub_df['desc_subramo'].notna())]
+
+    pos_by_sub = pos_rows.groupby(['cod_subramo', 'desc_subramo'])['importe'].sum().reset_index()
+    neg_by_sub = neg_rows.groupby(['cod_subramo', 'desc_subramo'])['importe'].sum().reset_index()
+
+    p_sub = pd.merge(pos_by_sub, neg_by_sub, on=['cod_subramo', 'desc_subramo'], how='outer', suffixes=('_pos', '_neg')).fillna(0.0)
+    p_sub['primas'] = p_sub['importe_pos'] - p_sub['importe_neg']
 
     siniestros_rows = sub_df[sub_df['cod_cuenta'].str.startswith(('4.01.01.01.01.01', '4.01.01.01.01.99', '4.01.01.01.02.01', '4.01.01.01.02.99', '4.01.01.01.03.01', '4.01.01.01.03.99', '4.01.01.01.04.01', '4.01.01.01.04.99', '4.01.02.01', '4.01.02.02', '4.01.02.03')) & (sub_df['desc_subramo'] != '') & (sub_df['desc_subramo'].notna())]
-
-    primas_by_sub = primas_rows.groupby(['cod_subramo', 'desc_subramo'])['importe'].sum().reset_index()
     sin_by_sub = siniestros_rows.groupby(['cod_subramo', 'desc_subramo'])['importe'].sum().reset_index()
 
-    merged = pd.merge(primas_by_sub, sin_by_sub, on=['cod_subramo', 'desc_subramo'], how='outer', suffixes=('_primas', '_siniestros')).fillna(0)
-    merged['primas'] = merged['importe_primas']
-    merged['siniestros'] = merged['importe_siniestros']
+    merged = pd.merge(p_sub, sin_by_sub, on=['cod_subramo', 'desc_subramo'], how='outer', suffixes=('', '_sin')).fillna(0.0)
+    merged['siniestros'] = merged['importe']
     merged['siniestralidad_%'] = np.where(merged['primas'] > 0, (merged['siniestros'] / merged['primas']) * 100.0, 0.0)
 
     merged = merged[merged['desc_subramo'].notna() & (merged['desc_subramo'] != '') & ((merged['primas'] > 0) | (merged['siniestros'] > 0))]
     merged = merged.sort_values(by='primas', ascending=False)
-    
+
     return merged[['cod_subramo', 'desc_subramo', 'primas', 'siniestros', 'siniestralidad_%']].to_dict(orient='records')
 
 def get_company_investments_breakdown(df_cia):
