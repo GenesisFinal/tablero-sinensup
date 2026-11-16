@@ -472,3 +472,7 @@ def get_company_investments_breakdown(df_cia):
             'porcentaje': float(row['porcentaje'])
         })
     return records
+
+def get_company_investments(df_cia):
+    """Returns investments breakdown as a DataFrame for Streamlit app compatibility."""
+    return pd.DataFrame(get_company_investments_breakdown(df_cia))
