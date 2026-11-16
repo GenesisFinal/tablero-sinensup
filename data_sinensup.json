@@ -11177,17 +11177,17 @@
           "siniestralidad_%": 0.0
         },
         {
-          "cod_subramo": "1.030.02",
-          "desc_subramo": "Automotores - RC Exclusivo",
-          "primas": 0.0,
-          "siniestros": 22834083779.0,
-          "siniestralidad_%": 0.0
-        },
-        {
           "cod_subramo": "1.180.02",
           "desc_subramo": "Motos - RC Exclusivo",
           "primas": 0.0,
           "siniestros": 210507538.0,
+          "siniestralidad_%": 0.0
+        },
+        {
+          "cod_subramo": "1.030.02",
+          "desc_subramo": "Automotores - RC Exclusivo",
+          "primas": 0.0,
+          "siniestros": 22834083779.0,
           "siniestralidad_%": 0.0
         }
       ],
@@ -47162,17 +47162,17 @@
           "siniestralidad_%": 0.0
         },
         {
-          "cod_subramo": "1.030.02",
-          "desc_subramo": "Automotores - RC Exclusivo",
-          "primas": 0.0,
-          "siniestros": 22834083779.0,
-          "siniestralidad_%": 0.0
-        },
-        {
           "cod_subramo": "1.180.02",
           "desc_subramo": "Motos - RC Exclusivo",
           "primas": 0.0,
           "siniestros": 210507538.0,
+          "siniestralidad_%": 0.0
+        },
+        {
+          "cod_subramo": "1.030.02",
+          "desc_subramo": "Automotores - RC Exclusivo",
+          "primas": 0.0,
+          "siniestros": 22834083779.0,
           "siniestralidad_%": 0.0
         }
       ],
