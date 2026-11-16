@@ -4,6 +4,7 @@ Script de Despliegue Automatizado a GitHub / GitHub Pages
 Tablero de Control del Mercado Asegurador Argentino (SSN SINENSUP)
 """
 
+import argparse
 import requests
 import base64
 import os
@@ -11,8 +12,13 @@ import sys
 import time
 
 def get_github_token():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    ia_dir = os.path.dirname(base_dir)
     possible_paths = [
-        os.path.join(os.path.dirname(__file__), "GitHub token.txt"),
+        os.path.join(base_dir, "GitHub token.txt"),
+        os.path.join(ia_dir, "Tablero Retiro", "GitHub token.txt"),
+        os.path.join(ia_dir, "Tablero Personas", "GitHub token.txt"),
+        os.path.join(ia_dir, "Valores Financieros", "GitHub token.txt"),
         os.path.join("G:\\Mi unidad\\IA\\Tablero Retiro", "GitHub token.txt"),
         os.path.join("G:\\Mi unidad\\IA\\Tablero Personas", "GitHub token.txt"),
         os.path.join("G:\\Mi unidad\\IA\\Valores Financieros", "GitHub token.txt")
@@ -22,14 +28,14 @@ def get_github_token():
             with open(p, "r", encoding="utf-8") as f:
                 for line in f.read().splitlines():
                     clean = line.strip()
-                    if clean.startswith("ghp_"):
+                    if clean.startswith(("ghp_", "github_pat_")):
                         return clean
     return os.environ.get("GITHUB_TOKEN")
 
-def deploy():
+def deploy(check_only=False):
     token = get_github_token()
     if not token:
-        print("ERROR: No se encontró el token de GitHub (ghp_...).")
+        print("ERROR: No se encontró el token de GitHub (ghp_... / github_pat_...).")
         sys.exit(1)
 
     headers = {
@@ -42,11 +48,46 @@ def deploy():
     repo_name = "tablero-sinensup"
     full_repo = f"{username}/{repo_name}"
     print(f"\n=======================================================")
-    print(f"Desplegando en repositorio: {full_repo}")
+    print(f"{'VERIFICACIÓN (CHECK)' if check_only else 'Desplegando en repositorio'}: {full_repo}")
     print(f"=======================================================")
 
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    files_to_upload = [
+        (".nojekyll", "Config: Deshabilitar procesamiento Jekyll con .nojekyll"),
+        ("favicon.svg", "Asset: Favicon SVG para pestaña y marcadores"),
+        ("index.html", "Feat: Dashboard Analítico del Mercado Asegurador (SSN SINENSUP)"),
+        ("data_sinensup.json", "Data: Dataset consolidado de balances de 185 aseguradoras SSN"),
+        ("README.md", "Docs: Documentación completa del Dashboard Sinensup"),
+        ("build_data.py", "Code: Script generador del dataset actuarial y contable"),
+        ("insurance_kpis.py", "Code: Motor de cálculo contable y devengamiento SSN"),
+        ("db_engine.py", "Code: Motor de extracción y caché de bases Access SSN (.mdb)"),
+        ("generate_html.py", "Code: Generador de la aplicación HTML interactiva"),
+        ("deploy_to_github.py", "Code: Script de despliegue automatizado a GitHub Pages")
+    ]
+
     # 1. Verificar o Crear Repositorio
-    repo_res = requests.get(f"https://api.github.com/repos/{full_repo}", headers=headers)
+    repo_res = requests.get(f"https://api.github.com/repos/{full_repo}", headers=headers, timeout=20)
+    if check_only:
+        print(f"Token GitHub detectado: OK")
+        print(f"GET /repos/{full_repo} -> HTTP {repo_res.status_code}")
+        if repo_res.status_code != 200:
+            print(f"ERROR: No se pudo verificar el repositorio ({repo_res.status_code}).")
+            sys.exit(1)
+        missing = []
+        for fname, _ in files_to_upload:
+            fpath = os.path.join(base_dir, fname)
+            if os.path.exists(fpath):
+                print(f"  [OK] {fname} ({os.path.getsize(fpath):,} bytes)")
+            else:
+                print(f"  [FALTA] {fname}")
+                missing.append(fname)
+        if missing:
+            print(f"ERROR: Faltan archivos requeridos: {missing}")
+            sys.exit(1)
+        print("CHECK COMPLETADO EXITOSAMENTE (sin cambios publicados).")
+        return
+
     if repo_res.status_code == 404:
         print(f"Creando repositorio '{repo_name}' en GitHub...")
         create_payload = {
@@ -105,21 +146,6 @@ def deploy():
         print(f"ERROR: No se pudo subir {remote_path} tras 6 intentos.")
         return False
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    files_to_upload = [
-        (".nojekyll", "Config: Deshabilitar procesamiento Jekyll con .nojekyll"),
-        ("favicon.svg", "Asset: Favicon SVG para pestaña y marcadores"),
-        ("index.html", "Feat: Dashboard Analítico del Mercado Asegurador (SSN SINENSUP)"),
-        ("data_sinensup.json", "Data: Dataset consolidado de balances de 185 aseguradoras SSN"),
-        ("README.md", "Docs: Documentación completa del Dashboard Sinensup"),
-        ("build_data.py", "Code: Script generador del dataset actuarial y contable"),
-        ("insurance_kpis.py", "Code: Motor de cálculo contable y devengamiento SSN"),
-        ("db_engine.py", "Code: Motor de extracción y caché de base Access 2026-2.mdb"),
-        ("generate_html.py", "Code: Generador de la aplicación HTML interactiva"),
-        ("deploy_to_github.py", "Code: Script de despliegue automatizado a GitHub Pages")
-    ]
-
     for fname, msg in files_to_upload:
         fpath = os.path.join(base_dir, fname)
         upload_file(fname, fpath, msg)
@@ -148,4 +174,7 @@ def deploy():
     print("=======================================================\n")
 
 if __name__ == '__main__':
-    deploy()
+    parser = argparse.ArgumentParser(description="Despliegue a GitHub Pages para Tablero SINENSUP")
+    parser.add_argument("--check", "--dry-run", dest="check", action="store_true", help="Verifica token, acceso al repo y archivos sin subir cambios")
+    args = parser.parse_args()
+    deploy(check_only=args.check)
