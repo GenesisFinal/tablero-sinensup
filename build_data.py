@@ -1,9 +1,8 @@
 import json
 import os
-import pyodbc
 import pandas as pd
 import numpy as np
-from db_engine import get_balance_data
+from db_engine import BASE_DIR, get_balance_data, load_data_from_mdb
 from insurance_kpis import (
     compute_all_companies_summary,
     get_company_waterfall_data,
@@ -763,32 +762,43 @@ def build_complete_dataset():
     }
 
     # ----------------------------------------------------
-    # COMPARATIVE MARKET DATASET (2026-2 vs 2025-2)
+    # COMPARATIVE MARKET DATASET (Current Period vs YoY Comparative)
     # ----------------------------------------------------
-    print("Building comparative subramos dataset (2026 vs 2025)...")
+    current_period = str(df_raw['periodo'].iloc[0]).strip()
+    if '-' in current_period:
+        p_year, p_qtr = current_period.split('-', 1)
+        try:
+            comp_period = f"{int(p_year) - 1}-{p_qtr}"
+        except ValueError:
+            comp_period = "2025-2"
+    else:
+        comp_period = "2025-2"
+
+    print(f"Building comparative subramos dataset ({current_period} vs {comp_period})...")
     cias_comparative_subramos = {}
     groups_comparative_subramos = {}
     market_comparative_subramos = {}
 
-    mdb_2026 = r"g:\Mi unidad\IA\Sinensup\2026-2.mdb"
-    mdb_2025 = r"g:\Mi unidad\IA\Sinensup\2025-2.mdb"
+    mdb_prev = os.path.join(BASE_DIR, f"{comp_period}.mdb")
 
-    if os.path.exists(mdb_2026) and os.path.exists(mdb_2025):
+    if not df_raw.empty and os.path.exists(mdb_prev):
         try:
-            conn26 = pyodbc.connect(f"DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={mdb_2026};")
-            df_c26 = pd.read_sql("SELECT cod_cia, cod_subramo, cod_cuenta, importe FROM Balance WHERE cod_subramo IS NOT NULL AND cod_subramo <> ''", conn26)
-            conn26.close()
+            df_c26 = df_raw[df_raw['cod_subramo'].notna() & (df_raw['cod_subramo'] != '')][
+                ['cod_cia', 'cod_subramo', 'cod_cuenta', 'importe']
+            ].copy()
 
-            conn25 = pyodbc.connect(f"DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={mdb_2025};")
-            df_c25 = pd.read_sql("SELECT cod_cia, cod_subramo, cod_cuenta, importe FROM Balance WHERE cod_subramo IS NOT NULL AND cod_subramo <> ''", conn25)
-            conn25.close()
+            df_prev_raw = load_data_from_mdb(
+                mdb_prev,
+                columns=['cod_cia', 'cod_subramo', 'cod_cuenta', 'importe']
+            )
+            df_c25 = df_prev_raw[df_prev_raw['cod_subramo'].notna() & (df_prev_raw['cod_subramo'] != '')].copy()
 
             def process_comp_df(df_in):
                 df_c = df_in.copy()
-                df_c['cod_cia'] = df_c['cod_cia'].astype(str).str.strip().str.zfill(4)
-                df_c['cod_subramo'] = df_c['cod_subramo'].astype(str).str.strip()
-                df_c['cod_cuenta'] = df_c['cod_cuenta'].astype(str).str.strip()
-                df_c['importe'] = df_c['importe'].fillna(0.0)
+                df_c['cod_cia'] = df_c['cod_cia'].fillna('').astype(str).str.strip().str.zfill(4)
+                df_c['cod_subramo'] = df_c['cod_subramo'].fillna('').astype(str).str.strip()
+                df_c['cod_cuenta'] = df_c['cod_cuenta'].fillna('').astype(str).str.strip()
+                df_c['importe'] = pd.to_numeric(df_c['importe'], errors='coerce').fillna(0.0)
 
                 # Primas Directas Netas y Adicionales (Emisión Directa Neta Total)
                 p_dir_01 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
@@ -898,8 +908,8 @@ def build_complete_dataset():
             print(f"Error building comparative subramos dataset: {e}")
 
     payload = {
-        "periodo": str(df_raw['periodo'].iloc[0]),
-        "periodo_comparativo": "2025-2",
+        "periodo": current_period,
+        "periodo_comparativo": comp_period,
         "default_inflation_rate": 45.0,
         "total_entidades": len(df_summary),
         "segmentos": segments,
@@ -931,7 +941,7 @@ def build_complete_dataset():
         "market_comparative_subramos": market_comparative_subramos
     }
 
-    out_json = r"g:\Mi unidad\IA\Sinensup\data_sinensup.json"
+    out_json = os.path.join(BASE_DIR, "data_sinensup.json")
     with open(out_json, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
