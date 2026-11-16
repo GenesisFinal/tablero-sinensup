@@ -1,10 +1,27 @@
 import json
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def _period_to_month_label(period_str):
+    q_map = {"1": "Mar", "2": "Jun", "3": "Sep", "4": "Dic"}
+    s = str(period_str or "").strip()
+    if "-" in s:
+        yr, qtr = s.split("-", 1)
+        m_name = q_map.get(qtr.strip(), f"T{qtr.strip()}")
+        return f"{m_name}-{yr.strip()[-2:]}"
+    return s
+
 def generate_html():
-    json_path = r"g:\Mi unidad\IA\Sinensup\data_sinensup.json"
+    json_path = os.path.join(BASE_DIR, "data_sinensup.json")
     with open(json_path, "r", encoding="utf-8") as f:
         raw_json_str = f.read()
+
+    meta = json.loads(raw_json_str)
+    periodo_actual = meta.get("periodo", "2026-2")
+    periodo_comp = meta.get("periodo_comparativo", "2025-2")
+    curr_month_label = _period_to_month_label(periodo_actual)
+    comp_month_label = _period_to_month_label(periodo_comp)
 
     html_content = f"""<!DOCTYPE html>
 <html lang="es" class="dark">
@@ -754,7 +771,7 @@ def generate_html():
             <h1 class="text-lg font-bold tracking-tight text-white">Mercado Asegurador Argentino</h1>
             <span class="text-[10px] font-mono uppercase px-2 py-0.5 bg-brand-red/20 text-brand-red border border-brand-red/30 rounded-full font-bold">SSN SINENSUP</span>
           </div>
-          <p class="text-xs text-slate-400">Balances Oficiales • Período <span id="headerPeriodo" class="font-mono text-slate-300 font-semibold">2026-2</span> • <span id="headerTotalCias" class="font-mono text-brand-blue font-semibold">185</span> Compañías</p>
+          <p class="text-xs text-slate-400">Balances Oficiales • Período <span id="headerPeriodo" class="font-mono text-slate-300 font-semibold">{periodo_actual}</span> • <span id="headerTotalCias" class="font-mono text-brand-blue font-semibold">185</span> Compañías</p>
         </div>
       </div>
 
@@ -1177,7 +1194,7 @@ def generate_html():
             <h2 id="selectedCiaTitle" class="text-lg font-bold text-white">...</h2>
             <span id="selectedCiaBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-brand-red/20 text-brand-red border border-brand-red/30">...</span>
           </div>
-          <p class="text-xs text-slate-400 mt-1">Código SSN: <span id="selectedCiaCode" class="font-mono text-white font-bold">...</span> | Período: <span class="font-mono text-slate-300">2026-2</span></p>
+          <p class="text-xs text-slate-400 mt-1">Código SSN: <span id="selectedCiaCode" class="font-mono text-white font-bold">...</span> | Período: <span class="font-mono text-slate-300">{periodo_actual}</span></p>
         </div>
         
         <div class="flex items-center gap-3">
@@ -2937,7 +2954,7 @@ def generate_html():
 
         <!-- Footer Actions -->
         <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex flex-wrap items-center justify-between gap-3">
-          <span class="text-[11px] text-slate-400">Fuente: Base Oficial SSN • Período 2026-2</span>
+          <span class="text-[11px] text-slate-400">Fuente: Base Oficial SSN • Período {periodo_actual}</span>
           <div class="flex items-center gap-2">
             <button id="groupModalFichaBtn" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer">
               <i class="fa-solid fa-id-card"></i> Ver Ficha Integral Consolidada (Tab 2)
@@ -2961,7 +2978,7 @@ def generate_html():
         <span>Desarrollado para el Análisis Integral del Mercado Asegurador</span> • Normativa SSN / RGAA
       </div>
       <div class="font-mono text-[11px] text-slate-400">
-        SINENSUP Engine • Período 2026-2
+        SINENSUP Engine • Período {periodo_actual}
       </div>
     </div>
   </footer>
@@ -3211,7 +3228,7 @@ def generate_html():
       const data = window.DATA_SINENSUP;
       if (!data) return;
 
-      document.getElementById('headerPeriodo').innerText = data.periodo || '2026-2';
+      document.getElementById('headerPeriodo').innerText = data.periodo || '{periodo_actual}';
       document.getElementById('headerTotalCias').innerText = data.total_entidades || '185';
 
       // 1. Set macro entity values
@@ -6426,7 +6443,7 @@ def generate_html():
           nomBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-md cursor-pointer';
           axiBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all cursor-pointer';
           if (axiContainer) axiContainer.classList.add('hidden');
-          if (thEjAnt) thEjAnt.innerText = 'Prima Emitida Ej. Ant. (Jun-25)';
+          if (thEjAnt) thEjAnt.innerText = 'Prima Emitida Ej. Ant. ({comp_month_label})';
         }} else {{
           nomBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all cursor-pointer';
           axiBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-md cursor-pointer';
@@ -6647,7 +6664,7 @@ def generate_html():
         titleEl.innerHTML = `<i class="fa-solid fa-table-list text-amber-400"></i> ${{rName}}`;
       }}
       if (subEl) {{
-        const modeLabel = (state.compAjusteMode === 'axi') ? `Moneda Homogénea a Jun-26 (AXI +${{state.compInflationRate}}%)` : 'Cifras Nominales de Balances';
+        const modeLabel = (state.compAjusteMode === 'axi') ? `Moneda Homogénea a {curr_month_label} (AXI +${{state.compInflationRate}}%)` : 'Cifras Nominales de Balances';
         subEl.innerText = `${{curSec.name}} • ${{state.compMode === 'groups' ? 'Grupos Económicos' : 'Aseguradoras Directas'}} • ${{modeLabel}}`;
       }}
 
@@ -8917,7 +8934,7 @@ def generate_html():
 </html>
 """
 
-    out_file = r"g:\Mi unidad\IA\Sinensup\index.html"
+    out_file = os.path.join(BASE_DIR, "index.html")
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(html_content)
 
