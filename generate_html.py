@@ -18,10 +18,18 @@ def generate_html():
         raw_json_str = f.read()
 
     meta = json.loads(raw_json_str)
-    periodo_actual = meta.get("periodo", "2026-2")
-    periodo_comp = meta.get("periodo_comparativo", "2025-2")
+    periodo_actual = meta.get("periodo", "2026-3")
+    periodo_comp = meta.get("periodo_comparativo", "2025-3")
     curr_month_label = _period_to_month_label(periodo_actual)
     comp_month_label = _period_to_month_label(periodo_comp)
+    comp_badge_label = f"INTERANUAL {curr_month_label.upper()} vs {comp_month_label.upper()}"
+    default_inf = meta.get("default_inflation_rate", 33.4)
+    total_entidades = meta.get("total_entidades", 178)
+    me_meta = meta.get("macro_entidades", {})
+    patrim_cnt = me_meta.get("patrimoniales_entidades", 91)
+    art_cnt = me_meta.get("art_entidades", 18)
+    pers_cnt = me_meta.get("personas_entidades", 55)
+    ret_cnt = me_meta.get("retiro_entidades", 14)
 
     html_content = f"""<!DOCTYPE html>
 <html lang="es" class="dark">
@@ -155,7 +163,7 @@ def generate_html():
     }}
 
     html:not(.dark) header .border-slate-800,
-    html:not(.dark) header .border-slate-800\/60 {{
+    html:not(.dark) header .border-slate-800\\/60 {{
       border-color: #E2E8F0 !important;
     }}
 
@@ -174,23 +182,23 @@ def generate_html():
 
     /* Backgrounds oscuros que se transforman en claros en Light Mode */
     html:not(.dark) .bg-slate-950,
-    html:not(.dark) .bg-slate-950\/80,
-    html:not(.dark) .bg-slate-950\/90 {{
+    html:not(.dark) .bg-slate-950\\/80,
+    html:not(.dark) .bg-slate-950\\/90 {{
       background-color: #F8FAFC !important;
     }}
     html:not(.dark) .bg-slate-900,
-    html:not(.dark) .bg-slate-900\/90,
-    html:not(.dark) .bg-slate-900\/80,
-    html:not(.dark) .bg-slate-900\/60,
-    html:not(.dark) .bg-slate-900\/50 {{
+    html:not(.dark) .bg-slate-900\\/90,
+    html:not(.dark) .bg-slate-900\\/80,
+    html:not(.dark) .bg-slate-900\\/60,
+    html:not(.dark) .bg-slate-900\\/50 {{
       background-color: #FFFFFF !important;
     }}
     html:not(.dark) .bg-slate-800,
-    html:not(.dark) .bg-slate-800\/80,
-    html:not(.dark) .bg-slate-800\/70,
-    html:not(.dark) .bg-slate-800\/60,
-    html:not(.dark) .bg-slate-800\/50,
-    html:not(.dark) .bg-slate-800\/40 {{
+    html:not(.dark) .bg-slate-800\\/80,
+    html:not(.dark) .bg-slate-800\\/70,
+    html:not(.dark) .bg-slate-800\\/60,
+    html:not(.dark) .bg-slate-800\\/50,
+    html:not(.dark) .bg-slate-800\\/40 {{
       background-color: #F1F5F9 !important;
     }}
     html:not(.dark) .bg-slate-700 {{
@@ -211,13 +219,13 @@ def generate_html():
 
     /* Bordes generales en Modo Claro */
     html:not(.dark) .border-slate-800,
-    html:not(.dark) .border-slate-800\/80,
-    html:not(.dark) .border-slate-800\/60,
-    html:not(.dark) .border-slate-800\/40,
+    html:not(.dark) .border-slate-800\\/80,
+    html:not(.dark) .border-slate-800\\/60,
+    html:not(.dark) .border-slate-800\\/40,
     html:not(.dark) .border-slate-700,
-    html:not(.dark) .border-slate-700\/80,
-    html:not(.dark) .border-slate-700\/60,
-    html:not(.dark) .border-slate-700\/50 {{
+    html:not(.dark) .border-slate-700\\/80,
+    html:not(.dark) .border-slate-700\\/60,
+    html:not(.dark) .border-slate-700\\/50 {{
       border-color: #CBD5E1 !important;
     }}
 
@@ -249,12 +257,12 @@ def generate_html():
     html:not(.dark) .text-brand-blue {{
       color: #0369A1 !important;
     }}
-    html:not(.dark) .border-sky-500\/30,
-    html:not(.dark) .border-sky-500\/40,
-    html:not(.dark) .border-sky-500\/50,
-    html:not(.dark) .border-cyan-500\/30,
-    html:not(.dark) .border-cyan-500\/40,
-    html:not(.dark) .border-cyan-500\/50 {{
+    html:not(.dark) .border-sky-500\\/30,
+    html:not(.dark) .border-sky-500\\/40,
+    html:not(.dark) .border-sky-500\\/50,
+    html:not(.dark) .border-cyan-500\\/30,
+    html:not(.dark) .border-cyan-500\\/40,
+    html:not(.dark) .border-cyan-500\\/50 {{
       border-color: rgba(3, 105, 161, 0.4) !important;
     }}
 
@@ -344,29 +352,29 @@ def generate_html():
     }}
 
     /* Badges / Pill Tags sobre fondo claro */
-    html:not(.dark) span[class*="bg-amber-500\/"],
-    html:not(.dark) span[class*="bg-amber-400\/"],
-    html:not(.dark) div[class*="bg-amber-500\/"]:not(button) {{
+    html:not(.dark) span[class*="bg-amber-500\\/"],
+    html:not(.dark) span[class*="bg-amber-400\\/"],
+    html:not(.dark) div[class*="bg-amber-500\\/"]:not(button) {{
       background-color: rgba(194, 65, 12, 0.12) !important;
       color: #9A3412 !important;
       border-color: rgba(194, 65, 12, 0.35) !important;
     }}
-    html:not(.dark) span[class*="bg-emerald-500\/"],
-    html:not(.dark) div[class*="bg-emerald-500\/"]:not(button) {{
+    html:not(.dark) span[class*="bg-emerald-500\\/"],
+    html:not(.dark) div[class*="bg-emerald-500\\/"]:not(button) {{
       background-color: rgba(4, 120, 87, 0.12) !important;
       color: #047857 !important;
       border-color: rgba(4, 120, 87, 0.35) !important;
     }}
-    html:not(.dark) span[class*="bg-cyan-500\/"],
-    html:not(.dark) span[class*="bg-sky-500\/"],
-    html:not(.dark) div[class*="bg-cyan-500\/"]:not(button) {{
+    html:not(.dark) span[class*="bg-cyan-500\\/"],
+    html:not(.dark) span[class*="bg-sky-500\\/"],
+    html:not(.dark) div[class*="bg-cyan-500\\/"]:not(button) {{
       background-color: rgba(2, 132, 199, 0.12) !important;
       color: #0369A1 !important;
       border-color: rgba(2, 132, 199, 0.35) !important;
     }}
-    html:not(.dark) span[class*="bg-rose-500\/"],
-    html:not(.dark) span[class*="bg-brand-red\/"],
-    html:not(.dark) div[class*="bg-rose-500\/"]:not(button) {{
+    html:not(.dark) span[class*="bg-rose-500\\/"],
+    html:not(.dark) span[class*="bg-brand-red\\/"],
+    html:not(.dark) div[class*="bg-rose-500\\/"]:not(button) {{
       background-color: rgba(190, 0, 47, 0.12) !important;
       color: #9F1239 !important;
       border-color: rgba(190, 0, 47, 0.35) !important;
@@ -771,7 +779,7 @@ def generate_html():
             <h1 class="text-lg font-bold tracking-tight text-white">Mercado Asegurador Argentino</h1>
             <span class="text-[10px] font-mono uppercase px-2 py-0.5 bg-brand-red/20 text-brand-red border border-brand-red/30 rounded-full font-bold">SSN SINENSUP</span>
           </div>
-          <p class="text-xs text-slate-400">Balances Oficiales • Período <span id="headerPeriodo" class="font-mono text-slate-300 font-semibold">{periodo_actual}</span> • <span id="headerTotalCias" class="font-mono text-brand-blue font-semibold">185</span> Compañías</p>
+          <p class="text-xs text-slate-400">Balances Oficiales • Período <span id="headerPeriodo" class="font-mono text-slate-300 font-semibold">{periodo_actual}</span> • <span id="headerTotalCias" class="font-mono text-brand-blue font-semibold">{total_entidades}</span> Compañías</p>
         </div>
       </div>
 
@@ -843,7 +851,7 @@ def generate_html():
     <!-- ======================================================== -->
     <section id="tab-vision-mercado" class="space-y-6">
       
-      <!-- 1. BANNER: DISTRIBUCIÓN POR TIPO DE ASEGURADORA (185 ENTIDADES) -->
+      <!-- 1. BANNER: DISTRIBUCIÓN POR TIPO DE ASEGURADORA ({total_entidades} ENTIDADES) -->
       <div id="bannerInstitucional" class="glass-card p-4 rounded-xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
@@ -904,7 +912,7 @@ def generate_html():
           <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-boxes-stacked text-amber-400"></i> 2. Clasificación Técnica por Línea Real de Producto (Subramos)
           </span>
-          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b>Total Primas y Recargos Unificados ($29.91 B)</b></span>
+          <span class="text-[11px] font-mono text-slate-400">Base Técnica: <b id="macroProdTotalLabel">Total Primas y Recargos Unificados</b></span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
           <!-- Productos Patrimoniales -->
@@ -948,9 +956,9 @@ def generate_html():
         <div id="personasInsightBox" class="mt-2.5 p-2 bg-slate-900/80 rounded-lg border border-slate-800 text-[11px] text-slate-300 flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-circle-info text-rose-400"></i>
-            <span><b>Efecto Multirramo en Personas:</b> El <b>48.2% ($1.80 B)</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>50.0% ($1.87 B)</b> por Aseguradoras exclusivas de Personas.</span>
+            <span id="personasInsightText"><b>Efecto Multirramo en Personas:</b> Cargando participación multirramo...</span>
           </div>
-          <span class="font-mono text-rose-300 font-bold">Total Ramo Personas: $3.74 B (12.5% del mercado)</span>
+          <span id="personasInsightTotal" class="font-mono text-rose-300 font-bold">Total Ramo Personas: ...</span>
         </div>
       </div>
 
@@ -961,7 +969,7 @@ def generate_html():
           <div id="segmentPillsContainer" class="flex flex-wrap gap-1.5"></div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades en el segmento: <span id="filteredCiasCount" class="font-mono font-bold text-white">185</span>
+          Entidades en el segmento: <span id="filteredCiasCount" class="font-mono font-bold text-white">{total_entidades}</span>
         </div>
       </div>
 
@@ -1145,12 +1153,12 @@ def generate_html():
         </div>
       </div>
 
-      <!-- 3. FULL WIDTH: Base Consolidada del Mercado Asegurador (185 Entidades) -->
+      <!-- 3. FULL WIDTH: Base Consolidada del Mercado Asegurador ({total_entidades} Entidades) -->
       <div class="glass-card p-5 rounded-xl w-full">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-table-list text-brand-blue"></i> Base Consolidada del Mercado Asegurador (185 Entidades)
+              <i class="fa-solid fa-table-list text-brand-blue"></i> Base Consolidada del Mercado Asegurador (<span id="marketTableCountLabel">{total_entidades}</span> Entidades)
             </h3>
             <p class="text-xs text-slate-400">Explora, filtra y compara todas las compañías registradas</p>
           </div>
@@ -1303,7 +1311,7 @@ def generate_html():
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-shield-virus text-brand-red"></i> Distribución de Producción y Siniestralidad por Ramo
             </h3>
-            <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS) | Línea y Etiquetas = Siniestralidad s/ Emisión (%)</p>
+            <p class="text-xs text-slate-400">Barras = Primas Emitidas (ARS) | Línea y Etiquetas = Siniestralidad Devengada (%)</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="downloadPlotAsPNG('subramosBarChart', 'produccion_siniestros_subramos')" data-plot-target="subramosBarChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
@@ -1332,7 +1340,7 @@ def generate_html():
                 <th class="py-2.5 px-3">Descripción del Subramo</th>
                 <th class="py-2.5 px-3 text-right">Primas Emitidas (ARS)</th>
                 <th class="py-2.5 px-3 text-right">Siniestros (ARS)</th>
-                <th class="py-2.5 px-3 text-right">Siniestralidad s/ Emisión (%)</th>
+                <th class="py-2.5 px-3 text-right">Siniestralidad Devengada (%)</th>
               </tr>
             </thead>
             <tbody id="subramosTableBody" class="divide-y divide-slate-800 font-mono"></tbody>
@@ -1393,7 +1401,7 @@ def generate_html():
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-amber-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
             <button onclick="setInvScope('cia')" id="invScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500 text-slate-950 font-bold transition-all shadow-md shadow-amber-500/20">🏢 Aseguradora Seleccionada</button>
-            <button onclick="setInvScope('market')" id="invScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setInvScope('market')" id="invScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🌐 Mercado Total ({total_entidades} Cías)</button>
             <button onclick="setInvScope('Patrimoniales y Mixtas')" id="invScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
             <button onclick="setInvScope('Riesgos del Trabajo (ART)')" id="invScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
             <button onclick="setInvScope('Seguros de Personas')" id="invScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
@@ -1562,7 +1570,7 @@ def generate_html():
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-emerald-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
             <button onclick="setSolvScope('cia')" id="solvScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏢 Aseguradora Seleccionada</button>
-            <button onclick="setSolvScope('Todos')" id="solvScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setSolvScope('Todos')" id="solvScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total ({total_entidades} Cías)</button>
             <button onclick="setSolvScope('Patrimoniales y Mixtas')" id="solvScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
             <button onclick="setSolvScope('Riesgos del Trabajo (ART)')" id="solvScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
             <button onclick="setSolvScope('Seguros de Personas')" id="solvScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
@@ -1570,7 +1578,7 @@ def generate_html():
           </div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades analizadas: <span id="solvEntitiesCount" class="font-mono font-bold text-white">185</span>
+          Entidades analizadas: <span id="solvEntitiesCount" class="font-mono font-bold text-white">{total_entidades}</span>
         </div>
       </div>
 
@@ -1693,7 +1701,7 @@ def generate_html():
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-indigo-400"></i> Alcance del Análisis:</span>
           <div class="flex flex-wrap gap-1.5">
             <button onclick="setGestScope('cia')" id="gestScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🏢 Aseguradora Seleccionada</button>
-            <button onclick="setGestScope('Todos')" id="gestScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-500 text-white font-bold transition-all shadow-md shadow-indigo-500/20">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setGestScope('Todos')" id="gestScopeBtn-Todos" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-500 text-white font-bold transition-all shadow-md shadow-indigo-500/20">🌐 Mercado Total ({total_entidades} Cías)</button>
             <button onclick="setGestScope('Patrimoniales y Mixtas')" id="gestScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
             <button onclick="setGestScope('Riesgos del Trabajo (ART)')" id="gestScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
             <button onclick="setGestScope('Seguros de Personas')" id="gestScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">❤️ Seguros de Personas</button>
@@ -1701,7 +1709,7 @@ def generate_html():
           </div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades analizadas: <span id="gestEntitiesCount" class="font-mono font-bold text-white">185</span>
+          Entidades analizadas: <span id="gestEntitiesCount" class="font-mono font-bold text-white">{total_entidades}</span>
         </div>
       </div>
 
@@ -1989,7 +1997,7 @@ def generate_html():
         <div>
           <div class="flex items-center gap-3">
             <h2 id="balSelectedTitle" class="text-lg font-bold text-white">Mercado Total Consolidado</h2>
-            <span id="balSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">185 Cías</span>
+            <span id="balSelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">{total_entidades} Cías</span>
           </div>
           <p id="balSelectedSubtitle" class="text-xs text-slate-400 mt-1">Plan de Cuentas Oficial SSN • Apertura Jerárquica Multinivel por Cuentas e Importes</p>
         </div>
@@ -2030,7 +2038,7 @@ def generate_html():
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-emerald-400"></i> Alcance del Balance:</span>
           <div class="flex flex-wrap gap-1.5">
-            <button onclick="setBalScope('market')" id="balScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total (185 Cías)</button>
+            <button onclick="setBalScope('market')" id="balScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 font-bold transition-all shadow-md shadow-emerald-500/20">🌐 Mercado Total ({total_entidades} Cías)</button>
             <button onclick="setBalScope('group')" id="balScopeBtn-group" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-amber-300 hover:bg-slate-700 transition-all font-bold">🏛️ Grupo Asegurador</button>
             <button onclick="setBalScope('Patrimoniales y Mixtas')" id="balScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🚗 Patrimoniales y Mixtas</button>
             <button onclick="setBalScope('Riesgos del Trabajo (ART)')" id="balScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🦺 Riesgos del Trabajo (ART)</button>
@@ -2040,7 +2048,7 @@ def generate_html():
           </div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades consolidadas: <span id="balEntitiesCount" class="font-mono font-bold text-white">185</span>
+          Entidades consolidadas: <span id="balEntitiesCount" class="font-mono font-bold text-white">{total_entidades}</span>
         </div>
       </div>
 
@@ -2377,7 +2385,7 @@ def generate_html():
           <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-col justify-between dark-kpi-tile">
             <div class="text-[10px] text-slate-400 uppercase font-semibold">Anulaciones</div>
             <div id="arKpiAnulacion" class="text-sm sm:text-base font-bold font-mono text-slate-300 mt-1">0.0%</div>
-            <div id="arKpiAnulSub" class="text-[9px] text-slate-400 mt-0.5">s/ Primas Emit.</div>
+            <div id="arKpiAnulSub" class="text-[9px] text-slate-400 mt-0.5">s/ Emisión Bruta</div>
           </div>
         </div>
       </div>
@@ -2533,7 +2541,7 @@ def generate_html():
             <div>
               <div class="flex items-center gap-2.5">
                 <h2 class="text-lg font-bold text-white tracking-tight">Comparativo de Mercado</h2>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">INTERANUAL JUN-26 vs JUN-25</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">{comp_badge_label}</span>
               </div>
               <p class="text-xs text-slate-400 mt-0.5">Producción Directa Neta, Crecimiento Interanual, Evolución de Market Share y Ratios Técnicos</p>
             </div>
@@ -2549,7 +2557,7 @@ def generate_html():
             </button>
             <div id="compAxiInputContainer" class="hidden flex items-center gap-1.5 pl-2 border-l border-slate-800 text-xs">
               <span class="text-[11px] text-slate-400">Inflación:</span>
-              <input type="number" id="compInflationInput" value="45.0" step="1.0" min="0" max="300" onchange="setCompInflationRate(this.value)" class="w-14 px-1.5 py-0.5 bg-slate-900 border border-slate-700 rounded text-center text-amber-300 font-mono font-bold text-xs focus:outline-none focus:border-amber-400">
+              <input type="number" id="compInflationInput" value="{default_inf}" step="0.1" min="0" max="300" onchange="setCompInflationRate(this.value)" class="w-14 px-1.5 py-0.5 bg-slate-900 border border-slate-700 rounded text-center text-amber-300 font-mono font-bold text-xs focus:outline-none focus:border-amber-400">
               <span class="text-slate-400 font-mono text-xs">%</span>
             </div>
           </div>
@@ -2672,7 +2680,7 @@ def generate_html():
             <div>
               <div class="flex items-center gap-2">
                 <h2 id="sankeySelectedTitle" class="text-lg font-bold text-white">Mercado Total Consolidado</h2>
-                <span id="sankeySelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">185 Cías</span>
+                <span id="sankeySelectedBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">{total_entidades} Cías</span>
               </div>
               <p id="sankeySelectedSubtitle" class="text-xs text-slate-400 mt-0.5">Trazabilidad Integral del Estado de Resultados: Primas, Siniestralidad, Gastos Operativos, Margen Financiero y Resultado Neto</p>
             </div>
@@ -2714,22 +2722,22 @@ def generate_html():
           <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-layer-group text-indigo-400"></i> Alcance del Flujo:</span>
           <div class="flex flex-wrap gap-1.5">
             <button onclick="setSankeyScope('market')" id="sankeyScopeBtn-market" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white transition-all shadow-md shadow-indigo-600/30 flex items-center gap-1.5">
-              <i class="fa-solid fa-globe"></i> Mercado Total (185 Cías)
+              <i class="fa-solid fa-globe"></i> Mercado Total ({total_entidades} Cías)
             </button>
             <button onclick="setSankeyScope('group')" id="sankeyScopeBtn-group" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
               <i class="fa-solid fa-building-columns text-amber-400"></i> Grupo Asegurador
             </button>
             <button onclick="setSankeyScope('Patrimoniales y Mixtas')" id="sankeyScopeBtn-Patrimoniales y Mixtas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
-              🚗 Patrimoniales y Mixtas (91)
+              🚗 Patrimoniales y Mixtas ({patrim_cnt})
             </button>
             <button onclick="setSankeyScope('Riesgos del Trabajo (ART)')" id="sankeyScopeBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
-              🦺 Riesgos del Trabajo / ART (19)
+              🦺 Riesgos del Trabajo / ART ({art_cnt})
             </button>
             <button onclick="setSankeyScope('Seguros de Personas')" id="sankeyScopeBtn-Seguros de Personas" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
-              ❤️ Seguros de Personas (60)
+              ❤️ Seguros de Personas ({pers_cnt})
             </button>
             <button onclick="setSankeyScope('Seguros de Retiro')" id="sankeyScopeBtn-Seguros de Retiro" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
-              🏦 Seguros de Retiro (15)
+              🏦 Seguros de Retiro ({ret_cnt})
             </button>
             <button onclick="setSankeyScope('cia')" id="sankeyScopeBtn-cia" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all flex items-center gap-1.5">
               🏢 Empresa Seleccionada
@@ -2737,7 +2745,7 @@ def generate_html():
           </div>
         </div>
         <div class="text-xs text-slate-400">
-          Entidades consolidadas: <span id="sankeyEntitiesCount" class="font-mono font-bold text-white">185</span>
+          Entidades consolidadas: <span id="sankeyEntitiesCount" class="font-mono font-bold text-white">{total_entidades}</span>
         </div>
       </div>
 
@@ -3084,7 +3092,7 @@ def generate_html():
       compSubramo: 'all',
       compMode: 'groups',
       compAjusteMode: 'nominal',
-      compInflationRate: 45.0,
+      compInflationRate: {default_inf},
       compSearchQuery: '',
       ramosScope: 'cia',
       invScope: 'cia',
@@ -3229,7 +3237,12 @@ def generate_html():
       if (!data) return;
 
       document.getElementById('headerPeriodo').innerText = data.periodo || '{periodo_actual}';
-      document.getElementById('headerTotalCias').innerText = data.total_entidades || '185';
+      document.getElementById('headerTotalCias').innerText = data.total_entidades || '{total_entidades}';
+
+      const defInf = (data.default_inflation_rate !== undefined && data.default_inflation_rate !== null) ? data.default_inflation_rate : {default_inf};
+      state.compInflationRate = defInf;
+      const infInput = document.getElementById('compInflationInput');
+      if (infInput) infInput.value = defInf;
 
       // 1. Set macro entity values
       const me = data.macro_entidades || data.macro_ramos;
@@ -3274,6 +3287,20 @@ def generate_html():
         // Retiro
         document.getElementById('prodRetiroPrimas').innerText = formatARS(mp.retiro.primas);
         document.getElementById('prodRetiroDetails').innerText = `${{mp.retiro.participacion}}% Mercado • Sin: ${{mp.retiro.siniestralidad}}% (Siniestros: ${{formatARS(mp.retiro.siniestros)}})`;
+
+        const macroTotEl = document.getElementById('macroProdTotalLabel');
+        if (macroTotEl && mp.total) {{
+          macroTotEl.innerText = `Total Primas y Recargos Unificados (${{formatARS(mp.total.primas)}})`;
+        }}
+        const pcs = mp.personas_cross_selling;
+        const persTextEl = document.getElementById('personasInsightText');
+        const persTotEl = document.getElementById('personasInsightTotal');
+        if (persTextEl && pcs) {{
+          persTextEl.innerHTML = `<b>Efecto Multirramo en Personas:</b> El <b>${{(pcs.pct_en_mixtas || 0).toFixed(1)}}% (${{formatARS(pcs.en_mixtas || 0)}})</b> de los productos de Personas y Vida es emitido por Aseguradoras Mixtas, y el <b>${{(pcs.pct_en_personas || 0).toFixed(1)}}% (${{formatARS(pcs.en_personas || 0)}})</b> por Aseguradoras exclusivas de Personas.`;
+        }}
+        if (persTotEl && mp.personas) {{
+          persTotEl.innerText = `Total Ramo Personas: ${{formatARS(mp.personas.primas)}} (${{mp.personas.participacion}}% del mercado)`;
+        }}
       }}
 
       // Populate Balances subramos select
@@ -3575,7 +3602,7 @@ def generate_html():
         if (state.sankeyScope === 'group' && data.groups_by_id && data.groups_by_id[state.selectedGroupId]) {{
           sankeyLabel.innerText = `🏛️ ${{data.groups_by_id[state.selectedGroupId].name}} (Consolidado)`;
         }} else if (state.sankeyScope === 'market') {{
-          sankeyLabel.innerText = '🌐 Mercado Total (185 Cías)';
+          sankeyLabel.innerText = `🌐 Mercado Total (${{data.total_entidades || {total_entidades}}} Cías)`;
         }} else if (['Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'].includes(state.sankeyScope)) {{
           const cCount = (data.companies || []).filter(c => c.tipo_entidad === state.sankeyScope).length;
           sankeyLabel.innerText = `📂 ${{state.sankeyScope}} (${{cCount}} Cías)`;
@@ -3975,7 +4002,7 @@ def generate_html():
           <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
           <td class="py-1.5 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
           <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.primas_devengadas)}}</td>
-          <td class="py-1.5 px-2 text-right text-rose-300">${{formatARS(c.siniestros)}}</td>
+          <td class="py-1.5 px-2 text-right text-rose-300">${{formatARS((c.siniestros || 0) + (c.rescates || 0))}}</td>
           <td class="py-1.5 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
           <td class="py-1.5 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
           <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
@@ -4011,7 +4038,7 @@ def generate_html():
             <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
             <td class="py-1.5 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
             <td class="py-1.5 px-2 text-right text-slate-300">${{formatARS(c.primas_devengadas)}}</td>
-            <td class="py-1.5 px-2 text-right text-rose-300">${{formatARS(c.siniestros)}}</td>
+            <td class="py-1.5 px-2 text-right text-rose-300">${{formatARS((c.siniestros || 0) + (c.rescates || 0))}}</td>
             <td class="py-1.5 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
             <td class="py-1.5 px-2 text-right font-bold ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
             <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
@@ -4062,7 +4089,7 @@ def generate_html():
           <span class="text-[10px] font-bold text-amber-300 mr-1"><i class="fa-solid fa-star"></i> Benchmark:</span>
           <button onclick="highlightScatterCompany('la_segunda')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Asegurador La Segunda">★ La Segunda</button>
           <button onclick="highlightScatterCompany('sancor')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Sancor Seguros">Sancor</button>
-          <button onclick="highlightScatterCompany('fed_pat')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Federación Patronal">Fed. Patronal</button>
+          <button onclick="highlightScatterCompany('federacion_patronal')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 transition-colors cursor-pointer" title="Grupo Federación Patronal">Fed. Patronal</button>
         `;
       }} else {{
         container.innerHTML = `
@@ -4092,7 +4119,7 @@ def generate_html():
           if (isGroupsMode) {{
             return `<b>${{x.name}}</b><br>🏛️ Grupo Económico (${{x.entities_count}} Cías Consolidadas)<br>Primas Emitidas: ${{formatARS(x.primas_emitidas)}} (${{x.market_share.toFixed(1)}}% mkt)<br>Primas Devengadas: ${{formatARS(x.primas_devengadas)}}<br>Resultado Técnico: ${{formatARS(x.resultado_tecnico)}} (M. Téc: ${{((x.margen_tecnico || 0)).toFixed(1)}}%)<br>Resultado Financiero: ${{formatARS(x.resultado_financiero)}} (ROI: ${{((x.roi_inversiones || 0)).toFixed(1)}}%)<br>Resultado Neto: ${{formatARS(x.resultado_neto)}}<br>Ratio Combinado: ${{((x.combined_ratio || 0)).toFixed(1)}}%`;
           }} else {{
-            return `<b>${{x.razon_social}}</b><br>Cód SSN: ${{x.cod_cia}} • Tipo: ${{x.tipo_entidad}}<br>Primas Emitidas: ${{formatARS(x.primas_emitidas)}}<br>Primas Devengadas: ${{formatARS(x.primas_devengadas)}}<br>Siniestros: ${{formatARS(x.siniestros)}}<br>M. Técnico: ${{((x.margen_tecnico || 0)).toFixed(1)}}%<br>ROI Inv: ${{((x.roi_inversiones || 0)).toFixed(1)}}%<br>Ratio Comb: ${{((x.combined_ratio || 0)).toFixed(1)}}%`;
+            return `<b>${{x.razon_social}}</b><br>Cód SSN: ${{x.cod_cia}} • Tipo: ${{x.tipo_entidad}}<br>Primas Emitidas: ${{formatARS(x.primas_emitidas)}}<br>Primas Devengadas: ${{formatARS(x.primas_devengadas)}}<br>Siniestros y Prest.: ${{formatARS((x.siniestros || 0) + (x.rescates || 0))}}<br>M. Técnico: ${{((x.margen_tecnico || 0)).toFixed(1)}}%<br>ROI Inv: ${{((x.roi_inversiones || 0)).toFixed(1)}}%<br>Ratio Comb: ${{((x.combined_ratio || 0)).toFixed(1)}}%`;
           }}
         }}),
         customdata: valid.map(x => isGroupsMode ? x.id : x.cod_cia),
@@ -4313,6 +4340,8 @@ def generate_html():
       const filtered = q ? list.filter(c => c.razon_social.toLowerCase().includes(q) || c.cod_cia.includes(q)) : list;
       
       const sorted = [...filtered].sort((a, b) => b.primas_emitidas - a.primas_emitidas);
+      const tblCountEl = document.getElementById('marketTableCountLabel');
+      if (tblCountEl) tblCountEl.innerText = sorted.length;
       const tbody = document.getElementById('marketFullTableBody');
       tbody.innerHTML = sorted.map(c => {{
         const isHL = state.highlightedCiaCode === c.cod_cia;
@@ -4322,7 +4351,7 @@ def generate_html():
           <td class="py-1.5 px-2 text-center">${{getTipoBadge(c.tipo_entidad)}}</td>
           <td class="py-1.5 px-2 text-right font-bold text-white">${{formatARS(c.primas_emitidas)}}</td>
           <td class="py-1.5 px-2 text-right text-slate-300 font-bold">${{formatARS(c.primas_devengadas)}}</td>
-          <td class="py-1.5 px-2 text-right text-rose-300 font-bold">${{formatARS(c.siniestros)}}</td>
+          <td class="py-1.5 px-2 text-right text-rose-300 font-bold">${{formatARS((c.siniestros || 0) + (c.rescates || 0))}}</td>
           <td class="py-1.5 px-2 text-right">${{formatPercent(c.loss_ratio)}}</td>
           <td class="py-1.5 px-2 text-right ${{c.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatPercent(c.combined_ratio)}}</td>
           <td class="py-1.5 px-2 text-right ${{c.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(c.resultado_tecnico)}}</td>
@@ -4555,13 +4584,13 @@ def generate_html():
           sin_txt: formatARS(s.siniestros),
           loss_txt: (s['siniestralidad_%'] || 0).toFixed(1) + '%'
         }})),
-        hovertemplate: '<b>%{{customdata.sub}}</b> (Cód: %{{customdata.cod}})<br>Primas Emitidas: <b>%{{customdata.primas_txt}}</b><br>Siniestros: <b>%{{customdata.sin_txt}}</b><br>Siniestralidad s/ Emisión: <b>%{{customdata.loss_txt}}</b><extra></extra>'
+        hovertemplate: '<b>%{{customdata.sub}}</b> (Cód: %{{customdata.cod}})<br>Primas Emitidas: <b>%{{customdata.primas_txt}}</b><br>Siniestros: <b>%{{customdata.sin_txt}}</b><br>Siniestralidad Devengada: <b>%{{customdata.loss_txt}}</b><extra></extra>'
       }};
 
       const traceLoss = {{
         x: topSub.map(s => s.desc_subramo),
         y: topSub.map(s => s['siniestralidad_%'] || 0),
-        name: 'Siniestralidad s/ Emisión (%)',
+        name: 'Siniestralidad Devengada (%)',
         type: 'scatter',
         mode: 'lines+markers+text',
         text: topSub.map(s => (s['siniestralidad_%'] || 0).toFixed(1) + '%'),
@@ -4570,7 +4599,7 @@ def generate_html():
         yaxis: 'y2',
         marker: {{ color: '#E20039', size: 9, line: {{ color: '#FFFFFF', width: 2 }} }},
         line: {{ color: '#E20039', width: 3 }},
-        hovertemplate: '<b>%{{x}}</b><br>Siniestralidad s/ Emisión: <b>%{{y:.1f}}%</b><extra></extra>'
+        hovertemplate: '<b>%{{x}}</b><br>Siniestralidad Devengada: <b>%{{y:.1f}}%</b><extra></extra>'
       }};
 
       const pTheme = getPlotlyTheme();
@@ -4589,7 +4618,7 @@ def generate_html():
           showgrid: true
         }},
         yaxis2: {{
-          title: 'Siniestralidad s/ Emisión (%)',
+          title: 'Siniestralidad Devengada (%)',
           overlaying: 'y',
           side: 'right',
           color: '#E20039',
@@ -4855,33 +4884,37 @@ def generate_html():
       const groupsById = data.groups_by_id || {{}};
 
       // 1. Process all individual companies and compute 100% Market Consolidated Totals
-      let mktTotEmit = 0.0, mktTotSin = 0.0, mktTotIngTec = 0.0, mktTotEgrTec = 0.0;
+      let mktTotEmit = 0.0, mktTotDev = 0.0, mktTotSin = 0.0, mktTotResTec = 0.0;
       let mktActiveCiasCount = 0;
       const companiesRanking = [];
 
       Object.entries(ciasSub).forEach(([cod_cia, sub_map]) => {{
-        let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
+        let totEmit = 0.0, totDev = 0.0, totSin = 0.0, totResTec = 0.0, totIngFin = 0.0, totEgrFin = 0.0;
         targetSubs.forEach(s => {{
           if (sub_map[s]) {{
             const d = sub_map[s];
-            totEmit += (d._net_emit !== undefined ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0));
-            totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
-            totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
-            totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+            const emitD = (d._net_emit !== undefined) ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0);
+            const devD = (d._net_dev !== undefined) ? d._net_dev : emitD;
+            const sinD = (d._net_sin !== undefined) ? d._net_sin : ((d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0));
+            const resTecD = (d._res_tec !== undefined) ? d._res_tec : ((d['5.01.00.00.00.00.00.00'] || 0.0) - (d['4.01.00.00.00.00.00.00'] || 0.0));
+            totEmit += emitD;
+            totDev += devD;
+            totSin += sinD;
+            totResTec += resTecD;
             totIngFin += (d['5.02.00.00.00.00.00.00'] || 0.0);
             totEgrFin += (d['4.02.00.00.00.00.00.00'] || 0.0);
           }}
         }});
-        if (totEmit > 0 || totSin > 0 || totIngTec > 0 || totEgrTec > 0) {{
+        if (Math.abs(totEmit) > 0 || Math.abs(totDev) > 0 || Math.abs(totSin) > 0 || Math.abs(totResTec) > 0) {{
           mktActiveCiasCount++;
           mktTotEmit += totEmit;
+          mktTotDev += totDev;
           mktTotSin += totSin;
-          mktTotIngTec += totIngTec;
-          mktTotEgrTec += totEgrTec;
+          mktTotResTec += totResTec;
 
           const c = ciasByCode[cod_cia] || {{}};
-          const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : (totIngTec > 0 ? (totSin / totIngTec * 100.0) : 0.0);
-          const resTec = totIngTec - totEgrTec;
+          const basePrimas = totDev > 0 ? totDev : totEmit;
+          const lossRatio = basePrimas > 0 ? (totSin / basePrimas * 100.0) : 0.0;
           const resFin = (c.resultado_financiero !== undefined) ? c.resultado_financiero : (totIngFin - totEgrFin);
           companiesRanking.push({{
             id: cod_cia,
@@ -4889,9 +4922,10 @@ def generate_html():
             name: c.razon_social || cod_cia,
             tipo: c.tipo_entidad || '',
             emitidas: totEmit,
+            devengadas: totDev,
             siniestros: totSin,
             loss_ratio: lossRatio,
-            resultado_tecnico: resTec,
+            resultado_tecnico: totResTec,
             resultado_financiero: resFin
           }});
         }}
@@ -4901,20 +4935,24 @@ def generate_html():
       const groupsRanking = [];
       if (state.ramosRankMode === 'groups') {{
         Object.entries(groupsSub).forEach(([gid, sub_map]) => {{
-          let totEmit = 0.0, totSin = 0.0, totIngTec = 0.0, totEgrTec = 0.0;
+          let totEmit = 0.0, totDev = 0.0, totSin = 0.0, totResTec = 0.0;
           targetSubs.forEach(s => {{
             if (sub_map[s]) {{
               const d = sub_map[s];
-              totEmit += (d._net_emit !== undefined ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0));
-              totSin += (d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0);
-              totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
-              totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+              const emitD = (d._net_emit !== undefined) ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0);
+              const devD = (d._net_dev !== undefined) ? d._net_dev : emitD;
+              const sinD = (d._net_sin !== undefined) ? d._net_sin : ((d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0));
+              const resTecD = (d._res_tec !== undefined) ? d._res_tec : ((d['5.01.00.00.00.00.00.00'] || 0.0) - (d['4.01.00.00.00.00.00.00'] || 0.0));
+              totEmit += emitD;
+              totDev += devD;
+              totSin += sinD;
+              totResTec += resTecD;
             }}
           }});
-          if (totEmit > 0 || totSin > 0 || totIngTec > 0 || totEgrTec > 0) {{
+          if (Math.abs(totEmit) > 0 || Math.abs(totDev) > 0 || Math.abs(totSin) > 0 || Math.abs(totResTec) > 0) {{
             const g = groupsById[gid] || {{}};
-            const lossRatio = totEmit > 0 ? (totSin / totEmit * 100.0) : (totIngTec > 0 ? (totSin / totIngTec * 100.0) : 0.0);
-            const resTec = totIngTec - totEgrTec;
+            const basePrimas = totDev > 0 ? totDev : totEmit;
+            const lossRatio = basePrimas > 0 ? (totSin / basePrimas * 100.0) : 0.0;
 
             // Compute active member companies and aggregate their general financial result
             let activeCiasCount = 0;
@@ -4925,10 +4963,10 @@ def generate_html():
               if (ciasSub[mCode]) {{
                 const subM = ciasSub[mCode];
                 const hasActivity = targetSubs.some(s => subM[s] && (
-                  ((subM[s]._net_emit !== undefined ? subM[s]._net_emit : (subM[s]['5.01.01.00.00.00.00.00'] || 0)) > 0) ||
-                  (subM[s]['4.01.01.00.00.00.00.00'] || 0) > 0 ||
-                  (subM[s]['5.01.00.00.00.00.00.00'] || 0) > 0 ||
-                  (subM[s]['4.01.00.00.00.00.00.00'] || 0) > 0
+                  Math.abs((subM[s]._net_emit !== undefined ? subM[s]._net_emit : (subM[s]['5.01.01.00.00.00.00.00'] || 0))) > 0 ||
+                  Math.abs(subM[s]._net_dev || 0) > 0 ||
+                  Math.abs(subM[s]._net_sin || 0) > 0 ||
+                  Math.abs(subM[s]._res_tec || 0) > 0
                 ));
                 if (hasActivity) {{
                   activeCiasCount++;
@@ -4947,9 +4985,10 @@ def generate_html():
               name: g.name || gid,
               tipo: tipoLabel,
               emitidas: totEmit,
+              devengadas: totDev,
               siniestros: totSin,
               loss_ratio: lossRatio,
-              resultado_tecnico: resTec,
+              resultado_tecnico: totResTec,
               resultado_financiero: activeResFin
             }});
           }}
@@ -4962,14 +5001,15 @@ def generate_html():
       }});
       ranking.sort((a, b) => (b.emitidas - a.emitidas) || (b.siniestros - a.siniestros) || (Math.abs(b.resultado_tecnico) - Math.abs(a.resultado_tecnico)));
 
-      const mktLoss = mktTotEmit > 0 ? (mktTotSin / mktTotEmit * 100.0) : 0.0;
-      const mktResTec = mktTotIngTec - mktTotEgrTec;
+      const mktBase = mktTotDev > 0 ? mktTotDev : mktTotEmit;
+      const mktLoss = mktBase > 0 ? (mktTotSin / mktBase * 100.0) : 0.0;
 
       return {{
         total_emitidas: mktTotEmit,
+        total_devengadas: mktTotDev,
         total_siniestros: mktTotSin,
         loss_ratio: mktLoss,
-        resultado_tecnico: mktResTec,
+        resultado_tecnico: mktTotResTec,
         entities_count: mktActiveCiasCount,
         ranking: ranking
       }};
@@ -5125,64 +5165,35 @@ def generate_html():
       let items = [];
       let totalRamoEmit = 0.0;
 
-      const isPersonas = state.ramosRankSections.includes('personas');
+      const isPersonasOnly = (state.ramosRankSections.length === 1 && state.ramosRankSections[0] === 'personas');
       const selectedGroups = state.ramosRankGroups || [];
-      const isAllGroups = selectedGroups.includes('all');
+      const isSpecificSubramo = !!(state.ramosRankSubramo && state.ramosRankSubramo !== 'all');
 
-      if (isPersonas) {{
-        // Gather all codes across selected persona groups
-        let relevantGroups = isAllGroups ? ['ap', 'salud', 'vida', 'sepelio', 'otros_pers'] : selectedGroups;
-
-        // 1. AP (2.010.01 + 2.010.02)
-        if (relevantGroups.includes('ap')) {{
+      if (isPersonasOnly && !isSpecificSubramo && selectedGroups.length > 1) {{
+        // Grouped summary for Personas when comparing multiple Personas ramos
+        if (selectedGroups.includes('ap')) {{
           const apEmit = getMktSubEmit('2.010.01') + getMktSubEmit('2.010.02');
           if (apEmit > 0) items.push({{ code: '2.010.*', name: 'Accidentes Personales (Indiv + Colect)', emit: apEmit }});
         }}
-
-        // 2. Salud (2.020.01 + 2.020.02)
-        if (relevantGroups.includes('salud')) {{
+        if (selectedGroups.includes('salud')) {{
           const saludEmit = getMktSubEmit('2.020.01') + getMktSubEmit('2.020.02');
           if (saludEmit > 0) items.push({{ code: '2.020.*', name: 'Salud (Indiv + Colect)', emit: saludEmit }});
         }}
-
-        // 3. Sepelio (2.050.01 + 2.050.02)
-        if (relevantGroups.includes('sepelio')) {{
+        if (selectedGroups.includes('sepelio')) {{
           const sepelioEmit = getMktSubEmit('2.050.01') + getMktSubEmit('2.050.02');
           if (sepelioEmit > 0) items.push({{ code: '2.050.*', name: 'Sepelio (Indiv + Colect)', emit: sepelioEmit }});
         }}
-
-        // 4. Vida: keep all individual subramos
-        if (relevantGroups.includes('vida')) {{
-          const vidaCodes = ['2.030.01', '2.030.02', '2.030.03', '2.040.01', '2.040.02', '2.040.03', '2.040.04', '2.040.05'];
+        if (selectedGroups.includes('vida')) {{
+          const vidaCodes = ['2.030.01', '2.030.02', '2.030.03', '2.030.04', '2.030.05'];
           vidaCodes.forEach(sc => {{
             const emit = getMktSubEmit(sc);
             if (emit > 0) items.push({{ code: sc, name: catalog[sc] || sc, emit: emit }});
           }});
         }}
-
-        // 5. Otros Personas
-        if (relevantGroups.includes('otros_pers')) {{
-          const emit = getMktSubEmit('2.060.01');
-          if (emit > 0) items.push({{ code: '2.060.01', name: catalog['2.060.01'] || 'Otros Seguros de Personas', emit: emit }});
-        }}
       }} else {{
-        // General logic for Patrimoniales, ART, Retiro
-        const secKeys = state.ramosRankSections.includes('all') ? ['patrimoniales', 'art', 'personas', 'retiro'] : state.ramosRankSections;
-        const subCodesSet = new Set();
-
-        secKeys.forEach(secKey => {{
-          const secObj = tax[secKey];
-          if (!secObj || !secObj.grupos) return;
-          const grpKeys = isAllGroups ? Object.keys(secObj.grupos) : selectedGroups;
-          grpKeys.forEach(gKey => {{
-            const grp = secObj.grupos[gKey];
-            if (grp && grp.subramos) {{
-              grp.subramos.forEach(sc => subCodesSet.add(sc));
-            }}
-          }});
-        }});
-
-        subCodesSet.forEach(sc => {{
+        // Exact subramos for Patrimoniales, ART, Retiro, single Personas ramo, or specific subramo
+        const targetSubs = getTargetRamosSubramos();
+        targetSubs.forEach(sc => {{
           const emit = getMktSubEmit(sc);
           if (emit > 0) {{
             items.push({{ code: sc, name: catalog[sc] || sc, emit: emit }});
@@ -5591,59 +5602,51 @@ def generate_html():
 
       const processSubMap = (sub_map) => {{
         let totEmit = 0.0, totCed = 0.0, totAnul = 0.0;
-        let totVarCargo = 0.0, totVarLib = 0.0;
-        let totSinCargo = 0.0, totRescates = 0.0, totSinRecup = 0.0;
-        let totGtosProdCargo = 0.0, totRecupProd = 0.0, totGtosExpl = 0.0;
-        let totIngTec = 0.0, totEgrTec = 0.0;
+        let totDev = 0.0, totSin = 0.0, totProd = 0.0, totExpl = 0.0, totResTec = 0.0;
 
         targetSubs.forEach(s => {{
           if (sub_map[s]) {{
             const d = sub_map[s];
-            totEmit += (d._net_emit !== undefined ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0));
-            totCed += (d['4.01.03.00.00.00.00.00'] || 0.0);
-            totAnul += (d['4.01.04.00.00.00.00.00'] || 0.0);
-            totVarCargo += (d['4.01.05.00.00.00.00.00'] || 0.0);
-            totVarLib += ((d['5.01.04.04.04.11.00.00'] || 0.0) + (d['5.01.04.04.04.12.00.00'] || 0.0) + (d['5.01.04.04.04.13.00.00'] || 0.0));
-            
-            totSinCargo += (d['4.01.01.00.00.00.00.00'] || 0.0);
-            totRescates += (d['4.01.02.00.00.00.00.00'] || 0.0);
-            recupKeys.forEach(rk => {{ totSinRecup += (d[rk] || 0.0); }});
+            const emitD = (d._net_emit !== undefined) ? d._net_emit : (d['5.01.01.00.00.00.00.00'] || 0.0);
+            const cedD = (d._net_ced !== undefined) ? d._net_ced : (d['4.01.03.00.00.00.00.00'] || 0.0);
+            const anulD = (d._net_anul !== undefined) ? d._net_anul : (d['4.01.04.00.00.00.00.00'] || 0.0);
+            const devD = (d._net_dev !== undefined) ? d._net_dev : emitD;
+            const sinD = (d._net_sin !== undefined) ? d._net_sin : ((d['4.01.01.00.00.00.00.00'] || 0.0) + (d['4.01.02.00.00.00.00.00'] || 0.0));
+            const gpD = (d._net_gp !== undefined) ? d._net_gp : (d['4.01.06.00.00.00.00.00'] || 0.0);
+            const geD = (d._net_ge !== undefined) ? d._net_ge : ((d['4.01.07.00.00.00.00.00'] || 0.0) + (d['4.01.60.00.00.00.00.00'] || 0.0));
+            const resTecD = (d._res_tec !== undefined) ? d._res_tec : ((d['5.01.00.00.00.00.00.00'] || 0.0) - (d['4.01.00.00.00.00.00.00'] || 0.0));
 
-            totGtosProdCargo += (d['4.01.06.00.00.00.00.00'] || 0.0);
-            totRecupProd += (d['5.01.03.00.00.00.00.00'] || 0.0);
-            totGtosExpl += (d['4.01.07.00.00.00.00.00'] || 0.0);
-
-            totIngTec += (d['5.01.00.00.00.00.00.00'] || 0.0);
-            totEgrTec += (d['4.01.00.00.00.00.00.00'] || 0.0);
+            totEmit += emitD;
+            totCed += cedD;
+            totAnul += anulD;
+            totDev += devD;
+            totSin += sinD;
+            totProd += gpD;
+            totExpl += geD;
+            totResTec += resTecD;
           }}
         }});
 
-        const varCompTec = totVarCargo - totVarLib;
-        const primasDev = totEmit - totCed - varCompTec;
-        const sinNetos = Math.max(0.0, (totSinCargo + totRescates) - totSinRecup);
-        const gtosProd = Math.max(0.0, totGtosProdCargo - totRecupProd);
-        const gtosExpl = totGtosExpl;
-        const resTec = totIngTec - totEgrTec;
-
-        const baseDev = primasDev > 0 ? primasDev : (totEmit > 0 ? totEmit : 1.0);
-        const lossRatio = (sinNetos / baseDev) * 100.0;
-        const acqRatio = (gtosProd / baseDev) * 100.0;
-        const expRatio = (gtosExpl / baseDev) * 100.0;
+        const baseDev = totDev > 0 ? totDev : (totEmit > 0 ? totEmit : 1.0);
+        const lossRatio = (totSin / baseDev) * 100.0;
+        const acqRatio = (totProd / baseDev) * 100.0;
+        const expRatio = (totExpl / baseDev) * 100.0;
         const combinedRatio = lossRatio + acqRatio + expRatio;
-        const margenTec = (resTec / baseDev) * 100.0;
+        const margenTec = (totResTec / baseDev) * 100.0;
         const retentionRate = totEmit > 0 ? ((totEmit - totCed) / totEmit * 100.0) : 100.0;
         const cessionRate = totEmit > 0 ? (totCed / totEmit * 100.0) : 0.0;
-        const cancellationRate = totEmit > 0 ? (totAnul / totEmit * 100.0) : 0.0;
+        const emisionBruta = totEmit + totAnul;
+        const cancellationRate = emisionBruta > 0 ? (totAnul / emisionBruta * 100.0) : 0.0;
 
         return {{
           emitidas: totEmit,
           cedidas: totCed,
           anulaciones: totAnul,
-          devengadas: primasDev,
-          siniestros: sinNetos,
-          gtos_produccion: gtosProd,
-          gtos_explotacion: gtosExpl,
-          resultado_tecnico: resTec,
+          devengadas: totDev,
+          siniestros: totSin,
+          gtos_produccion: totProd,
+          gtos_explotacion: totExpl,
+          resultado_tecnico: totResTec,
           loss_ratio: lossRatio,
           acq_ratio: acqRatio,
           exp_ratio: expRatio,
@@ -6492,7 +6495,9 @@ def generate_html():
     }}
 
     function setCompInflationRate(val) {{
-      state.compInflationRate = parseFloat(val) || 45.0;
+      const parsed = parseFloat(val);
+      const fallback = (window.DATA_SINENSUP && window.DATA_SINENSUP.default_inflation_rate !== undefined) ? window.DATA_SINENSUP.default_inflation_rate : {default_inf};
+      state.compInflationRate = Number.isFinite(parsed) ? parsed : fallback;
       initComparativoTab();
       renderComparativoTab();
     }}
@@ -6538,8 +6543,21 @@ def generate_html():
       const groupsById = data.groups_by_id || {{}};
       const axiFactor = (state.compAjusteMode === 'axi') ? (1.0 + (parseFloat(state.compInflationRate) || 0.0) / 100.0) : 1.0;
 
+      const mktSubComp = data.market_comparative_subramos || {{}};
       let mktE26 = 0.0, mktE25 = 0.0, mktS26 = 0.0, mktG26 = 0.0, mktD26 = 0.0;
+      targetSubs.forEach(scod => {{
+        if (mktSubComp[scod]) {{
+          const msd = mktSubComp[scod];
+          mktE26 += (msd.e26 || 0.0);
+          mktE25 += (msd.e25 || 0.0) * axiFactor;
+          mktS26 += (msd.s26 || 0.0);
+          mktG26 += (msd.g26 || 0.0);
+          mktD26 += (msd.d26 || 0.0);
+        }}
+      }});
+
       const rawRows = [];
+      let sumRowsE26 = 0.0, sumRowsE25 = 0.0, sumRowsS26 = 0.0, sumRowsG26 = 0.0, sumRowsD26 = 0.0;
 
       Object.entries(compMap).forEach(([entityId, subDict]) => {{
         let e26 = 0.0, e25 = 0.0, s26 = 0.0, g26 = 0.0, d26 = 0.0;
@@ -6555,11 +6573,11 @@ def generate_html():
         }});
 
         if (e26 > 0 || e25 > 0 || s26 > 0 || g26 > 0) {{
-          mktE26 += e26;
-          mktE25 += e25;
-          mktS26 += s26;
-          mktG26 += g26;
-          mktD26 += d26;
+          sumRowsE26 += e26;
+          sumRowsE25 += e25;
+          sumRowsS26 += s26;
+          sumRowsG26 += g26;
+          sumRowsD26 += d26;
 
           let name = entityId;
           let tipo = '';
@@ -6569,8 +6587,8 @@ def generate_html():
             tipo = g ? `${{g.entities_count}} Cías` : 'Grupo';
           }} else {{
             const c = ciasByCode[entityId];
-            name = c ? c.razon_social : entityId;
-            tipo = c ? c.tipo_entidad : '';
+            name = c ? c.razon_social : `Cía SSN ${{entityId}}`;
+            tipo = c ? c.tipo_entidad : `Inactiva ${{data.periodo || '{periodo_actual}'}}`;
           }}
 
           rawRows.push({{
@@ -6585,6 +6603,14 @@ def generate_html():
           }});
         }}
       }});
+
+      if (Object.keys(mktSubComp).length === 0) {{
+        mktE26 = sumRowsE26;
+        mktE25 = sumRowsE25;
+        mktS26 = sumRowsS26;
+        mktG26 = sumRowsG26;
+        mktD26 = sumRowsD26;
+      }}
 
       const isLS = id => (id === 'la_segunda' || id === '0117' || id === '0317' || id === '0436' || id === '0618');
       
@@ -6965,7 +6991,7 @@ def generate_html():
           totInv = g.inversiones || 0;
           resFin = g.resultado_financiero || 0;
           totActivo = g.activo || 0;
-          invs = [];
+          invs = g.investments || [];
         }} else {{
           const c = data.companies_by_code[state.selectedCompanyCode];
           if (!c) return;
@@ -6980,7 +7006,7 @@ def generate_html():
       }} else if (state.invScope === 'market') {{
         title = 'Mercado Asegurador Consolidado';
         badge = 'Total Mercado';
-        count = data.total_entidades || 185;
+        count = data.total_entidades || {total_entidades};
         data.companies.forEach(c => {{
           totInv += c.inversiones || 0;
           resFin += c.resultado_financiero || 0;
@@ -7245,10 +7271,11 @@ def generate_html():
           document.getElementById('solvPnSub').innerText = 'Solvencia Patrimonial Individual';
         }}
       }} else if (state.solvScope === 'Todos') {{
+        const totEnt = data.total_entidades || {total_entidades};
         title = 'Mercado Asegurador Consolidado';
         badge = 'Total Mercado';
-        subtitle = 'Indicadores Agregados de Solvencia y Cobertura Regulatoria del Mercado (185 Entidades)';
-        count = data.total_entidades || 185;
+        subtitle = `Indicadores Agregados de Solvencia y Cobertura Regulatoria del Mercado (${{totEnt}} Entidades)`;
+        count = totEnt;
 
         let totDisp = 0, totInv = 0, totInm = 0, totCompTec = 0, totPrimas = 0, totPremios = 0, totPN = 0;
         data.companies.forEach(c => {{
@@ -7425,10 +7452,11 @@ def generate_html():
           benchmarkMetrics = segBench || marketBench;
         }}
       }} else if (state.gestScope === 'Todos') {{
+        const totEnt = data.total_entidades || {total_entidades};
         title = 'Mercado Asegurador Argentino Consolidado';
         badge = 'Total Mercado';
-        subtitle = 'Scorecard Agregado de las 185 Aseguradoras • Promedios y Ratios Ponderados del Mercado';
-        count = data.total_entidades || 185;
+        subtitle = `Scorecard Agregado de las ${{totEnt}} Aseguradoras • Promedios y Ratios Ponderados del Mercado`;
+        count = totEnt;
         targetMetrics = marketBench;
         benchmarkMetrics = marketBench;
       }} else {{
@@ -7449,7 +7477,9 @@ def generate_html():
       document.getElementById('gestSelectedSubtitle').innerText = subtitle;
 
       // Populate Scorecard Cards
-      const populateCard = (prefix, val, metric, benchVal, suffix = '%', isMulti = false) => {{
+      const populateCard = (prefix, rawVal, metric, rawBenchVal, suffix = '%', isMulti = false) => {{
+        const val = Number(rawVal ?? 0);
+        const benchVal = Number(rawBenchVal ?? 0);
         const valEl = document.getElementById(`${{prefix}}Val`);
         const badgeEl = document.getElementById(`${{prefix}}Badge`);
         const benchEl = document.getElementById(`${{prefix}}Bench`);
@@ -7460,10 +7490,12 @@ def generate_html():
         if (badgeEl) {{
           badgeEl.innerHTML = getTrafficLightBadge(val, metric);
         }}
-        if (benchEl && benchVal !== undefined && benchVal !== null) {{
+        if (benchEl && rawBenchVal !== undefined && rawBenchVal !== null) {{
           const diff = val - benchVal;
           const sign = diff >= 0 ? '+' : '';
-          const benchLabel = state.gestScope === 'cia' ? `vs. Prom. ${{currentCompany.tipo_entidad}}` : 'vs. Mercado Total';
+          const benchLabel = (state.gestScope === 'cia' && state.entityScope !== 'group' && currentCompany)
+            ? `vs. Prom. ${{currentCompany.tipo_entidad}}`
+            : 'vs. Mercado Total';
           benchEl.innerText = isMulti ? `${{sign}}${{diff.toFixed(2)}}x ${{benchLabel}} (${{benchVal.toFixed(2)}}x)` : `${{sign}}${{diff.toFixed(1)}}% ${{benchLabel}} (${{benchVal.toFixed(1)}}%)`;
         }}
       }};
@@ -7516,8 +7548,8 @@ def generate_html():
       const targetVals = normScore(target);
       const benchVals = normScore(bench);
 
-      const targetLabel = state.gestScope === 'cia' ? (target.razon_social || title) : title;
-      const benchLabel = state.gestScope === 'cia' ? `Promedio ${{target.tipo_entidad || 'Segmento'}}` : 'Promedio Mercado Total';
+      const targetLabel = (state.gestScope === 'cia' && state.entityScope !== 'group') ? (target.razon_social || title) : title;
+      const benchLabel = (state.gestScope === 'cia' && state.entityScope !== 'group' && target.tipo_entidad) ? `Promedio ${{target.tipo_entidad}}` : 'Promedio Mercado Total';
 
       const plainCategories = [
         'Control de Siniestros',
@@ -7802,7 +7834,7 @@ def generate_html():
     // Export to CSV
     function exportToCSV() {{
       const list = getFilteredCompanies();
-      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_emitidas', 'primas_devengadas', 'var_reservas', 'siniestros', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas', 'comm_ratio', 'exp_ratio', 'roi_inversiones', 'roe', 'roa', 'margen_neto'];
+      const headers = ['cod_cia', 'razon_social', 'tipo_entidad', 'primas_emitidas', 'primas_devengadas', 'var_reservas', 'siniestros', 'rescates', 'resultado_tecnico', 'resultado_financiero', 'resultado_neto', 'activo', 'inversiones', 'patrimonio_neto', 'loss_ratio', 'combined_ratio', 'cobertura_reservas', 'comm_ratio', 'exp_ratio', 'roi_inversiones', 'roe', 'roa', 'margen_neto'];
       
       let csv = headers.join(',') + '\\n';
       list.forEach(c => {{
@@ -7814,6 +7846,7 @@ def generate_html():
           c.primas_devengadas || 0,
           c.var_reservas || 0,
           c.siniestros || 0,
+          c.rescates || 0,
           c.resultado_tecnico || 0,
           c.resultado_financiero || 0,
           c.resultado_neto || 0,
@@ -7939,9 +7972,10 @@ def generate_html():
       if (!titleEl || !badgeEl || !countEl) return;
 
       if (state.balScope === 'market') {{
+        const totEnt = data.total_entidades || {total_entidades};
         titleEl.innerText = 'Mercado Total Consolidado';
-        badgeEl.innerText = '185 Cías';
-        countEl.innerText = '185';
+        badgeEl.innerText = `${{totEnt}} Cías`;
+        countEl.innerText = totEnt.toString();
         if (subTitleEl) subTitleEl.innerText = 'Plan de Cuentas Oficial SSN • Apertura Jerárquica Multinivel por Cuentas e Importes';
       }} else if (state.balScope === 'group') {{
         const g = (data.groups_by_id && data.groups_by_id[state.selectedGroupId]) || (data.groups && data.groups[0]);
@@ -8340,6 +8374,7 @@ def generate_html():
       const scopeLabel = state.balScope === 'market' ? 'Mercado Total' : (state.balScope === 'cia' ? state.selectedCompanyCode : state.balScope);
 
       Object.entries(plan).forEach(([code, info]) => {{
+        if (code.startsWith('_')) return;
         const saldo = dict[code] || 0;
         csv += `"${{code}}","${{info.desc.replace(/"/g, '""')}}",${{info.nivel}},${{saldo}},"${{scopeLabel}}","${{state.balStatement}}"\\n`;
       }});
@@ -8440,25 +8475,34 @@ def generate_html():
       let entityName = '';
 
       if (state.sankeyScope === 'market') {{
+        const totEnt = data.total_entidades || {total_entidades};
         const bm = data.market_benchmarks || {{}};
         const cias = data.companies || [];
-        const gp_mkt = cias.reduce((acc, c) => acc + (c.gtos_produccion || 0), 0);
-        const ge_mkt = cias.reduce((acc, c) => acc + (c.gtos_explotacion || 0), 0);
-        const sin_mkt = cias.reduce((acc, c) => acc + ((c.siniestros || 0) + (c.rescates || 0)), 0);
-        
-        const cesion_mkt = cias.reduce((acc, c) => acc + ((c.primas_cedidas && c.primas_cedidas > 0) ? c.primas_cedidas : 0), 0);
-        const vr_mkt = cias.reduce((acc, c) => acc + (c.var_reservas || 0), 0);
+        const sumField = (fn) => cias.reduce((acc, c) => acc + (fn(c) || 0), 0);
+        const gp_mkt = bm.gtos_produccion !== undefined ? bm.gtos_produccion : sumField(c => c.gtos_produccion);
+        const ge_mkt = bm.gtos_explotacion !== undefined ? bm.gtos_explotacion : sumField(c => c.gtos_explotacion);
+        const sin_mkt = (bm.siniestros !== undefined && bm.rescates !== undefined) ? (bm.siniestros + bm.rescates) : sumField(c => (c.siniestros || 0) + (c.rescates || 0));
+        const reaseg_mkt = bm.reaseguro_activo_neto !== undefined ? bm.reaseguro_activo_neto : sumField(c => c.reaseguro_activo_neto);
+        const cesion_mkt = bm.primas_cedidas !== undefined ? bm.primas_cedidas : sumField(c => c.primas_cedidas);
+        const vr_mkt = bm.var_reservas !== undefined ? bm.var_reservas : sumField(c => c.var_reservas);
+        const otros_tec_mkt = bm.otros_tec_neto !== undefined ? bm.otros_tec_neto : sumField(c => c.otros_tec_neto);
+        const op_ext_mkt = bm.op_extraordinarias !== undefined ? bm.op_extraordinarias : sumField(c => c.op_extraordinarias);
+        const ig_mkt = bm.impuesto_ganancias !== undefined ? bm.impuesto_ganancias : sumField(c => c.impuesto_ganancias);
+
         metrics = {{
           pe: bm.primas_emitidas || 0,
-          pd: bm.primas_devengadas || 0,
-          var_res: vr_mkt,
+          reaseg: reaseg_mkt,
           cesion: cesion_mkt,
+          var_res: vr_mkt,
+          pd: bm.primas_devengadas || 0,
           sin: sin_mkt,
           gp: gp_mkt,
           ge: ge_mkt,
+          otros_tec: otros_tec_mkt,
           rt: bm.resultado_tecnico || 0,
           rf: bm.resultado_financiero || 0,
-          ig: 0,
+          op_ext: op_ext_mkt,
+          ig: ig_mkt,
           rn: bm.resultado_neto || 0,
           loss_ratio: bm.loss_ratio || 0,
           comm_ratio: bm.comm_ratio || 0,
@@ -8470,33 +8514,39 @@ def generate_html():
         if (titleEl) titleEl.innerText = entityName;
         if (badgeEl) {{
           badgeEl.className = 'text-xs px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
-          badgeEl.innerText = '185 Aseguradoras';
+          badgeEl.innerText = `${{totEnt}} Aseguradoras`;
         }}
         if (subTitleEl) subTitleEl.innerText = 'Trazabilidad Consolidada del Sistema Asegurador Argentino • 100% Entidades SSN';
-        if (countEl) countEl.innerText = '185';
+        if (countEl) countEl.innerText = totEnt.toString();
 
       }} else if (state.sankeyScope === 'group') {{
         const g = (data.groups_by_id && data.groups_by_id[state.selectedGroupId]) || (data.groups && data.groups[0]);
         if (!g) return;
         const members = g.members || [];
-        const gp_g = members.reduce((acc, m) => acc + ((data.companies_by_code[m.cod_cia] && data.companies_by_code[m.cod_cia].gtos_produccion) || 0), 0);
-        const ge_g = members.reduce((acc, m) => acc + ((data.companies_by_code[m.cod_cia] && data.companies_by_code[m.cod_cia].gtos_explotacion) || 0), 0);
-        
-        const cesion_g = members.reduce((acc, m) => {{
-          const cia = data.companies_by_code[m.cod_cia];
-          return acc + ((cia && cia.primas_cedidas && cia.primas_cedidas > 0) ? cia.primas_cedidas : 0);
-        }}, 0);
+        const sumMember = (key) => members.reduce((acc, m) => acc + ((data.companies_by_code[m.cod_cia] && data.companies_by_code[m.cod_cia][key]) || 0), 0);
+        const gp_g = g.gtos_produccion !== undefined ? g.gtos_produccion : sumMember('gtos_produccion');
+        const ge_g = g.gtos_explotacion !== undefined ? g.gtos_explotacion : sumMember('gtos_explotacion');
+        const sin_g = (g.siniestros || 0) + (g.rescates || 0);
+        const reaseg_g = g.reaseguro_activo_neto !== undefined ? g.reaseguro_activo_neto : sumMember('reaseguro_activo_neto');
+        const cesion_g = g.primas_cedidas !== undefined ? g.primas_cedidas : sumMember('primas_cedidas');
+        const otros_tec_g = g.otros_tec_neto !== undefined ? g.otros_tec_neto : sumMember('otros_tec_neto');
+        const op_ext_g = g.op_extraordinarias !== undefined ? g.op_extraordinarias : sumMember('op_extraordinarias');
+        const ig_g = g.impuesto_ganancias !== undefined ? g.impuesto_ganancias : sumMember('impuesto_ganancias');
+
         metrics = {{
           pe: g.primas_emitidas || 0,
-          pd: g.primas_devengadas || 0,
-          var_res: g.var_reservas || 0,
+          reaseg: reaseg_g,
           cesion: cesion_g,
-          sin: g.siniestros || 0,
+          var_res: g.var_reservas || 0,
+          pd: g.primas_devengadas || 0,
+          sin: sin_g,
           gp: gp_g,
           ge: ge_g,
+          otros_tec: otros_tec_g,
           rt: g.resultado_tecnico || 0,
           rf: g.resultado_financiero || 0,
-          ig: 0,
+          op_ext: op_ext_g,
+          ig: ig_g,
           rn: g.resultado_neto || 0,
           loss_ratio: g.loss_ratio || 0,
           comm_ratio: g.comm_ratio || 0,
@@ -8517,25 +8567,33 @@ def generate_html():
         const seg = state.sankeyScope;
         const cias = data.companies.filter(c => c.tipo_entidad === seg);
         const bm = (data.segment_benchmarks && data.segment_benchmarks[seg]) || {{}};
+        const sumSeg = (fn) => cias.reduce((acc, c) => acc + (fn(c) || 0), 0);
 
-        const gp_seg = cias.reduce((acc, c) => acc + (c.gtos_produccion || 0), 0);
-        const ge_seg = cias.reduce((acc, c) => acc + (c.gtos_explotacion || 0), 0);
-        const sin_seg = cias.reduce((acc, c) => acc + ((c.siniestros || 0) + (c.rescates || 0)), 0);
-        const cesion_seg = cias.reduce((acc, c) => acc + ((c.primas_cedidas && c.primas_cedidas > 0) ? c.primas_cedidas : 0), 0);
-        const vr_seg = cias.reduce((acc, c) => acc + (c.var_reservas || 0), 0);
+        const gp_seg = bm.gtos_produccion !== undefined ? bm.gtos_produccion : sumSeg(c => c.gtos_produccion);
+        const ge_seg = bm.gtos_explotacion !== undefined ? bm.gtos_explotacion : sumSeg(c => c.gtos_explotacion);
+        const sin_seg = (bm.siniestros !== undefined && bm.rescates !== undefined) ? (bm.siniestros + bm.rescates) : sumSeg(c => (c.siniestros || 0) + (c.rescates || 0));
+        const reaseg_seg = bm.reaseguro_activo_neto !== undefined ? bm.reaseguro_activo_neto : sumSeg(c => c.reaseguro_activo_neto);
+        const cesion_seg = bm.primas_cedidas !== undefined ? bm.primas_cedidas : sumSeg(c => c.primas_cedidas);
+        const vr_seg = bm.var_reservas !== undefined ? bm.var_reservas : sumSeg(c => c.var_reservas);
+        const otros_tec_seg = bm.otros_tec_neto !== undefined ? bm.otros_tec_neto : sumSeg(c => c.otros_tec_neto);
+        const op_ext_seg = bm.op_extraordinarias !== undefined ? bm.op_extraordinarias : sumSeg(c => c.op_extraordinarias);
+        const ig_seg = bm.impuesto_ganancias !== undefined ? bm.impuesto_ganancias : sumSeg(c => c.impuesto_ganancias);
 
         metrics = {{
-          pe: bm.primas_emitidas || cias.reduce((acc, c) => acc + (c.primas_emitidas || 0), 0),
-          pd: bm.primas_devengadas || cias.reduce((acc, c) => acc + (c.primas_devengadas || 0), 0),
-          var_res: vr_seg,
+          pe: bm.primas_emitidas !== undefined ? bm.primas_emitidas : sumSeg(c => c.primas_emitidas),
+          reaseg: reaseg_seg,
           cesion: cesion_seg,
+          var_res: vr_seg,
+          pd: bm.primas_devengadas !== undefined ? bm.primas_devengadas : sumSeg(c => c.primas_devengadas),
           sin: sin_seg,
           gp: gp_seg,
           ge: ge_seg,
-          rt: bm.resultado_tecnico !== undefined ? bm.resultado_tecnico : cias.reduce((acc, c) => acc + (c.resultado_tecnico || 0), 0),
-          rf: bm.resultado_financiero !== undefined ? bm.resultado_financiero : cias.reduce((acc, c) => acc + (c.resultado_financiero || 0), 0),
-          ig: cias.reduce((acc, c) => acc + (c.impuesto_ganancias || 0), 0),
-          rn: bm.resultado_neto !== undefined ? bm.resultado_neto : cias.reduce((acc, c) => acc + (c.resultado_neto || 0), 0),
+          otros_tec: otros_tec_seg,
+          rt: bm.resultado_tecnico !== undefined ? bm.resultado_tecnico : sumSeg(c => c.resultado_tecnico),
+          rf: bm.resultado_financiero !== undefined ? bm.resultado_financiero : sumSeg(c => c.resultado_financiero),
+          op_ext: op_ext_seg,
+          ig: ig_seg,
+          rn: bm.resultado_neto !== undefined ? bm.resultado_neto : sumSeg(c => c.resultado_neto),
           loss_ratio: bm.loss_ratio || 0,
           comm_ratio: bm.comm_ratio || 0,
           exp_ratio: bm.exp_ratio || 0,
@@ -8555,21 +8613,24 @@ def generate_html():
         const c = (data.companies_by_code && data.companies_by_code[state.selectedCompanyCode]) || (data.companies && data.companies[0]);
         if (!c) return;
         const sin_c = (c.siniestros || 0) + (c.rescates || 0);
+        const pd_c = c.primas_devengadas || 0;
 
-        const cesion_c = (c.primas_cedidas !== undefined && c.primas_cedidas !== null && c.primas_cedidas > 0) ? c.primas_cedidas : 0;
         metrics = {{
           pe: c.primas_emitidas || 0,
-          pd: c.primas_devengadas || 0,
+          reaseg: c.reaseguro_activo_neto || 0,
+          cesion: c.primas_cedidas || 0,
           var_res: c.var_reservas || 0,
-          cesion: cesion_c,
+          pd: pd_c,
           sin: sin_c,
           gp: c.gtos_produccion || 0,
           ge: c.gtos_explotacion || 0,
+          otros_tec: c.otros_tec_neto || 0,
           rt: c.resultado_tecnico || 0,
           rf: c.resultado_financiero || 0,
+          op_ext: c.op_extraordinarias || 0,
           ig: c.impuesto_ganancias || 0,
           rn: c.resultado_neto || 0,
-          loss_ratio: c.loss_ratio || (metrics.pd > 0 ? (sin_c / metrics.pd * 100) : 0),
+          loss_ratio: c.loss_ratio || (pd_c > 0 ? (sin_c / pd_c * 100) : 0),
           comm_ratio: c.comm_ratio || 0,
           exp_ratio: c.exp_ratio || 0,
           combined_ratio: c.combined_ratio || 0,
@@ -8586,12 +8647,14 @@ def generate_html():
       }}
 
       // 1. Update Executive KPI Cards
-      const retencionPct = (metrics.pe > 0) ? ((metrics.pd / metrics.pe) * 100) : 100;
-      const lossPct = (metrics.pd > 0) ? ((metrics.sin / metrics.pd) * 100) : metrics.loss_ratio;
+      const baseDenom = (metrics.pd > 0) ? metrics.pd : ((metrics.pe > 0) ? metrics.pe : 0);
+      const retencionPct = (metrics.pe > 0) ? Math.max(0, Math.min(100, ((metrics.pe - metrics.cesion) / metrics.pe) * 100)) : 100;
+      const lossPct = (baseDenom > 0) ? ((metrics.sin / baseDenom) * 100) : metrics.loss_ratio;
       const gastosTot = metrics.gp + metrics.ge;
-      const combinedPct = (metrics.pd > 0) ? (((metrics.sin + gastosTot) / metrics.pd) * 100) : metrics.combined_ratio;
-      const margTecPct = (metrics.pd > 0) ? ((metrics.rt / metrics.pd) * 100) : 0;
-      const margNetoPct = (metrics.pd > 0) ? ((metrics.rn / metrics.pd) * 100) : 0;
+      const gastosPct = (baseDenom > 0) ? ((gastosTot / baseDenom) * 100) : ((metrics.comm_ratio || 0) + (metrics.exp_ratio || 0));
+      const combinedPct = (baseDenom > 0) ? (((metrics.sin + gastosTot) / baseDenom) * 100) : metrics.combined_ratio;
+      const margTecPct = (baseDenom > 0) ? ((metrics.rt / baseDenom) * 100) : 0;
+      const margNetoPct = (baseDenom > 0) ? ((metrics.rn / baseDenom) * 100) : 0;
 
       const kpiPd = document.getElementById('sankeyKpiPrimasDev');
       const kpiRet = document.getElementById('sankeyKpiRetencionPct');
@@ -8652,7 +8715,7 @@ def generate_html():
           badgeTec.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
           badgeTec.innerText = 'Superávit de Suscripción';
         }}
-        if (textTec) textTec.innerHTML = `Las primas devengadas netas (<b>${{formatARS(metrics.pd)}}</b>) absorbieron con holgura la siniestralidad devengada (${{lossPct.toFixed(1)}}%) y los costos operativos (${{(gastosTot / metrics.pd * 100).toFixed(1)}}%), arrojando un resultado técnico superavitario de <b>${{formatARS(metrics.rt)}}</b> (Margen ${{margTecPct.toFixed(1)}}%).`;
+        if (textTec) textTec.innerHTML = `Las primas devengadas netas (<b>${{formatARS(metrics.pd)}}</b>) absorbieron con holgura la siniestralidad devengada (${{lossPct.toFixed(1)}}%) y los costos operativos (${{gastosPct.toFixed(1)}}%), arrojando un resultado técnico superavitario de <b>${{formatARS(metrics.rt)}}</b> (Margen ${{margTecPct.toFixed(1)}}%).`;
       }} else {{
         if (badgeTec) {{
           badgeTec.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
@@ -8728,7 +8791,7 @@ def generate_html():
       const linkTooltips = [];
 
       function addFlow(src, dst, val, color, label) {{
-        if (val === null || val === undefined || val <= 0) return;
+        if (val === null || val === undefined || val <= 0.01) return;
         const s = getNode(src, '#38BDF8');
         const t = getNode(dst, '#38BDF8');
         sources.push(s);
@@ -8738,118 +8801,216 @@ def generate_html():
         linkTooltips.push(label || formatARS(val));
       }}
 
-      const pe = Math.max(0, m.pe || 0);
-      const pd = Math.max(0, m.pd || 0);
-      const cesion = Math.max(0, m.cesion || 0);
+      const pe = m.pe || 0;
+      const reaseg = m.reaseg || 0;
+      const cesion = m.cesion || 0;
       const varRes = m.var_res || 0;
-      const sin = Math.max(0, m.sin || 0);
-      const gp = Math.max(0, m.gp || 0);
-      const ge = Math.max(0, m.ge || 0);
+      const pd = m.pd || 0;
+      const sin = m.sin || 0;
+      const gp = m.gp || 0;
+      const ge = m.ge || 0;
+      const otrosTec = m.otros_tec || 0;
       const rt = m.rt || 0;
       const rf = m.rf || 0;
-      const ig = Math.max(0, m.ig || 0);
+      const opExt = m.op_ext || 0;
+      const ig = m.ig || 0;
       const rn = m.rn || 0;
-      const totCostos = sin + gp + ge;
 
+      const s1InList = [
+        ['Primas Emitidas', Math.max(0, pe), 'rgba(14, 165, 233, 0.55)'],
+        ['Reaseguros Activos Netos', Math.max(0, reaseg), 'rgba(56, 189, 248, 0.45)'],
+        ['Recupero de Cesión', Math.max(0, -cesion), 'rgba(16, 185, 129, 0.45)'],
+        ['Liberación de Reservas', Math.max(0, -varRes), 'rgba(16, 185, 129, 0.50)']
+      ];
+      const s1OutList = [
+        ['Cesión a Reaseguros', Math.max(0, cesion), 'rgba(244, 63, 94, 0.45)'],
+        ['Constitución de Reservas', Math.max(0, varRes), 'rgba(245, 158, 11, 0.45)'],
+        ['Anulación Neta Emisión', Math.max(0, -pe), 'rgba(244, 63, 94, 0.45)'],
+        ['Anulación Reaseguro Activo', Math.max(0, -reaseg), 'rgba(244, 63, 94, 0.40)']
+      ];
+      const s1OutSum = s1OutList.reduce((a, x) => a + x[1], 0);
+
+      const uExtraList = [
+        ['Recupero de Siniestros', Math.max(0, -sin), 'rgba(16, 185, 129, 0.45)'],
+        ['Recupero Gtos. Producción', Math.max(0, -gp), 'rgba(16, 185, 129, 0.45)'],
+        ['Recupero Gtos. Explotación', Math.max(0, -ge), 'rgba(16, 185, 129, 0.45)'],
+        ['Otros Ingresos Técnicos Netos', Math.max(0, otrosTec), 'rgba(56, 189, 248, 0.45)']
+      ];
+      const uExtraSum = uExtraList.reduce((a, x) => a + x[1], 0);
+
+      const uDrainList = [
+        ['Siniestros y Prestaciones', Math.max(0, sin), 'rgba(239, 68, 68, 0.55)'],
+        ['Gastos de Producción', Math.max(0, gp), 'rgba(249, 115, 22, 0.55)'],
+        ['Gastos de Explotación', Math.max(0, ge), 'rgba(217, 119, 6, 0.55)'],
+        ['Otros Egresos Técnicos Netos', Math.max(0, -otrosTec), 'rgba(168, 85, 247, 0.50)']
+      ];
+      const pdPos = Math.max(0, pd);
+      const pdNeg = Math.max(0, -pd);
+      if (!isDetailed && pdNeg > 0.01) {{
+        uDrainList.push(['Prima Devengada Negativa', pdNeg, 'rgba(244, 63, 94, 0.50)']);
+      }}
+      const totalUDrains = uDrainList.reduce((a, x) => a + x[1], 0);
+
+      const s1Pool = 'Pool de Emisión y Reservas';
+      const useDirectS1Split = (isDetailed && pe >= s1OutSum && pd >= 0);
+
+      let uPoolName = 'Primas Devengadas (Retenidas)';
+      if (!isDetailed && pdPos > 0.01 && uExtraSum > 0.01) {{
+        uPoolName = 'Base Técnica Operativa';
+        addFlow('Primas Devengadas (Retenidas)', uPoolName, pdPos, 'rgba(14, 165, 233, 0.55)', `Primas Devengadas: ${{formatARS(pdPos)}}`);
+      }} else if (!isDetailed && pdPos <= 0.01 && uExtraSum > 0.01) {{
+        uPoolName = 'Ingresos Técnicos Operativos';
+      }}
+
+      // Stage 1 routing (exact balance: s1In + pdNeg == s1Out + pdPos)
       if (isDetailed) {{
-        // Stage 1: Gross Production
-        if (cesion > 0) addFlow('Primas Emitidas', 'Cesión a Reaseguros', cesion, 'rgba(244, 63, 94, 0.45)', `Cesión Reaseguro: ${{formatARS(cesion)}}`);
-        if (varRes > 0) addFlow('Primas Emitidas', 'Constitución de Reservas', varRes, 'rgba(245, 158, 11, 0.45)', `Constitución Reservas: ${{formatARS(varRes)}}`);
-        
-        const resPos = Math.max(0, varRes);
-        const flowToPd = (pe > 0) ? Math.max(0, pe - cesion - resPos) : pd;
-        if (flowToPd > 0) addFlow('Primas Emitidas', 'Primas Devengadas (Retenidas)', flowToPd, 'rgba(14, 165, 233, 0.5)', `Prima Retenida Directa: ${{formatARS(flowToPd)}}`);
-        if (varRes < 0) addFlow('Liberación de Reservas', 'Primas Devengadas (Retenidas)', Math.abs(varRes), 'rgba(16, 185, 129, 0.45)', `Liberación Reservas: ${{formatARS(Math.abs(varRes))}}`);
-
-        const totalInflowToPd = flowToPd + (varRes < 0 ? Math.abs(varRes) : 0);
-        if (pd > totalInflowToPd + 1000) {{
-          const diffPd = pd - totalInflowToPd;
-          addFlow('Otros Ajustes Técnicos', 'Primas Devengadas (Retenidas)', diffPd, 'rgba(56, 189, 248, 0.45)', `Ajustes Técnicos: ${{formatARS(diffPd)}}`);
-        }}
-      }}
-
-      // Stage 2: Technical Costs & Margin
-      if (rt >= 0) {{
-        // Profitable Underwriting
-        addFlow('Primas Devengadas (Retenidas)', 'Siniestros y Prestaciones', sin, 'rgba(239, 68, 68, 0.55)', `Siniestros: ${{formatARS(sin)}}`);
-        addFlow('Primas Devengadas (Retenidas)', 'Gastos de Producción', gp, 'rgba(249, 115, 22, 0.55)', `Comisiones: ${{formatARS(gp)}}`);
-        addFlow('Primas Devengadas (Retenidas)', 'Gastos de Explotación', ge, 'rgba(217, 119, 6, 0.55)', `Administración: ${{formatARS(ge)}}`);
-        if (rt > 0) {{
-          addFlow('Primas Devengadas (Retenidas)', 'Superávit Técnico (Underwriting)', rt, 'rgba(16, 185, 129, 0.6)', `Superávit: ${{formatARS(rt)}}`);
-        }}
-      }} else {{
-        // Underwriting Deficit
-        const pdAvail = Math.min(pd, totCostos);
-        if (totCostos > 0) {{
-          const sinFromPd = pdAvail * (sin / totCostos);
-          const gpFromPd = pdAvail * (gp / totCostos);
-          const geFromPd = pdAvail * (ge / totCostos);
-          addFlow('Primas Devengadas (Retenidas)', 'Siniestros y Prestaciones', sinFromPd, 'rgba(239, 68, 68, 0.55)', `Siniestros (de Primas): ${{formatARS(sinFromPd)}}`);
-          addFlow('Primas Devengadas (Retenidas)', 'Gastos de Producción', gpFromPd, 'rgba(249, 115, 22, 0.55)', `Gastos Prod. (de Primas): ${{formatARS(gpFromPd)}}`);
-          addFlow('Primas Devengadas (Retenidas)', 'Gastos de Explotación', geFromPd, 'rgba(217, 119, 6, 0.55)', `Gastos Expl. (de Primas): ${{formatARS(geFromPd)}}`);
-
-          const def = Math.abs(rt);
-          if (rf > 0) {{
-            const rfToDef = Math.min(rf, def);
-            addFlow('Rendimiento Financiero e Inversiones', 'Absorción Déficit Técnico', rfToDef, 'rgba(234, 88, 12, 0.6)', `Subsidio Inversiones: ${{formatARS(rfToDef)}}`);
-            const remDef = def - rfToDef;
-            if (remDef > 0) {{
-              addFlow('Absorción Patrimonial / Capital', 'Absorción Déficit Técnico', remDef, 'rgba(190, 18, 60, 0.55)', `Déficit no cubierto: ${{formatARS(remDef)}}`);
-            }}
-          }} else {{
-            addFlow('Absorción Patrimonial / Capital', 'Absorción Déficit Técnico', def, 'rgba(190, 18, 60, 0.55)', `Déficit Técnico a Capital: ${{formatARS(def)}}`);
+        if (useDirectS1Split) {{
+          s1OutList.forEach(([nm, val, col]) => {{
+            if (val > 0.01) addFlow('Primas Emitidas', nm, val, col, `${{nm}}: ${{formatARS(val)}}`);
+          }});
+          const directToPd = pe - s1OutSum;
+          if (directToPd > 0.01) {{
+            addFlow('Primas Emitidas', uPoolName, directToPd, 'rgba(14, 165, 233, 0.50)', `Prima Retenida Directa: ${{formatARS(directToPd)}}`);
           }}
-
-          const sinFromDef = def * (sin / totCostos);
-          const gpFromDef = def * (gp / totCostos);
-          const geFromDef = def * (ge / totCostos);
-          addFlow('Absorción Déficit Técnico', 'Siniestros y Prestaciones', sinFromDef, 'rgba(239, 68, 68, 0.45)', `Siniestros (Déficit): ${{formatARS(sinFromDef)}}`);
-          addFlow('Absorción Déficit Técnico', 'Gastos de Producción', gpFromDef, 'rgba(249, 115, 22, 0.45)', `Gastos Prod. (Déficit): ${{formatARS(gpFromDef)}}`);
-          addFlow('Absorción Déficit Técnico', 'Gastos de Explotación', geFromDef, 'rgba(217, 119, 6, 0.45)', `Gastos Expl. (Déficit): ${{formatARS(geFromDef)}}`);
+          s1InList.slice(1).forEach(([nm, val, col]) => {{
+            if (val > 0.01) addFlow(nm, uPoolName, val, col, `${{nm}}: ${{formatARS(val)}}`);
+          }});
+        }} else {{
+          s1InList.forEach(([nm, val, col]) => {{
+            if (val > 0.01) addFlow(nm, s1Pool, val, col, `${{nm}}: ${{formatARS(val)}}`);
+          }});
+          s1OutList.forEach(([nm, val, col]) => {{
+            if (val > 0.01) addFlow(s1Pool, nm, val, col, `${{nm}}: ${{formatARS(val)}}`);
+          }});
+          if (pdPos > 0.01) {{
+            addFlow(s1Pool, uPoolName, pdPos, 'rgba(14, 165, 233, 0.55)', `Primas Devengadas: ${{formatARS(pdPos)}}`);
+          }}
         }}
       }}
 
-      // Stage 3: Financial Results & Remainder
-      if (rf > 0) {{
-        const remRf = (rt < 0) ? Math.max(0, rf - Math.abs(rt)) : rf;
-        if (remRf > 0) {{
-          addFlow('Rendimiento Financiero e Inversiones', 'Resultado Operativo Global', remRf, 'rgba(16, 185, 129, 0.55)', `Remanente Financiero: ${{formatARS(remRf)}}`);
+      // Feed Stage-2 extra positive sources
+      const uAvail = pdPos + uExtraSum;
+      uExtraList.forEach(([nm, val, col]) => {{
+        if (val > 0.01) addFlow(nm, uPoolName, val, col, `${{nm}}: ${{formatARS(val)}}`);
+      }});
+
+      // Stage 3/4 items: (rt+) + (rf+) + (opExt+) + (ig-) + (rn-) === (rt-) + (rf-) + (opExt-) + (ig+) + (rn+)
+      const s3InList = [
+        ['Rendimiento Financiero e Inversiones', Math.max(0, rf), 'rgba(16, 185, 129, 0.55)'],
+        ['Operaciones Extraordinarias (+)', Math.max(0, opExt), 'rgba(56, 189, 248, 0.50)'],
+        ['Crédito Impuesto Ganancias', Math.max(0, -ig), 'rgba(16, 185, 129, 0.45)'],
+        ['PÉRDIDA NETA (Absorción Patrimonial)', Math.max(0, -rn), 'rgba(225, 29, 72, 0.65)']
+      ];
+      const s3OutList = [
+        ['Pérdida Financiera / RECPAM', Math.max(0, -rf), 'rgba(244, 63, 94, 0.55)'],
+        ['Operaciones Extraordinarias (-)', Math.max(0, -opExt), 'rgba(168, 85, 247, 0.50)'],
+        ['Impuesto a las Ganancias', Math.max(0, ig), 'rgba(244, 63, 94, 0.50)'],
+        ['RESULTADO NETO (Ganancia)', Math.max(0, rn), 'rgba(16, 185, 129, 0.80)']
+      ];
+      const s3OutSum = s3OutList.reduce((a, x) => a + x[1], 0);
+
+      if (rt >= 0) {{
+        // Route all underwriting drains from uPoolName
+        uDrainList.forEach(([nm, val, col]) => {{
+          if (val > 0.01) addFlow(uPoolName, nm, val, col, `${{nm}}: ${{formatARS(val)}}`);
+        }});
+        if (isDetailed && pdNeg > 0.01) {{
+          addFlow(uPoolName, s1Pool, pdNeg, 'rgba(244, 63, 94, 0.50)', `Déficit de Devengamiento: ${{formatARS(pdNeg)}}`);
         }}
-      }} else if (rf < 0) {{
-        addFlow('Pérdida Financiera / RECPAM', 'Resultado Operativo Global', Math.abs(rf), 'rgba(244, 63, 94, 0.55)', `Quebranto Financiero: ${{formatARS(Math.abs(rf))}}`);
-      }}
-
-      if (rt > 0) {{
-        addFlow('Superávit Técnico (Underwriting)', 'Resultado Operativo Global', rt, 'rgba(16, 185, 129, 0.55)', `Aporte Técnico: ${{formatARS(rt)}}`);
-      }}
-
-      // Stage 4: Bottom Line
-      if (rn >= 0) {{
-        if (ig > 0) addFlow('Resultado Operativo Global', 'Impuesto a las Ganancias', ig, 'rgba(244, 63, 94, 0.5)', `Impuestos: ${{formatARS(ig)}}`);
-        addFlow('Resultado Operativo Global', 'RESULTADO NETO (Ganancia)', rn, 'rgba(16, 185, 129, 0.8)', `Ganancia Neta: ${{formatARS(rn)}}`);
+        if (rt > 0.01) {{
+          addFlow(uPoolName, 'Superávit Técnico (Underwriting)', rt, 'rgba(16, 185, 129, 0.60)', `Superávit Técnico: ${{formatARS(rt)}}`);
+          addFlow('Superávit Técnico (Underwriting)', 'Resultado Operativo Global', rt, 'rgba(16, 185, 129, 0.55)', `Aporte Técnico: ${{formatARS(rt)}}`);
+        }}
+        s3InList.forEach(([nm, val, col]) => {{
+          if (val > 0.01) addFlow(nm, 'Resultado Operativo Global', val, col, `${{nm}}: ${{formatARS(val)}}`);
+        }});
+        s3OutList.forEach(([nm, val, col]) => {{
+          if (val > 0.01) addFlow('Resultado Operativo Global', nm, val, col, `${{nm}}: ${{formatARS(val)}}`);
+        }});
       }} else {{
-        addFlow('Resultado Operativo Global', 'PÉRDIDA NETA DEL EJERCICIO', Math.abs(rn), 'rgba(225, 29, 72, 0.8)', `Pérdida Neta: ${{formatARS(Math.abs(rn))}}`);
+        // rt < 0: pure left-to-right DAG through Pool Financiero y Patrimonial
+        const def = Math.abs(rt);
+        const finPool = 'Pool Financiero y Patrimonial';
+        s3InList.forEach(([nm, val, col]) => {{
+          if (val > 0.01) addFlow(nm, finPool, val, col, `${{nm}}: ${{formatARS(val)}}`);
+        }});
+        addFlow(finPool, 'Absorción Déficit Técnico', def, 'rgba(234, 88, 12, 0.60)', `Cobertura Déficit Técnico: ${{formatARS(def)}}`);
+        if (s3OutSum > 0.01) {{
+          addFlow(finPool, 'Resultado Operativo Global', s3OutSum, 'rgba(59, 130, 246, 0.50)', `Saldo a Resultados Finales: ${{formatARS(s3OutSum)}}`);
+          s3OutList.forEach(([nm, val, col]) => {{
+            if (val > 0.01) addFlow('Resultado Operativo Global', nm, val, col, `${{nm}}: ${{formatARS(val)}}`);
+          }});
+        }}
+
+        // Distribute uAvail and def across underwriting drains (exact 0-peso balance)
+        if (uAvail <= totalUDrains) {{
+          if (uAvail > 0.01 && totalUDrains > 0.01) {{
+            uDrainList.forEach(([nm, val, col]) => {{
+              if (val > 0.01) {{
+                const fromU = val * (uAvail / totalUDrains);
+                const fromDef = val - fromU;
+                if (fromU > 0.01) addFlow(uPoolName, nm, fromU, col, `${{nm}} (Primas): ${{formatARS(fromU)}}`);
+                if (fromDef > 0.01) addFlow('Absorción Déficit Técnico', nm, fromDef, col, `${{nm}} (Déficit): ${{formatARS(fromDef)}}`);
+              }}
+            }});
+          }} else {{
+            uDrainList.forEach(([nm, val, col]) => {{
+              if (val > 0.01) addFlow('Absorción Déficit Técnico', nm, val, col, `${{nm}} (Déficit): ${{formatARS(val)}}`);
+            }});
+          }}
+          if (isDetailed && pdNeg > 0.01) {{
+            addFlow('Absorción Déficit Técnico', s1Pool, pdNeg, 'rgba(244, 63, 94, 0.50)', `Déficit de Devengamiento: ${{formatARS(pdNeg)}}`);
+          }}
+        }} else {{
+          // Rare edge: uAvail > totalUDrains while pdNeg > 0
+          uDrainList.forEach(([nm, val, col]) => {{
+            if (val > 0.01) addFlow(uPoolName, nm, val, col, `${{nm}} (Primas): ${{formatARS(val)}}`);
+          }});
+          const remU = uAvail - totalUDrains;
+          if (isDetailed && remU > 0.01) {{
+            addFlow(uPoolName, s1Pool, remU, 'rgba(14, 165, 233, 0.45)', `Remanente Técnico: ${{formatARS(remU)}}`);
+          }}
+          if (isDetailed && def > 0.01) {{
+            addFlow('Absorción Déficit Técnico', s1Pool, def, 'rgba(234, 88, 12, 0.55)', `Déficit Técnico: ${{formatARS(def)}}`);
+          }}
+        }}
       }}
 
       // Explicit Node Palette
       const palette = {{
         'Primas Emitidas': '#0284C7',
+        'Reaseguros Activos Netos': '#38BDF8',
+        'Recupero de Cesión': '#10B981',
+        'Pool de Emisión y Reservas': '#0EA5E9',
         'Cesión a Reaseguros': '#F43F5E',
+        'Anulación Neta Emisión': '#F43F5E',
+        'Anulación Reaseguro Activo': '#FB7185',
         'Constitución de Reservas': '#F59E0B',
         'Liberación de Reservas': '#10B981',
         'Primas Devengadas (Retenidas)': '#0EA5E9',
+        'Base Técnica Operativa': '#0284C7',
+        'Ingresos Técnicos Operativos': '#38BDF8',
+        'Prima Devengada Negativa': '#F43F5E',
+        'Recupero de Siniestros': '#10B981',
+        'Recupero Gtos. Producción': '#34D399',
+        'Recupero Gtos. Explotación': '#34D399',
+        'Otros Ingresos Técnicos Netos': '#38BDF8',
+        'Otros Egresos Técnicos Netos': '#A855F7',
         'Siniestros y Prestaciones': '#EF4444',
         'Gastos de Producción': '#F97316',
         'Gastos de Explotación': '#D97706',
         'Superávit Técnico (Underwriting)': '#10B981',
         'Absorción Déficit Técnico': '#EA580C',
+        'Pool Financiero y Patrimonial': '#6366F1',
         'Rendimiento Financiero e Inversiones': '#059669',
         'Pérdida Financiera / RECPAM': '#E11D48',
-        'Absorción Patrimonial / Capital': '#BE123C',
+        'Operaciones Extraordinarias (+)': '#06B6D4',
+        'Operaciones Extraordinarias (-)': '#9333EA',
+        'Crédito Impuesto Ganancias': '#10B981',
         'Resultado Operativo Global': '#3B82F6',
         'Impuesto a las Ganancias': '#BE185D',
         'RESULTADO NETO (Ganancia)': '#059669',
-        'PÉRDIDA NETA DEL EJERCICIO': '#BE123C'
+        'PÉRDIDA NETA (Absorción Patrimonial)': '#BE123C'
       }};
 
       const finalColors = nodes.map(n => palette[n] || '#64748B');
