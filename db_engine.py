@@ -56,7 +56,7 @@ def get_latest_mdb_path(period=None):
     if period:
         return os.path.join(BASE_DIR, f"{str(period).strip()}.mdb")
     periods = list_local_periods()
-    target = periods[-1] if periods else "2026-2"
+    target = periods[-1] if periods else "2026-3"
     return os.path.join(BASE_DIR, f"{target}.mdb")
 
 
@@ -215,13 +215,18 @@ def get_balance_data(force_reload=False, period=None):
 
     if not force_reload and os.path.exists(CACHE_PARQUET):
         try:
-            df_cached = read_parquet_safe(CACHE_PARQUET)
-            if (
-                not df_cached.empty
-                and "periodo" in df_cached.columns
-                and str(df_cached["periodo"].iloc[0]).strip() == expected_period
-            ):
-                return df_cached
+            cache_fresh = (
+                not os.path.exists(mdb_path)
+                or os.path.getmtime(CACHE_PARQUET) >= os.path.getmtime(mdb_path)
+            )
+            if cache_fresh:
+                df_cached = read_parquet_safe(CACHE_PARQUET)
+                if (
+                    not df_cached.empty
+                    and "periodo" in df_cached.columns
+                    and str(df_cached["periodo"].iloc[0]).strip() == expected_period
+                ):
+                    return df_cached
         except Exception:
             pass
 
