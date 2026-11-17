@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from db_engine import BASE_DIR, get_balance_data, load_data_from_mdb
 from insurance_kpis import (
+    _extract_ssn_technical_components,
     compute_all_companies_summary,
     get_company_waterfall_data,
     get_company_subramos,
@@ -81,22 +82,28 @@ def build_complete_dataset():
             return 'personas'
         return 'otros'
 
-    sub_clean = df_raw[(df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna())].copy()
+    sub_clean = df_raw[
+        (df_raw['desc_subramo'] != '') & (df_raw['desc_subramo'].notna()) & (df_raw['cod_subramo'] != '3.000.99')
+    ].copy()
     sub_clean['macro_prod'] = sub_clean['cod_subramo'].apply(get_macro_product)
 
     macro_productos = {}
     tot_prod_p = 0.0
+    tot_prod_d = 0.0
     for k in ['patrimoniales', 'art', 'personas', 'retiro']:
         k_df = sub_clean[sub_clean['macro_prod'] == k]
-        p_pos = float(k_df[k_df['cod_cuenta'].str.startswith(pos_accounts)]['importe'].sum())
-        p_neg = float(k_df[k_df['cod_cuenta'].str.startswith(neg_accounts)]['importe'].sum())
-        p_val = p_pos - p_neg
-        s_val = float(k_df[k_df['cod_cuenta'].str.startswith(sin_accounts)]['importe'].sum())
+        comp_k = _extract_ssn_technical_components(k_df, use_exact=False)
+        p_val = comp_k['primas_emit']
+        d_val = comp_k['primas_dev']
+        s_val = comp_k['siniestros_dev'] + comp_k['rescates']
+        base_p = d_val if d_val > 0 else p_val
         tot_prod_p += p_val
-        sin_pct = (s_val / p_val * 100) if p_val > 0 else 0.0
+        tot_prod_d += d_val
+        sin_pct = (s_val / base_p * 100.0) if base_p > 0 else 0.0
 
         macro_productos[k] = {
             "primas": round(p_val, 2),
+            "devengadas": round(d_val, 2),
             "siniestros": round(s_val, 2),
             "siniestralidad": round(sin_pct, 1),
             "participacion": 0.0
@@ -126,11 +133,13 @@ def build_complete_dataset():
     }
 
     tot_prod_s = sum(macro_productos[k]['siniestros'] for k in ['patrimoniales', 'art', 'personas', 'retiro'])
+    tot_base_p = tot_prod_d if tot_prod_d > 0 else tot_prod_p
 
     macro_productos['total'] = {
         "primas": round(tot_prod_p, 2),
+        "devengadas": round(tot_prod_d, 2),
         "siniestros": round(tot_prod_s, 2),
-        "siniestralidad": round((tot_prod_s / tot_prod_p * 100), 1) if tot_prod_p > 0 else 0.0
+        "siniestralidad": round((tot_prod_s / tot_base_p * 100), 1) if tot_base_p > 0 else 0.0
     }
 
     # Convert summary to list of dicts with deep dive details
@@ -211,6 +220,18 @@ def build_complete_dataset():
             'patrimonio_neto': tot_pn,
             'activo': tot_activo,
             'inversiones': tot_inv,
+            'siniestros': float(df_sub['siniestros'].sum()),
+            'rescates': float(df_sub['rescates'].sum()),
+            'gtos_produccion': tot_prod,
+            'gtos_explotacion': tot_expl,
+            'reaseguro_activo_neto': float(df_sub['reaseguro_activo_neto'].sum()),
+            'primas_cedidas': float(df_sub['primas_cedidas'].sum()),
+            'var_reservas': float(df_sub['var_reservas'].sum()),
+            'otros_tec_neto': float(df_sub['otros_tec_neto'].sum()),
+            'op_extraordinarias': float(df_sub['op_extraordinarias'].sum()),
+            'impuesto_ganancias': float(df_sub['impuesto_ganancias'].sum()),
+            'rescates_ratio': round((float(df_sub['rescates'].sum()) / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'margen_tecnico': round((tot_res_tec / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
             'resultado_tecnico': tot_res_tec,
             'resultado_financiero': tot_res_fin,
             'resultado_neto': tot_res_neto
@@ -288,13 +309,18 @@ def build_complete_dataset():
                 rolled[code] = round(tot, 2)
 
         if is_subramo:
-            # Emisión Directa Neta Total: (Directas + Derechos + Recargos) - (Anulaciones Directas + Anulaciones Recargos)
-            p_dir = float(raw_dict.get('5.01.01.01.01.01.01.00', 0.0)) + float(raw_dict.get('5.01.01.01.01.01.99.00', 0.0))
-            der = float(raw_dict.get('5.01.01.01.01.02.01.00', 0.0)) + float(raw_dict.get('5.01.01.01.01.02.99.00', 0.0))
-            rec = float(raw_dict.get('5.01.01.01.01.03.02.00', 0.0)) + float(raw_dict.get('5.01.01.01.01.03.99.00', 0.0))
-            a_dir = float(raw_dict.get('4.01.04.04.04.01.01.00', 0.0)) + float(raw_dict.get('4.01.04.04.04.01.99.00', 0.0))
-            a_rec = float(raw_dict.get('4.01.04.04.04.02.01.00', 0.0)) + float(raw_dict.get('4.01.04.04.04.02.99.00', 0.0))
-            rolled['_net_emit'] = round((p_dir + der + rec) - (a_dir + a_rec), 2)
+            comp_sub = _extract_ssn_technical_components(raw_dict, use_exact=False)
+            rolled['_net_emit'] = round(comp_sub['primas_emit'], 2)
+            rolled['_net_ced'] = round(comp_sub['cesion_neta'], 2)
+            rolled['_net_anul'] = round(comp_sub['anulaciones'], 2)
+            rolled['_net_dev'] = round(comp_sub['primas_dev'], 2)
+            rolled['_net_sin'] = round(comp_sub['siniestros_dev'] + comp_sub['rescates'], 2)
+            rolled['_net_gp'] = round(comp_sub['gtos_prod'], 2)
+            rolled['_net_ge'] = round(comp_sub['gtos_expl'], 2)
+            rolled['_res_tec'] = round(
+                float(rolled.get('5.01.00.00.00.00.00.00', 0.0)) - float(rolled.get('4.01.00.00.00.00.00.00', 0.0)),
+                2
+            )
 
         return rolled
 
@@ -374,8 +400,13 @@ def build_complete_dataset():
             "id": "san_cristobal",
             "name": "Grupo San Cristóbal",
             "short_name": "San Cristóbal",
-            "codes": ["0192", "0620", "0434"],
-            "description": "San Cristóbal Seguros, Asociart ART, San Cristóbal Retiro"
+            "codes": ["0192", "0620", "0442"],
+            "description": "San Cristóbal Seguros, Asociart ART, San Cristóbal Retiro",
+            "member_labels": {
+                "0192": "San Cristóbal Seguros",
+                "0620": "Asociart ART",
+                "0442": "San Cristóbal Retiro"
+            }
         },
         {
             "id": "la_segunda",
@@ -403,7 +434,12 @@ def build_complete_dataset():
             "name": "Grupo Experta / Werthein",
             "short_name": "Experta / Werthein",
             "codes": ["0880", "0616", "0419"],
-            "description": "Experta Seguros, Experta ART, La Estrella Retiro"
+            "description": "Experta Seguros, Experta ART, La Estrella Retiro",
+            "member_labels": {
+                "0880": "Experta Seguros",
+                "0616": "Experta ART",
+                "0419": "La Estrella Retiro"
+            }
         },
         {
             "id": "mercantil_andina",
@@ -424,7 +460,13 @@ def build_complete_dataset():
             "name": "Grupo Galicia Seguros",
             "short_name": "Galicia Seguros",
             "codes": ["0025", "0589", "0443", "0426"],
-            "description": "Galicia Seguros, Sudamericana Seguros Galicia, Galicia Retiro"
+            "description": "Seguros Galicia, Galicia Seguros, Galicia Retiro",
+            "member_labels": {
+                "0025": "Seguros Galicia",
+                "0589": "Galicia Seguros",
+                "0443": "Galicia Vida (ex-BNP)",
+                "0426": "Galicia Retiro"
+            }
         },
         {
             "id": "swiss_medical",
@@ -444,15 +486,23 @@ def build_complete_dataset():
             "id": "nacion",
             "name": "Grupo Nación",
             "short_name": "Nación",
-            "codes": ["0244", "0424"],
-            "description": "Nación Seguros, Nación Retiro"
+            "codes": ["0515", "0534"],
+            "description": "Nación Seguros, Nación Retiro",
+            "member_labels": {
+                "0515": "Nación Seguros",
+                "0534": "Nación Retiro"
+            }
         },
         {
             "id": "mapfre",
             "name": "Grupo Mapfre",
             "short_name": "Mapfre",
             "codes": ["0213", "0699"],
-            "description": "Mapfre Seguros, Mapfre Vida"
+            "description": "Mapfre Seguros, Mapfre Vida",
+            "member_labels": {
+                "0213": "Mapfre Seguros",
+                "0699": "Mapfre Vida"
+            }
         },
         {
             "id": "barbuss_hdi",
@@ -465,8 +515,12 @@ def build_complete_dataset():
             "id": "galeno",
             "name": "Grupo Galeno",
             "short_name": "Galeno",
-            "codes": ["0878", "0606"],
-            "description": "Galeno Seguros, Galeno ART"
+            "codes": ["0878", "0619"],
+            "description": "Galeno Seguros, Galeno ART",
+            "member_labels": {
+                "0878": "Galeno Seguros",
+                "0619": "Galeno ART"
+            }
         }
     ]
 
@@ -482,15 +536,21 @@ def build_complete_dataset():
         gid = gdef['id']
         gname = gdef['name']
         codes = gdef['codes']
-        
+
         # Collect member companies that exist in dataset
         members = []
         tot_emit = 0.0
+        tot_reaseg = 0.0
+        tot_cedidas = 0.0
         tot_dev = 0.0
         tot_var = 0.0
         tot_sin = 0.0
+        tot_rescates = 0.0
         tot_gtos_prod = 0.0
         tot_gtos_exp = 0.0
+        tot_otros_tec = 0.0
+        tot_op_ext = 0.0
+        tot_imp_gan = 0.0
         tot_res_tec = 0.0
         tot_res_fin = 0.0
         tot_res_neto = 0.0
@@ -498,21 +558,34 @@ def build_complete_dataset():
         tot_inv = 0.0
         tot_disp = 0.0
         tot_cred = 0.0
+        tot_premios = 0.0
         tot_inm = 0.0
+        tot_bu = 0.0
+        tot_otros_act = 0.0
+        tot_pasivo = 0.0
         tot_deudas = 0.0
         tot_comp_tec = 0.0
+        tot_prev = 0.0
         tot_pn = 0.0
 
+        active_codes = []
         for cd in codes:
             if cd in companies_dict:
+                active_codes.append(cd)
                 c = companies_dict[cd]
                 members.append(c)
                 tot_emit += float(c.get('primas_emitidas', 0.0))
+                tot_reaseg += float(c.get('reaseguro_activo_neto', 0.0))
+                tot_cedidas += float(c.get('primas_cedidas', 0.0))
                 tot_dev += float(c.get('primas_devengadas', 0.0))
                 tot_var += float(c.get('var_reservas', 0.0))
                 tot_sin += float(c.get('siniestros', 0.0))
-                tot_gtos_prod += float(c.get('gastos_produccion', 0.0))
-                tot_gtos_exp += float(c.get('gastos_explotacion', 0.0))
+                tot_rescates += float(c.get('rescates', 0.0))
+                tot_gtos_prod += float(c.get('gtos_produccion', 0.0))
+                tot_gtos_exp += float(c.get('gtos_explotacion', 0.0))
+                tot_otros_tec += float(c.get('otros_tec_neto', 0.0))
+                tot_op_ext += float(c.get('op_extraordinarias', 0.0))
+                tot_imp_gan += float(c.get('impuesto_ganancias', 0.0))
                 tot_res_tec += float(c.get('resultado_tecnico', 0.0))
                 tot_res_fin += float(c.get('resultado_financiero', 0.0))
                 tot_res_neto += float(c.get('resultado_neto', 0.0))
@@ -520,28 +593,48 @@ def build_complete_dataset():
                 tot_inv += float(c.get('inversiones', 0.0))
                 tot_disp += float(c.get('disponibilidades', 0.0))
                 tot_cred += float(c.get('creditos', 0.0))
+                tot_premios += float(c.get('premios_a_cobrar', 0.0))
                 tot_inm += float(c.get('inmuebles', 0.0))
+                tot_bu += float(c.get('bienes_uso', 0.0))
+                tot_otros_act += float(c.get('otros_activos', 0.0))
+                tot_pasivo += float(c.get('pasivo', 0.0))
                 tot_deudas += float(c.get('deudas', 0.0))
                 tot_comp_tec += float(c.get('compromisos_tecnicos', 0.0))
+                tot_prev += float(c.get('previsiones', 0.0))
                 tot_pn += float(c.get('patrimonio_neto', 0.0))
 
         if len(members) == 0:
             continue
 
-        # Weighted consolidated ratios
-        loss_ratio = (tot_sin / tot_dev * 100.0) if tot_dev > 0 else 0.0
-        comm_ratio = (tot_gtos_prod / tot_dev * 100.0) if tot_dev > 0 else 0.0
-        exp_ratio = (tot_gtos_exp / tot_dev * 100.0) if tot_dev > 0 else 0.0
+        if 'member_labels' in gdef:
+            active_desc = ", ".join(gdef['member_labels'][cd] for cd in active_codes if cd in gdef['member_labels'])
+            if not active_desc:
+                active_desc = gdef['description']
+        else:
+            active_desc = gdef['description']
+
+        base_primas = tot_dev if tot_dev > 0 else tot_emit
+        costo_prestacional = tot_sin + tot_rescates
+        tot_gtos_op = tot_gtos_prod + tot_gtos_exp
+
+        # Weighted consolidated ratios (identical definitions to insurance_kpis.py & compute_benchmarks)
+        loss_ratio = (costo_prestacional / base_primas * 100.0) if base_primas > 0 else 0.0
+        rescates_ratio = (tot_rescates / base_primas * 100.0) if base_primas > 0 else 0.0
+        comm_ratio = (tot_gtos_prod / base_primas * 100.0) if base_primas > 0 else 0.0
+        exp_ratio = (tot_gtos_exp / base_primas * 100.0) if base_primas > 0 else 0.0
         combined_ratio = loss_ratio + comm_ratio + exp_ratio
-        
+
         roi_inv = (tot_res_fin / tot_inv * 100.0) if tot_inv > 0 else 0.0
-        total_reservas = tot_comp_tec + tot_deudas
-        cobertura_reservas = (tot_inv + tot_inm) / total_reservas if total_reservas > 0 else 0.0
-        apalancamiento = total_reservas / tot_pn if tot_pn > 0 else 0.0
-        calidad_cartera = (tot_cred / tot_activo * 100.0) if tot_activo > 0 else 0.0
+        cobertura_reservas = (tot_inv + tot_inm + tot_disp) / tot_comp_tec if tot_comp_tec > 0 else 1.0
+        apalancamiento = base_primas / tot_pn if tot_pn > 0 else 0.0
+        calidad_cartera = (tot_premios / base_primas * 100.0) if base_primas > 0 else 0.0
+        retencion_ratio = max(0.0, min(100.0, ((tot_emit - tot_cedidas) / tot_emit * 100.0))) if tot_emit > 0 else 100.0
+        cesion_ratio = (tot_cedidas / tot_emit * 100.0) if tot_emit > 0 else 0.0
+        densidad_inversiones = (tot_inv / tot_activo * 100.0) if tot_activo > 0 else 0.0
         roe = (tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else 0.0
         roa = (tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0
-        margen_neto = (tot_res_neto / tot_dev * 100.0) if tot_dev > 0 else 0.0
+        margen_neto = (tot_res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
+        margen_tecnico = (tot_res_tec / base_primas * 100.0) if base_primas > 0 else 0.0
         mkt_share = (tot_emit / total_mkt_emit * 100.0) if total_mkt_emit > 0 else 0.0
 
         # Members breakdown with individual share of group
@@ -555,6 +648,7 @@ def build_complete_dataset():
                 "primas_emitidas": m_emit,
                 "primas_devengadas": float(m.get('primas_devengadas', 0.0)),
                 "siniestros": float(m.get('siniestros', 0.0)),
+                "rescates": float(m.get('rescates', 0.0)),
                 "resultado_tecnico": float(m.get('resultado_tecnico', 0.0)),
                 "resultado_financiero": float(m.get('resultado_financiero', 0.0)),
                 "resultado_neto": float(m.get('resultado_neto', 0.0)),
@@ -568,19 +662,32 @@ def build_complete_dataset():
             })
         members_summary.sort(key=lambda x: x['primas_emitidas'], reverse=True)
 
+        df_group_raw = df_raw[df_raw['cod_cia'].isin(active_codes)]
+        group_waterfall = get_company_waterfall_data(df_group_raw)
+        group_investments = get_company_investments_breakdown(df_group_raw)
+
         g_obj = {
             "id": gid,
             "name": gname,
             "short_name": gdef['short_name'],
-            "description": gdef['description'],
+            "description": active_desc,
             "entities_count": len(members),
             "members": members_summary,
             "primas_emitidas": tot_emit,
+            "reaseguro_activo_neto": tot_reaseg,
+            "primas_cedidas": tot_cedidas,
             "primas_devengadas": tot_dev,
             "var_reservas": tot_var,
             "siniestros": tot_sin,
+            "rescates": tot_rescates,
+            "gtos_produccion": tot_gtos_prod,
+            "gtos_explotacion": tot_gtos_exp,
+            "gtos_operativos": tot_gtos_op,
             "gastos_produccion": tot_gtos_prod,
             "gastos_explotacion": tot_gtos_exp,
+            "otros_tec_neto": tot_otros_tec,
+            "op_extraordinarias": tot_op_ext,
+            "impuesto_ganancias": tot_imp_gan,
             "resultado_tecnico": tot_res_tec,
             "resultado_financiero": tot_res_fin,
             "resultado_neto": tot_res_neto,
@@ -588,11 +695,17 @@ def build_complete_dataset():
             "inversiones": tot_inv,
             "disponibilidades": tot_disp,
             "creditos": tot_cred,
+            "premios_a_cobrar": tot_premios,
             "inmuebles": tot_inm,
+            "bienes_uso": tot_bu,
+            "otros_activos": tot_otros_act,
+            "pasivo": tot_pasivo,
             "deudas": tot_deudas,
             "compromisos_tecnicos": tot_comp_tec,
+            "previsiones": tot_prev,
             "patrimonio_neto": tot_pn,
             "loss_ratio": round(loss_ratio, 2),
+            "rescates_ratio": round(rescates_ratio, 2),
             "comm_ratio": round(comm_ratio, 2),
             "exp_ratio": round(exp_ratio, 2),
             "combined_ratio": round(combined_ratio, 2),
@@ -600,23 +713,16 @@ def build_complete_dataset():
             "cobertura_reservas": round(cobertura_reservas, 2),
             "apalancamiento": round(apalancamiento, 2),
             "calidad_cartera": round(calidad_cartera, 2),
+            "retencion_ratio": round(retencion_ratio, 2),
+            "cesion_ratio": round(cesion_ratio, 2),
+            "densidad_inversiones": round(densidad_inversiones, 2),
             "roe": round(roe, 2),
             "roa": round(roa, 2),
             "margen_neto": round(margen_neto, 2),
-            "margen_tecnico": round((tot_res_tec / tot_dev * 100.0) if tot_dev > 0 else 0.0, 2),
+            "margen_tecnico": round(margen_tecnico, 2),
             "market_share": round(mkt_share, 2),
-            "waterfall": [
-                {"name": "Primas Emitidas", "amount": tot_emit, "type": "relative"},
-                {"name": "Variación Reservas", "amount": tot_var, "type": "relative"},
-                {"name": "Primas Devengadas", "amount": tot_dev, "type": "total"},
-                {"name": "Siniestros Netos", "amount": -tot_sin, "type": "relative"},
-                {"name": "Gastos Producción", "amount": -tot_gtos_prod, "type": "relative"},
-                {"name": "Gastos Explotación", "amount": -tot_gtos_exp, "type": "relative"},
-                {"name": "Resultado Técnico", "amount": tot_res_tec, "type": "total"},
-                {"name": "Resultado Financiero", "amount": tot_res_fin, "type": "relative"},
-                {"name": "Otros Ing/Egr e Imp.", "amount": tot_res_neto - tot_res_tec - tot_res_fin, "type": "relative"},
-                {"name": "Resultado Neto", "amount": tot_res_neto, "type": "total"}
-            ]
+            "investments": group_investments,
+            "waterfall": group_waterfall
         }
 
         groups_ranking.append(g_obj)
@@ -624,37 +730,32 @@ def build_complete_dataset():
 
         # Consolidate General Balances for this group
         group_gen_raw = {}
-        for cd in codes:
+        for cd in active_codes:
             if cd in cias_balances_general:
                 for acc_code, acc_val in cias_balances_general[cd].items():
-                    group_gen_raw[acc_code] = group_gen_raw.get(acc_code, 0.0) + acc_val
+                    if not str(acc_code).startswith('_'):
+                        group_gen_raw[acc_code] = group_gen_raw.get(acc_code, 0.0) + acc_val
         groups_balances_general[gid] = compute_hierarchical_rollup(group_gen_raw, is_subramo=False)
 
-        # Consolidate Subramo Balances for this group
+        # Consolidate Subramo Balances directly from raw subramo leaf rows (avoids double rollups)
         groups_balances_subramos[gid] = {}
-        g_subramos_list = []
-        for scat in subramos_catalog:
-            scod = scat['cod']
-            group_sub_raw = {}
-            for cd in codes:
-                if cd in cias_balances_subramos and scod in cias_balances_subramos[cd]:
-                    for acc_code, acc_val in cias_balances_subramos[cd][scod].items():
-                        group_sub_raw[acc_code] = group_sub_raw.get(acc_code, 0.0) + acc_val
-            if group_sub_raw:
-                sub_rollup = compute_hierarchical_rollup(group_sub_raw, is_subramo=True)
-                groups_balances_subramos[gid][scod] = sub_rollup
-                sub_emit = sub_rollup.get('_net_emit', sub_rollup.get('5.01.01.00.00.00.00.00', 0.0))
-                sub_sin = sub_rollup.get('4.01.01.00.00.00.00.00', 0.0) + sub_rollup.get('4.01.02.00.00.00.00.00', 0.0)
-                if sub_emit > 0:
-                    g_subramos_list.append({
-                        "cod_subramo": scod,
-                        "desc_subramo": scat['desc'],
-                        "primas_emitidas": sub_emit,
-                        "siniestros": sub_sin,
-                        "loss_ratio": round((sub_sin / sub_emit * 100.0), 2) if sub_emit > 0 else 0.0
-                    })
-        g_subramos_list.sort(key=lambda x: x['primas_emitidas'], reverse=True)
-        g_obj["subramos"] = g_subramos_list
+        df_group_sub = sub_df[sub_df['cod_cia'].isin(active_codes)]
+        for scod, grp in df_group_sub.groupby('cod_subramo'):
+            raw_map = {str(k): round(float(v), 2) for k, v in grp.groupby('cod_cuenta')['importe'].sum().items()}
+            groups_balances_subramos[gid][str(scod)] = compute_hierarchical_rollup(raw_map, is_subramo=True)
+
+        g_subramos_raw = get_company_subramos(df_group_sub)
+        g_obj["subramos"] = [
+            {
+                "cod_subramo": r['cod_subramo'],
+                "desc_subramo": r['desc_subramo'],
+                "primas_emitidas": r['primas'],
+                "primas_devengadas": r['primas_devengadas'],
+                "siniestros": r['siniestros'],
+                "loss_ratio": r['siniestralidad_%']
+            }
+            for r in g_subramos_raw
+        ]
 
     groups_ranking.sort(key=lambda x: x['primas_emitidas'], reverse=True)
     for i, g in enumerate(groups_ranking, 1):
@@ -800,64 +901,46 @@ def build_complete_dataset():
                 df_c['cod_cuenta'] = df_c['cod_cuenta'].fillna('').astype(str).str.strip()
                 df_c['importe'] = pd.to_numeric(df_c['importe'], errors='coerce').fillna(0.0)
 
-                # Primas Directas Netas y Adicionales (Emisión Directa Neta Total)
-                p_dir_01 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                p_dir_99 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.01.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                der_01 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.02.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                der_99 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.02.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                rec_02 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.03.02.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                rec_99 = df_c[df_c['cod_cuenta'] == '5.01.01.01.01.03.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                grp = df_c.groupby(['cod_cia', 'cod_subramo', 'cod_cuenta'], as_index=False)['importe'].sum()
+                idx_pairs = grp[['cod_cia', 'cod_subramo']].drop_duplicates()
+                res_df = pd.DataFrame(index=pd.MultiIndex.from_frame(idx_pairs))
 
-                a_dir_01 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                a_dir_99 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.01.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                a_rec_01 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.02.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                a_rec_99 = df_c[df_c['cod_cuenta'] == '4.01.04.04.04.02.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                prefix_specs = {
+                    'emit_pos': ('5.01.01.01.01.01.', '5.01.01.01.01.02.', '5.01.01.01.01.03.'),
+                    'emit_neg': ('4.01.04.04.04.01.', '4.01.04.04.04.02.'),
+                    'ing_primas': '5.01.01.',
+                    'anul_primas': '4.01.04.',
+                    'cesion_bruta': '4.01.03.',
+                    'recup_cesion': '5.01.02.',
+                    'var_cargo': '4.01.05.',
+                    'var_lib': ('5.01.04.04.04.11.', '5.01.04.04.04.12.', '5.01.04.04.04.13.'),
+                    'tot_recup': '5.01.04.',
+                    'part_util': '5.01.04.04.04.08.',
+                    'sin_cargo': '4.01.01.',
+                    'rescates': '4.01.02.',
+                    'gtos_prod_cargo': '4.01.06.',
+                    'recup_gtos_prod': '5.01.03.',
+                    'gtos_expl': ('4.01.07.', '4.01.60.'),
+                    'ing_tec': '5.01.',
+                    'egr_tec': '4.01.',
+                }
+                for col_name, pfx in prefix_specs.items():
+                    s = grp[grp['cod_cuenta'].str.startswith(pfx)].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                    res_df[col_name] = s
+                res_df = res_df.fillna(0.0)
 
-                # Siniestros Netos
-                s_pag_01 = df_c[df_c['cod_cuenta'] == '4.01.01.01.01.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_pag_99 = df_c[df_c['cod_cuenta'] == '4.01.01.01.01.99.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_pend_01 = df_c[df_c['cod_cuenta'] == '4.01.01.01.06.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_liq_01 = df_c[df_c['cod_cuenta'] == '4.01.01.01.04.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_liq_99 = df_c[df_c['cod_cuenta'] == '4.01.01.01.04.99.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_resc = df_c[df_c['cod_cuenta'] == '4.01.02.00.00.00.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                
-                s_pend_ant_01 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.06.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_pend_ant_99 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.06.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_recup_reag_01 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_recup_reag_99 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.01.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_recup_terc_01 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.03.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                s_recup_terc_99 = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.03.99.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                res_df['emit'] = res_df['emit_pos'] - res_df['emit_neg']
+                reaseg_neto = (res_df['ing_primas'] - res_df['anul_primas']) - res_df['emit']
+                cesion_neta = res_df['cesion_bruta'] - res_df['recup_cesion']
+                var_comp_tec = res_df['var_cargo'] - res_df['var_lib']
+                res_df['dev'] = res_df['emit'] + reaseg_neto - cesion_neta - var_comp_tec
 
-                # Gastos
-                g_prod = df_c[df_c['cod_cuenta'].str.startswith('4.01.06')].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                g_expl = df_c[df_c['cod_cuenta'].str.startswith('4.01.07')].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
+                recup_sin = res_df['tot_recup'] - res_df['var_lib'] - res_df['part_util']
+                siniestros_dev = res_df['sin_cargo'] - recup_sin
+                res_df['sin'] = siniestros_dev + res_df['rescates']
 
-                # Devengadas
-                rva_ej = df_c[df_c['cod_cuenta'] == '4.01.05.05.01.01.01.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                rva_ant = df_c[df_c['cod_cuenta'] == '5.01.04.04.04.12.01.01'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                p_ced = df_c[df_c['cod_cuenta'] == '4.01.03.03.03.01.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-
-                # Res Tecnico
-                ing_tec = df_c[df_c['cod_cuenta'] == '5.01.00.00.00.00.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-                egr_tec = df_c[df_c['cod_cuenta'] == '4.01.00.00.00.00.00.00'].groupby(['cod_cia', 'cod_subramo'])['importe'].sum()
-
-                res_df = pd.DataFrame({
-                    'p_dir_01': p_dir_01, 'p_dir_99': p_dir_99,
-                    'der_01': der_01, 'der_99': der_99,
-                    'rec_02': rec_02, 'rec_99': rec_99,
-                    'a_dir_01': a_dir_01, 'a_dir_99': a_dir_99,
-                    'a_rec_01': a_rec_01, 'a_rec_99': a_rec_99,
-                    's_pag_01': s_pag_01, 's_pag_99': s_pag_99, 's_pend_01': s_pend_01, 's_liq_01': s_liq_01, 's_liq_99': s_liq_99, 's_resc': s_resc,
-                    's_pend_ant_01': s_pend_ant_01, 's_pend_ant_99': s_pend_ant_99, 's_recup_reag_01': s_recup_reag_01, 's_recup_reag_99': s_recup_reag_99,
-                    's_recup_terc_01': s_recup_terc_01, 's_recup_terc_99': s_recup_terc_99,
-                    'g_prod': g_prod, 'g_expl': g_expl, 'rva_ej': rva_ej, 'rva_ant': rva_ant, 'p_ced': p_ced,
-                    'ing_tec': ing_tec, 'egr_tec': egr_tec
-                }).fillna(0.0)
-
-                res_df['emit'] = (res_df['p_dir_01'] + res_df['p_dir_99'] + res_df['der_01'] + res_df['der_99'] + res_df['rec_02'] + res_df['rec_99']) - (res_df['a_dir_01'] + res_df['a_dir_99'] + res_df['a_rec_01'] + res_df['a_rec_99'])
-                res_df['sin'] = (res_df['s_pag_01'] + res_df['s_pag_99'] + res_df['s_pend_01'] + res_df['s_liq_01'] + res_df['s_liq_99'] + res_df['s_resc']) - (res_df['s_pend_ant_01'] + res_df['s_pend_ant_99'] + res_df['s_recup_reag_01'] + res_df['s_recup_reag_99'] + res_df['s_recup_terc_01'] + res_df['s_recup_terc_99'])
-                res_df['gtos'] = res_df['g_prod'] + res_df['g_expl']
-                res_df['dev'] = res_df['emit'] - res_df['p_ced'] - (res_df['rva_ej'] - res_df['rva_ant'])
+                gtos_prod = res_df['gtos_prod_cargo'] - res_df['recup_gtos_prod'] - res_df['part_util']
+                res_df['gtos'] = gtos_prod + res_df['gtos_expl']
                 res_df['res_tec'] = res_df['ing_tec'] - res_df['egr_tec']
                 return res_df[['emit', 'sin', 'gtos', 'dev', 'res_tec']]
 
@@ -910,7 +993,7 @@ def build_complete_dataset():
     payload = {
         "periodo": current_period,
         "periodo_comparativo": comp_period,
-        "default_inflation_rate": 45.0,
+        "default_inflation_rate": 33.4,
         "total_entidades": len(df_summary),
         "segmentos": segments,
         "macro_ramos": macro_entidades,
