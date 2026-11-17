@@ -5,6 +5,7 @@ import numpy as np
 from db_engine import BASE_DIR, get_balance_data, load_data_from_mdb
 from insurance_kpis import (
     _extract_ssn_technical_components,
+    get_period_months,
     compute_all_companies_summary,
     get_company_waterfall_data,
     get_company_subramos,
@@ -16,6 +17,9 @@ def build_complete_dataset():
     df_raw = get_balance_data(force_reload=False)
     print("Computing company summary...")
     df_summary = compute_all_companies_summary(df_raw)
+    current_period_early = str(df_raw['periodo'].iloc[0]).strip() if not df_raw.empty else ''
+    period_months = get_period_months(current_period_early)
+    annual_factor = 12.0 / float(period_months) if period_months > 0 else 1.0
 
     # Market-wide subramos (unified full emission)
     market_subramos_list = get_company_subramos(df_raw)
@@ -183,7 +187,8 @@ def build_complete_dataset():
     def compute_benchmarks(df_sub):
         tot_emit = float(df_sub['primas_emitidas'].sum())
         tot_dev = float(df_sub['primas_devengadas'].sum())
-        base_primas = tot_dev if tot_dev > 0 else tot_emit
+        base_primas = tot_dev if tot_dev > 0 else (tot_emit if tot_emit > 0 else 0.0)
+        has_primas = base_primas > 0
         tot_sin = float(df_sub['siniestros'].sum() + df_sub['rescates'].sum())
         tot_prod = float(df_sub['gtos_produccion'].sum())
         tot_expl = float(df_sub['gtos_explotacion'].sum())
@@ -203,23 +208,27 @@ def build_complete_dataset():
             'entidades': int(len(df_sub)),
             'primas_emitidas': tot_emit,
             'primas_devengadas': tot_dev,
-            'loss_ratio': round((tot_sin / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
-            'comm_ratio': round((tot_prod / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
-            'exp_ratio': round((tot_expl / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
-            'combined_ratio': round(((tot_sin + tot_gtos_op) / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
-            'retencion_ratio': round(((tot_emit - float(df_sub['primas_cedidas'].sum())) / tot_emit * 100.0) if tot_emit > 0 else 100.0, 2),
+            'loss_ratio': round((tot_sin / base_primas * 100.0) if has_primas else 0.0, 2),
+            'comm_ratio': round((tot_prod / base_primas * 100.0) if has_primas else 0.0, 2),
+            'exp_ratio': round((tot_expl / base_primas * 100.0) if has_primas else 0.0, 2),
+            'combined_ratio': round(((tot_sin + tot_gtos_op) / base_primas * 100.0) if has_primas else 0.0, 2),
+            'retencion_ratio': round(max(0.0, min(100.0, ((tot_emit - float(df_sub['primas_cedidas'].sum())) / tot_emit * 100.0))) if tot_emit > 0 else 100.0, 2),
             'cesion_ratio': round((float(df_sub['primas_cedidas'].sum()) / tot_emit * 100.0) if tot_emit > 0 else 0.0, 2),
             'roi_inversiones': round((tot_res_fin / tot_inv * 100.0) if tot_inv > 0 else 0.0, 2),
             'densidad_inversiones': round((tot_inv / tot_activo * 100.0) if tot_activo > 0 else 0.0, 2),
-            'cobertura_reservas': round(((tot_inv + tot_inm + tot_disp) / tot_ct) if tot_ct > 0 else 1.0, 2),
-            'apalancamiento': round((base_primas / tot_pn) if tot_pn > 0 else 0.0, 2),
-            'calidad_cartera': round((tot_premios / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
-            'roe': round((tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else 0.0, 2),
+            'cobertura_reservas': round(((tot_inv + tot_inm + tot_disp) / tot_ct) if tot_ct > 0 else 0.0, 2),
+            'apalancamiento': round(((base_primas * annual_factor) / tot_pn) if tot_pn > 0 else (-1.0 if tot_pn < 0 else 0.0), 2),
+            'calidad_cartera': round((tot_premios / (tot_emit * annual_factor) * 100.0) if tot_emit > 0 else 0.0, 2),
+            'roe': round((tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else ((tot_res_neto / abs(tot_pn) * 100.0) if tot_pn < 0 else 0.0), 2),
             'roa': round((tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0, 2),
-            'margen_neto': round((tot_res_neto / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'margen_neto': round((tot_res_neto / base_primas * 100.0) if has_primas else 0.0, 2),
             'patrimonio_neto': tot_pn,
             'activo': tot_activo,
             'inversiones': tot_inv,
+            'disponibilidades': tot_disp,
+            'inmuebles': tot_inm,
+            'compromisos_tecnicos': tot_ct,
+            'premios_a_cobrar': tot_premios,
             'siniestros': float(df_sub['siniestros'].sum()),
             'rescates': float(df_sub['rescates'].sum()),
             'gtos_produccion': tot_prod,
@@ -230,11 +239,14 @@ def build_complete_dataset():
             'otros_tec_neto': float(df_sub['otros_tec_neto'].sum()),
             'op_extraordinarias': float(df_sub['op_extraordinarias'].sum()),
             'impuesto_ganancias': float(df_sub['impuesto_ganancias'].sum()),
-            'rescates_ratio': round((float(df_sub['rescates'].sum()) / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
-            'margen_tecnico': round((tot_res_tec / base_primas * 100.0) if base_primas > 0 else 0.0, 2),
+            'rescates_ratio': round((float(df_sub['rescates'].sum()) / base_primas * 100.0) if has_primas else 0.0, 2),
+            'margen_tecnico': round((tot_res_tec / base_primas * 100.0) if has_primas else 0.0, 2),
             'resultado_tecnico': tot_res_tec,
             'resultado_financiero': tot_res_fin,
-            'resultado_neto': tot_res_neto
+            'resultado_neto': tot_res_neto,
+            'sin_base_primas': bool(not has_primas),
+            'patrimonio_negativo': bool(tot_pn <= 0),
+            'sin_compromisos_tecnicos': bool(tot_ct <= 0)
         }
 
     market_benchmarks = compute_benchmarks(df_summary)
@@ -426,8 +438,15 @@ def build_complete_dataset():
             "id": "zurich",
             "name": "Grupo Zurich",
             "short_name": "Zurich",
-            "codes": ["0228", "0692", "0541"],
-            "description": "Zurich Argentina, Zurich Santander, Zurich International Life"
+            "codes": ["0228", "0039", "0692", "0541"],
+            "merged_codes": ["0039"],
+            "description": "Zurich Argentina, Zurich Santander, Zurich International Life",
+            "member_labels": {
+                "0228": "Zurich Argentina",
+                "0039": "Zurich Aseguradora (fusionada)",
+                "0692": "Zurich Santander",
+                "0541": "Zurich International Life"
+            }
         },
         {
             "id": "experta_werthein",
@@ -460,11 +479,12 @@ def build_complete_dataset():
             "name": "Grupo Galicia Seguros",
             "short_name": "Galicia Seguros",
             "codes": ["0025", "0589", "0443", "0426"],
+            "merged_codes": ["0443"],
             "description": "Seguros Galicia, Galicia Seguros, Galicia Retiro",
             "member_labels": {
                 "0025": "Seguros Galicia",
                 "0589": "Galicia Seguros",
-                "0443": "Galicia Vida (ex-BNP)",
+                "0443": "Galicia Seguros de Retiro (fusionada)",
                 "0426": "Galicia Retiro"
             }
         },
@@ -531,6 +551,7 @@ def build_complete_dataset():
     groups_by_id = {}
     groups_balances_general = {}
     groups_balances_subramos = {}
+    active_codes_by_gid = {}
 
     for gdef in GROUPS_DEFINITIONS:
         gid = gdef['id']
@@ -567,6 +588,8 @@ def build_complete_dataset():
         tot_comp_tec = 0.0
         tot_prev = 0.0
         tot_pn = 0.0
+        tot_vpp_res = 0.0
+        tot_vpp_act = 0.0
 
         active_codes = []
         for cd in codes:
@@ -602,9 +625,15 @@ def build_complete_dataset():
                 tot_comp_tec += float(c.get('compromisos_tecnicos', 0.0))
                 tot_prev += float(c.get('previsiones', 0.0))
                 tot_pn += float(c.get('patrimonio_neto', 0.0))
+                tot_vpp_res += float(c.get('vpp_resultado', 0.0))
+                tot_vpp_act += float(c.get('vpp_activo', 0.0))
 
         if len(members) == 0:
             continue
+
+        active_codes_by_gid[gid] = active_codes
+        if abs(tot_vpp_res) < 1000.0:
+            tot_vpp_res = 0.0
 
         if 'member_labels' in gdef:
             active_desc = ", ".join(gdef['member_labels'][cd] for cd in active_codes if cd in gdef['member_labels'])
@@ -613,29 +642,32 @@ def build_complete_dataset():
         else:
             active_desc = gdef['description']
 
-        base_primas = tot_dev if tot_dev > 0 else tot_emit
+        base_primas = tot_dev if tot_dev > 0 else (tot_emit if tot_emit > 0 else 0.0)
+        has_primas = base_primas > 0
         costo_prestacional = tot_sin + tot_rescates
         tot_gtos_op = tot_gtos_prod + tot_gtos_exp
 
         # Weighted consolidated ratios (identical definitions to insurance_kpis.py & compute_benchmarks)
-        loss_ratio = (costo_prestacional / base_primas * 100.0) if base_primas > 0 else 0.0
-        rescates_ratio = (tot_rescates / base_primas * 100.0) if base_primas > 0 else 0.0
-        comm_ratio = (tot_gtos_prod / base_primas * 100.0) if base_primas > 0 else 0.0
-        exp_ratio = (tot_gtos_exp / base_primas * 100.0) if base_primas > 0 else 0.0
+        loss_ratio = (costo_prestacional / base_primas * 100.0) if has_primas else 0.0
+        rescates_ratio = (tot_rescates / base_primas * 100.0) if has_primas else 0.0
+        comm_ratio = (tot_gtos_prod / base_primas * 100.0) if has_primas else 0.0
+        exp_ratio = (tot_gtos_exp / base_primas * 100.0) if has_primas else 0.0
         combined_ratio = loss_ratio + comm_ratio + exp_ratio
 
         roi_inv = (tot_res_fin / tot_inv * 100.0) if tot_inv > 0 else 0.0
-        cobertura_reservas = (tot_inv + tot_inm + tot_disp) / tot_comp_tec if tot_comp_tec > 0 else 1.0
-        apalancamiento = base_primas / tot_pn if tot_pn > 0 else 0.0
-        calidad_cartera = (tot_premios / base_primas * 100.0) if base_primas > 0 else 0.0
+        cobertura_reservas = (tot_inv + tot_inm + tot_disp) / tot_comp_tec if tot_comp_tec > 0 else 0.0
+        apalancamiento = ((base_primas * annual_factor) / tot_pn) if tot_pn > 0 else (-1.0 if tot_pn < 0 else 0.0)
+        calidad_cartera = (tot_premios / (tot_emit * annual_factor) * 100.0) if tot_emit > 0 else 0.0
         retencion_ratio = max(0.0, min(100.0, ((tot_emit - tot_cedidas) / tot_emit * 100.0))) if tot_emit > 0 else 100.0
         cesion_ratio = (tot_cedidas / tot_emit * 100.0) if tot_emit > 0 else 0.0
         densidad_inversiones = (tot_inv / tot_activo * 100.0) if tot_activo > 0 else 0.0
-        roe = (tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else 0.0
+        roe = (tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else ((tot_res_neto / abs(tot_pn) * 100.0) if tot_pn < 0 else 0.0)
         roa = (tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0
-        margen_neto = (tot_res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
-        margen_tecnico = (tot_res_tec / base_primas * 100.0) if base_primas > 0 else 0.0
+        margen_neto = (tot_res_neto / base_primas * 100.0) if has_primas else 0.0
+        margen_tecnico = (tot_res_tec / base_primas * 100.0) if has_primas else 0.0
         mkt_share = (tot_emit / total_mkt_emit * 100.0) if total_mkt_emit > 0 else 0.0
+        vpp_pct_neto = round((tot_vpp_res / tot_res_neto * 100.0), 1) if (tot_vpp_res != 0 and tot_res_neto != 0) else 0.0
+        vpp_pct_fin = round((tot_vpp_res / tot_res_fin * 100.0), 1) if (tot_vpp_res != 0 and tot_res_fin != 0) else 0.0
 
         # Members breakdown with individual share of group
         members_summary = []
@@ -721,6 +753,13 @@ def build_complete_dataset():
             "margen_neto": round(margen_neto, 2),
             "margen_tecnico": round(margen_tecnico, 2),
             "market_share": round(mkt_share, 2),
+            "vpp_resultado": round(tot_vpp_res, 2),
+            "vpp_activo": round(tot_vpp_act, 2),
+            "vpp_pct_neto": vpp_pct_neto,
+            "vpp_pct_fin": vpp_pct_fin,
+            "sin_base_primas": bool(not has_primas),
+            "patrimonio_negativo": bool(tot_pn <= 0),
+            "sin_compromisos_tecnicos": bool(tot_comp_tec <= 0),
             "investments": group_investments,
             "waterfall": group_waterfall
         }
@@ -879,6 +918,7 @@ def build_complete_dataset():
     cias_comparative_subramos = {}
     groups_comparative_subramos = {}
     market_comparative_subramos = {}
+    historical_companies = {}
 
     mdb_prev = os.path.join(BASE_DIR, f"{comp_period}.mdb")
 
@@ -890,8 +930,16 @@ def build_complete_dataset():
 
             df_prev_raw = load_data_from_mdb(
                 mdb_prev,
-                columns=['cod_cia', 'cod_subramo', 'cod_cuenta', 'importe']
+                columns=['cod_cia', 'razon_social', 'cod_subramo', 'cod_cuenta', 'importe']
             )
+            df_prev_names = df_prev_raw[['cod_cia', 'razon_social']].copy()
+            df_prev_names['cod_cia'] = df_prev_names['cod_cia'].fillna('').astype(str).str.strip().str.zfill(4)
+            df_prev_names['razon_social'] = df_prev_names['razon_social'].fillna('').astype(str).str.strip()
+            for _, nr in df_prev_names.drop_duplicates('cod_cia').iterrows():
+                cc = nr['cod_cia']
+                if cc and cc not in companies_dict and nr['razon_social']:
+                    historical_companies[cc] = {"razon_social": nr['razon_social']}
+
             df_c25 = df_prev_raw[df_prev_raw['cod_subramo'].notna() & (df_prev_raw['cod_subramo'] != '')].copy()
 
             def process_comp_df(df_in):
@@ -965,11 +1013,12 @@ def build_complete_dataset():
                     't25': round(float(r['res_tec_25']), 2)
                 }
 
-            # Group rollup
+            # Group rollup (homogeneous perimeter: active 2026-3 codes + explicitly merged predecessors)
             for gdef in GROUPS_DEFINITIONS:
                 gid = gdef['id']
                 g_subs = {}
-                for m_cod in gdef['codes']:
+                comp_codes = list(dict.fromkeys(active_codes_by_gid.get(gid, []) + gdef.get('merged_codes', [])))
+                for m_cod in comp_codes:
                     m_data = cias_comparative_subramos.get(m_cod, {})
                     for scod, sval in m_data.items():
                         if scod not in g_subs:
@@ -993,8 +1042,11 @@ def build_complete_dataset():
     payload = {
         "periodo": current_period,
         "periodo_comparativo": comp_period,
+        "period_months": period_months,
+        "annual_factor": annual_factor,
         "default_inflation_rate": 33.4,
         "total_entidades": len(df_summary),
+        "historical_companies": historical_companies,
         "segmentos": segments,
         "macro_ramos": macro_entidades,
         "macro_entidades": macro_entidades,
