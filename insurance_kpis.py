@@ -130,6 +130,18 @@ def _extract_ssn_technical_components(df_slice, use_exact=True):
     }
 
 
+def get_period_months(periodo_str):
+    """
+    Returns elapsed fiscal months in the SSN July–June exercise:
+    -3 (Sep, Q1) -> 3 months; -4 (Dec, Q2) -> 6; -1 (Mar, Q3) -> 9; -2 (Jun, Q4) -> 12.
+    """
+    s = str(periodo_str or '').strip()
+    if '-' in s:
+        q = s.split('-', 1)[1].strip()
+        return {'3': 3, '4': 6, '1': 9, '2': 12}.get(q, 12)
+    return 12
+
+
 def compute_all_companies_summary(df):
     """
     Computes standard SSN financial and technical KPIs for all companies.
@@ -137,6 +149,9 @@ def compute_all_companies_summary(df):
     """
     df_bal = df[df['cod_subramo'] == ''] if 'cod_subramo' in df.columns else df
     companies = df_bal[['cod_cia', 'razon_social', 'tipo_entidad']].drop_duplicates()
+    periodo_str = str(df_bal['periodo'].iloc[0]).strip() if ('periodo' in df_bal.columns and not df_bal.empty) else ''
+    period_months = get_period_months(periodo_str)
+    annual_factor = 12.0 / float(period_months) if period_months > 0 else 1.0
     records = []
 
     for _, cia in companies.iterrows():
@@ -196,30 +211,34 @@ def compute_all_companies_summary(df):
         # ----------------------------------------------------
         # 3. RATIOS TÉCNICOS & FINANCIEROS (BASE DEVENGADA)
         # ----------------------------------------------------
-        base_primas = primas_dev if primas_dev > 0 else (primas_emit if primas_emit > 0 else 1.0)
-        
-        costo_prestacional = siniestros_dev + rescates
-        loss_ratio = (costo_prestacional / base_primas) * 100.0 if base_primas > 0 else 0.0
-        rescates_ratio = (rescates / base_primas) * 100.0 if base_primas > 0 else 0.0
-        comm_ratio = (gtos_prod / base_primas) * 100.0 if base_primas > 0 else 0.0
-        exp_ratio = (gtos_expl / base_primas) * 100.0 if base_primas > 0 else 0.0
-        combined_ratio = loss_ratio + ((gtos_operativos) / base_primas * 100.0) if base_primas > 0 else 0.0
+        base_primas = primas_dev if primas_dev > 0 else (primas_emit if primas_emit > 0 else 0.0)
+        sin_base_primas = (base_primas <= 0)
+        has_primas = not sin_base_primas
 
-        margen_tecnico = (res_tec / base_primas) * 100.0 if base_primas > 0 else 0.0
+        costo_prestacional = siniestros_dev + rescates
+        loss_ratio = (costo_prestacional / base_primas) * 100.0 if has_primas else 0.0
+        rescates_ratio = (rescates / base_primas) * 100.0 if has_primas else 0.0
+        comm_ratio = (gtos_prod / base_primas) * 100.0 if has_primas else 0.0
+        exp_ratio = (gtos_expl / base_primas) * 100.0 if has_primas else 0.0
+        combined_ratio = loss_ratio + ((gtos_operativos) / base_primas * 100.0) if has_primas else 0.0
+
+        margen_tecnico = (res_tec / base_primas) * 100.0 if has_primas else 0.0
         roi_inversiones = (res_fin / inv) * 100.0 if inv > 0 else 0.0
 
-        # Solvencia SSN
-        cobertura_res = (inv + inm + disp) / comp_tec_pasivo if comp_tec_pasivo > 0 else 1.0
-        apalancamiento = base_primas / pn if pn > 0 else 0.0
+        # Solvencia SSN (Stock / Flujo anualizado según trimestre fiscal)
+        sin_compromisos_tecnicos = (comp_tec_pasivo <= 0)
+        patrimonio_negativo = (pn <= 0)
+        cobertura_res = (inv + inm + disp) / comp_tec_pasivo if comp_tec_pasivo > 0 else 0.0
+        apalancamiento = ((base_primas * annual_factor) / pn) if pn > 0 else (-1.0 if pn < 0 else 0.0)
         premios_a_cobrar = get_account_value(df_c, '1.03.01.00.00.00.00.00', exact=True)
-        calidad_cartera = (premios_a_cobrar / base_primas) * 100.0 if base_primas > 0 else 0.0
+        calidad_cartera = (premios_a_cobrar / (primas_emit * annual_factor)) * 100.0 if primas_emit > 0 else 0.0
 
         # Ratios de Gestión adicionales (Retención pura de Reaseguro: Primas Emitidas - Cedidas / Primas Emitidas)
         retencion_ratio = max(0.0, min(100.0, ((primas_emit - primas_cedidas) / primas_emit * 100.0))) if primas_emit > 0 else 100.0
         cesion_ratio = (primas_cedidas / primas_emit * 100.0) if primas_emit > 0 else 0.0
-        roe = (res_neto / pn * 100.0) if pn > 0 else 0.0
+        roe = (res_neto / pn * 100.0) if pn > 0 else ((res_neto / abs(pn) * 100.0) if pn < 0 else 0.0)
         roa = (res_neto / activo_tot * 100.0) if activo_tot > 0 else 0.0
-        margen_neto = (res_neto / base_primas * 100.0) if base_primas > 0 else 0.0
+        margen_neto = (res_neto / base_primas * 100.0) if has_primas else 0.0
         densidad_inversiones = (inv / activo_tot * 100.0) if activo_tot > 0 else 0.0
 
         # VPP (Valor Patrimonial Proporcional / Acciones Grupo Económico y Otras Participaciones)
@@ -227,13 +246,15 @@ def compute_all_companies_summary(df):
         vpp_tenencia_otr = get_account_value(df_c, '5.02.03.03.02.01.00.00', exact=True)
         vpp_realizacion_acc = get_account_value(df_c, '5.02.02.02.01.02.00.00', exact=True)
         vpp_resultado = vpp_tenencia_acc + vpp_tenencia_otr + vpp_realizacion_acc
-        
+        if abs(vpp_resultado) < 1000.0:
+            vpp_resultado = 0.0
+
         vpp_activo_sin = get_account_value(df_c, '1.02.01.02.02.02.00.00', exact=True)
         vpp_activo_con = get_account_value(df_c, '1.02.01.02.01.02.00.00', exact=True)
         vpp_activo = vpp_activo_sin + vpp_activo_con
-        
-        vpp_pct_neto = round((vpp_resultado / res_neto * 100.0), 1) if res_neto != 0 else 0.0
-        vpp_pct_fin = round((vpp_resultado / res_fin * 100.0), 1) if res_fin != 0 else 0.0
+
+        vpp_pct_neto = round((vpp_resultado / res_neto * 100.0), 1) if (vpp_resultado != 0 and res_neto != 0) else 0.0
+        vpp_pct_fin = round((vpp_resultado / res_fin * 100.0), 1) if (vpp_resultado != 0 and res_fin != 0) else 0.0
 
         records.append({
             'cod_cia': cod,
@@ -288,7 +309,10 @@ def compute_all_companies_summary(df):
             'vpp_resultado': vpp_resultado,
             'vpp_activo': vpp_activo,
             'vpp_pct_neto': vpp_pct_neto,
-            'vpp_pct_fin': vpp_pct_fin
+            'vpp_pct_fin': vpp_pct_fin,
+            'sin_base_primas': bool(sin_base_primas),
+            'patrimonio_negativo': bool(patrimonio_negativo),
+            'sin_compromisos_tecnicos': bool(sin_compromisos_tecnicos)
         })
 
     return pd.DataFrame(records)
