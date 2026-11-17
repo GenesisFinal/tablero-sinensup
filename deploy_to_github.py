@@ -56,13 +56,20 @@ def deploy(check_only=False):
     files_to_upload = [
         (".nojekyll", "Config: Deshabilitar procesamiento Jekyll con .nojekyll"),
         ("favicon.svg", "Asset: Favicon SVG para pestaña y marcadores"),
+        ("favicon.png", "Asset: Favicon PNG / Apple Touch Icon"),
+        ("favicon-192.png", "Asset: Favicon 192px"),
+        ("favicon-64.png", "Asset: Favicon 64px"),
+        ("favicon-32.png", "Asset: Favicon 32px"),
         ("index.html", "Feat: Dashboard Analítico del Mercado Asegurador (SSN SINENSUP)"),
-        ("data_sinensup.json", "Data: Dataset consolidado de balances de 185 aseguradoras SSN"),
+        ("data_sinensup.json", "Data: Dataset consolidado de balances SSN SINENSUP"),
         ("README.md", "Docs: Documentación completa del Dashboard Sinensup"),
         ("build_data.py", "Code: Script generador del dataset actuarial y contable"),
         ("insurance_kpis.py", "Code: Motor de cálculo contable y devengamiento SSN"),
         ("db_engine.py", "Code: Motor de extracción y caché de bases Access SSN (.mdb)"),
         ("generate_html.py", "Code: Generador de la aplicación HTML interactiva"),
+        ("ssn_updater.py", "Code: Monitor y actualizador automático de balances SSN"),
+        ("app.py", "Code: Aplicación interactiva Streamlit"),
+        ("charts.py", "Code: Generador de gráficos Plotly para Streamlit"),
         ("deploy_to_github.py", "Code: Script de despliegue automatizado a GitHub Pages")
     ]
 
@@ -92,7 +99,7 @@ def deploy(check_only=False):
         print(f"Creando repositorio '{repo_name}' en GitHub...")
         create_payload = {
             "name": repo_name,
-            "description": "Dashboard Analítico del Mercado Asegurador Argentino (SSN SINENSUP • Balances Oficiales • 185 Aseguradoras • Ratios de Devengamiento)",
+            "description": "Dashboard Analítico del Mercado Asegurador Argentino (SSN SINENSUP • Balances Oficiales • Ratios de Devengamiento)",
             "homepage": f"https://{username}.github.io/{repo_name}/",
             "private": False,
             "has_issues": True,
@@ -110,7 +117,14 @@ def deploy(check_only=False):
     else:
         print(f"Repositorio '{full_repo}' ya existe.")
 
-    # 2. Subir archivos
+    # 2. Subir archivos (consultar listado raíz para obtener SHAs incluso en archivos >1 MB)
+    existing_shas = {}
+    dir_res = requests.get(f"https://api.github.com/repos/{full_repo}/contents/", headers=headers, timeout=30)
+    if dir_res.status_code == 200 and isinstance(dir_res.json(), list):
+        for entry in dir_res.json():
+            if entry.get("name") and entry.get("sha"):
+                existing_shas[entry["name"]] = entry["sha"]
+
     def upload_file(remote_path, local_path, commit_msg):
         if not os.path.exists(local_path):
             print(f"Archivo local no encontrado: {local_path}")
@@ -121,12 +135,13 @@ def deploy(check_only=False):
         content_b64 = base64.b64encode(content_bytes).decode("utf-8")
 
         url = f"https://api.github.com/repos/{full_repo}/contents/{remote_path}"
-        
+
         for attempt in range(6):
-            get_res = requests.get(url, headers=headers)
-            sha = None
-            if get_res.status_code == 200:
-                sha = get_res.json().get("sha")
+            sha = existing_shas.get(remote_path)
+            if not sha:
+                get_res = requests.get(url, headers=headers, timeout=30)
+                if get_res.status_code == 200:
+                    sha = get_res.json().get("sha")
 
             payload = {
                 "message": commit_msg,
@@ -136,19 +151,34 @@ def deploy(check_only=False):
                 payload["sha"] = sha
 
             print(f"Subiendo {remote_path} ({len(content_bytes):,} bytes, intento {attempt+1})...")
-            put_res = requests.put(url, headers=headers, json=payload)
+            put_res = requests.put(url, headers=headers, json=payload, timeout=120)
             if put_res.status_code in [200, 201]:
+                new_sha = put_res.json().get("content", {}).get("sha")
+                if new_sha:
+                    existing_shas[remote_path] = new_sha
                 print(f"OK: {remote_path} publicado en GitHub.")
                 return True
             else:
-                print(f"Aviso al subir {remote_path}: {put_res.status_code} - {put_res.text[:120]}")
+                print(f"Aviso al subir {remote_path}: {put_res.status_code} - {put_res.text[:160]}")
+                # Refresh directory listing in case SHA changed concurrently
+                dir_refresh = requests.get(f"https://api.github.com/repos/{full_repo}/contents/", headers=headers, timeout=30)
+                if dir_refresh.status_code == 200 and isinstance(dir_refresh.json(), list):
+                    for entry in dir_refresh.json():
+                        if entry.get("name") and entry.get("sha"):
+                            existing_shas[entry["name"]] = entry["sha"]
                 time.sleep(2 * (attempt + 1))
         print(f"ERROR: No se pudo subir {remote_path} tras 6 intentos.")
         return False
 
+    failed_files = []
     for fname, msg in files_to_upload:
         fpath = os.path.join(base_dir, fname)
-        upload_file(fname, fpath, msg)
+        if not upload_file(fname, fpath, msg):
+            failed_files.append(fname)
+
+    if failed_files:
+        print(f"\nERROR CRÍTICO: Falló la subida de: {failed_files}")
+        sys.exit(1)
 
     # 3. Activar GitHub Pages si aún no está activado
     pages_url = f"https://api.github.com/repos/{full_repo}/pages"
