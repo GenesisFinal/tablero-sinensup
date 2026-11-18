@@ -1,6 +1,6 @@
 # 📊 Dashboard Analítico del Mercado Asegurador Argentino (SSN - SINENSUP)
 
-Este proyecto proporciona un **Dashboard Analítico e Interactivo de 11 pestañas** (y su versión Streamlit complementaria) para el análisis integral de los estados contables de las compañías del mercado asegurador argentino bajo el régimen **SINENSUP** de la **Superintendencia de Seguros de la Nación (SSN)**.
+Este proyecto proporciona un **Dashboard Analítico e Interactivo de 12 pestañas** (y su versión Streamlit complementaria) para el análisis integral de los estados contables de las compañías del mercado asegurador argentino bajo el régimen **SINENSUP** de la **Superintendencia de Seguros de la Nación (SSN)**.
 
 - **Tablero Web Estático (GitHub Pages):** https://GenesisFinal.github.io/tablero-sinensup/
 - **Último período procesado:** `2026-3` (cierre 30/09/2026 — **178 entidades** y **17 grupos aseguradores**, comparativo interanual vs. `2025-3` con **192 entidades** históricas/activas y **52 subramos**).
@@ -9,7 +9,7 @@ Este proyecto proporciona un **Dashboard Analítico e Interactivo de 11 pestaña
 
 ## 🚀 Cómo Iniciar o Actualizar el Dashboard
 
-### Opción 1: Tablero HTML Interactivo (`index.html`, 11 Pestañas)
+### Opción 1: Tablero HTML Interactivo (`index.html`, 12 Pestañas)
 Abrí directamente [index.html](index.html) en cualquier navegador o publicá la última compilación en GitHub Pages:
 ```bash
 python3 build_data.py
@@ -36,7 +36,7 @@ python3 -m streamlit run app.py
 * **`db_engine.py`**: Motor multiplataforma (`macOS` con `access_parser` parcheado / `Windows` con `pyodbc` + PowerShell) para extraer tablas Access `.mdb` de SSN con caché Parquet (`balance_cache.parquet`) validado por período y fecha de modificación.
 * **`insurance_kpis.py`**: Motor contable bajo normas RGAA de la SSN con cuadre exacto (`0.00` pesos) de Primas Devengadas, Siniestros Devengados, Rescates/Rentas, Gastos, Resultado Técnico y Resultado Neto, anualización de ratios stock/flujo según trimestre fiscal, desglose de Inversiones (`1.02`) y subramos.
 * **`build_data.py`**: Genera `data_sinensup.json` consolidando las compañías individuales, 17 grupos aseguradores con consolidación RT 21 y eliminación de VPP intra-grupo (sin doble cómputo de resultados ni patrimonio), benchmarks de mercado y segmentos, árbol completo del Plan de Cuentas SSN y comparativo interanual (`2026-3` vs `2025-3`) con IPC INDEC de referencia.
-* **`generate_html.py`**: Compila `index.html` autocontenido con las 11 pestañas interactivas, Modo Claro / Modo Oscuro y exportaciones CSV/PNG.
+* **`generate_html.py`**: Compila `index.html` autocontenido con las 12 pestañas interactivas, Modo Claro / Modo Oscuro y exportaciones CSV/PNG.
 * **`ssn_updater.py` / `deploy_to_github.py`**: Descarga nuevos períodos trimestrales `.mdb` desde SSN SINENSUP y publica el tablero actualizado en GitHub Pages.
 * **`app.py` / `charts.py`**: Versión interactiva en Streamlit y sus gráficos Plotly.
 
@@ -55,3 +55,4 @@ python3 -m streamlit run app.py
 9. **🎯 Ratios de Gestión:** Scorecard de 14 KPIs con semáforos, gráfico radar, diagnóstico ejecutivo y filtros de alerta temprana.
 10. **📒 Balances Contables:** Árbol jerárquico navegable del Plan de Cuentas oficial SSN (Patrimonial, EDR, Técnico, Financiero y por Subramo) para mercado, segmento, grupo o entidad.
 11. **🔀 Flujo de Resultados (Sankey):** Trazabilidad completa con conservación exacta de flujo desde Emisión hasta Resultado Neto.
+12. **🏆 Rankings Dinámicos Multicriterio:** Constructor interactivo de rankings por 11 indicadores contables y ratios (Patrimonio Neto, Resultados, Activos, Pasivos, Siniestralidad, Combinado, ROE, Densidad de Inversiones y Res. Financiero/PN) a nivel de Aseguradoras, Grupos Económicos (RT 21) o Conjuntos/Segmentos SSN.
