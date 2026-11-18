@@ -237,6 +237,7 @@ def compute_all_companies_summary(df):
         retencion_ratio = max(0.0, min(100.0, ((primas_emit - primas_cedidas) / primas_emit * 100.0))) if primas_emit > 0 else 100.0
         cesion_ratio = (primas_cedidas / primas_emit * 100.0) if primas_emit > 0 else 0.0
         roe = (res_neto / pn * 100.0) if pn > 0 else ((res_neto / abs(pn) * 100.0) if pn < 0 else 0.0)
+        res_fin_sobre_pn = (res_fin / pn * 100.0) if pn > 0 else ((res_fin / abs(pn) * 100.0) if pn < 0 else 0.0)
         roa = (res_neto / activo_tot * 100.0) if activo_tot > 0 else 0.0
         margen_neto = (res_neto / base_primas * 100.0) if has_primas else 0.0
         densidad_inversiones = (inv / activo_tot * 100.0) if activo_tot > 0 else 0.0
@@ -315,6 +316,7 @@ def compute_all_companies_summary(df):
             'retencion_ratio': retencion_ratio,
             'cesion_ratio': cesion_ratio,
             'roe': roe,
+            'res_fin_sobre_pn': res_fin_sobre_pn,
             'roa': roa,
             'margen_neto': margen_neto,
             'densidad_inversiones': densidad_inversiones,
