@@ -200,9 +200,13 @@ def build_complete_dataset():
         tot_inm = float(df_sub['inmuebles'].sum())
         tot_disp = float(df_sub['disponibilidades'].sum())
         tot_ct = float(df_sub['compromisos_tecnicos'].sum())
+        tot_pasivo = float(df_sub['pasivo'].sum())
+        tot_deudas = float(df_sub['deudas'].sum())
+        tot_prev = float(df_sub['previsiones'].sum())
         tot_pn = float(df_sub['patrimonio_neto'].sum())
         tot_activo = float(df_sub['activo'].sum())
         tot_premios = float(df_sub['premios_a_cobrar'].sum())
+        res_fin_sobre_pn = (tot_res_fin / tot_pn * 100.0) if tot_pn > 0 else ((tot_res_fin / abs(tot_pn) * 100.0) if tot_pn < 0 else 0.0)
 
         return {
             'entidades': int(len(df_sub)),
@@ -220,8 +224,12 @@ def build_complete_dataset():
             'apalancamiento': round(((base_primas * annual_factor) / tot_pn) if tot_pn > 0 else (-1.0 if tot_pn < 0 else 0.0), 2),
             'calidad_cartera': round((tot_premios / (tot_emit * annual_factor) * 100.0) if tot_emit > 0 else 0.0, 2),
             'roe': round((tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else ((tot_res_neto / abs(tot_pn) * 100.0) if tot_pn < 0 else 0.0), 2),
+            'res_fin_sobre_pn': round(res_fin_sobre_pn, 2),
             'roa': round((tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0, 2),
             'margen_neto': round((tot_res_neto / base_primas * 100.0) if has_primas else 0.0, 2),
+            'pasivo': tot_pasivo,
+            'deudas': tot_deudas,
+            'previsiones': tot_prev,
             'patrimonio_neto': tot_pn,
             'activo': tot_activo,
             'inversiones': tot_inv,
@@ -233,6 +241,7 @@ def build_complete_dataset():
             'rescates': float(df_sub['rescates'].sum()),
             'gtos_produccion': tot_prod,
             'gtos_explotacion': tot_expl,
+            'gtos_operativos': tot_gtos_op,
             'reaseguro_activo_neto': float(df_sub['reaseguro_activo_neto'].sum()),
             'primas_cedidas': float(df_sub['primas_cedidas'].sum()),
             'var_reservas': float(df_sub['var_reservas'].sum()),
@@ -809,6 +818,7 @@ def build_complete_dataset():
         cesion_ratio = (tot_cedidas / tot_emit * 100.0) if tot_emit > 0 else 0.0
         densidad_inversiones = (tot_inv / tot_activo * 100.0) if tot_activo > 0 else 0.0
         roe = (tot_res_neto / tot_pn * 100.0) if tot_pn > 0 else ((tot_res_neto / abs(tot_pn) * 100.0) if tot_pn < 0 else 0.0)
+        res_fin_sobre_pn = (tot_res_fin / tot_pn * 100.0) if tot_pn > 0 else ((tot_res_fin / abs(tot_pn) * 100.0) if tot_pn < 0 else 0.0)
         roa = (tot_res_neto / tot_activo * 100.0) if tot_activo > 0 else 0.0
         margen_neto = (tot_res_neto / base_primas * 100.0) if has_primas else 0.0
         margen_tecnico = (tot_res_tec / base_primas * 100.0) if has_primas else 0.0
@@ -919,6 +929,7 @@ def build_complete_dataset():
             "cesion_ratio": round(cesion_ratio, 2),
             "densidad_inversiones": round(densidad_inversiones, 2),
             "roe": round(roe, 2),
+            "res_fin_sobre_pn": round(res_fin_sobre_pn, 2),
             "roa": round(roa, 2),
             "margen_neto": round(margen_neto, 2),
             "margen_tecnico": round(margen_tecnico, 2),
