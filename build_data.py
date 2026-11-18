@@ -229,6 +229,11 @@ def build_complete_dataset():
             'margen_neto': round((tot_res_neto / base_primas * 100.0) if has_primas else 0.0, 2),
             'pasivo': tot_pasivo,
             'deudas': tot_deudas,
+            'deudas_asegurados': float(df_sub['deudas_asegurados'].sum()),
+            'reserva_siniestros_pendientes': float(df_sub['reserva_siniestros_pendientes'].sum()),
+            'ibnr': float(df_sub['ibnr'].sum()),
+            'reserva_juicios': float(df_sub['reserva_juicios'].sum()),
+            'reserva_mediaciones': float(df_sub['reserva_mediaciones'].sum()),
             'previsiones': tot_prev,
             'patrimonio_neto': tot_pn,
             'activo': tot_activo,
@@ -236,6 +241,8 @@ def build_complete_dataset():
             'disponibilidades': tot_disp,
             'inmuebles': tot_inm,
             'compromisos_tecnicos': tot_ct,
+            'riesgos_en_curso': float(df_sub['riesgos_en_curso'].sum()),
+            'reservas_matematicas': float(df_sub['reservas_matematicas'].sum()),
             'premios_a_cobrar': tot_premios,
             'siniestros': float(df_sub['siniestros'].sum()),
             'rescates': float(df_sub['rescates'].sum()),
@@ -617,7 +624,14 @@ def build_complete_dataset():
         tot_otros_act = 0.0
         tot_pasivo = 0.0
         tot_deudas = 0.0
+        tot_deudas_aseg = 0.0
+        tot_rsp = 0.0
+        tot_ibnr = 0.0
+        tot_juicios = 0.0
+        tot_mediaciones = 0.0
         tot_comp_tec = 0.0
+        tot_riesgos_curso = 0.0
+        tot_res_mat = 0.0
         tot_prev = 0.0
         tot_pn = 0.0
         tot_vpp_res = 0.0
@@ -654,7 +668,14 @@ def build_complete_dataset():
                 tot_otros_act += float(c.get('otros_activos', 0.0))
                 tot_pasivo += float(c.get('pasivo', 0.0))
                 tot_deudas += float(c.get('deudas', 0.0))
+                tot_deudas_aseg += float(c.get('deudas_asegurados', 0.0))
+                tot_rsp += float(c.get('reserva_siniestros_pendientes', 0.0))
+                tot_ibnr += float(c.get('ibnr', 0.0))
+                tot_juicios += float(c.get('reserva_juicios', 0.0))
+                tot_mediaciones += float(c.get('reserva_mediaciones', 0.0))
                 tot_comp_tec += float(c.get('compromisos_tecnicos', 0.0))
+                tot_riesgos_curso += float(c.get('riesgos_en_curso', 0.0))
+                tot_res_mat += float(c.get('reservas_matematicas', 0.0))
                 tot_prev += float(c.get('previsiones', 0.0))
                 tot_pn += float(c.get('patrimonio_neto', 0.0))
                 tot_vpp_res += float(c.get('vpp_resultado', 0.0))
@@ -913,7 +934,14 @@ def build_complete_dataset():
             "otros_activos": round(tot_otros_act, 2),
             "pasivo": round(tot_pasivo, 2),
             "deudas": round(tot_deudas, 2),
+            "deudas_asegurados": round(tot_deudas_aseg, 2),
+            "reserva_siniestros_pendientes": round(tot_rsp, 2),
+            "ibnr": round(tot_ibnr, 2),
+            "reserva_juicios": round(tot_juicios, 2),
+            "reserva_mediaciones": round(tot_mediaciones, 2),
             "compromisos_tecnicos": round(tot_comp_tec, 2),
+            "riesgos_en_curso": round(tot_riesgos_curso, 2),
+            "reservas_matematicas": round(tot_res_mat, 2),
             "previsiones": round(tot_prev, 2),
             "patrimonio_neto": round(tot_pn, 2),
             "loss_ratio": round(loss_ratio, 2),
