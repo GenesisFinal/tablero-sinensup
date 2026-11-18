@@ -148,6 +148,66 @@ def compute_all_companies_summary(df):
     Values are in ARS (Pesos Homogéneos).
     """
     df_bal = df[df['cod_subramo'] == ''] if 'cod_subramo' in df.columns else df
+    df_sub = df[df['cod_subramo'] != ''] if 'cod_subramo' in df.columns else df.iloc[0:0]
+    df_20101 = df_sub[df_sub['cod_cuenta'].str.startswith('2.01.01.')] if not df_sub.empty else df_sub
+
+    RSP_PREFIXES = (
+        '2.01.01.01.01.01.',  # Stros. Pendientes - Seguros Directos Administrativos
+        '2.01.01.01.01.02.',  # Stros. Pendientes - Seguros Directos En juicios
+        '2.01.01.01.01.03.',  # Stros. Pendientes - Seguros Directos En Mediación
+        '2.01.01.01.01.04.',  # Stros. Pendientes a/c Reaseguradores (-)
+        '2.01.01.01.01.05.',  # Stros. Liquidados a Pagar
+        '2.01.01.01.01.06.',  # Stros. en Proceso de Liquidación
+        '2.01.01.01.01.07.',  # Stros. Pendientes Reaseguros Activos y Retrocesiones
+        '2.01.01.01.01.16.',  # Stros. Esperados (Vida - Ley 24.241)
+        '2.01.01.01.01.17.',  # Reserva Especial - Transporte Público de Pasajeros
+        '2.01.01.01.01.18.',  # Stros. por Reclamaciones Judiciales ART (.01 Med, .02 Juicio, .03 Ley 27348)
+        '2.01.01.01.01.19.',  # Diferimiento Stros. Pendientes (-)
+        '2.01.01.01.01.21.',  # Incapacidades Laborales Temporarias a Pagar
+        '2.01.01.01.01.22.',  # Prestaciones en Especies a Pagar
+        '2.01.01.01.01.24.',  # Saldo a amortizar dif. reserva pto. 33.4.1.6 (-)
+        '2.01.01.01.01.26.',  # Amort. dif. cálc. Rva.-val. juicios s/sentencia (-)
+        '2.01.01.01.01.27.',  # Ajuste por Diferencia a amortizar en 8 trimestres (-)
+        '2.01.01.01.01.28.01.', '2.01.01.01.01.28.02.', '2.01.01.01.01.28.03.', '2.01.01.01.01.28.04.',
+        '2.01.01.01.01.28.05.', '2.01.01.01.01.28.06.', '2.01.01.01.01.28.07.', '2.01.01.01.01.28.08.',
+        '2.01.01.01.01.28.09.', '2.01.01.01.01.28.10.', '2.01.01.01.01.28.11.', '2.01.01.01.01.28.12.',
+        '2.01.01.01.01.28.15.', '2.01.01.01.01.28.16.',  # Stros. Pendientes a/c FFEP (-)
+        '2.01.01.01.01.29.',  # Reserva por Juicios Futuros
+    )
+    IBNR_PREFIXES = (
+        '2.01.01.01.01.08.',     # Stros. Ocurridos y no Reportados - IBNR
+        '2.01.01.01.01.09.',     # Stros. Ocurridos y no Suficientemente Reportados - IBNER
+        '2.01.01.01.01.10.',     # Stros. Ocurridos y no Reportados - IBNR a/c Reaseg. (-)
+        '2.01.01.01.01.20.',     # Diferimiento IBNR (-)
+        '2.01.01.01.01.25.',     # Stros. Ocurr. y no Reportados - IBNR por Reas. Act.
+        '2.01.01.01.01.28.13.',  # IBNR a/c FFEP (-)
+    )
+    JUICIOS_PREFIXES = (
+        '2.01.01.01.01.02.',     # Stros. Pendientes - Seguros Directos En juicios
+        '2.01.01.01.01.18.02.',  # Siniestros ART - En juicio
+        '2.01.01.01.01.18.03.',  # Proc jud. de revisión inst adm Art 2° Ley 27348
+        '2.01.01.01.01.26.',     # Amort. dif. cálc. Rva.-val. juicios s/sentencia (-)
+        '2.01.01.01.01.28.07.',  # Stros. en Juicio a/c FFEP (-)
+        '2.01.01.01.01.28.08.',  # Stros. COVID en Juicio a/c FFEP (-)
+        '2.01.01.01.01.28.15.',  # Rev Inst Adm Art 2° Ley 27348 a/c FFEP (-)
+        '2.01.01.01.01.28.16.',  # Rev Inst Adm Art 2° Ley 27348 COVID a/c FFEP (-)
+        '2.01.01.01.01.29.',     # Reserva por Juicios Futuros
+    )
+    MEDIACIONES_PREFIXES = (
+        '2.01.01.01.01.03.',     # Stros. Pendientes - Seguros Directos En Mediación
+        '2.01.01.01.01.18.01.',  # Siniestros ART - En mediación
+        '2.01.01.01.01.28.05.',  # Stros. en Mediación a/c FFEP (-)
+        '2.01.01.01.01.28.06.',  # Stros. COVID en Mediación a/c FFEP (-)
+    )
+
+    if not df_20101.empty:
+        rsp_by_cia = df_20101[df_20101['cod_cuenta'].str.startswith(RSP_PREFIXES)].groupby('cod_cia')['importe'].sum().to_dict()
+        ibnr_by_cia = df_20101[df_20101['cod_cuenta'].str.startswith(IBNR_PREFIXES)].groupby('cod_cia')['importe'].sum().to_dict()
+        juicios_by_cia = df_20101[df_20101['cod_cuenta'].str.startswith(JUICIOS_PREFIXES)].groupby('cod_cia')['importe'].sum().to_dict()
+        med_by_cia = df_20101[df_20101['cod_cuenta'].str.startswith(MEDIACIONES_PREFIXES)].groupby('cod_cia')['importe'].sum().to_dict()
+    else:
+        rsp_by_cia, ibnr_by_cia, juicios_by_cia, med_by_cia = {}, {}, {}, {}
+
     companies = df_bal[['cod_cia', 'razon_social', 'tipo_entidad']].drop_duplicates()
     periodo_str = str(df_bal['periodo'].iloc[0]).strip() if ('periodo' in df_bal.columns and not df_bal.empty) else ''
     period_months = get_period_months(periodo_str)
@@ -171,7 +231,10 @@ def compute_all_companies_summary(df):
 
         pasivo_tot = get_account_value(df_c, '2.00.00.00.00.00.00.00', exact=True)
         deudas = get_account_value(df_c, '2.01.00.00.00.00.00.00', exact=True)
+        deudas_aseg = get_account_value(df_c, '2.01.01.00.00.00.00.00', exact=True)
         comp_tec_pasivo = get_account_value(df_c, '2.02.00.00.00.00.00.00', exact=True)
+        riesgos_curso = get_account_value(df_c, '2.02.02.02.02.00.00.00', exact=True)
+        res_matematicas = get_account_value(df_c, '2.02.02.02.03.00.00.00', exact=True)
         prev = get_account_value(df_c, '2.03.00.00.00.00.00.00', exact=True)
         pn = get_account_value(df_c, '3.00.00.00.00.00.00.00', exact=True)
 
@@ -283,7 +346,14 @@ def compute_all_companies_summary(df):
             'otros_activos': otros_act,
             'pasivo': pasivo_tot,
             'deudas': deudas,
+            'deudas_asegurados': deudas_aseg,
+            'reserva_siniestros_pendientes': float(rsp_by_cia.get(cod, 0.0)),
+            'ibnr': float(ibnr_by_cia.get(cod, 0.0)),
+            'reserva_juicios': float(juicios_by_cia.get(cod, 0.0)),
+            'reserva_mediaciones': float(med_by_cia.get(cod, 0.0)),
             'compromisos_tecnicos': comp_tec_pasivo,
+            'riesgos_en_curso': riesgos_curso,
+            'reservas_matematicas': res_matematicas,
             'previsiones': prev,
             'patrimonio_neto': pn,
             'primas_emitidas': primas_emit,
