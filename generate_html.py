@@ -3923,8 +3923,13 @@ def generate_html():
         const trueIdx = data.groups.indexOf(g) + 1;
         const isLS = g.id === 'la_segunda';
         const barWidth = Math.min(100, Math.max(4, (g.market_share || 0) * 7));
-        const totVpp = (g.members || []).reduce((acc, m) => acc + (m.vpp_resultado || 0), 0);
-        const hasVpp = Math.abs(totVpp) >= 1000;
+        const elimVpp = g.vpp_eliminado_resultado || 0;
+        const isVppCons = (g.consolidation_mode === 'vpp_parent' || g.consolidation_mode === 'sister_cross_vpp') && (Math.abs(elimVpp) >= 1000 || Math.abs(g.vpp_eliminado_activo || 0) >= 1000);
+        const rnTitle = g.consolidation_mode === 'vpp_parent'
+          ? `Resultado consolidado RT 21 = Controlante [${{g.parent_code}}] (${{formatARS(g.resultado_neto)}}). VPP intra-grupo eliminado: ${{formatARS(elimVpp)}}`
+          : (isVppCons
+              ? `Resultado consolidado neto de VPP cruzado intra-grupo: ${{formatARS(g.resultado_neto)}} (VPP eliminado: ${{formatARS(elimVpp)}})`
+              : `Rdo Neto: ${{formatARS(g.resultado_neto)}}`);
         const sinBase = !!g.sin_base_primas;
         return `
           <tr class="hover:bg-slate-800/70 ${{isLS ? 'bg-amber-500/10 border-l-4 border-l-amber-400/80 font-semibold' : ''}} cursor-pointer transition-colors" onclick="openGroupModal('${{g.id}}')">
@@ -3951,9 +3956,9 @@ def generate_html():
             <td class="py-2.5 px-2 text-right font-mono font-bold ${{sinBase ? 'text-slate-400' : (g.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400')}}">${{sinBase ? 'S/P' : formatPercent(g.combined_ratio)}}</td>
             <td class="py-2.5 px-2 text-right font-mono ${{g.resultado_tecnico >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_tecnico)}}</td>
             <td class="py-2.5 px-2 text-right font-mono ${{g.resultado_financiero >= 0 ? 'text-emerald-400' : 'text-rose-400'}}">${{formatARS(g.resultado_financiero)}}</td>
-            <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} whitespace-nowrap" title="${{hasVpp ? `Rdo Neto: ${{formatARS(g.resultado_neto)}} (del cual VPP Cías en balances de controlantes: ${{formatARS(totVpp)}})` : `Rdo Neto: ${{formatARS(g.resultado_neto)}}`}}">
+            <td class="py-2.5 px-2 text-right font-mono font-bold ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} whitespace-nowrap" title="${{rnTitle}}">
               ${{formatARS(g.resultado_neto)}}
-              ${{hasVpp ? `<span class="block text-[8px] font-normal text-amber-300">VPP: ${{formatARS(totVpp)}}</span>` : ''}}
+              ${{isVppCons ? `<span class="block text-[8px] font-normal text-emerald-400">✓ Neto s/ VPP</span>` : ''}}
             </td>
             <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.activo)}}</td>
             <td class="py-2.5 px-2 text-right text-slate-300 font-mono">${{formatARS(g.patrimonio_neto)}}</td>
@@ -3975,7 +3980,9 @@ def generate_html():
 
       state.selectedGroupId = gid;
 
-      const totVppGroup = g.members.reduce((acc, m) => acc + (m.vpp_resultado || 0), 0);
+      const elimVpp = g.vpp_eliminado_resultado || 0;
+      const elimAct = g.vpp_eliminado_activo || 0;
+      const isVppCons = (g.consolidation_mode === 'vpp_parent' || g.consolidation_mode === 'sister_cross_vpp') && (Math.abs(elimVpp) >= 1000 || Math.abs(elimAct) >= 1000);
 
       document.getElementById('groupModalTitle').innerText = g.name;
       document.getElementById('groupModalSubtitle').innerText = `${{g.description}} • ${{g.entities_count}} entidades aseguradoras consolidadas`;
@@ -3994,33 +4001,49 @@ def generate_html():
         <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
           <div class="text-[10px] font-semibold text-slate-400 uppercase">Resultado Neto</div>
           <div class="text-base font-bold font-mono ${{g.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} mt-0.5">${{formatARS(g.resultado_neto)}}</div>
-          <div class="text-[10px] text-slate-400">Téc: ${{formatARS(g.resultado_tecnico)}} ${{Math.abs(totVppGroup) >= 1000 ? `<span class="block text-[9px] text-amber-300 font-semibold" title="Suma de VPP registrado en los balances individuales">(VPP Cías: ${{formatARS(totVppGroup)}})</span>` : ''}}</div>
+          <div class="text-[10px] text-slate-400">Téc: ${{formatARS(g.resultado_tecnico)}} ${{isVppCons ? `<span class="block text-[9px] text-emerald-400 font-semibold" title="Consolidado RT 21 sin doble cómputo intra-grupo">✓ Sin doble cómputo VPP (${{formatARS(elimVpp)}} elim.)</span>` : ''}}</div>
         </div>
-        <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl">
+        <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl" title="${{isVppCons && Math.abs(elimAct) >= 1000 ? `Activos/PN VPP intra-grupo eliminados: ${{formatARS(elimAct)}}` : ''}}">
           <div class="text-[10px] font-semibold text-slate-400 uppercase">Activo Consolidado</div>
           <div class="text-base font-bold font-mono text-brand-blue mt-0.5">${{formatARS(g.activo)}}</div>
           <div class="text-[10px] text-slate-400">PN: ${{formatARS(g.patrimonio_neto)}}</div>
         </div>
       `;
 
-      document.getElementById('groupModalMembersList').innerHTML = g.members.map(m => {{
+      let vppNoticeHtml = '';
+      if (isVppCons && g.consolidation_mode === 'vpp_parent') {{
+        vppNoticeHtml = `
+          <div class="p-3 bg-emerald-500/10 border-b border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed">
+            <b class="text-emerald-300">Consolidación RT 21 (Sin Doble Cómputo VPP):</b> El Resultado Neto (<b>${{formatARS(g.resultado_neto)}}</b>) y Patrimonio Neto (<b>${{formatARS(g.patrimonio_neto)}}</b>) consolidados del grupo corresponden a la entidad controlante (<b>[${{g.parent_code}}]</b>), cuyo balance ya resume por VPP el de sus vinculadas. Se eliminaron <b>${{formatARS(elimVpp)}}</b> de VPP en Resultados y <b>${{formatARS(elimAct)}}</b> en Inversiones/PN (Primas, Siniestros y Res. Técnico sí integran las ${{g.entities_count}} entidades).
+          </div>
+        `;
+      }} else if (isVppCons && g.consolidation_mode === 'sister_cross_vpp') {{
+        vppNoticeHtml = `
+          <div class="p-3 bg-emerald-500/10 border-b border-emerald-500/20 text-[11px] text-slate-300 leading-relaxed">
+            <b class="text-emerald-300">Consolidación RT 21 (Participación Cruzada Eliminada):</b> Se eliminó el VPP intra-grupo por tenencia cruzada entre entidades del grupo (<b>${{formatARS(elimVpp)}}</b> en Resultados y <b>${{formatARS(elimAct)}}</b> en Inversiones/PN) para evitar doble cómputo.
+          </div>
+        `;
+      }}
+
+      document.getElementById('groupModalMembersList').innerHTML = vppNoticeHtml + g.members.map(m => {{
         const cObj = (data.companies_by_code && data.companies_by_code[m.cod_cia]) || {{}};
         const sinResc = (m.siniestros || 0) + (m.rescates !== undefined ? (m.rescates || 0) : (cObj.rescates || 0));
         const sinBaseM = (m.sin_base_primas !== undefined) ? !!m.sin_base_primas : !!cObj.sin_base_primas;
         return `
         <div class="p-3.5 flex flex-wrap items-center justify-between gap-3 hover:bg-slate-900/60 transition-colors">
           <div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <span class="font-mono text-xs font-bold text-slate-400">${{m.cod_cia}}</span>
               <span class="font-bold text-sm text-white">${{m.razon_social}}</span>
               ${{getTipoBadge(m.tipo_entidad)}}
+              ${{m.is_parent ? '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🏛️ Controlante (Resume VPP)</span>' : ''}}
             </div>
             <div class="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-3">
               <span>Primas: <b class="text-slate-200 font-mono">${{formatARS(m.primas_emitidas)}}</b> (${{m.share_of_group}}% del grupo)</span>
               <span>Siniestros y Resc.: <b class="text-rose-300 font-mono">${{formatARS(sinResc)}}</b></span>
               <span>Comb. Ratio: <b class="${{sinBaseM ? 'text-slate-400' : (m.combined_ratio <= 100 ? 'text-emerald-400' : 'text-rose-400')}} font-mono">${{sinBaseM ? 'S/P' : formatPercent(m.combined_ratio)}}</b></span>
-              <span>Rdo. Neto: <b class="${{m.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{formatARS(m.resultado_neto)}}</b></span>
-              ${{(m.vpp_resultado && Math.abs(m.vpp_resultado) >= 1000) ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades del grupo asegurador">↳ VPP Cías: ${{formatARS(m.vpp_resultado)}} (${{m.vpp_pct_neto}}%)</span>` : ''}}
+              <span>Rdo. Neto: <b class="${{m.resultado_neto >= 0 ? 'text-emerald-400' : 'text-rose-400'}} font-mono">${{formatARS(m.resultado_neto)}}</b>${{m.excluded_from_rn_pn_sum ? ` <span class="text-[10px] text-slate-400 italic">(incluido vía VPP en ${{g.parent_code}})</span>` : ''}}</span>
+              ${{(m.vpp_resultado && Math.abs(m.vpp_resultado) >= 1000) ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades">↳ VPP Cías: ${{formatARS(m.vpp_resultado)}} (${{m.vpp_pct_neto}}%)</span>` : ''}}
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -4554,9 +4577,9 @@ def generate_html():
         if (!isGroup && c.vpp_resultado && c.vpp_resultado !== 0) {{
           resNetoSub.innerHTML = `Final del Período<br><span class="text-amber-400 font-bold" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades del grupo asegurador">↳ del cual VPP Cías: ${{formatARS(c.vpp_resultado)}} (${{c.vpp_pct_neto}}%)</span>`;
         }} else if (isGroup) {{
-          const totVppGroup = (c.members || []).reduce((acc, m) => acc + (m.vpp_resultado || 0), 0);
-          if (totVppGroup !== 0) {{
-            resNetoSub.innerHTML = `Consolidado Grupo<br><span class="text-amber-400 font-bold" title="Suma de resultados por VPP registrados entre empresas del grupo">↳ VPP Intra-Grupo: ${{formatARS(totVppGroup)}}</span>`;
+          const elimRes = c.vpp_eliminado_resultado || 0;
+          if (Math.abs(elimRes) >= 1000 || c.consolidation_mode === 'vpp_parent') {{
+            resNetoSub.innerHTML = `Consolidado RT 21<br><span class="text-emerald-400 font-bold" title="Resultado consolidado sin duplicar resultados de vinculadas valuadas por VPP">✓ VPP Intra-Grupo Elim.: ${{formatARS(elimRes)}}</span>`;
           }} else {{
             resNetoSub.innerText = 'Consolidado Grupo';
           }}
@@ -4638,9 +4661,12 @@ def generate_html():
             annotations: [{{ text: 'Sin activos positivos informados', showarrow: false, font: {{ color: pTheme.textColor, size: 13 }} }}]
           }}, {{ responsive: true, displayModeBar: false }});
         }} else {{
-          const assetAnnots = (c.vpp_activo && Math.abs(c.vpp_activo) >= 1000)
-            ? [{{ text: `↳ Inversiones incluye VPP Filiales: ${{formatARS(c.vpp_activo)}}`, x: 0.5, y: -0.06, xref: 'paper', yref: 'paper', showarrow: false, font: {{ color: '#F59E0B', size: 10 }} }}]
-            : [];
+          const hasElimAct = c.vpp_eliminado_activo && Math.abs(c.vpp_eliminado_activo) >= 1000;
+          const assetAnnots = hasElimAct
+            ? [{{ text: `✓ Neto de VPP Intra-Grupo (-${{formatARS(c.vpp_eliminado_activo)}})`, x: 0.5, y: -0.06, xref: 'paper', yref: 'paper', showarrow: false, font: {{ color: '#10B981', size: 10 }} }}]
+            : ((c.vpp_activo && Math.abs(c.vpp_activo) >= 1000)
+                ? [{{ text: `↳ Inversiones incluye VPP Filiales: ${{formatARS(c.vpp_activo)}}`, x: 0.5, y: -0.06, xref: 'paper', yref: 'paper', showarrow: false, font: {{ color: '#F59E0B', size: 10 }} }}]
+                : []);
           Plotly.newPlot('ciaAssetDonut', [{{
             labels: assetLabels,
             values: assetVals,
@@ -4660,14 +4686,28 @@ def generate_html():
         }}
       }}
 
-      const liabLabels = ['Deudas', 'Compromisos Técnicos', 'Previsiones', 'Patrimonio Neto'];
+      const partTercPas = Math.max(0, c.part_terceros_pasivo || 0);
+      const liabLabels = partTercPas > 0
+        ? ['Deudas', 'Compromisos Técnicos', 'Previsiones', 'Part. Terceros', 'Patrimonio Neto']
+        : ['Deudas', 'Compromisos Técnicos', 'Previsiones', 'Patrimonio Neto'];
       const pnVal = c.patrimonio_neto || 0;
-      const liabVals = [
-        Math.max(0, c.deudas || 0),
-        Math.max(0, c.compromisos_tecnicos || 0),
-        Math.max(0, c.previsiones || 0),
-        Math.max(0, pnVal)
-      ];
+      const liabVals = partTercPas > 0
+        ? [
+            Math.max(0, c.deudas || 0),
+            Math.max(0, c.compromisos_tecnicos || 0),
+            Math.max(0, c.previsiones || 0),
+            partTercPas,
+            Math.max(0, pnVal)
+          ]
+        : [
+            Math.max(0, c.deudas || 0),
+            Math.max(0, c.compromisos_tecnicos || 0),
+            Math.max(0, c.previsiones || 0),
+            Math.max(0, pnVal)
+          ];
+      const liabColors = partTercPas > 0
+        ? ['#F87171', '#C084FC', '#FB923C', '#F59E0B', '#2DD4BF']
+        : ['#F87171', '#C084FC', '#FB923C', '#2DD4BF'];
       const liabSum = liabVals.reduce((a, b) => a + b, 0);
 
       if (document.getElementById('ciaLiabDonut')) {{
@@ -4687,7 +4727,7 @@ def generate_html():
             hole: 0.45,
             type: 'pie',
             textinfo: 'label+percent',
-            marker: {{ colors: ['#F87171', '#C084FC', '#FB923C', '#2DD4BF'] }},
+            marker: {{ colors: liabColors }},
             hovertemplate: '<b>%{{label}}</b><br>Importe: <b>%{{customdata}}</b><br>Participación: <b>%{{percent}}</b><extra></extra>'
           }}], {{
             paper_bgcolor: pTheme.paper_bgcolor,
@@ -5195,7 +5235,10 @@ def generate_html():
                 if (hasActivity) {{
                   activeCiasCount++;
                   const mCia = ciasByCode[mCode] || {{}};
-                  activeResFin += (mCia.resultado_financiero || 0);
+                  const mRf = (m.resultado_financiero_consolidado !== undefined)
+                    ? m.resultado_financiero_consolidado
+                    : (mCia.resultado_financiero || 0);
+                  activeResFin += mRf;
                 }}
               }}
             }});
@@ -7352,7 +7395,9 @@ def generate_html():
         ? ((state.entityScope === 'group' && data.groups_by_id) ? data.groups_by_id[state.selectedGroupId] : data.companies_by_code[state.selectedCompanyCode])
         : null;
       if (invResFinSub) {{
-        if (activeEntity && activeEntity.vpp_resultado && Math.abs(activeEntity.vpp_resultado) >= 1000) {{
+        if (activeEntity && activeEntity.vpp_eliminado_resultado && Math.abs(activeEntity.vpp_eliminado_resultado) >= 1000) {{
+          invResFinSub.innerHTML = `Ganancias - Pérdidas Fin.<br><span class="text-emerald-400 font-bold" title="Resultado financiero consolidado neto de VPP intra-grupo eliminado">✓ Neto de VPP Intra-Grupo (${{formatARS(activeEntity.vpp_eliminado_resultado)}})</span>`;
+        }} else if (activeEntity && activeEntity.vpp_resultado && Math.abs(activeEntity.vpp_resultado) >= 1000) {{
           const pctFinTxt = activeEntity.vpp_pct_fin !== undefined ? ` (${{activeEntity.vpp_pct_fin}}%)` : '';
           invResFinSub.innerHTML = `Ganancias - Pérdidas Fin.<br><span class="text-amber-400 font-bold" title="Resultado atribuible a la tenencia de acciones / VPP en sociedades">↳ del cual VPP Cías: ${{formatARS(activeEntity.vpp_resultado)}}${{pctFinTxt}}</span>`;
         }} else {{
@@ -7360,7 +7405,9 @@ def generate_html():
         }}
       }}
       if (invTotalSub) {{
-        if (activeEntity && activeEntity.vpp_activo && Math.abs(activeEntity.vpp_activo) >= 1000) {{
+        if (activeEntity && activeEntity.vpp_eliminado_activo && Math.abs(activeEntity.vpp_eliminado_activo) >= 1000) {{
+          invTotalSub.innerHTML = `Cartera Consolidada Ex-VPP<br><span class="text-emerald-400 font-bold" title="Inversiones netas de tenencias accionarias intra-grupo eliminadas">✓ Neto de Acc. Intra-Grupo (-${{formatARS(activeEntity.vpp_eliminado_activo)}})</span>`;
+        }} else if (activeEntity && activeEntity.vpp_activo && Math.abs(activeEntity.vpp_activo) >= 1000) {{
           invTotalSub.innerHTML = `Cartera de Activos Financieros<br><span class="text-amber-400 font-bold" title="Tenencia en Acciones de Grupo Económico / Filiales">↳ Acc. Grupo (VPP): ${{formatARS(activeEntity.vpp_activo)}}</span>`;
         }} else {{
           invTotalSub.innerText = 'Cartera de Activos Financieros';
