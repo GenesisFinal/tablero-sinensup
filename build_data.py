@@ -392,6 +392,8 @@ def build_complete_dataset():
             "name": "Grupo Sancor Seguros",
             "short_name": "Sancor Seguros",
             "codes": ["0224", "0626", "0930"],
+            "consolidation_mode": "vpp_parent",
+            "parent_code": "0224",
             "description": "Sancor Seguros, Prevención ART, Prevención Retiro"
         },
         {
@@ -399,6 +401,7 @@ def build_complete_dataset():
             "name": "Grupo Federación Patronal",
             "short_name": "Federación Patronal",
             "codes": ["0726", "0425"],
+            "consolidation_mode": "additive",
             "description": "Federación Patronal Seguros (PM+ART), Federación Patronal Retiro"
         },
         {
@@ -406,6 +409,8 @@ def build_complete_dataset():
             "name": "Grupo Provincia",
             "short_name": "Provincia",
             "codes": ["0499", "0621", "0532"],
+            "consolidation_mode": "sister_cross_vpp",
+            "cross_vpp_holders": ["0499"],
             "description": "Provincia Seguros, Provincia ART, Provincia Vida"
         },
         {
@@ -413,6 +418,8 @@ def build_complete_dataset():
             "name": "Grupo San Cristóbal",
             "short_name": "San Cristóbal",
             "codes": ["0192", "0620", "0442"],
+            "consolidation_mode": "vpp_parent",
+            "parent_code": "0192",
             "description": "San Cristóbal Seguros, Asociart ART, San Cristóbal Retiro",
             "member_labels": {
                 "0192": "San Cristóbal Seguros",
@@ -425,6 +432,8 @@ def build_complete_dataset():
             "name": "Grupo Asegurador La Segunda",
             "short_name": "La Segunda",
             "codes": ["0317", "0618", "0117", "0436"],
+            "consolidation_mode": "vpp_parent",
+            "parent_code": "0317",
             "description": "La Segunda Generales, La Segunda ART, La Segunda Personas, La Segunda Retiro"
         },
         {
@@ -465,6 +474,8 @@ def build_complete_dataset():
             "name": "Grupo Mercantil Andina",
             "short_name": "Mercantil Andina",
             "codes": ["0116", "0959"],
+            "consolidation_mode": "vpp_parent",
+            "parent_code": "0116",
             "description": "Mercantil Andina, Andina ART"
         },
         {
@@ -553,6 +564,18 @@ def build_complete_dataset():
     groups_balances_subramos = {}
     active_codes_by_gid = {}
 
+    def apply_account_delta(acc_dict, delta_tracker, leaf_code, delta):
+        delta = round(float(delta), 2)
+        if delta == 0.0:
+            return
+        curr = leaf_code
+        visited = set()
+        while curr and curr in plan_de_cuentas and curr not in visited:
+            visited.add(curr)
+            acc_dict[curr] = round(float(acc_dict.get(curr, 0.0)) + delta, 2)
+            delta_tracker[curr] = round(float(delta_tracker.get(curr, 0.0)) + delta, 2)
+            curr = plan_de_cuentas[curr].get('padre_codigo', '')
+
     for gdef in GROUPS_DEFINITIONS:
         gid = gdef['id']
         gname = gdef['name']
@@ -632,8 +655,132 @@ def build_complete_dataset():
             continue
 
         active_codes_by_gid[gid] = active_codes
-        if abs(tot_vpp_res) < 1000.0:
+
+        # Raw aggregated general balance across active group members
+        group_gen_raw = {}
+        for cd in active_codes:
+            if cd in cias_balances_general:
+                for acc_code, acc_val in cias_balances_general[cd].items():
+                    if not str(acc_code).startswith('_'):
+                        group_gen_raw[acc_code] = round(group_gen_raw.get(acc_code, 0.0) + float(acc_val), 2)
+
+        # RT 21 FACPCE / SSN Intra-group VPP consolidation adjustments
+        elim_deltas = {}
+        vpp_elim_by_member = {cd: 0.0 for cd in active_codes}
+        elim_act = 0.0
+        elim_res = 0.0
+        part_terc_pas = 0.0
+        part_terc_res = 0.0
+        effective_mode = "additive"
+        cons_mode_cfg = gdef.get("consolidation_mode", "additive")
+        parent_code = gdef.get("parent_code")
+
+        if cons_mode_cfg == "vpp_parent" and parent_code in active_codes and len(active_codes) > 1:
+            effective_mode = "vpp_parent"
+            subs_codes = [cd for cd in active_codes if cd != parent_code]
+
+            # 1. Eliminate subsidiaries' Patrimonio Neto (3.*) so chapter 3 equals parent's PN
+            for cd in subs_codes:
+                for acc_code, acc_val in cias_balances_general.get(cd, {}).items():
+                    if str(acc_code).startswith('3.') and not str(acc_code).startswith('_'):
+                        val = round(float(acc_val), 2)
+                        group_gen_raw[acc_code] = round(group_gen_raw.get(acc_code, 0.0) - val, 2)
+                        elim_deltas[acc_code] = round(elim_deltas.get(acc_code, 0.0) - val, 2)
+
+            # 2. Eliminate intra-group VPP equity holdings (1.02.01.02.02.02 & 1.02.01.02.01.02)
+            ge_sin = sum(float(cias_balances_general.get(cd, {}).get('1.02.01.02.02.02.00.00', 0.0)) for cd in active_codes)
+            ge_con = sum(float(cias_balances_general.get(cd, {}).get('1.02.01.02.01.02.00.00', 0.0)) for cd in active_codes)
+            pn_subs = sum(float(companies_dict[cd]['patrimonio_neto']) for cd in subs_codes)
+            elim_act = round(min(ge_sin + ge_con, max(0.0, pn_subs)), 2)
+            elim_sin = round(min(ge_sin, elim_act), 2)
+            elim_con = round(elim_act - elim_sin, 2)
+            if elim_sin != 0.0:
+                apply_account_delta(group_gen_raw, elim_deltas, '1.02.01.02.02.02.00.00', -elim_sin)
+            if elim_con != 0.0:
+                apply_account_delta(group_gen_raw, elim_deltas, '1.02.01.02.01.02.00.00', -elim_con)
+
+            # 3. Minority interest in subsidiaries' equity -> 2.04 Participación de Terceros en Soc. Controladas
+            part_terc_pas = round(pn_subs - elim_act, 2)
+            if abs(part_terc_pas) >= 0.01:
+                apply_account_delta(group_gen_raw, elim_deltas, '2.04.04.04.04.01.00.00', part_terc_pas)
+
+            # 4. Eliminate intra-group VPP result (5.02) & recognize minority interest in P&L (4.03)
+            rn_subs = sum(float(companies_dict[cd]['resultado_neto']) for cd in subs_codes)
+            alpha = (elim_act / pn_subs) if pn_subs > 0 else 1.0
+            ten_acc_grp = sum(float(cias_balances_general.get(cd, {}).get('5.02.03.03.01.02.00.00', 0.0)) for cd in active_codes)
+            ten_otr_grp = sum(float(cias_balances_general.get(cd, {}).get('5.02.03.03.02.01.00.00', 0.0)) for cd in active_codes)
+
+            if abs(ten_acc_grp) < 1000.0 and abs(ten_otr_grp) > 0 and (
+                rn_subs == 0 or (ten_otr_grp * rn_subs > 0 and abs(ten_otr_grp) <= abs(rn_subs) * 1.05)
+            ):
+                elim_res = round(ten_otr_grp, 2)
+                apply_account_delta(group_gen_raw, elim_deltas, '5.02.03.03.02.01.00.00', -elim_res)
+                for cd in active_codes:
+                    vpp_elim_by_member[cd] = float(cias_balances_general.get(cd, {}).get('5.02.03.03.02.01.00.00', 0.0))
+            else:
+                elim_res = round(alpha * rn_subs, 2)
+                res_leaf = '5.02.03.03.01.02.00.00' if abs(ten_acc_grp) >= abs(ten_otr_grp) else '5.02.03.03.02.01.00.00'
+                apply_account_delta(group_gen_raw, elim_deltas, res_leaf, -elim_res)
+                vpp_elim_by_member[parent_code] = elim_res
+
+            part_terc_res = round(rn_subs - elim_res, 2)
+            if abs(part_terc_res) >= 0.01:
+                apply_account_delta(group_gen_raw, elim_deltas, '4.03.03.03.03.01.00.00', part_terc_res)
+
+            # Update group-level totals so Activo == Pasivo + PN and RN == RN_parent
+            tot_activo = round(tot_activo - elim_act, 2)
+            tot_inv = round(tot_inv - elim_act, 2)
+            tot_pasivo = round(tot_pasivo + part_terc_pas, 2)
+            tot_pn = float(companies_dict[parent_code]['patrimonio_neto'])
+            tot_res_fin = round(tot_res_fin - elim_res, 2)
+            tot_op_ext = round(tot_op_ext - part_terc_res, 2)
+            tot_res_neto = float(companies_dict[parent_code]['resultado_neto'])
+
+        elif cons_mode_cfg == "sister_cross_vpp" and len(active_codes) > 1:
+            holders = [h for h in gdef.get("cross_vpp_holders", []) if h in active_codes]
+            non_holders = [cd for cd in active_codes if cd not in holders]
+            if holders and non_holders:
+                effective_mode = "sister_cross_vpp"
+                for h in holders:
+                    h_bg = cias_balances_general.get(h, {})
+                    h_sin = float(h_bg.get('1.02.01.02.02.02.00.00', 0.0))
+                    h_con = float(h_bg.get('1.02.01.02.01.02.00.00', 0.0))
+                    h_act = round(h_sin + h_con, 2)
+                    h_tacc = float(h_bg.get('5.02.03.03.01.02.00.00', 0.0))
+                    h_totr = float(h_bg.get('5.02.03.03.02.01.00.00', 0.0))
+                    h_res = round(h_tacc + h_totr, 2) if h_act > 0 else 0.0
+
+                    if h_sin != 0.0:
+                        apply_account_delta(group_gen_raw, elim_deltas, '1.02.01.02.02.02.00.00', -h_sin)
+                    if h_con != 0.0:
+                        apply_account_delta(group_gen_raw, elim_deltas, '1.02.01.02.01.02.00.00', -h_con)
+                    if h_act > 0 and h_tacc != 0.0:
+                        apply_account_delta(group_gen_raw, elim_deltas, '5.02.03.03.01.02.00.00', -h_tacc)
+                    if h_act > 0 and h_totr != 0.0:
+                        apply_account_delta(group_gen_raw, elim_deltas, '5.02.03.03.02.01.00.00', -h_totr)
+                    if h_res != 0.0:
+                        apply_account_delta(group_gen_raw, elim_deltas, '3.05.05.05.05.02.00.00', -h_res)
+                    adj_res_cap = round(h_act - h_res, 2)
+                    if adj_res_cap != 0.0:
+                        apply_account_delta(group_gen_raw, elim_deltas, '3.03.03.03.03.04.00.00', -adj_res_cap)
+
+                    elim_act = round(elim_act + h_act, 2)
+                    elim_res = round(elim_res + h_res, 2)
+                    vpp_elim_by_member[h] = h_res
+
+                tot_activo = round(tot_activo - elim_act, 2)
+                tot_inv = round(tot_inv - elim_act, 2)
+                tot_pn = round(tot_pn - elim_act, 2)
+                tot_res_fin = round(tot_res_fin - elim_res, 2)
+                tot_res_neto = round(tot_res_neto - elim_res, 2)
+
+        # Residual VPP held outside the group perimeter (e.g., health/banks/foreign)
+        tot_vpp_act = round(max(0.0, tot_vpp_act - elim_act), 2)
+        tot_vpp_res = round(tot_vpp_res - elim_res, 2)
+        if tot_vpp_act <= 0 or abs(tot_vpp_res) < 1000.0:
             tot_vpp_res = 0.0
+
+        groups_balances_general[gid] = compute_hierarchical_rollup(group_gen_raw, is_subramo=False)
 
         if 'member_labels' in gdef:
             active_desc = ", ".join(gdef['member_labels'][cd] for cd in active_codes if cd in gdef['member_labels'])
@@ -669,20 +816,24 @@ def build_complete_dataset():
         vpp_pct_neto = round((tot_vpp_res / tot_res_neto * 100.0), 1) if (tot_vpp_res != 0 and tot_res_neto != 0) else 0.0
         vpp_pct_fin = round((tot_vpp_res / tot_res_fin * 100.0), 1) if (tot_vpp_res != 0 and tot_res_fin != 0) else 0.0
 
-        # Members breakdown with individual share of group
+        # Members breakdown with individual share of group and consolidation metadata
         members_summary = []
         for m in members:
             m_emit = float(m.get('primas_emitidas', 0.0))
+            m_cod = m['cod_cia']
             members_summary.append({
-                "cod_cia": m['cod_cia'],
+                "cod_cia": m_cod,
                 "razon_social": m['razon_social'],
                 "tipo_entidad": m['tipo_entidad'],
+                "is_parent": bool(effective_mode == "vpp_parent" and m_cod == parent_code),
+                "excluded_from_rn_pn_sum": bool(effective_mode == "vpp_parent" and m_cod != parent_code),
                 "primas_emitidas": m_emit,
                 "primas_devengadas": float(m.get('primas_devengadas', 0.0)),
                 "siniestros": float(m.get('siniestros', 0.0)),
                 "rescates": float(m.get('rescates', 0.0)),
                 "resultado_tecnico": float(m.get('resultado_tecnico', 0.0)),
                 "resultado_financiero": float(m.get('resultado_financiero', 0.0)),
+                "resultado_financiero_consolidado": round(float(m.get('resultado_financiero', 0.0)) - float(vpp_elim_by_member.get(m_cod, 0.0)), 2),
                 "resultado_neto": float(m.get('resultado_neto', 0.0)),
                 "vpp_resultado": float(m.get('vpp_resultado', 0.0)),
                 "vpp_activo": float(m.get('vpp_activo', 0.0)),
@@ -695,8 +846,20 @@ def build_complete_dataset():
         members_summary.sort(key=lambda x: x['primas_emitidas'], reverse=True)
 
         df_group_raw = df_raw[df_raw['cod_cia'].isin(active_codes)]
-        group_waterfall = get_company_waterfall_data(df_group_raw)
-        group_investments = get_company_investments_breakdown(df_group_raw)
+        elim_rows = [
+            {
+                'cod_cia': parent_code if effective_mode == 'vpp_parent' else active_codes[0],
+                'tipo_entidad': members[0]['tipo_entidad'],
+                'cod_subramo': '',
+                'cod_cuenta': k,
+                'desc_cuenta': plan_de_cuentas.get(k, {}).get('desc', k),
+                'importe': float(v),
+            }
+            for k, v in elim_deltas.items() if abs(v) > 0
+        ]
+        df_group_cons = pd.concat([df_group_raw, pd.DataFrame(elim_rows)], ignore_index=True) if elim_rows else df_group_raw
+        group_waterfall = get_company_waterfall_data(df_group_cons)
+        group_investments = get_company_investments_breakdown(df_group_cons)
 
         g_obj = {
             "id": gid,
@@ -704,38 +867,45 @@ def build_complete_dataset():
             "short_name": gdef['short_name'],
             "description": active_desc,
             "entities_count": len(members),
+            "consolidation_mode": effective_mode,
+            "parent_code": parent_code if effective_mode == "vpp_parent" else None,
+            "parent_name": companies_dict[parent_code]['razon_social'] if (effective_mode == "vpp_parent" and parent_code in companies_dict) else None,
+            "vpp_eliminado_resultado": round(elim_res, 2),
+            "vpp_eliminado_activo": round(elim_act, 2),
+            "part_terceros_pasivo": round(part_terc_pas, 2),
+            "part_terceros_resultado": round(part_terc_res, 2),
             "members": members_summary,
-            "primas_emitidas": tot_emit,
-            "reaseguro_activo_neto": tot_reaseg,
-            "primas_cedidas": tot_cedidas,
-            "primas_devengadas": tot_dev,
-            "var_reservas": tot_var,
-            "siniestros": tot_sin,
-            "rescates": tot_rescates,
-            "gtos_produccion": tot_gtos_prod,
-            "gtos_explotacion": tot_gtos_exp,
-            "gtos_operativos": tot_gtos_op,
-            "gastos_produccion": tot_gtos_prod,
-            "gastos_explotacion": tot_gtos_exp,
-            "otros_tec_neto": tot_otros_tec,
-            "op_extraordinarias": tot_op_ext,
-            "impuesto_ganancias": tot_imp_gan,
-            "resultado_tecnico": tot_res_tec,
-            "resultado_financiero": tot_res_fin,
-            "resultado_neto": tot_res_neto,
-            "activo": tot_activo,
-            "inversiones": tot_inv,
-            "disponibilidades": tot_disp,
-            "creditos": tot_cred,
-            "premios_a_cobrar": tot_premios,
-            "inmuebles": tot_inm,
-            "bienes_uso": tot_bu,
-            "otros_activos": tot_otros_act,
-            "pasivo": tot_pasivo,
-            "deudas": tot_deudas,
-            "compromisos_tecnicos": tot_comp_tec,
-            "previsiones": tot_prev,
-            "patrimonio_neto": tot_pn,
+            "primas_emitidas": round(tot_emit, 2),
+            "reaseguro_activo_neto": round(tot_reaseg, 2),
+            "primas_cedidas": round(tot_cedidas, 2),
+            "primas_devengadas": round(tot_dev, 2),
+            "var_reservas": round(tot_var, 2),
+            "siniestros": round(tot_sin, 2),
+            "rescates": round(tot_rescates, 2),
+            "gtos_produccion": round(tot_gtos_prod, 2),
+            "gtos_explotacion": round(tot_gtos_exp, 2),
+            "gtos_operativos": round(tot_gtos_op, 2),
+            "gastos_produccion": round(tot_gtos_prod, 2),
+            "gastos_explotacion": round(tot_gtos_exp, 2),
+            "otros_tec_neto": round(tot_otros_tec, 2),
+            "op_extraordinarias": round(tot_op_ext, 2),
+            "impuesto_ganancias": round(tot_imp_gan, 2),
+            "resultado_tecnico": round(tot_res_tec, 2),
+            "resultado_financiero": round(tot_res_fin, 2),
+            "resultado_neto": round(tot_res_neto, 2),
+            "activo": round(tot_activo, 2),
+            "inversiones": round(tot_inv, 2),
+            "disponibilidades": round(tot_disp, 2),
+            "creditos": round(tot_cred, 2),
+            "premios_a_cobrar": round(tot_premios, 2),
+            "inmuebles": round(tot_inm, 2),
+            "bienes_uso": round(tot_bu, 2),
+            "otros_activos": round(tot_otros_act, 2),
+            "pasivo": round(tot_pasivo, 2),
+            "deudas": round(tot_deudas, 2),
+            "compromisos_tecnicos": round(tot_comp_tec, 2),
+            "previsiones": round(tot_prev, 2),
+            "patrimonio_neto": round(tot_pn, 2),
             "loss_ratio": round(loss_ratio, 2),
             "rescates_ratio": round(rescates_ratio, 2),
             "comm_ratio": round(comm_ratio, 2),
@@ -766,15 +936,6 @@ def build_complete_dataset():
 
         groups_ranking.append(g_obj)
         groups_by_id[gid] = g_obj
-
-        # Consolidate General Balances for this group
-        group_gen_raw = {}
-        for cd in active_codes:
-            if cd in cias_balances_general:
-                for acc_code, acc_val in cias_balances_general[cd].items():
-                    if not str(acc_code).startswith('_'):
-                        group_gen_raw[acc_code] = group_gen_raw.get(acc_code, 0.0) + acc_val
-        groups_balances_general[gid] = compute_hierarchical_rollup(group_gen_raw, is_subramo=False)
 
         # Consolidate Subramo Balances directly from raw subramo leaf rows (avoids double rollups)
         groups_balances_subramos[gid] = {}
