@@ -835,6 +835,9 @@
       <button onclick="switchTab('flujo-sankey')" id="tabBtn-flujo-sankey" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-diagram-project text-indigo-400"></i> 11. Flujo de Resultados
       </button>
+      <button onclick="switchTab('rankings-dinamicos')" id="tabBtn-rankings-dinamicos" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-trophy text-amber-400"></i> 12. Rankings Dinámicos
+      </button>
     </div>
   </header>
 
@@ -1087,14 +1090,19 @@
             <p class="text-xs text-slate-400">Compara el liderazgo de mercado por Grupos Económicos Consolidados o por Aseguradoras Individuales</p>
           </div>
           
-          <!-- Mode Switch: Grupos vs Aseguradoras -->
-          <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
-            <button type="button" onclick="setRankingMode('groups')" id="rankingModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
-              <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores (Top 17)
+          <!-- Mode Switch: Grupos vs Aseguradoras + Acceso Rankings Dinámicos -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="switchTab('rankings-dinamicos')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 transition-all flex items-center gap-1.5 cursor-pointer" title="Abrir constructor de Rankings Dinámicos por 11 criterios contables y financieros">
+              <i class="fa-solid fa-sliders text-amber-400"></i> Rankings Dinámicos (11 Criterios)
             </button>
-            <button type="button" onclick="setRankingMode('companies')" id="rankingModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
-              <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
-            </button>
+            <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
+              <button type="button" onclick="setRankingMode('groups')" id="rankingModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
+                <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores (Top 17)
+              </button>
+              <button type="button" onclick="setRankingMode('companies')" id="rankingModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2937,6 +2945,137 @@
 
     </section>
 
+    <!-- ======================================================== -->
+    <!-- TAB 12: RANKINGS DINÁMICOS MULTICRITERIO                 -->
+    <!-- ======================================================== -->
+    <section id="tab-rankings-dinamicos" class="hidden space-y-6">
+
+      <!-- Control Header -->
+      <div class="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 id="drHeaderTitle" class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-trophy text-amber-400"></i> Rankings Dinámicos Multicriterio
+              </h2>
+              <span id="drHeaderBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">...</span>
+            </div>
+            <p id="drFormulaBadge" class="text-xs text-slate-400 mt-1 font-mono">Fórmula contable SSN</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="toggleDynSortDir()" id="drSortDirBtn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer" title="Invertir sentido del ordenamiento">
+              <i class="fa-solid fa-arrow-down-wide-short"></i> Mayor a Menor
+            </button>
+            <button type="button" onclick="exportDynRankingCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Level Selector + Segment Filter -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 pt-3 border-t border-slate-800/80">
+          <div class="lg:col-span-5 space-y-1.5">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-brand-red"></i> 1. Nivel de Agrupación
+            </div>
+            <div id="drLevelButtons" class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="setDynRankLevel('companies')" id="drLevelBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-red text-white shadow-md shadow-brand-red/30 transition-all cursor-pointer">
+                🏢 Aseguradoras (178)
+              </button>
+              <button type="button" onclick="setDynRankLevel('groups')" id="drLevelBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🏛️ Grupos Económicos (17)
+              </button>
+              <button type="button" onclick="setDynRankLevel('segments')" id="drLevelBtn-segments" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                📂 Conjuntos / Segmentos (4)
+              </button>
+            </div>
+          </div>
+
+          <div id="drSegmentFilterRow" class="lg:col-span-7 space-y-1.5">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-filter text-sky-400"></i> 2. Filtrar Conjunto de Empresas
+            </div>
+            <div id="drSegmentButtons" class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="setDynSegmentFilter('Todos')" id="drSegBtn-Todos" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all cursor-pointer">
+                🌐 Mercado Completo
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Patrimoniales y Mixtas')" id="drSegBtn-Patrimoniales y Mixtas" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🚗 Patrimoniales y Mixtas (91)
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Riesgos del Trabajo (ART)')" id="drSegBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🦺 ART (18)
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Seguros de Personas')" id="drSegBtn-Seguros de Personas" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                ❤️ Personas (55)
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Seguros de Retiro')" id="drSegBtn-Seguros de Retiro" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🏦 Retiro (14)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 Criteria Selector -->
+        <div class="pt-3 border-t border-slate-800/80 space-y-2.5" id="drCriteriaContainer">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders text-amber-400"></i> 3. Seleccionar Criterio de Ranking (11 Indicadores)
+          </div>
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaArsButtons"></div>
+            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaPctButtons"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Executive KPI Cards -->
+      <div id="drKpiBanner" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+      <!-- Horizontal Bar Chart -->
+      <div class="glass-card p-5 rounded-xl">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h3 id="drChartTitle" class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-bar text-amber-400"></i> Visualización Comparativa del Ranking
+            </h3>
+            <p id="drChartSubtitle" class="text-xs text-slate-400">...</p>
+          </div>
+          <button type="button" onclick="downloadPlotAsPNG('dynRankingBarChart', 'ranking_dinamico_sinensup')" data-plot-target="dynRankingBarChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+            <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+          </button>
+        </div>
+        <div id="dynRankingBarChart" class="w-full min-h-[440px]"></div>
+      </div>
+
+      <!-- Full Auditable Ranking Table -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-brand-blue"></i> Ranking Detallado (<span id="drTableCount">0</span> Registros)
+            </h3>
+            <p class="text-xs text-slate-400">Haz clic en cualquier fila para explorar su ficha individual, modal de grupo o conjunto de empresas</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input type="text" id="drSearchInput" oninput="setDynSearchQuery(this.value)" placeholder="Buscar entidad, grupo o código..." class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 w-56">
+            <button type="button" onclick="toggleDynShowAll()" id="drLimitBtn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors cursor-pointer">
+              Mostrando Todas
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-x-auto max-h-[640px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead id="dynRankingTableHead" class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px]"></thead>
+            <tbody id="dynRankingTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+            <tfoot id="dynRankingTableFoot" class="font-mono text-[11px]"></tfoot>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
     <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador (Universal) -->
     <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -3809,8 +3948,12 @@
     "apalancamiento": 2.31,
     "calidad_cartera": 15.73,
     "roe": -2.8,
+    "res_fin_sobre_pn": -5.23,
     "roa": -0.93,
     "margen_neto": -4.85,
+    "pasivo": 24417584630950.0,
+    "deudas": 15494112543499.0,
+    "previsiones": 363672141310.0,
     "patrimonio_neto": 12085788051616.0,
     "activo": 36503372682566.0,
     "inversiones": 25228774903850.0,
@@ -3822,6 +3965,7 @@
     "rescates": 315098624901.0,
     "gtos_produccion": 1200857068367.0,
     "gtos_explotacion": 1510008958830.0,
+    "gtos_operativos": 2710866027197.0,
     "reaseguro_activo_neto": 8045066966.0,
     "primas_cedidas": 596210556903.0,
     "var_reservas": -243106896624.0,
@@ -3854,8 +3998,12 @@
       "apalancamiento": 1.83,
       "calidad_cartera": 22.15,
       "roe": -3.72,
+      "res_fin_sobre_pn": -1.78,
       "roa": -1.5,
       "margen_neto": -8.12,
+      "pasivo": 13131227706487.0,
+      "deudas": 10303302022806.0,
+      "previsiones": 280116088899.0,
       "patrimonio_neto": 8882306433937.0,
       "activo": 22013534140424.0,
       "inversiones": 13094986398771.0,
@@ -3867,6 +4015,7 @@
       "rescates": 14766661829.0,
       "gtos_produccion": 981629698046.0,
       "gtos_explotacion": 1011295147575.0,
+      "gtos_operativos": 1992924845621.0,
       "reaseguro_activo_neto": 7551314177.0,
       "primas_cedidas": 544693176568.0,
       "var_reservas": 63531035989.0,
@@ -3898,8 +4047,12 @@
       "apalancamiento": 5.39,
       "calidad_cartera": 3.33,
       "roe": -7.37,
+      "res_fin_sobre_pn": -7.19,
       "roa": -1.71,
       "margen_neto": -5.47,
+      "pasivo": 4429353301833.0,
+      "deudas": 4357364463434.0,
+      "previsiones": 14486100463.0,
       "patrimonio_neto": 1340545591912.0,
       "activo": 5769898893745.0,
       "inversiones": 4362501109888.0,
@@ -3911,6 +4064,7 @@
       "rescates": 6141591.0,
       "gtos_produccion": 98931786382.0,
       "gtos_explotacion": 295408382843.0,
+      "gtos_operativos": 394340169225.0,
       "reaseguro_activo_neto": 17259659.0,
       "primas_cedidas": 14889357242.0,
       "var_reservas": 3457944427.0,
@@ -3942,8 +4096,12 @@
       "apalancamiento": 3.08,
       "calidad_cartera": 7.72,
       "roe": 7.59,
+      "res_fin_sobre_pn": -23.22,
       "roa": 1.94,
       "margen_neto": 9.87,
+      "pasivo": 3776994891314.0,
+      "deudas": 616011054366.0,
+      "previsiones": 29669006622.0,
       "patrimonio_neto": 1294780045254.0,
       "activo": 5071774936568.0,
       "inversiones": 4247707660184.0,
@@ -3955,6 +4113,7 @@
       "rescates": 235017752427.0,
       "gtos_produccion": 118942957200.0,
       "gtos_explotacion": 176899239712.0,
+      "gtos_operativos": 295842196912.0,
       "reaseguro_activo_neto": 476493130.0,
       "primas_cedidas": 36626228946.0,
       "var_reservas": -291674138464.0,
@@ -3986,8 +4145,12 @@
       "apalancamiento": 0.77,
       "calidad_cartera": 0.0,
       "roe": -1.39,
+      "res_fin_sobre_pn": -13.62,
       "roa": -0.22,
       "margen_neto": -7.2,
+      "pasivo": 3080008731316.0,
+      "deudas": 217435002893.0,
+      "previsiones": 39400945326.0,
       "patrimonio_neto": 568155980513.0,
       "activo": 3648164711829.0,
       "inversiones": 3523579735007.0,
@@ -3999,6 +4162,7 @@
       "rescates": 65308069054.0,
       "gtos_produccion": 1352626739.0,
       "gtos_explotacion": 26406188700.0,
+      "gtos_operativos": 27758815439.0,
       "reaseguro_activo_neto": 0.0,
       "primas_cedidas": 1794147.0,
       "var_reservas": -18421738576.0,
@@ -4063,6 +4227,7 @@
       "retencion_ratio": 80.49,
       "cesion_ratio": 19.51,
       "roe": -20.74,
+      "res_fin_sobre_pn": -14.68,
       "roa": -2.37,
       "margen_neto": -11.93,
       "densidad_inversiones": 35.61,
@@ -4393,6 +4558,7 @@
       "retencion_ratio": 99.14,
       "cesion_ratio": 0.86,
       "roe": 32.9,
+      "res_fin_sobre_pn": -5.22,
       "roa": 14.35,
       "margen_neto": 42.32,
       "densidad_inversiones": 59.39,
@@ -4693,6 +4859,7 @@
       "retencion_ratio": 87.27,
       "cesion_ratio": 12.73,
       "roe": -5.58,
+      "res_fin_sobre_pn": -7.71,
       "roa": -1.33,
       "margen_neto": -6.23,
       "densidad_inversiones": 53.19,
@@ -5035,6 +5202,7 @@
       "retencion_ratio": 82.41,
       "cesion_ratio": 17.59,
       "roe": -2.12,
+      "res_fin_sobre_pn": -2.52,
       "roa": -0.83,
       "margen_neto": -5.07,
       "densidad_inversiones": 62.61,
@@ -5358,6 +5526,7 @@
       "retencion_ratio": 49.89,
       "cesion_ratio": 50.11,
       "roe": 21.81,
+      "res_fin_sobre_pn": -4.19,
       "roa": 9.54,
       "margen_neto": 34.65,
       "densidad_inversiones": 25.7,
@@ -5645,6 +5814,7 @@
       "retencion_ratio": 88.84,
       "cesion_ratio": 11.16,
       "roe": -3.5,
+      "res_fin_sobre_pn": 2.89,
       "roa": -1.38,
       "margen_neto": -7.85,
       "densidad_inversiones": 30.1,
@@ -5953,6 +6123,7 @@
       "retencion_ratio": 91.07,
       "cesion_ratio": 8.93,
       "roe": -3.49,
+      "res_fin_sobre_pn": 4.71,
       "roa": -1.26,
       "margen_neto": -6.36,
       "densidad_inversiones": 14.78,
@@ -6257,6 +6428,7 @@
       "retencion_ratio": 78.4,
       "cesion_ratio": 21.6,
       "roe": 0.59,
+      "res_fin_sobre_pn": 2.27,
       "roa": 0.25,
       "margen_neto": 0.97,
       "densidad_inversiones": 23.24,
@@ -6621,6 +6793,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.55,
+      "res_fin_sobre_pn": -5.27,
       "roa": 0.14,
       "margen_neto": 1.22,
       "densidad_inversiones": 72.13,
@@ -6798,6 +6971,7 @@
       "retencion_ratio": 95.78,
       "cesion_ratio": 4.22,
       "roe": 2.65,
+      "res_fin_sobre_pn": -5.22,
       "roa": 0.46,
       "margen_neto": 1.67,
       "densidad_inversiones": 61.85,
@@ -7129,6 +7303,7 @@
       "retencion_ratio": 98.77,
       "cesion_ratio": 1.23,
       "roe": 3.52,
+      "res_fin_sobre_pn": -0.75,
       "roa": 1.96,
       "margen_neto": 13.61,
       "densidad_inversiones": 71.4,
@@ -7379,6 +7554,7 @@
       "retencion_ratio": 86.78,
       "cesion_ratio": 13.22,
       "roe": -5.34,
+      "res_fin_sobre_pn": -7.6,
       "roa": -2.67,
       "margen_neto": -32.96,
       "densidad_inversiones": 78.0,
@@ -7648,6 +7824,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.28,
+      "res_fin_sobre_pn": -0.12,
       "roa": -1.26,
       "margen_neto": -179.32,
       "densidad_inversiones": 3.71,
@@ -7761,6 +7938,7 @@
       "retencion_ratio": 92.77,
       "cesion_ratio": 7.23,
       "roe": 1.44,
+      "res_fin_sobre_pn": -0.17,
       "roa": 0.52,
       "margen_neto": 2.32,
       "densidad_inversiones": 54.48,
@@ -8116,6 +8294,7 @@
       "retencion_ratio": 96.52,
       "cesion_ratio": 3.48,
       "roe": 0.66,
+      "res_fin_sobre_pn": -8.06,
       "roa": 0.22,
       "margen_neto": 0.97,
       "densidad_inversiones": 60.84,
@@ -8423,6 +8602,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.55,
+      "res_fin_sobre_pn": -3.47,
       "roa": -2.49,
       "margen_neto": -4653.98,
       "densidad_inversiones": 62.12,
@@ -8565,6 +8745,7 @@
       "retencion_ratio": 96.56,
       "cesion_ratio": 3.44,
       "roe": -5.29,
+      "res_fin_sobre_pn": -2.41,
       "roa": -2.58,
       "margen_neto": -13.65,
       "densidad_inversiones": 70.63,
@@ -8933,6 +9114,7 @@
       "retencion_ratio": 93.68,
       "cesion_ratio": 6.32,
       "roe": -22.23,
+      "res_fin_sobre_pn": -9.13,
       "roa": -9.31,
       "margen_neto": -44.91,
       "densidad_inversiones": 49.35,
@@ -9270,6 +9452,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.01,
+      "res_fin_sobre_pn": -0.91,
       "roa": -2.0,
       "margen_neto": -269.48,
       "densidad_inversiones": 55.42,
@@ -9406,6 +9589,7 @@
       "retencion_ratio": 89.15,
       "cesion_ratio": 10.85,
       "roe": 2.22,
+      "res_fin_sobre_pn": -3.24,
       "roa": 0.77,
       "margen_neto": 3.38,
       "densidad_inversiones": 36.78,
@@ -9608,6 +9792,7 @@
       "retencion_ratio": 97.71,
       "cesion_ratio": 2.29,
       "roe": -0.39,
+      "res_fin_sobre_pn": -1.71,
       "roa": -0.24,
       "margen_neto": -1.7,
       "densidad_inversiones": 81.34,
@@ -9894,6 +10079,7 @@
       "retencion_ratio": 99.34,
       "cesion_ratio": 0.66,
       "roe": -4.93,
+      "res_fin_sobre_pn": 1.05,
       "roa": -3.22,
       "margen_neto": -18.2,
       "densidad_inversiones": 70.35,
@@ -10188,6 +10374,7 @@
       "retencion_ratio": 82.44,
       "cesion_ratio": 17.56,
       "roe": -1.5,
+      "res_fin_sobre_pn": -2.8,
       "roa": -0.78,
       "margen_neto": -4.35,
       "densidad_inversiones": 45.84,
@@ -10638,6 +10825,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 23.16,
+      "res_fin_sobre_pn": -18.4,
       "roa": 15.8,
       "margen_neto": 38.39,
       "densidad_inversiones": 26.67,
@@ -10897,6 +11085,7 @@
       "retencion_ratio": 79.02,
       "cesion_ratio": 20.98,
       "roe": -2.7,
+      "res_fin_sobre_pn": -10.28,
       "roa": -0.6,
       "margen_neto": -2.58,
       "densidad_inversiones": 56.39,
@@ -11262,6 +11451,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 27.0,
+      "res_fin_sobre_pn": -5.16,
       "roa": 22.07,
       "margen_neto": 77.87,
       "densidad_inversiones": 1.78,
@@ -11381,6 +11571,7 @@
       "retencion_ratio": 93.8,
       "cesion_ratio": 6.2,
       "roe": -23.97,
+      "res_fin_sobre_pn": -6.7,
       "roa": -12.64,
       "margen_neto": -75.73,
       "densidad_inversiones": 6.3,
@@ -11692,6 +11883,7 @@
       "retencion_ratio": 97.64,
       "cesion_ratio": 2.36,
       "roe": 3.32,
+      "res_fin_sobre_pn": 4.61,
       "roa": 1.74,
       "margen_neto": 16.91,
       "densidad_inversiones": 27.02,
@@ -11913,6 +12105,7 @@
       "retencion_ratio": 47.06,
       "cesion_ratio": 52.94,
       "roe": -2.88,
+      "res_fin_sobre_pn": -5.44,
       "roa": -1.0,
       "margen_neto": -6.7,
       "densidad_inversiones": 49.63,
@@ -12258,6 +12451,7 @@
       "retencion_ratio": 99.36,
       "cesion_ratio": 0.64,
       "roe": -5.03,
+      "res_fin_sobre_pn": -8.73,
       "roa": -0.92,
       "margen_neto": -5.15,
       "densidad_inversiones": 0.39,
@@ -12508,6 +12702,7 @@
       "retencion_ratio": 98.0,
       "cesion_ratio": 2.0,
       "roe": -5.99,
+      "res_fin_sobre_pn": -13.61,
       "roa": -3.72,
       "margen_neto": -16.36,
       "densidad_inversiones": 49.19,
@@ -12763,6 +12958,7 @@
       "retencion_ratio": 97.38,
       "cesion_ratio": 2.62,
       "roe": -12.88,
+      "res_fin_sobre_pn": -3.05,
       "roa": -5.54,
       "margen_neto": -37.28,
       "densidad_inversiones": 30.12,
@@ -13051,6 +13247,7 @@
       "retencion_ratio": 88.21,
       "cesion_ratio": 11.79,
       "roe": -6.78,
+      "res_fin_sobre_pn": -16.47,
       "roa": -1.0,
       "margen_neto": -7.9,
       "densidad_inversiones": 84.41,
@@ -13371,6 +13568,7 @@
       "retencion_ratio": 61.52,
       "cesion_ratio": 38.48,
       "roe": -3.35,
+      "res_fin_sobre_pn": -4.72,
       "roa": -1.43,
       "margen_neto": -7.64,
       "densidad_inversiones": 63.13,
@@ -13519,6 +13717,7 @@
       "retencion_ratio": 98.22,
       "cesion_ratio": 1.78,
       "roe": -2.73,
+      "res_fin_sobre_pn": -5.5,
       "roa": -1.65,
       "margen_neto": -12.81,
       "densidad_inversiones": 46.49,
@@ -13915,6 +14114,7 @@
       "retencion_ratio": 97.4,
       "cesion_ratio": 2.6,
       "roe": 2.97,
+      "res_fin_sobre_pn": -6.62,
       "roa": 0.86,
       "margen_neto": 3.12,
       "densidad_inversiones": 66.09,
@@ -14189,6 +14389,7 @@
       "retencion_ratio": 65.3,
       "cesion_ratio": 34.7,
       "roe": -5.21,
+      "res_fin_sobre_pn": -5.16,
       "roa": -2.23,
       "margen_neto": -18.48,
       "densidad_inversiones": 66.01,
@@ -14472,6 +14673,7 @@
       "retencion_ratio": 96.94,
       "cesion_ratio": 3.06,
       "roe": -10.53,
+      "res_fin_sobre_pn": 0.69,
       "roa": -4.71,
       "margen_neto": -26.9,
       "densidad_inversiones": 48.08,
@@ -14752,6 +14954,7 @@
       "retencion_ratio": 53.67,
       "cesion_ratio": 46.33,
       "roe": 2.05,
+      "res_fin_sobre_pn": -8.58,
       "roa": 0.87,
       "margen_neto": 10.04,
       "densidad_inversiones": 59.37,
@@ -14906,6 +15109,7 @@
       "retencion_ratio": 89.73,
       "cesion_ratio": 10.27,
       "roe": -8.21,
+      "res_fin_sobre_pn": -3.15,
       "roa": -3.77,
       "margen_neto": -24.75,
       "densidad_inversiones": 46.29,
@@ -15215,6 +15419,7 @@
       "retencion_ratio": 53.09,
       "cesion_ratio": 46.91,
       "roe": 0.45,
+      "res_fin_sobre_pn": -4.92,
       "roa": 0.26,
       "margen_neto": 2.43,
       "densidad_inversiones": 39.69,
@@ -15381,6 +15586,7 @@
       "retencion_ratio": 98.99,
       "cesion_ratio": 1.01,
       "roe": -13.49,
+      "res_fin_sobre_pn": -4.55,
       "roa": -3.7,
       "margen_neto": -14.93,
       "densidad_inversiones": 35.17,
@@ -15698,6 +15904,7 @@
       "retencion_ratio": 98.69,
       "cesion_ratio": 1.31,
       "roe": 6.79,
+      "res_fin_sobre_pn": -1.51,
       "roa": 4.18,
       "margen_neto": 18.77,
       "densidad_inversiones": 78.83,
@@ -15928,6 +16135,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -5.57,
+      "res_fin_sobre_pn": -11.33,
       "roa": -1.85,
       "margen_neto": -5.88,
       "densidad_inversiones": 33.53,
@@ -16166,6 +16374,7 @@
       "retencion_ratio": 50.55,
       "cesion_ratio": 49.45,
       "roe": 7.25,
+      "res_fin_sobre_pn": 0.08,
       "roa": 2.65,
       "margen_neto": 17.57,
       "densidad_inversiones": 42.49,
@@ -16480,6 +16689,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -0.76,
+      "res_fin_sobre_pn": -15.1,
       "roa": -0.21,
       "margen_neto": -0.87,
       "densidad_inversiones": 14.46,
@@ -16752,6 +16962,7 @@
       "retencion_ratio": 98.06,
       "cesion_ratio": 1.94,
       "roe": -7.22,
+      "res_fin_sobre_pn": -9.65,
       "roa": -1.92,
       "margen_neto": -6.77,
       "densidad_inversiones": 13.16,
@@ -17120,6 +17331,7 @@
       "retencion_ratio": 94.6,
       "cesion_ratio": 5.4,
       "roe": -13.58,
+      "res_fin_sobre_pn": -5.74,
       "roa": -7.85,
       "margen_neto": -49.29,
       "densidad_inversiones": 32.84,
@@ -17382,6 +17594,7 @@
       "retencion_ratio": 95.84,
       "cesion_ratio": 4.16,
       "roe": 2.48,
+      "res_fin_sobre_pn": -5.4,
       "roa": 1.68,
       "margen_neto": 12.39,
       "densidad_inversiones": 49.27,
@@ -17638,6 +17851,7 @@
       "retencion_ratio": 99.74,
       "cesion_ratio": 0.26,
       "roe": -17.13,
+      "res_fin_sobre_pn": -11.96,
       "roa": -9.54,
       "margen_neto": -316.85,
       "densidad_inversiones": 50.85,
@@ -17806,6 +18020,7 @@
       "retencion_ratio": 94.89,
       "cesion_ratio": 5.11,
       "roe": 2.17,
+      "res_fin_sobre_pn": 0.06,
       "roa": 1.33,
       "margen_neto": 6.08,
       "densidad_inversiones": 72.24,
@@ -18072,6 +18287,7 @@
       "retencion_ratio": 98.51,
       "cesion_ratio": 1.49,
       "roe": -62.59,
+      "res_fin_sobre_pn": -35.94,
       "roa": -24.19,
       "margen_neto": -79.52,
       "densidad_inversiones": 32.1,
@@ -18397,6 +18613,7 @@
       "retencion_ratio": 12.78,
       "cesion_ratio": 87.22,
       "roe": -2.55,
+      "res_fin_sobre_pn": -5.44,
       "roa": -2.34,
       "margen_neto": -65.48,
       "densidad_inversiones": 41.56,
@@ -18521,6 +18738,7 @@
       "retencion_ratio": 99.93,
       "cesion_ratio": 0.07,
       "roe": 6.55,
+      "res_fin_sobre_pn": -2.57,
       "roa": 3.95,
       "margen_neto": 15.71,
       "densidad_inversiones": 77.05,
@@ -18836,6 +19054,7 @@
       "retencion_ratio": 94.68,
       "cesion_ratio": 5.32,
       "roe": -2.99,
+      "res_fin_sobre_pn": -1.82,
       "roa": -2.38,
       "margen_neto": -16.94,
       "densidad_inversiones": 14.93,
@@ -19062,6 +19281,7 @@
       "retencion_ratio": 92.8,
       "cesion_ratio": 7.2,
       "roe": -4.94,
+      "res_fin_sobre_pn": -6.21,
       "roa": -2.34,
       "margen_neto": -15.49,
       "densidad_inversiones": 45.59,
@@ -19280,6 +19500,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -4.66,
+      "res_fin_sobre_pn": -0.09,
       "roa": -3.9,
       "margen_neto": -92.71,
       "densidad_inversiones": 2.61,
@@ -19421,6 +19642,7 @@
       "retencion_ratio": 84.54,
       "cesion_ratio": 15.46,
       "roe": 1.72,
+      "res_fin_sobre_pn": -17.73,
       "roa": 0.47,
       "margen_neto": 4.88,
       "densidad_inversiones": 12.22,
@@ -19595,6 +19817,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 17.89,
+      "res_fin_sobre_pn": 14.6,
       "roa": 1.35,
       "margen_neto": 29.05,
       "densidad_inversiones": 96.11,
@@ -19772,6 +19995,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -8.85,
+      "res_fin_sobre_pn": -67.95,
       "roa": -0.66,
       "margen_neto": -19.14,
       "densidad_inversiones": 99.37,
@@ -19954,6 +20178,7 @@
       "retencion_ratio": 99.94,
       "cesion_ratio": 0.06,
       "roe": 0.11,
+      "res_fin_sobre_pn": 5.47,
       "roa": 0.03,
       "margen_neto": 1.49,
       "densidad_inversiones": 92.8,
@@ -20101,6 +20326,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 2.3,
+      "res_fin_sobre_pn": 7.28,
       "roa": 0.85,
       "margen_neto": 33.32,
       "densidad_inversiones": 95.02,
@@ -20255,6 +20481,7 @@
       "retencion_ratio": 67.02,
       "cesion_ratio": 32.98,
       "roe": 0.95,
+      "res_fin_sobre_pn": -3.98,
       "roa": 0.7,
       "margen_neto": 2.15,
       "densidad_inversiones": 1.58,
@@ -20433,6 +20660,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -3.16,
+      "res_fin_sobre_pn": -2.32,
       "roa": -0.53,
       "margen_neto": -14.66,
       "densidad_inversiones": 95.06,
@@ -20615,6 +20843,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.9,
+      "res_fin_sobre_pn": -1.95,
       "roa": -1.12,
       "margen_neto": -97.6,
       "densidad_inversiones": 53.32,
@@ -20793,6 +21022,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.02,
+      "res_fin_sobre_pn": 0.21,
       "roa": 0.02,
       "margen_neto": 0.81,
       "densidad_inversiones": 5.68,
@@ -20925,6 +21155,7 @@
       "retencion_ratio": 97.58,
       "cesion_ratio": 2.42,
       "roe": 10.27,
+      "res_fin_sobre_pn": -16.77,
       "roa": 1.38,
       "margen_neto": 6.02,
       "densidad_inversiones": 82.99,
@@ -21067,6 +21298,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.44,
+      "res_fin_sobre_pn": 3.69,
       "roa": 0.08,
       "margen_neto": 1.71,
       "densidad_inversiones": 91.32,
@@ -21268,6 +21500,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -4.41,
+      "res_fin_sobre_pn": -9.61,
       "roa": -2.11,
       "margen_neto": -79.95,
       "densidad_inversiones": 94.03,
@@ -21397,6 +21630,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.38,
+      "res_fin_sobre_pn": -0.97,
       "roa": 0.33,
       "margen_neto": 1.65,
       "densidad_inversiones": 65.59,
@@ -21538,6 +21772,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.17,
+      "res_fin_sobre_pn": -1.21,
       "roa": -2.01,
       "margen_neto": -21.47,
       "densidad_inversiones": 0.52,
@@ -21683,6 +21918,7 @@
       "retencion_ratio": 96.15,
       "cesion_ratio": 3.85,
       "roe": 4.58,
+      "res_fin_sobre_pn": -16.68,
       "roa": 0.84,
       "margen_neto": 3.92,
       "densidad_inversiones": 67.02,
@@ -21968,6 +22204,7 @@
       "retencion_ratio": 96.85,
       "cesion_ratio": 3.15,
       "roe": 3.24,
+      "res_fin_sobre_pn": -4.01,
       "roa": 0.98,
       "margen_neto": 2.71,
       "densidad_inversiones": 50.45,
@@ -22180,6 +22417,7 @@
       "retencion_ratio": 97.74,
       "cesion_ratio": 2.26,
       "roe": -0.6,
+      "res_fin_sobre_pn": -0.33,
       "roa": -0.23,
       "margen_neto": -0.91,
       "densidad_inversiones": 61.69,
@@ -22524,6 +22762,7 @@
       "retencion_ratio": 74.98,
       "cesion_ratio": 25.02,
       "roe": -1.95,
+      "res_fin_sobre_pn": -3.39,
       "roa": -1.08,
       "margen_neto": -11.62,
       "densidad_inversiones": 75.04,
@@ -22914,6 +23153,7 @@
       "retencion_ratio": 98.06,
       "cesion_ratio": 1.94,
       "roe": -1.5,
+      "res_fin_sobre_pn": -9.99,
       "roa": -0.47,
       "margen_neto": -7.76,
       "densidad_inversiones": 96.0,
@@ -23128,6 +23368,7 @@
       "retencion_ratio": 91.87,
       "cesion_ratio": 8.13,
       "roe": -1.92,
+      "res_fin_sobre_pn": -14.61,
       "roa": -0.7,
       "margen_neto": -6.93,
       "densidad_inversiones": 95.88,
@@ -23306,6 +23547,7 @@
       "retencion_ratio": 93.11,
       "cesion_ratio": 6.89,
       "roe": 29.33,
+      "res_fin_sobre_pn": 45.69,
       "roa": 10.03,
       "margen_neto": 85.29,
       "densidad_inversiones": 19.15,
@@ -23572,6 +23814,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -6.87,
+      "res_fin_sobre_pn": -40.8,
       "roa": -0.83,
       "margen_neto": -14.96,
       "densidad_inversiones": 95.13,
@@ -23752,6 +23995,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 3.44,
+      "res_fin_sobre_pn": -0.28,
       "roa": 1.57,
       "margen_neto": 13.62,
       "densidad_inversiones": 91.81,
@@ -23904,6 +24148,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -3.05,
+      "res_fin_sobre_pn": -9.13,
       "roa": -0.76,
       "margen_neto": -28.79,
       "densidad_inversiones": 99.61,
@@ -24086,6 +24331,7 @@
       "retencion_ratio": 99.55,
       "cesion_ratio": 0.45,
       "roe": -2.98,
+      "res_fin_sobre_pn": -17.7,
       "roa": -1.61,
       "margen_neto": -3.26,
       "densidad_inversiones": 66.44,
@@ -24315,6 +24561,7 @@
       "retencion_ratio": 95.54,
       "cesion_ratio": 4.46,
       "roe": 31.12,
+      "res_fin_sobre_pn": -112.64,
       "roa": 3.09,
       "margen_neto": 11.74,
       "densidad_inversiones": 91.05,
@@ -24495,6 +24742,7 @@
       "retencion_ratio": 99.93,
       "cesion_ratio": 0.07,
       "roe": -0.24,
+      "res_fin_sobre_pn": -1.94,
       "roa": -0.22,
       "margen_neto": -1.24,
       "densidad_inversiones": 79.39,
@@ -24668,6 +24916,7 @@
       "retencion_ratio": 97.35,
       "cesion_ratio": 2.65,
       "roe": -1.47,
+      "res_fin_sobre_pn": -1.62,
       "roa": -1.21,
       "margen_neto": -4.52,
       "densidad_inversiones": 82.06,
@@ -24846,6 +25095,7 @@
       "retencion_ratio": 95.58,
       "cesion_ratio": 4.42,
       "roe": 4.2,
+      "res_fin_sobre_pn": -2.46,
       "roa": 2.83,
       "margen_neto": 7.69,
       "densidad_inversiones": 70.53,
@@ -25086,6 +25336,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -6.29,
+      "res_fin_sobre_pn": -3.88,
       "roa": -5.46,
       "margen_neto": -21.54,
       "densidad_inversiones": 24.62,
@@ -25222,6 +25473,7 @@
       "retencion_ratio": 72.0,
       "cesion_ratio": 28.0,
       "roe": 5.88,
+      "res_fin_sobre_pn": -1.6,
       "roa": 3.76,
       "margen_neto": 12.19,
       "densidad_inversiones": 8.52,
@@ -25373,6 +25625,7 @@
       "retencion_ratio": 97.38,
       "cesion_ratio": 2.62,
       "roe": -2.86,
+      "res_fin_sobre_pn": -3.27,
       "roa": -1.1,
       "margen_neto": -7.96,
       "densidad_inversiones": 75.55,
@@ -25605,6 +25858,7 @@
       "retencion_ratio": 97.48,
       "cesion_ratio": 2.52,
       "roe": 9.7,
+      "res_fin_sobre_pn": -12.93,
       "roa": 5.97,
       "margen_neto": 6.81,
       "densidad_inversiones": 2.49,
@@ -25772,6 +26026,7 @@
       "retencion_ratio": 77.58,
       "cesion_ratio": 22.42,
       "roe": 2.83,
+      "res_fin_sobre_pn": -20.23,
       "roa": 1.27,
       "margen_neto": 5.67,
       "densidad_inversiones": 33.98,
@@ -25958,6 +26213,7 @@
       "retencion_ratio": 96.0,
       "cesion_ratio": 4.0,
       "roe": 4.0,
+      "res_fin_sobre_pn": -13.27,
       "roa": 0.73,
       "margen_neto": 6.71,
       "densidad_inversiones": 81.84,
@@ -26203,6 +26459,7 @@
       "retencion_ratio": 98.98,
       "cesion_ratio": 1.02,
       "roe": -10.59,
+      "res_fin_sobre_pn": -4.63,
       "roa": -4.36,
       "margen_neto": -9.6,
       "densidad_inversiones": 40.46,
@@ -26492,6 +26749,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -0.7,
+      "res_fin_sobre_pn": -0.06,
       "roa": -0.69,
       "margen_neto": -22.85,
       "densidad_inversiones": 3.96,
@@ -26610,6 +26868,7 @@
       "retencion_ratio": 99.35,
       "cesion_ratio": 0.65,
       "roe": 8.9,
+      "res_fin_sobre_pn": -0.9,
       "roa": 4.93,
       "margen_neto": 21.98,
       "densidad_inversiones": 51.74,
@@ -26841,6 +27100,7 @@
       "retencion_ratio": 88.19,
       "cesion_ratio": 11.81,
       "roe": -1.07,
+      "res_fin_sobre_pn": -1.17,
       "roa": -1.04,
       "margen_neto": -102.09,
       "densidad_inversiones": 19.98,
@@ -27008,6 +27268,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.41,
+      "res_fin_sobre_pn": -0.35,
       "roa": -0.6,
       "margen_neto": -189.61,
       "densidad_inversiones": 89.1,
@@ -27185,6 +27446,7 @@
       "retencion_ratio": 99.6,
       "cesion_ratio": 0.4,
       "roe": 6.33,
+      "res_fin_sobre_pn": -19.13,
       "roa": 0.78,
       "margen_neto": 2.57,
       "densidad_inversiones": 86.27,
@@ -27353,6 +27615,7 @@
       "retencion_ratio": 99.81,
       "cesion_ratio": 0.19,
       "roe": 4.48,
+      "res_fin_sobre_pn": -16.5,
       "roa": 0.6,
       "margen_neto": 1.52,
       "densidad_inversiones": 76.82,
@@ -27511,6 +27774,7 @@
       "retencion_ratio": 99.69,
       "cesion_ratio": 0.31,
       "roe": -16.7,
+      "res_fin_sobre_pn": -7.11,
       "roa": -5.07,
       "margen_neto": -18.19,
       "densidad_inversiones": 81.91,
@@ -27680,6 +27944,7 @@
       "retencion_ratio": 99.72,
       "cesion_ratio": 0.28,
       "roe": -25.16,
+      "res_fin_sobre_pn": -7.51,
       "roa": -3.96,
       "margen_neto": -15.18,
       "densidad_inversiones": 84.57,
@@ -27844,6 +28109,7 @@
       "retencion_ratio": 99.83,
       "cesion_ratio": 0.17,
       "roe": -19.69,
+      "res_fin_sobre_pn": -7.2,
       "roa": -4.41,
       "margen_neto": -10.02,
       "densidad_inversiones": 64.45,
@@ -28001,6 +28267,7 @@
       "retencion_ratio": 73.39,
       "cesion_ratio": 26.61,
       "roe": -4.64,
+      "res_fin_sobre_pn": -8.31,
       "roa": -1.98,
       "margen_neto": -28.18,
       "densidad_inversiones": 96.02,
@@ -28143,6 +28410,7 @@
       "retencion_ratio": 99.82,
       "cesion_ratio": 0.18,
       "roe": 0.4,
+      "res_fin_sobre_pn": -3.1,
       "roa": 0.07,
       "margen_neto": 0.2,
       "densidad_inversiones": 77.43,
@@ -28307,6 +28575,7 @@
       "retencion_ratio": 99.05,
       "cesion_ratio": 0.95,
       "roe": 8.27,
+      "res_fin_sobre_pn": -6.35,
       "roa": 4.25,
       "margen_neto": 8.86,
       "densidad_inversiones": 86.13,
@@ -28523,6 +28792,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -5.8,
+      "res_fin_sobre_pn": -4.72,
       "roa": -4.93,
       "margen_neto": -22.51,
       "densidad_inversiones": 70.98,
@@ -28664,6 +28934,7 @@
       "retencion_ratio": 64.68,
       "cesion_ratio": 35.32,
       "roe": -4.25,
+      "res_fin_sobre_pn": -3.74,
       "roa": -1.07,
       "margen_neto": -6.77,
       "densidad_inversiones": 45.54,
@@ -28816,6 +29087,7 @@
       "retencion_ratio": 99.93,
       "cesion_ratio": 0.07,
       "roe": 10.69,
+      "res_fin_sobre_pn": -2.8,
       "roa": 6.74,
       "margen_neto": 20.92,
       "densidad_inversiones": 61.36,
@@ -29013,6 +29285,7 @@
       "retencion_ratio": 98.47,
       "cesion_ratio": 1.53,
       "roe": 22.37,
+      "res_fin_sobre_pn": 29.11,
       "roa": 7.26,
       "margen_neto": 34.69,
       "densidad_inversiones": 50.56,
@@ -29315,6 +29588,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.8,
+      "res_fin_sobre_pn": 1.08,
       "roa": -1.78,
       "margen_neto": 0.0,
       "densidad_inversiones": 34.48,
@@ -29421,6 +29695,7 @@
       "retencion_ratio": 96.63,
       "cesion_ratio": 3.37,
       "roe": -5.17,
+      "res_fin_sobre_pn": -3.08,
       "roa": -4.6,
       "margen_neto": -96.79,
       "densidad_inversiones": 74.66,
@@ -29568,6 +29843,7 @@
       "retencion_ratio": 99.32,
       "cesion_ratio": 0.68,
       "roe": -64.06,
+      "res_fin_sobre_pn": -5.29,
       "roa": -29.99,
       "margen_neto": -165.56,
       "densidad_inversiones": 53.64,
@@ -29715,6 +29991,7 @@
       "retencion_ratio": 90.06,
       "cesion_ratio": 9.94,
       "roe": -34.82,
+      "res_fin_sobre_pn": -1.51,
       "roa": -6.37,
       "margen_neto": -73.92,
       "densidad_inversiones": 73.35,
@@ -29867,6 +30144,7 @@
       "retencion_ratio": 96.85,
       "cesion_ratio": 3.15,
       "roe": -4.54,
+      "res_fin_sobre_pn": -2.37,
       "roa": -2.85,
       "margen_neto": -56.21,
       "densidad_inversiones": 86.66,
@@ -30002,6 +30280,7 @@
       "retencion_ratio": 96.65,
       "cesion_ratio": 3.35,
       "roe": -20.16,
+      "res_fin_sobre_pn": -4.8,
       "roa": -15.75,
       "margen_neto": -195.85,
       "densidad_inversiones": 62.12,
@@ -30155,6 +30434,7 @@
       "retencion_ratio": 78.67,
       "cesion_ratio": 21.33,
       "roe": -1525.75,
+      "res_fin_sobre_pn": -1365.96,
       "roa": -27.87,
       "margen_neto": -76.45,
       "densidad_inversiones": 54.85,
@@ -30298,6 +30578,7 @@
       "retencion_ratio": 97.91,
       "cesion_ratio": 2.09,
       "roe": 6.25,
+      "res_fin_sobre_pn": -3.41,
       "roa": 3.61,
       "margen_neto": 12.79,
       "densidad_inversiones": 67.08,
@@ -30507,6 +30788,7 @@
       "retencion_ratio": 99.37,
       "cesion_ratio": 0.63,
       "roe": 5.48,
+      "res_fin_sobre_pn": -4.82,
       "roa": 2.97,
       "margen_neto": 10.02,
       "densidad_inversiones": 79.93,
@@ -30721,6 +31003,7 @@
       "retencion_ratio": 98.52,
       "cesion_ratio": 1.48,
       "roe": 9.35,
+      "res_fin_sobre_pn": -5.01,
       "roa": 4.38,
       "margen_neto": 15.36,
       "densidad_inversiones": 73.33,
@@ -30913,6 +31196,7 @@
       "retencion_ratio": 98.65,
       "cesion_ratio": 1.35,
       "roe": 4.11,
+      "res_fin_sobre_pn": -2.02,
       "roa": 2.43,
       "margen_neto": 20.52,
       "densidad_inversiones": 64.25,
@@ -31098,6 +31382,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.57,
+      "res_fin_sobre_pn": -5.78,
       "roa": -0.3,
       "margen_neto": -11.29,
       "densidad_inversiones": 96.4,
@@ -31274,6 +31559,7 @@
       "retencion_ratio": 94.86,
       "cesion_ratio": 5.14,
       "roe": -4.89,
+      "res_fin_sobre_pn": 3.84,
       "roa": -1.76,
       "margen_neto": -10.15,
       "densidad_inversiones": 26.39,
@@ -31521,6 +31807,7 @@
       "retencion_ratio": 90.95,
       "cesion_ratio": 9.05,
       "roe": 0.84,
+      "res_fin_sobre_pn": -6.68,
       "roa": 0.24,
       "margen_neto": 1.06,
       "densidad_inversiones": 35.78,
@@ -31775,6 +32062,7 @@
       "retencion_ratio": 93.48,
       "cesion_ratio": 6.52,
       "roe": -4.55,
+      "res_fin_sobre_pn": -4.84,
       "roa": -4.45,
       "margen_neto": -286.71,
       "densidad_inversiones": 95.77,
@@ -31947,6 +32235,7 @@
       "retencion_ratio": 70.23,
       "cesion_ratio": 29.77,
       "roe": -0.16,
+      "res_fin_sobre_pn": -1.72,
       "roa": -0.12,
       "margen_neto": -0.82,
       "densidad_inversiones": 5.58,
@@ -32082,6 +32371,7 @@
       "retencion_ratio": 97.66,
       "cesion_ratio": 2.34,
       "roe": 0.43,
+      "res_fin_sobre_pn": 11.43,
       "roa": 0.13,
       "margen_neto": 0.77,
       "densidad_inversiones": 72.49,
@@ -32478,6 +32768,7 @@
       "retencion_ratio": 96.61,
       "cesion_ratio": 3.39,
       "roe": 0.4,
+      "res_fin_sobre_pn": -7.49,
       "roa": 0.23,
       "margen_neto": 2.43,
       "densidad_inversiones": 72.55,
@@ -32733,6 +33024,7 @@
       "retencion_ratio": 87.36,
       "cesion_ratio": 12.64,
       "roe": 1.58,
+      "res_fin_sobre_pn": -2.98,
       "roa": 0.44,
       "margen_neto": 2.42,
       "densidad_inversiones": 46.38,
@@ -32998,6 +33290,7 @@
       "retencion_ratio": 97.41,
       "cesion_ratio": 2.59,
       "roe": 1.95,
+      "res_fin_sobre_pn": 1.84,
       "roa": 0.97,
       "margen_neto": 5.49,
       "densidad_inversiones": 79.94,
@@ -33252,6 +33545,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.13,
+      "res_fin_sobre_pn": -3.42,
       "roa": 0.05,
       "margen_neto": 0.26,
       "densidad_inversiones": 74.7,
@@ -33403,6 +33697,7 @@
       "retencion_ratio": 59.68,
       "cesion_ratio": 40.32,
       "roe": 6.18,
+      "res_fin_sobre_pn": -3.14,
       "roa": 2.54,
       "margen_neto": 11.23,
       "densidad_inversiones": 61.76,
@@ -33544,6 +33839,7 @@
       "retencion_ratio": 73.15,
       "cesion_ratio": 26.85,
       "roe": -2.68,
+      "res_fin_sobre_pn": -6.93,
       "roa": -1.36,
       "margen_neto": -11.52,
       "densidad_inversiones": 15.84,
@@ -33696,6 +33992,7 @@
       "retencion_ratio": 60.52,
       "cesion_ratio": 39.48,
       "roe": 0.34,
+      "res_fin_sobre_pn": -3.92,
       "roa": 0.19,
       "margen_neto": 1.16,
       "densidad_inversiones": 18.01,
@@ -33906,6 +34203,7 @@
       "retencion_ratio": 40.31,
       "cesion_ratio": 59.69,
       "roe": -5.69,
+      "res_fin_sobre_pn": -13.94,
       "roa": -1.88,
       "margen_neto": -13.7,
       "densidad_inversiones": 48.44,
@@ -34060,6 +34358,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 1.86,
+      "res_fin_sobre_pn": -1.68,
       "roa": 0.6,
       "margen_neto": 1.16,
       "densidad_inversiones": 55.93,
@@ -34328,6 +34627,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 17.84,
+      "res_fin_sobre_pn": -5.83,
       "roa": 10.49,
       "margen_neto": 28.06,
       "densidad_inversiones": 58.02,
@@ -34533,6 +34833,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 16.67,
+      "res_fin_sobre_pn": -2.16,
       "roa": 10.91,
       "margen_neto": 55.71,
       "densidad_inversiones": 23.81,
@@ -34666,6 +34967,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 5.74,
+      "res_fin_sobre_pn": -2.56,
       "roa": 5.26,
       "margen_neto": 40.09,
       "densidad_inversiones": 60.73,
@@ -34851,6 +35153,7 @@
       "retencion_ratio": 4.77,
       "cesion_ratio": 95.23,
       "roe": -12.59,
+      "res_fin_sobre_pn": -18.29,
       "roa": -5.95,
       "margen_neto": -46.77,
       "densidad_inversiones": 51.03,
@@ -35009,6 +35312,7 @@
       "retencion_ratio": 14.29,
       "cesion_ratio": 85.71,
       "roe": -4.07,
+      "res_fin_sobre_pn": -7.09,
       "roa": -2.76,
       "margen_neto": -67.62,
       "densidad_inversiones": 68.41,
@@ -35164,6 +35468,7 @@
       "retencion_ratio": 52.83,
       "cesion_ratio": 47.17,
       "roe": -46.46,
+      "res_fin_sobre_pn": -15.55,
       "roa": -16.13,
       "margen_neto": -4609.97,
       "densidad_inversiones": 53.34,
@@ -35320,6 +35625,7 @@
       "retencion_ratio": 98.06,
       "cesion_ratio": 1.94,
       "roe": -5.12,
+      "res_fin_sobre_pn": -6.8,
       "roa": -4.53,
       "margen_neto": -16.67,
       "densidad_inversiones": 7.43,
@@ -35483,6 +35789,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -7.11,
+      "res_fin_sobre_pn": 0.62,
       "roa": -6.78,
       "margen_neto": -4095.37,
       "densidad_inversiones": 96.41,
@@ -35616,6 +35923,7 @@
       "retencion_ratio": 99.62,
       "cesion_ratio": 0.38,
       "roe": 20.69,
+      "res_fin_sobre_pn": -1.42,
       "roa": 12.22,
       "margen_neto": 32.51,
       "densidad_inversiones": 0.2,
@@ -35777,6 +36085,7 @@
       "retencion_ratio": 98.76,
       "cesion_ratio": 1.24,
       "roe": 1.24,
+      "res_fin_sobre_pn": -7.96,
       "roa": 0.23,
       "margen_neto": 2.57,
       "densidad_inversiones": 1.53,
@@ -36045,6 +36354,7 @@
       "retencion_ratio": 95.58,
       "cesion_ratio": 4.42,
       "roe": -1.8,
+      "res_fin_sobre_pn": 0.6,
       "roa": -0.79,
       "margen_neto": -1.3,
       "densidad_inversiones": 24.95,
@@ -36275,6 +36585,7 @@
       "retencion_ratio": 99.65,
       "cesion_ratio": 0.35,
       "roe": -18.24,
+      "res_fin_sobre_pn": -10.44,
       "roa": -4.16,
       "margen_neto": -6.66,
       "densidad_inversiones": 59.3,
@@ -36428,6 +36739,7 @@
       "retencion_ratio": 70.63,
       "cesion_ratio": 29.37,
       "roe": -4.72,
+      "res_fin_sobre_pn": -6.01,
       "roa": -1.56,
       "margen_neto": -5.0,
       "densidad_inversiones": 49.65,
@@ -36626,6 +36938,7 @@
       "retencion_ratio": 98.02,
       "cesion_ratio": 1.98,
       "roe": -12.0,
+      "res_fin_sobre_pn": -45.8,
       "roa": -2.99,
       "margen_neto": -9.3,
       "densidad_inversiones": 20.47,
@@ -36806,6 +37119,7 @@
       "retencion_ratio": 68.43,
       "cesion_ratio": 31.57,
       "roe": 7.11,
+      "res_fin_sobre_pn": -0.86,
       "roa": 4.03,
       "margen_neto": 26.67,
       "densidad_inversiones": 55.22,
@@ -37069,6 +37383,7 @@
       "retencion_ratio": 98.89,
       "cesion_ratio": 1.11,
       "roe": 7.31,
+      "res_fin_sobre_pn": 7.13,
       "roa": 2.61,
       "margen_neto": 6.48,
       "densidad_inversiones": 54.23,
@@ -37394,6 +37709,7 @@
       "retencion_ratio": 97.49,
       "cesion_ratio": 2.51,
       "roe": 3.42,
+      "res_fin_sobre_pn": -2.89,
       "roa": 2.13,
       "margen_neto": 11.65,
       "densidad_inversiones": 68.48,
@@ -37597,6 +37913,7 @@
       "retencion_ratio": 96.49,
       "cesion_ratio": 3.51,
       "roe": -50.62,
+      "res_fin_sobre_pn": -0.33,
       "roa": -15.36,
       "margen_neto": -118.25,
       "densidad_inversiones": 6.98,
@@ -37884,6 +38201,7 @@
       "retencion_ratio": 99.43,
       "cesion_ratio": 0.57,
       "roe": 22.86,
+      "res_fin_sobre_pn": -0.37,
       "roa": 10.8,
       "margen_neto": 30.76,
       "densidad_inversiones": 60.46,
@@ -38123,6 +38441,7 @@
       "retencion_ratio": 82.35,
       "cesion_ratio": 17.65,
       "roe": -3.72,
+      "res_fin_sobre_pn": -14.22,
       "roa": -1.55,
       "margen_neto": -8.59,
       "densidad_inversiones": 17.38,
@@ -38319,6 +38638,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 6.59,
+      "res_fin_sobre_pn": -0.53,
       "roa": 4.77,
       "margen_neto": 31.6,
       "densidad_inversiones": 80.96,
@@ -38467,6 +38787,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -29.48,
+      "res_fin_sobre_pn": 6.31,
       "roa": -6.3,
       "margen_neto": -20.72,
       "densidad_inversiones": 79.62,
@@ -38602,6 +38923,7 @@
       "retencion_ratio": 98.12,
       "cesion_ratio": 1.88,
       "roe": 5.11,
+      "res_fin_sobre_pn": -0.28,
       "roa": 4.35,
       "margen_neto": 36.39,
       "densidad_inversiones": 85.48,
@@ -38768,6 +39090,7 @@
       "retencion_ratio": 67.33,
       "cesion_ratio": 32.67,
       "roe": 1.64,
+      "res_fin_sobre_pn": -15.45,
       "roa": 0.73,
       "margen_neto": 3.09,
       "densidad_inversiones": 41.35,
@@ -38899,6 +39222,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -3.4,
+      "res_fin_sobre_pn": -2.39,
       "roa": -3.36,
       "margen_neto": -7149.27,
       "densidad_inversiones": 15.46,
@@ -39013,6 +39337,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.32,
+      "res_fin_sobre_pn": -3.63,
       "roa": 0.27,
       "margen_neto": 4.56,
       "densidad_inversiones": 73.44,
@@ -39151,6 +39476,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 3.53,
+      "res_fin_sobre_pn": 8.67,
       "roa": 0.37,
       "margen_neto": 7.88,
       "densidad_inversiones": 94.08,
@@ -39294,6 +39620,7 @@
       "retencion_ratio": 69.3,
       "cesion_ratio": 30.7,
       "roe": 25.87,
+      "res_fin_sobre_pn": 0.83,
       "roa": 4.1,
       "margen_neto": 40.92,
       "densidad_inversiones": 61.72,
@@ -39440,6 +39767,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -26.47,
+      "res_fin_sobre_pn": -5.53,
       "roa": -7.32,
       "margen_neto": -13.46,
       "densidad_inversiones": 90.24,
@@ -39559,6 +39887,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.65,
+      "res_fin_sobre_pn": -3.08,
       "roa": -2.62,
       "margen_neto": -96.85,
       "densidad_inversiones": 98.02,
@@ -39716,6 +40045,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 3.14,
+      "res_fin_sobre_pn": 0.93,
       "roa": 3.05,
       "margen_neto": 53.09,
       "densidad_inversiones": 79.72,
@@ -39861,6 +40191,7 @@
       "retencion_ratio": 99.43,
       "cesion_ratio": 0.57,
       "roe": -1.77,
+      "res_fin_sobre_pn": 12.56,
       "roa": -0.36,
       "margen_neto": -1.11,
       "densidad_inversiones": 37.19,
@@ -40010,6 +40341,7 @@
       "retencion_ratio": 99.2,
       "cesion_ratio": 0.8,
       "roe": 9.52,
+      "res_fin_sobre_pn": 3.13,
       "roa": 2.39,
       "margen_neto": 4.24,
       "densidad_inversiones": 60.64,
@@ -40161,6 +40493,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -4.75,
+      "res_fin_sobre_pn": -13.86,
       "roa": -1.91,
       "margen_neto": -4.06,
       "densidad_inversiones": 92.77,
@@ -40293,6 +40626,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 6.52,
+      "res_fin_sobre_pn": -1.15,
       "roa": 4.75,
       "margen_neto": 25.88,
       "densidad_inversiones": 43.03,
@@ -40412,6 +40746,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 2.19,
+      "res_fin_sobre_pn": -2.78,
       "roa": 1.72,
       "margen_neto": 8.25,
       "densidad_inversiones": 61.9,
@@ -40551,6 +40886,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 50.42,
+      "res_fin_sobre_pn": -23.65,
       "roa": 16.5,
       "margen_neto": 28.14,
       "densidad_inversiones": 63.35,
@@ -40687,6 +41023,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.62,
+      "res_fin_sobre_pn": 0.39,
       "roa": -1.62,
       "margen_neto": -738.8,
       "densidad_inversiones": 96.6,
@@ -40811,6 +41148,7 @@
       "retencion_ratio": 95.35,
       "cesion_ratio": 4.65,
       "roe": -11.12,
+      "res_fin_sobre_pn": -1.14,
       "roa": -7.54,
       "margen_neto": -27.84,
       "densidad_inversiones": 7.02,
@@ -40969,6 +41307,7 @@
       "retencion_ratio": 49.79,
       "cesion_ratio": 50.21,
       "roe": -14.72,
+      "res_fin_sobre_pn": -1.42,
       "roa": -14.3,
       "margen_neto": -1547.05,
       "densidad_inversiones": 68.96,
@@ -41143,6 +41482,7 @@
       "retencion_ratio": 61.85,
       "cesion_ratio": 38.15,
       "roe": -5.96,
+      "res_fin_sobre_pn": -2.69,
       "roa": -5.25,
       "margen_neto": -188.49,
       "densidad_inversiones": 81.38,
@@ -41343,6 +41683,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -19.26,
+      "res_fin_sobre_pn": -0.71,
       "roa": -12.44,
       "margen_neto": -56.39,
       "densidad_inversiones": 61.21,
@@ -41479,6 +41820,7 @@
       "retencion_ratio": 97.13,
       "cesion_ratio": 2.87,
       "roe": 4.09,
+      "res_fin_sobre_pn": -0.08,
       "roa": 3.55,
       "margen_neto": 50.84,
       "densidad_inversiones": 25.22,
@@ -41599,6 +41941,7 @@
       "retencion_ratio": 80.49,
       "cesion_ratio": 19.51,
       "roe": -20.74,
+      "res_fin_sobre_pn": -14.68,
       "roa": -2.37,
       "margen_neto": -11.93,
       "densidad_inversiones": 35.61,
@@ -41929,6 +42272,7 @@
       "retencion_ratio": 99.14,
       "cesion_ratio": 0.86,
       "roe": 32.9,
+      "res_fin_sobre_pn": -5.22,
       "roa": 14.35,
       "margen_neto": 42.32,
       "densidad_inversiones": 59.39,
@@ -42229,6 +42573,7 @@
       "retencion_ratio": 87.27,
       "cesion_ratio": 12.73,
       "roe": -5.58,
+      "res_fin_sobre_pn": -7.71,
       "roa": -1.33,
       "margen_neto": -6.23,
       "densidad_inversiones": 53.19,
@@ -42571,6 +42916,7 @@
       "retencion_ratio": 82.41,
       "cesion_ratio": 17.59,
       "roe": -2.12,
+      "res_fin_sobre_pn": -2.52,
       "roa": -0.83,
       "margen_neto": -5.07,
       "densidad_inversiones": 62.61,
@@ -42894,6 +43240,7 @@
       "retencion_ratio": 49.89,
       "cesion_ratio": 50.11,
       "roe": 21.81,
+      "res_fin_sobre_pn": -4.19,
       "roa": 9.54,
       "margen_neto": 34.65,
       "densidad_inversiones": 25.7,
@@ -43181,6 +43528,7 @@
       "retencion_ratio": 88.84,
       "cesion_ratio": 11.16,
       "roe": -3.5,
+      "res_fin_sobre_pn": 2.89,
       "roa": -1.38,
       "margen_neto": -7.85,
       "densidad_inversiones": 30.1,
@@ -43489,6 +43837,7 @@
       "retencion_ratio": 91.07,
       "cesion_ratio": 8.93,
       "roe": -3.49,
+      "res_fin_sobre_pn": 4.71,
       "roa": -1.26,
       "margen_neto": -6.36,
       "densidad_inversiones": 14.78,
@@ -43793,6 +44142,7 @@
       "retencion_ratio": 78.4,
       "cesion_ratio": 21.6,
       "roe": 0.59,
+      "res_fin_sobre_pn": 2.27,
       "roa": 0.25,
       "margen_neto": 0.97,
       "densidad_inversiones": 23.24,
@@ -44157,6 +44507,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.55,
+      "res_fin_sobre_pn": -5.27,
       "roa": 0.14,
       "margen_neto": 1.22,
       "densidad_inversiones": 72.13,
@@ -44334,6 +44685,7 @@
       "retencion_ratio": 95.78,
       "cesion_ratio": 4.22,
       "roe": 2.65,
+      "res_fin_sobre_pn": -5.22,
       "roa": 0.46,
       "margen_neto": 1.67,
       "densidad_inversiones": 61.85,
@@ -44665,6 +45017,7 @@
       "retencion_ratio": 98.77,
       "cesion_ratio": 1.23,
       "roe": 3.52,
+      "res_fin_sobre_pn": -0.75,
       "roa": 1.96,
       "margen_neto": 13.61,
       "densidad_inversiones": 71.4,
@@ -44915,6 +45268,7 @@
       "retencion_ratio": 86.78,
       "cesion_ratio": 13.22,
       "roe": -5.34,
+      "res_fin_sobre_pn": -7.6,
       "roa": -2.67,
       "margen_neto": -32.96,
       "densidad_inversiones": 78.0,
@@ -45184,6 +45538,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.28,
+      "res_fin_sobre_pn": -0.12,
       "roa": -1.26,
       "margen_neto": -179.32,
       "densidad_inversiones": 3.71,
@@ -45297,6 +45652,7 @@
       "retencion_ratio": 92.77,
       "cesion_ratio": 7.23,
       "roe": 1.44,
+      "res_fin_sobre_pn": -0.17,
       "roa": 0.52,
       "margen_neto": 2.32,
       "densidad_inversiones": 54.48,
@@ -45652,6 +46008,7 @@
       "retencion_ratio": 96.52,
       "cesion_ratio": 3.48,
       "roe": 0.66,
+      "res_fin_sobre_pn": -8.06,
       "roa": 0.22,
       "margen_neto": 0.97,
       "densidad_inversiones": 60.84,
@@ -45959,6 +46316,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.55,
+      "res_fin_sobre_pn": -3.47,
       "roa": -2.49,
       "margen_neto": -4653.98,
       "densidad_inversiones": 62.12,
@@ -46101,6 +46459,7 @@
       "retencion_ratio": 96.56,
       "cesion_ratio": 3.44,
       "roe": -5.29,
+      "res_fin_sobre_pn": -2.41,
       "roa": -2.58,
       "margen_neto": -13.65,
       "densidad_inversiones": 70.63,
@@ -46469,6 +46828,7 @@
       "retencion_ratio": 93.68,
       "cesion_ratio": 6.32,
       "roe": -22.23,
+      "res_fin_sobre_pn": -9.13,
       "roa": -9.31,
       "margen_neto": -44.91,
       "densidad_inversiones": 49.35,
@@ -46806,6 +47166,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.01,
+      "res_fin_sobre_pn": -0.91,
       "roa": -2.0,
       "margen_neto": -269.48,
       "densidad_inversiones": 55.42,
@@ -46942,6 +47303,7 @@
       "retencion_ratio": 89.15,
       "cesion_ratio": 10.85,
       "roe": 2.22,
+      "res_fin_sobre_pn": -3.24,
       "roa": 0.77,
       "margen_neto": 3.38,
       "densidad_inversiones": 36.78,
@@ -47144,6 +47506,7 @@
       "retencion_ratio": 97.71,
       "cesion_ratio": 2.29,
       "roe": -0.39,
+      "res_fin_sobre_pn": -1.71,
       "roa": -0.24,
       "margen_neto": -1.7,
       "densidad_inversiones": 81.34,
@@ -47430,6 +47793,7 @@
       "retencion_ratio": 99.34,
       "cesion_ratio": 0.66,
       "roe": -4.93,
+      "res_fin_sobre_pn": 1.05,
       "roa": -3.22,
       "margen_neto": -18.2,
       "densidad_inversiones": 70.35,
@@ -47724,6 +48088,7 @@
       "retencion_ratio": 82.44,
       "cesion_ratio": 17.56,
       "roe": -1.5,
+      "res_fin_sobre_pn": -2.8,
       "roa": -0.78,
       "margen_neto": -4.35,
       "densidad_inversiones": 45.84,
@@ -48174,6 +48539,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 23.16,
+      "res_fin_sobre_pn": -18.4,
       "roa": 15.8,
       "margen_neto": 38.39,
       "densidad_inversiones": 26.67,
@@ -48433,6 +48799,7 @@
       "retencion_ratio": 79.02,
       "cesion_ratio": 20.98,
       "roe": -2.7,
+      "res_fin_sobre_pn": -10.28,
       "roa": -0.6,
       "margen_neto": -2.58,
       "densidad_inversiones": 56.39,
@@ -48798,6 +49165,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 27.0,
+      "res_fin_sobre_pn": -5.16,
       "roa": 22.07,
       "margen_neto": 77.87,
       "densidad_inversiones": 1.78,
@@ -48917,6 +49285,7 @@
       "retencion_ratio": 93.8,
       "cesion_ratio": 6.2,
       "roe": -23.97,
+      "res_fin_sobre_pn": -6.7,
       "roa": -12.64,
       "margen_neto": -75.73,
       "densidad_inversiones": 6.3,
@@ -49228,6 +49597,7 @@
       "retencion_ratio": 97.64,
       "cesion_ratio": 2.36,
       "roe": 3.32,
+      "res_fin_sobre_pn": 4.61,
       "roa": 1.74,
       "margen_neto": 16.91,
       "densidad_inversiones": 27.02,
@@ -49449,6 +49819,7 @@
       "retencion_ratio": 47.06,
       "cesion_ratio": 52.94,
       "roe": -2.88,
+      "res_fin_sobre_pn": -5.44,
       "roa": -1.0,
       "margen_neto": -6.7,
       "densidad_inversiones": 49.63,
@@ -49794,6 +50165,7 @@
       "retencion_ratio": 99.36,
       "cesion_ratio": 0.64,
       "roe": -5.03,
+      "res_fin_sobre_pn": -8.73,
       "roa": -0.92,
       "margen_neto": -5.15,
       "densidad_inversiones": 0.39,
@@ -50044,6 +50416,7 @@
       "retencion_ratio": 98.0,
       "cesion_ratio": 2.0,
       "roe": -5.99,
+      "res_fin_sobre_pn": -13.61,
       "roa": -3.72,
       "margen_neto": -16.36,
       "densidad_inversiones": 49.19,
@@ -50299,6 +50672,7 @@
       "retencion_ratio": 97.38,
       "cesion_ratio": 2.62,
       "roe": -12.88,
+      "res_fin_sobre_pn": -3.05,
       "roa": -5.54,
       "margen_neto": -37.28,
       "densidad_inversiones": 30.12,
@@ -50587,6 +50961,7 @@
       "retencion_ratio": 88.21,
       "cesion_ratio": 11.79,
       "roe": -6.78,
+      "res_fin_sobre_pn": -16.47,
       "roa": -1.0,
       "margen_neto": -7.9,
       "densidad_inversiones": 84.41,
@@ -50907,6 +51282,7 @@
       "retencion_ratio": 61.52,
       "cesion_ratio": 38.48,
       "roe": -3.35,
+      "res_fin_sobre_pn": -4.72,
       "roa": -1.43,
       "margen_neto": -7.64,
       "densidad_inversiones": 63.13,
@@ -51055,6 +51431,7 @@
       "retencion_ratio": 98.22,
       "cesion_ratio": 1.78,
       "roe": -2.73,
+      "res_fin_sobre_pn": -5.5,
       "roa": -1.65,
       "margen_neto": -12.81,
       "densidad_inversiones": 46.49,
@@ -51451,6 +51828,7 @@
       "retencion_ratio": 97.4,
       "cesion_ratio": 2.6,
       "roe": 2.97,
+      "res_fin_sobre_pn": -6.62,
       "roa": 0.86,
       "margen_neto": 3.12,
       "densidad_inversiones": 66.09,
@@ -51725,6 +52103,7 @@
       "retencion_ratio": 65.3,
       "cesion_ratio": 34.7,
       "roe": -5.21,
+      "res_fin_sobre_pn": -5.16,
       "roa": -2.23,
       "margen_neto": -18.48,
       "densidad_inversiones": 66.01,
@@ -52008,6 +52387,7 @@
       "retencion_ratio": 96.94,
       "cesion_ratio": 3.06,
       "roe": -10.53,
+      "res_fin_sobre_pn": 0.69,
       "roa": -4.71,
       "margen_neto": -26.9,
       "densidad_inversiones": 48.08,
@@ -52288,6 +52668,7 @@
       "retencion_ratio": 53.67,
       "cesion_ratio": 46.33,
       "roe": 2.05,
+      "res_fin_sobre_pn": -8.58,
       "roa": 0.87,
       "margen_neto": 10.04,
       "densidad_inversiones": 59.37,
@@ -52442,6 +52823,7 @@
       "retencion_ratio": 89.73,
       "cesion_ratio": 10.27,
       "roe": -8.21,
+      "res_fin_sobre_pn": -3.15,
       "roa": -3.77,
       "margen_neto": -24.75,
       "densidad_inversiones": 46.29,
@@ -52751,6 +53133,7 @@
       "retencion_ratio": 53.09,
       "cesion_ratio": 46.91,
       "roe": 0.45,
+      "res_fin_sobre_pn": -4.92,
       "roa": 0.26,
       "margen_neto": 2.43,
       "densidad_inversiones": 39.69,
@@ -52917,6 +53300,7 @@
       "retencion_ratio": 98.99,
       "cesion_ratio": 1.01,
       "roe": -13.49,
+      "res_fin_sobre_pn": -4.55,
       "roa": -3.7,
       "margen_neto": -14.93,
       "densidad_inversiones": 35.17,
@@ -53234,6 +53618,7 @@
       "retencion_ratio": 98.69,
       "cesion_ratio": 1.31,
       "roe": 6.79,
+      "res_fin_sobre_pn": -1.51,
       "roa": 4.18,
       "margen_neto": 18.77,
       "densidad_inversiones": 78.83,
@@ -53464,6 +53849,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -5.57,
+      "res_fin_sobre_pn": -11.33,
       "roa": -1.85,
       "margen_neto": -5.88,
       "densidad_inversiones": 33.53,
@@ -53702,6 +54088,7 @@
       "retencion_ratio": 50.55,
       "cesion_ratio": 49.45,
       "roe": 7.25,
+      "res_fin_sobre_pn": 0.08,
       "roa": 2.65,
       "margen_neto": 17.57,
       "densidad_inversiones": 42.49,
@@ -54016,6 +54403,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -0.76,
+      "res_fin_sobre_pn": -15.1,
       "roa": -0.21,
       "margen_neto": -0.87,
       "densidad_inversiones": 14.46,
@@ -54288,6 +54676,7 @@
       "retencion_ratio": 98.06,
       "cesion_ratio": 1.94,
       "roe": -7.22,
+      "res_fin_sobre_pn": -9.65,
       "roa": -1.92,
       "margen_neto": -6.77,
       "densidad_inversiones": 13.16,
@@ -54656,6 +55045,7 @@
       "retencion_ratio": 94.6,
       "cesion_ratio": 5.4,
       "roe": -13.58,
+      "res_fin_sobre_pn": -5.74,
       "roa": -7.85,
       "margen_neto": -49.29,
       "densidad_inversiones": 32.84,
@@ -54918,6 +55308,7 @@
       "retencion_ratio": 95.84,
       "cesion_ratio": 4.16,
       "roe": 2.48,
+      "res_fin_sobre_pn": -5.4,
       "roa": 1.68,
       "margen_neto": 12.39,
       "densidad_inversiones": 49.27,
@@ -55174,6 +55565,7 @@
       "retencion_ratio": 99.74,
       "cesion_ratio": 0.26,
       "roe": -17.13,
+      "res_fin_sobre_pn": -11.96,
       "roa": -9.54,
       "margen_neto": -316.85,
       "densidad_inversiones": 50.85,
@@ -55342,6 +55734,7 @@
       "retencion_ratio": 94.89,
       "cesion_ratio": 5.11,
       "roe": 2.17,
+      "res_fin_sobre_pn": 0.06,
       "roa": 1.33,
       "margen_neto": 6.08,
       "densidad_inversiones": 72.24,
@@ -55608,6 +56001,7 @@
       "retencion_ratio": 98.51,
       "cesion_ratio": 1.49,
       "roe": -62.59,
+      "res_fin_sobre_pn": -35.94,
       "roa": -24.19,
       "margen_neto": -79.52,
       "densidad_inversiones": 32.1,
@@ -55933,6 +56327,7 @@
       "retencion_ratio": 12.78,
       "cesion_ratio": 87.22,
       "roe": -2.55,
+      "res_fin_sobre_pn": -5.44,
       "roa": -2.34,
       "margen_neto": -65.48,
       "densidad_inversiones": 41.56,
@@ -56057,6 +56452,7 @@
       "retencion_ratio": 99.93,
       "cesion_ratio": 0.07,
       "roe": 6.55,
+      "res_fin_sobre_pn": -2.57,
       "roa": 3.95,
       "margen_neto": 15.71,
       "densidad_inversiones": 77.05,
@@ -56372,6 +56768,7 @@
       "retencion_ratio": 94.68,
       "cesion_ratio": 5.32,
       "roe": -2.99,
+      "res_fin_sobre_pn": -1.82,
       "roa": -2.38,
       "margen_neto": -16.94,
       "densidad_inversiones": 14.93,
@@ -56598,6 +56995,7 @@
       "retencion_ratio": 92.8,
       "cesion_ratio": 7.2,
       "roe": -4.94,
+      "res_fin_sobre_pn": -6.21,
       "roa": -2.34,
       "margen_neto": -15.49,
       "densidad_inversiones": 45.59,
@@ -56816,6 +57214,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -4.66,
+      "res_fin_sobre_pn": -0.09,
       "roa": -3.9,
       "margen_neto": -92.71,
       "densidad_inversiones": 2.61,
@@ -56957,6 +57356,7 @@
       "retencion_ratio": 84.54,
       "cesion_ratio": 15.46,
       "roe": 1.72,
+      "res_fin_sobre_pn": -17.73,
       "roa": 0.47,
       "margen_neto": 4.88,
       "densidad_inversiones": 12.22,
@@ -57131,6 +57531,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 17.89,
+      "res_fin_sobre_pn": 14.6,
       "roa": 1.35,
       "margen_neto": 29.05,
       "densidad_inversiones": 96.11,
@@ -57308,6 +57709,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -8.85,
+      "res_fin_sobre_pn": -67.95,
       "roa": -0.66,
       "margen_neto": -19.14,
       "densidad_inversiones": 99.37,
@@ -57490,6 +57892,7 @@
       "retencion_ratio": 99.94,
       "cesion_ratio": 0.06,
       "roe": 0.11,
+      "res_fin_sobre_pn": 5.47,
       "roa": 0.03,
       "margen_neto": 1.49,
       "densidad_inversiones": 92.8,
@@ -57637,6 +58040,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 2.3,
+      "res_fin_sobre_pn": 7.28,
       "roa": 0.85,
       "margen_neto": 33.32,
       "densidad_inversiones": 95.02,
@@ -57791,6 +58195,7 @@
       "retencion_ratio": 67.02,
       "cesion_ratio": 32.98,
       "roe": 0.95,
+      "res_fin_sobre_pn": -3.98,
       "roa": 0.7,
       "margen_neto": 2.15,
       "densidad_inversiones": 1.58,
@@ -57969,6 +58374,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -3.16,
+      "res_fin_sobre_pn": -2.32,
       "roa": -0.53,
       "margen_neto": -14.66,
       "densidad_inversiones": 95.06,
@@ -58151,6 +58557,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.9,
+      "res_fin_sobre_pn": -1.95,
       "roa": -1.12,
       "margen_neto": -97.6,
       "densidad_inversiones": 53.32,
@@ -58329,6 +58736,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.02,
+      "res_fin_sobre_pn": 0.21,
       "roa": 0.02,
       "margen_neto": 0.81,
       "densidad_inversiones": 5.68,
@@ -58461,6 +58869,7 @@
       "retencion_ratio": 97.58,
       "cesion_ratio": 2.42,
       "roe": 10.27,
+      "res_fin_sobre_pn": -16.77,
       "roa": 1.38,
       "margen_neto": 6.02,
       "densidad_inversiones": 82.99,
@@ -58603,6 +59012,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.44,
+      "res_fin_sobre_pn": 3.69,
       "roa": 0.08,
       "margen_neto": 1.71,
       "densidad_inversiones": 91.32,
@@ -58804,6 +59214,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -4.41,
+      "res_fin_sobre_pn": -9.61,
       "roa": -2.11,
       "margen_neto": -79.95,
       "densidad_inversiones": 94.03,
@@ -58933,6 +59344,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.38,
+      "res_fin_sobre_pn": -0.97,
       "roa": 0.33,
       "margen_neto": 1.65,
       "densidad_inversiones": 65.59,
@@ -59074,6 +59486,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.17,
+      "res_fin_sobre_pn": -1.21,
       "roa": -2.01,
       "margen_neto": -21.47,
       "densidad_inversiones": 0.52,
@@ -59219,6 +59632,7 @@
       "retencion_ratio": 96.15,
       "cesion_ratio": 3.85,
       "roe": 4.58,
+      "res_fin_sobre_pn": -16.68,
       "roa": 0.84,
       "margen_neto": 3.92,
       "densidad_inversiones": 67.02,
@@ -59504,6 +59918,7 @@
       "retencion_ratio": 96.85,
       "cesion_ratio": 3.15,
       "roe": 3.24,
+      "res_fin_sobre_pn": -4.01,
       "roa": 0.98,
       "margen_neto": 2.71,
       "densidad_inversiones": 50.45,
@@ -59716,6 +60131,7 @@
       "retencion_ratio": 97.74,
       "cesion_ratio": 2.26,
       "roe": -0.6,
+      "res_fin_sobre_pn": -0.33,
       "roa": -0.23,
       "margen_neto": -0.91,
       "densidad_inversiones": 61.69,
@@ -60060,6 +60476,7 @@
       "retencion_ratio": 74.98,
       "cesion_ratio": 25.02,
       "roe": -1.95,
+      "res_fin_sobre_pn": -3.39,
       "roa": -1.08,
       "margen_neto": -11.62,
       "densidad_inversiones": 75.04,
@@ -60450,6 +60867,7 @@
       "retencion_ratio": 98.06,
       "cesion_ratio": 1.94,
       "roe": -1.5,
+      "res_fin_sobre_pn": -9.99,
       "roa": -0.47,
       "margen_neto": -7.76,
       "densidad_inversiones": 96.0,
@@ -60664,6 +61082,7 @@
       "retencion_ratio": 91.87,
       "cesion_ratio": 8.13,
       "roe": -1.92,
+      "res_fin_sobre_pn": -14.61,
       "roa": -0.7,
       "margen_neto": -6.93,
       "densidad_inversiones": 95.88,
@@ -60842,6 +61261,7 @@
       "retencion_ratio": 93.11,
       "cesion_ratio": 6.89,
       "roe": 29.33,
+      "res_fin_sobre_pn": 45.69,
       "roa": 10.03,
       "margen_neto": 85.29,
       "densidad_inversiones": 19.15,
@@ -61108,6 +61528,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -6.87,
+      "res_fin_sobre_pn": -40.8,
       "roa": -0.83,
       "margen_neto": -14.96,
       "densidad_inversiones": 95.13,
@@ -61288,6 +61709,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 3.44,
+      "res_fin_sobre_pn": -0.28,
       "roa": 1.57,
       "margen_neto": 13.62,
       "densidad_inversiones": 91.81,
@@ -61440,6 +61862,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -3.05,
+      "res_fin_sobre_pn": -9.13,
       "roa": -0.76,
       "margen_neto": -28.79,
       "densidad_inversiones": 99.61,
@@ -61622,6 +62045,7 @@
       "retencion_ratio": 99.55,
       "cesion_ratio": 0.45,
       "roe": -2.98,
+      "res_fin_sobre_pn": -17.7,
       "roa": -1.61,
       "margen_neto": -3.26,
       "densidad_inversiones": 66.44,
@@ -61851,6 +62275,7 @@
       "retencion_ratio": 95.54,
       "cesion_ratio": 4.46,
       "roe": 31.12,
+      "res_fin_sobre_pn": -112.64,
       "roa": 3.09,
       "margen_neto": 11.74,
       "densidad_inversiones": 91.05,
@@ -62031,6 +62456,7 @@
       "retencion_ratio": 99.93,
       "cesion_ratio": 0.07,
       "roe": -0.24,
+      "res_fin_sobre_pn": -1.94,
       "roa": -0.22,
       "margen_neto": -1.24,
       "densidad_inversiones": 79.39,
@@ -62204,6 +62630,7 @@
       "retencion_ratio": 97.35,
       "cesion_ratio": 2.65,
       "roe": -1.47,
+      "res_fin_sobre_pn": -1.62,
       "roa": -1.21,
       "margen_neto": -4.52,
       "densidad_inversiones": 82.06,
@@ -62382,6 +62809,7 @@
       "retencion_ratio": 95.58,
       "cesion_ratio": 4.42,
       "roe": 4.2,
+      "res_fin_sobre_pn": -2.46,
       "roa": 2.83,
       "margen_neto": 7.69,
       "densidad_inversiones": 70.53,
@@ -62622,6 +63050,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -6.29,
+      "res_fin_sobre_pn": -3.88,
       "roa": -5.46,
       "margen_neto": -21.54,
       "densidad_inversiones": 24.62,
@@ -62758,6 +63187,7 @@
       "retencion_ratio": 72.0,
       "cesion_ratio": 28.0,
       "roe": 5.88,
+      "res_fin_sobre_pn": -1.6,
       "roa": 3.76,
       "margen_neto": 12.19,
       "densidad_inversiones": 8.52,
@@ -62909,6 +63339,7 @@
       "retencion_ratio": 97.38,
       "cesion_ratio": 2.62,
       "roe": -2.86,
+      "res_fin_sobre_pn": -3.27,
       "roa": -1.1,
       "margen_neto": -7.96,
       "densidad_inversiones": 75.55,
@@ -63141,6 +63572,7 @@
       "retencion_ratio": 97.48,
       "cesion_ratio": 2.52,
       "roe": 9.7,
+      "res_fin_sobre_pn": -12.93,
       "roa": 5.97,
       "margen_neto": 6.81,
       "densidad_inversiones": 2.49,
@@ -63308,6 +63740,7 @@
       "retencion_ratio": 77.58,
       "cesion_ratio": 22.42,
       "roe": 2.83,
+      "res_fin_sobre_pn": -20.23,
       "roa": 1.27,
       "margen_neto": 5.67,
       "densidad_inversiones": 33.98,
@@ -63494,6 +63927,7 @@
       "retencion_ratio": 96.0,
       "cesion_ratio": 4.0,
       "roe": 4.0,
+      "res_fin_sobre_pn": -13.27,
       "roa": 0.73,
       "margen_neto": 6.71,
       "densidad_inversiones": 81.84,
@@ -63739,6 +64173,7 @@
       "retencion_ratio": 98.98,
       "cesion_ratio": 1.02,
       "roe": -10.59,
+      "res_fin_sobre_pn": -4.63,
       "roa": -4.36,
       "margen_neto": -9.6,
       "densidad_inversiones": 40.46,
@@ -64028,6 +64463,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -0.7,
+      "res_fin_sobre_pn": -0.06,
       "roa": -0.69,
       "margen_neto": -22.85,
       "densidad_inversiones": 3.96,
@@ -64146,6 +64582,7 @@
       "retencion_ratio": 99.35,
       "cesion_ratio": 0.65,
       "roe": 8.9,
+      "res_fin_sobre_pn": -0.9,
       "roa": 4.93,
       "margen_neto": 21.98,
       "densidad_inversiones": 51.74,
@@ -64377,6 +64814,7 @@
       "retencion_ratio": 88.19,
       "cesion_ratio": 11.81,
       "roe": -1.07,
+      "res_fin_sobre_pn": -1.17,
       "roa": -1.04,
       "margen_neto": -102.09,
       "densidad_inversiones": 19.98,
@@ -64544,6 +64982,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.41,
+      "res_fin_sobre_pn": -0.35,
       "roa": -0.6,
       "margen_neto": -189.61,
       "densidad_inversiones": 89.1,
@@ -64721,6 +65160,7 @@
       "retencion_ratio": 99.6,
       "cesion_ratio": 0.4,
       "roe": 6.33,
+      "res_fin_sobre_pn": -19.13,
       "roa": 0.78,
       "margen_neto": 2.57,
       "densidad_inversiones": 86.27,
@@ -64889,6 +65329,7 @@
       "retencion_ratio": 99.81,
       "cesion_ratio": 0.19,
       "roe": 4.48,
+      "res_fin_sobre_pn": -16.5,
       "roa": 0.6,
       "margen_neto": 1.52,
       "densidad_inversiones": 76.82,
@@ -65047,6 +65488,7 @@
       "retencion_ratio": 99.69,
       "cesion_ratio": 0.31,
       "roe": -16.7,
+      "res_fin_sobre_pn": -7.11,
       "roa": -5.07,
       "margen_neto": -18.19,
       "densidad_inversiones": 81.91,
@@ -65216,6 +65658,7 @@
       "retencion_ratio": 99.72,
       "cesion_ratio": 0.28,
       "roe": -25.16,
+      "res_fin_sobre_pn": -7.51,
       "roa": -3.96,
       "margen_neto": -15.18,
       "densidad_inversiones": 84.57,
@@ -65380,6 +65823,7 @@
       "retencion_ratio": 99.83,
       "cesion_ratio": 0.17,
       "roe": -19.69,
+      "res_fin_sobre_pn": -7.2,
       "roa": -4.41,
       "margen_neto": -10.02,
       "densidad_inversiones": 64.45,
@@ -65537,6 +65981,7 @@
       "retencion_ratio": 73.39,
       "cesion_ratio": 26.61,
       "roe": -4.64,
+      "res_fin_sobre_pn": -8.31,
       "roa": -1.98,
       "margen_neto": -28.18,
       "densidad_inversiones": 96.02,
@@ -65679,6 +66124,7 @@
       "retencion_ratio": 99.82,
       "cesion_ratio": 0.18,
       "roe": 0.4,
+      "res_fin_sobre_pn": -3.1,
       "roa": 0.07,
       "margen_neto": 0.2,
       "densidad_inversiones": 77.43,
@@ -65843,6 +66289,7 @@
       "retencion_ratio": 99.05,
       "cesion_ratio": 0.95,
       "roe": 8.27,
+      "res_fin_sobre_pn": -6.35,
       "roa": 4.25,
       "margen_neto": 8.86,
       "densidad_inversiones": 86.13,
@@ -66059,6 +66506,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -5.8,
+      "res_fin_sobre_pn": -4.72,
       "roa": -4.93,
       "margen_neto": -22.51,
       "densidad_inversiones": 70.98,
@@ -66200,6 +66648,7 @@
       "retencion_ratio": 64.68,
       "cesion_ratio": 35.32,
       "roe": -4.25,
+      "res_fin_sobre_pn": -3.74,
       "roa": -1.07,
       "margen_neto": -6.77,
       "densidad_inversiones": 45.54,
@@ -66352,6 +66801,7 @@
       "retencion_ratio": 99.93,
       "cesion_ratio": 0.07,
       "roe": 10.69,
+      "res_fin_sobre_pn": -2.8,
       "roa": 6.74,
       "margen_neto": 20.92,
       "densidad_inversiones": 61.36,
@@ -66549,6 +66999,7 @@
       "retencion_ratio": 98.47,
       "cesion_ratio": 1.53,
       "roe": 22.37,
+      "res_fin_sobre_pn": 29.11,
       "roa": 7.26,
       "margen_neto": 34.69,
       "densidad_inversiones": 50.56,
@@ -66851,6 +67302,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.8,
+      "res_fin_sobre_pn": 1.08,
       "roa": -1.78,
       "margen_neto": 0.0,
       "densidad_inversiones": 34.48,
@@ -66957,6 +67409,7 @@
       "retencion_ratio": 96.63,
       "cesion_ratio": 3.37,
       "roe": -5.17,
+      "res_fin_sobre_pn": -3.08,
       "roa": -4.6,
       "margen_neto": -96.79,
       "densidad_inversiones": 74.66,
@@ -67104,6 +67557,7 @@
       "retencion_ratio": 99.32,
       "cesion_ratio": 0.68,
       "roe": -64.06,
+      "res_fin_sobre_pn": -5.29,
       "roa": -29.99,
       "margen_neto": -165.56,
       "densidad_inversiones": 53.64,
@@ -67251,6 +67705,7 @@
       "retencion_ratio": 90.06,
       "cesion_ratio": 9.94,
       "roe": -34.82,
+      "res_fin_sobre_pn": -1.51,
       "roa": -6.37,
       "margen_neto": -73.92,
       "densidad_inversiones": 73.35,
@@ -67403,6 +67858,7 @@
       "retencion_ratio": 96.85,
       "cesion_ratio": 3.15,
       "roe": -4.54,
+      "res_fin_sobre_pn": -2.37,
       "roa": -2.85,
       "margen_neto": -56.21,
       "densidad_inversiones": 86.66,
@@ -67538,6 +67994,7 @@
       "retencion_ratio": 96.65,
       "cesion_ratio": 3.35,
       "roe": -20.16,
+      "res_fin_sobre_pn": -4.8,
       "roa": -15.75,
       "margen_neto": -195.85,
       "densidad_inversiones": 62.12,
@@ -67691,6 +68148,7 @@
       "retencion_ratio": 78.67,
       "cesion_ratio": 21.33,
       "roe": -1525.75,
+      "res_fin_sobre_pn": -1365.96,
       "roa": -27.87,
       "margen_neto": -76.45,
       "densidad_inversiones": 54.85,
@@ -67834,6 +68292,7 @@
       "retencion_ratio": 97.91,
       "cesion_ratio": 2.09,
       "roe": 6.25,
+      "res_fin_sobre_pn": -3.41,
       "roa": 3.61,
       "margen_neto": 12.79,
       "densidad_inversiones": 67.08,
@@ -68043,6 +68502,7 @@
       "retencion_ratio": 99.37,
       "cesion_ratio": 0.63,
       "roe": 5.48,
+      "res_fin_sobre_pn": -4.82,
       "roa": 2.97,
       "margen_neto": 10.02,
       "densidad_inversiones": 79.93,
@@ -68257,6 +68717,7 @@
       "retencion_ratio": 98.52,
       "cesion_ratio": 1.48,
       "roe": 9.35,
+      "res_fin_sobre_pn": -5.01,
       "roa": 4.38,
       "margen_neto": 15.36,
       "densidad_inversiones": 73.33,
@@ -68449,6 +68910,7 @@
       "retencion_ratio": 98.65,
       "cesion_ratio": 1.35,
       "roe": 4.11,
+      "res_fin_sobre_pn": -2.02,
       "roa": 2.43,
       "margen_neto": 20.52,
       "densidad_inversiones": 64.25,
@@ -68634,6 +69096,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.57,
+      "res_fin_sobre_pn": -5.78,
       "roa": -0.3,
       "margen_neto": -11.29,
       "densidad_inversiones": 96.4,
@@ -68810,6 +69273,7 @@
       "retencion_ratio": 94.86,
       "cesion_ratio": 5.14,
       "roe": -4.89,
+      "res_fin_sobre_pn": 3.84,
       "roa": -1.76,
       "margen_neto": -10.15,
       "densidad_inversiones": 26.39,
@@ -69057,6 +69521,7 @@
       "retencion_ratio": 90.95,
       "cesion_ratio": 9.05,
       "roe": 0.84,
+      "res_fin_sobre_pn": -6.68,
       "roa": 0.24,
       "margen_neto": 1.06,
       "densidad_inversiones": 35.78,
@@ -69311,6 +69776,7 @@
       "retencion_ratio": 93.48,
       "cesion_ratio": 6.52,
       "roe": -4.55,
+      "res_fin_sobre_pn": -4.84,
       "roa": -4.45,
       "margen_neto": -286.71,
       "densidad_inversiones": 95.77,
@@ -69483,6 +69949,7 @@
       "retencion_ratio": 70.23,
       "cesion_ratio": 29.77,
       "roe": -0.16,
+      "res_fin_sobre_pn": -1.72,
       "roa": -0.12,
       "margen_neto": -0.82,
       "densidad_inversiones": 5.58,
@@ -69618,6 +70085,7 @@
       "retencion_ratio": 97.66,
       "cesion_ratio": 2.34,
       "roe": 0.43,
+      "res_fin_sobre_pn": 11.43,
       "roa": 0.13,
       "margen_neto": 0.77,
       "densidad_inversiones": 72.49,
@@ -70014,6 +70482,7 @@
       "retencion_ratio": 96.61,
       "cesion_ratio": 3.39,
       "roe": 0.4,
+      "res_fin_sobre_pn": -7.49,
       "roa": 0.23,
       "margen_neto": 2.43,
       "densidad_inversiones": 72.55,
@@ -70269,6 +70738,7 @@
       "retencion_ratio": 87.36,
       "cesion_ratio": 12.64,
       "roe": 1.58,
+      "res_fin_sobre_pn": -2.98,
       "roa": 0.44,
       "margen_neto": 2.42,
       "densidad_inversiones": 46.38,
@@ -70534,6 +71004,7 @@
       "retencion_ratio": 97.41,
       "cesion_ratio": 2.59,
       "roe": 1.95,
+      "res_fin_sobre_pn": 1.84,
       "roa": 0.97,
       "margen_neto": 5.49,
       "densidad_inversiones": 79.94,
@@ -70788,6 +71259,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.13,
+      "res_fin_sobre_pn": -3.42,
       "roa": 0.05,
       "margen_neto": 0.26,
       "densidad_inversiones": 74.7,
@@ -70939,6 +71411,7 @@
       "retencion_ratio": 59.68,
       "cesion_ratio": 40.32,
       "roe": 6.18,
+      "res_fin_sobre_pn": -3.14,
       "roa": 2.54,
       "margen_neto": 11.23,
       "densidad_inversiones": 61.76,
@@ -71080,6 +71553,7 @@
       "retencion_ratio": 73.15,
       "cesion_ratio": 26.85,
       "roe": -2.68,
+      "res_fin_sobre_pn": -6.93,
       "roa": -1.36,
       "margen_neto": -11.52,
       "densidad_inversiones": 15.84,
@@ -71232,6 +71706,7 @@
       "retencion_ratio": 60.52,
       "cesion_ratio": 39.48,
       "roe": 0.34,
+      "res_fin_sobre_pn": -3.92,
       "roa": 0.19,
       "margen_neto": 1.16,
       "densidad_inversiones": 18.01,
@@ -71442,6 +71917,7 @@
       "retencion_ratio": 40.31,
       "cesion_ratio": 59.69,
       "roe": -5.69,
+      "res_fin_sobre_pn": -13.94,
       "roa": -1.88,
       "margen_neto": -13.7,
       "densidad_inversiones": 48.44,
@@ -71596,6 +72072,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 1.86,
+      "res_fin_sobre_pn": -1.68,
       "roa": 0.6,
       "margen_neto": 1.16,
       "densidad_inversiones": 55.93,
@@ -71864,6 +72341,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 17.84,
+      "res_fin_sobre_pn": -5.83,
       "roa": 10.49,
       "margen_neto": 28.06,
       "densidad_inversiones": 58.02,
@@ -72069,6 +72547,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 16.67,
+      "res_fin_sobre_pn": -2.16,
       "roa": 10.91,
       "margen_neto": 55.71,
       "densidad_inversiones": 23.81,
@@ -72202,6 +72681,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 5.74,
+      "res_fin_sobre_pn": -2.56,
       "roa": 5.26,
       "margen_neto": 40.09,
       "densidad_inversiones": 60.73,
@@ -72387,6 +72867,7 @@
       "retencion_ratio": 4.77,
       "cesion_ratio": 95.23,
       "roe": -12.59,
+      "res_fin_sobre_pn": -18.29,
       "roa": -5.95,
       "margen_neto": -46.77,
       "densidad_inversiones": 51.03,
@@ -72545,6 +73026,7 @@
       "retencion_ratio": 14.29,
       "cesion_ratio": 85.71,
       "roe": -4.07,
+      "res_fin_sobre_pn": -7.09,
       "roa": -2.76,
       "margen_neto": -67.62,
       "densidad_inversiones": 68.41,
@@ -72700,6 +73182,7 @@
       "retencion_ratio": 52.83,
       "cesion_ratio": 47.17,
       "roe": -46.46,
+      "res_fin_sobre_pn": -15.55,
       "roa": -16.13,
       "margen_neto": -4609.97,
       "densidad_inversiones": 53.34,
@@ -72856,6 +73339,7 @@
       "retencion_ratio": 98.06,
       "cesion_ratio": 1.94,
       "roe": -5.12,
+      "res_fin_sobre_pn": -6.8,
       "roa": -4.53,
       "margen_neto": -16.67,
       "densidad_inversiones": 7.43,
@@ -73019,6 +73503,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -7.11,
+      "res_fin_sobre_pn": 0.62,
       "roa": -6.78,
       "margen_neto": -4095.37,
       "densidad_inversiones": 96.41,
@@ -73152,6 +73637,7 @@
       "retencion_ratio": 99.62,
       "cesion_ratio": 0.38,
       "roe": 20.69,
+      "res_fin_sobre_pn": -1.42,
       "roa": 12.22,
       "margen_neto": 32.51,
       "densidad_inversiones": 0.2,
@@ -73313,6 +73799,7 @@
       "retencion_ratio": 98.76,
       "cesion_ratio": 1.24,
       "roe": 1.24,
+      "res_fin_sobre_pn": -7.96,
       "roa": 0.23,
       "margen_neto": 2.57,
       "densidad_inversiones": 1.53,
@@ -73581,6 +74068,7 @@
       "retencion_ratio": 95.58,
       "cesion_ratio": 4.42,
       "roe": -1.8,
+      "res_fin_sobre_pn": 0.6,
       "roa": -0.79,
       "margen_neto": -1.3,
       "densidad_inversiones": 24.95,
@@ -73811,6 +74299,7 @@
       "retencion_ratio": 99.65,
       "cesion_ratio": 0.35,
       "roe": -18.24,
+      "res_fin_sobre_pn": -10.44,
       "roa": -4.16,
       "margen_neto": -6.66,
       "densidad_inversiones": 59.3,
@@ -73964,6 +74453,7 @@
       "retencion_ratio": 70.63,
       "cesion_ratio": 29.37,
       "roe": -4.72,
+      "res_fin_sobre_pn": -6.01,
       "roa": -1.56,
       "margen_neto": -5.0,
       "densidad_inversiones": 49.65,
@@ -74162,6 +74652,7 @@
       "retencion_ratio": 98.02,
       "cesion_ratio": 1.98,
       "roe": -12.0,
+      "res_fin_sobre_pn": -45.8,
       "roa": -2.99,
       "margen_neto": -9.3,
       "densidad_inversiones": 20.47,
@@ -74342,6 +74833,7 @@
       "retencion_ratio": 68.43,
       "cesion_ratio": 31.57,
       "roe": 7.11,
+      "res_fin_sobre_pn": -0.86,
       "roa": 4.03,
       "margen_neto": 26.67,
       "densidad_inversiones": 55.22,
@@ -74605,6 +75097,7 @@
       "retencion_ratio": 98.89,
       "cesion_ratio": 1.11,
       "roe": 7.31,
+      "res_fin_sobre_pn": 7.13,
       "roa": 2.61,
       "margen_neto": 6.48,
       "densidad_inversiones": 54.23,
@@ -74930,6 +75423,7 @@
       "retencion_ratio": 97.49,
       "cesion_ratio": 2.51,
       "roe": 3.42,
+      "res_fin_sobre_pn": -2.89,
       "roa": 2.13,
       "margen_neto": 11.65,
       "densidad_inversiones": 68.48,
@@ -75133,6 +75627,7 @@
       "retencion_ratio": 96.49,
       "cesion_ratio": 3.51,
       "roe": -50.62,
+      "res_fin_sobre_pn": -0.33,
       "roa": -15.36,
       "margen_neto": -118.25,
       "densidad_inversiones": 6.98,
@@ -75420,6 +75915,7 @@
       "retencion_ratio": 99.43,
       "cesion_ratio": 0.57,
       "roe": 22.86,
+      "res_fin_sobre_pn": -0.37,
       "roa": 10.8,
       "margen_neto": 30.76,
       "densidad_inversiones": 60.46,
@@ -75659,6 +76155,7 @@
       "retencion_ratio": 82.35,
       "cesion_ratio": 17.65,
       "roe": -3.72,
+      "res_fin_sobre_pn": -14.22,
       "roa": -1.55,
       "margen_neto": -8.59,
       "densidad_inversiones": 17.38,
@@ -75855,6 +76352,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 6.59,
+      "res_fin_sobre_pn": -0.53,
       "roa": 4.77,
       "margen_neto": 31.6,
       "densidad_inversiones": 80.96,
@@ -76003,6 +76501,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -29.48,
+      "res_fin_sobre_pn": 6.31,
       "roa": -6.3,
       "margen_neto": -20.72,
       "densidad_inversiones": 79.62,
@@ -76138,6 +76637,7 @@
       "retencion_ratio": 98.12,
       "cesion_ratio": 1.88,
       "roe": 5.11,
+      "res_fin_sobre_pn": -0.28,
       "roa": 4.35,
       "margen_neto": 36.39,
       "densidad_inversiones": 85.48,
@@ -76304,6 +76804,7 @@
       "retencion_ratio": 67.33,
       "cesion_ratio": 32.67,
       "roe": 1.64,
+      "res_fin_sobre_pn": -15.45,
       "roa": 0.73,
       "margen_neto": 3.09,
       "densidad_inversiones": 41.35,
@@ -76435,6 +76936,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -3.4,
+      "res_fin_sobre_pn": -2.39,
       "roa": -3.36,
       "margen_neto": -7149.27,
       "densidad_inversiones": 15.46,
@@ -76549,6 +77051,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 0.32,
+      "res_fin_sobre_pn": -3.63,
       "roa": 0.27,
       "margen_neto": 4.56,
       "densidad_inversiones": 73.44,
@@ -76687,6 +77190,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 3.53,
+      "res_fin_sobre_pn": 8.67,
       "roa": 0.37,
       "margen_neto": 7.88,
       "densidad_inversiones": 94.08,
@@ -76830,6 +77334,7 @@
       "retencion_ratio": 69.3,
       "cesion_ratio": 30.7,
       "roe": 25.87,
+      "res_fin_sobre_pn": 0.83,
       "roa": 4.1,
       "margen_neto": 40.92,
       "densidad_inversiones": 61.72,
@@ -76976,6 +77481,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -26.47,
+      "res_fin_sobre_pn": -5.53,
       "roa": -7.32,
       "margen_neto": -13.46,
       "densidad_inversiones": 90.24,
@@ -77095,6 +77601,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -2.65,
+      "res_fin_sobre_pn": -3.08,
       "roa": -2.62,
       "margen_neto": -96.85,
       "densidad_inversiones": 98.02,
@@ -77252,6 +77759,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 3.14,
+      "res_fin_sobre_pn": 0.93,
       "roa": 3.05,
       "margen_neto": 53.09,
       "densidad_inversiones": 79.72,
@@ -77397,6 +77905,7 @@
       "retencion_ratio": 99.43,
       "cesion_ratio": 0.57,
       "roe": -1.77,
+      "res_fin_sobre_pn": 12.56,
       "roa": -0.36,
       "margen_neto": -1.11,
       "densidad_inversiones": 37.19,
@@ -77546,6 +78055,7 @@
       "retencion_ratio": 99.2,
       "cesion_ratio": 0.8,
       "roe": 9.52,
+      "res_fin_sobre_pn": 3.13,
       "roa": 2.39,
       "margen_neto": 4.24,
       "densidad_inversiones": 60.64,
@@ -77697,6 +78207,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -4.75,
+      "res_fin_sobre_pn": -13.86,
       "roa": -1.91,
       "margen_neto": -4.06,
       "densidad_inversiones": 92.77,
@@ -77829,6 +78340,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 6.52,
+      "res_fin_sobre_pn": -1.15,
       "roa": 4.75,
       "margen_neto": 25.88,
       "densidad_inversiones": 43.03,
@@ -77948,6 +78460,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 2.19,
+      "res_fin_sobre_pn": -2.78,
       "roa": 1.72,
       "margen_neto": 8.25,
       "densidad_inversiones": 61.9,
@@ -78087,6 +78600,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": 50.42,
+      "res_fin_sobre_pn": -23.65,
       "roa": 16.5,
       "margen_neto": 28.14,
       "densidad_inversiones": 63.35,
@@ -78223,6 +78737,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -1.62,
+      "res_fin_sobre_pn": 0.39,
       "roa": -1.62,
       "margen_neto": -738.8,
       "densidad_inversiones": 96.6,
@@ -78347,6 +78862,7 @@
       "retencion_ratio": 95.35,
       "cesion_ratio": 4.65,
       "roe": -11.12,
+      "res_fin_sobre_pn": -1.14,
       "roa": -7.54,
       "margen_neto": -27.84,
       "densidad_inversiones": 7.02,
@@ -78505,6 +79021,7 @@
       "retencion_ratio": 49.79,
       "cesion_ratio": 50.21,
       "roe": -14.72,
+      "res_fin_sobre_pn": -1.42,
       "roa": -14.3,
       "margen_neto": -1547.05,
       "densidad_inversiones": 68.96,
@@ -78679,6 +79196,7 @@
       "retencion_ratio": 61.85,
       "cesion_ratio": 38.15,
       "roe": -5.96,
+      "res_fin_sobre_pn": -2.69,
       "roa": -5.25,
       "margen_neto": -188.49,
       "densidad_inversiones": 81.38,
@@ -78879,6 +79397,7 @@
       "retencion_ratio": 100.0,
       "cesion_ratio": 0.0,
       "roe": -19.26,
+      "res_fin_sobre_pn": -0.71,
       "roa": -12.44,
       "margen_neto": -56.39,
       "densidad_inversiones": 61.21,
@@ -79015,6 +79534,7 @@
       "retencion_ratio": 97.13,
       "cesion_ratio": 2.87,
       "roe": 4.09,
+      "res_fin_sobre_pn": -0.08,
       "roa": 3.55,
       "margen_neto": 50.84,
       "densidad_inversiones": 25.22,
@@ -79213,6 +79733,7 @@
       "cesion_ratio": 9.06,
       "densidad_inversiones": 55.68,
       "roe": -1.5,
+      "res_fin_sobre_pn": -3.48,
       "roa": -0.5,
       "margen_neto": -2.0,
       "margen_tecnico": 2.46,
@@ -79750,6 +80271,7 @@
       "cesion_ratio": 2.32,
       "densidad_inversiones": 72.58,
       "roe": 0.43,
+      "res_fin_sobre_pn": 11.4,
       "roa": 0.13,
       "margen_neto": 0.77,
       "margen_tecnico": -19.58,
@@ -80239,6 +80761,7 @@
       "cesion_ratio": 10.86,
       "densidad_inversiones": 80.31,
       "roe": 13.14,
+      "res_fin_sobre_pn": -50.08,
       "roa": 2.15,
       "margen_neto": 8.41,
       "margen_tecnico": 34.91,
@@ -80704,6 +81227,7 @@
       "cesion_ratio": 2.06,
       "densidad_inversiones": 75.57,
       "roe": -5.29,
+      "res_fin_sobre_pn": 0.73,
       "roa": -1.61,
       "margen_neto": -7.87,
       "margen_tecnico": -11.95,
@@ -81223,6 +81747,7 @@
       "cesion_ratio": 1.28,
       "densidad_inversiones": 66.84,
       "roe": -7.31,
+      "res_fin_sobre_pn": -9.81,
       "roa": -1.54,
       "margen_neto": -4.78,
       "margen_tecnico": -0.45,
@@ -81637,6 +82162,7 @@
       "cesion_ratio": 5.81,
       "densidad_inversiones": 56.18,
       "roe": -8.21,
+      "res_fin_sobre_pn": -1.19,
       "roa": -2.56,
       "margen_neto": -13.08,
       "margen_tecnico": -14.0,
@@ -82120,6 +82646,7 @@
       "cesion_ratio": 2.26,
       "densidad_inversiones": 61.69,
       "roe": -0.6,
+      "res_fin_sobre_pn": -0.33,
       "roa": -0.23,
       "margen_neto": -0.91,
       "margen_tecnico": -3.96,
@@ -82522,6 +83049,7 @@
       "cesion_ratio": 3.6,
       "densidad_inversiones": 60.9,
       "roe": 2.65,
+      "res_fin_sobre_pn": -6.0,
       "roa": 0.42,
       "margen_neto": 1.35,
       "margen_tecnico": 5.62,
@@ -82940,6 +83468,7 @@
       "cesion_ratio": 0.17,
       "densidad_inversiones": 87.65,
       "roe": 10.12,
+      "res_fin_sobre_pn": -3.42,
       "roa": 1.02,
       "margen_neto": 5.15,
       "margen_tecnico": 5.7,
@@ -83270,6 +83799,7 @@
       "cesion_ratio": 5.65,
       "densidad_inversiones": 73.9,
       "roe": 1.98,
+      "res_fin_sobre_pn": -11.88,
       "roa": 0.34,
       "margen_neto": 1.59,
       "margen_tecnico": 10.53,
@@ -83763,6 +84293,7 @@
       "cesion_ratio": 0.72,
       "densidad_inversiones": 70.66,
       "roe": -4.95,
+      "res_fin_sobre_pn": 0.67,
       "roa": -3.32,
       "margen_neto": -19.75,
       "margen_tecnico": -22.41,
@@ -84145,6 +84676,7 @@
       "cesion_ratio": 8.57,
       "densidad_inversiones": 51.02,
       "roe": -7.06,
+      "res_fin_sobre_pn": -6.37,
       "roa": -1.97,
       "margen_neto": -7.47,
       "margen_tecnico": -2.72,
@@ -84622,6 +85154,7 @@
       "cesion_ratio": 23.78,
       "densidad_inversiones": 83.61,
       "roe": -2.16,
+      "res_fin_sobre_pn": -4.51,
       "roa": -0.97,
       "margen_neto": -13.9,
       "margen_tecnico": 8.63,
@@ -85102,6 +85635,7 @@
       "cesion_ratio": 10.22,
       "densidad_inversiones": 92.65,
       "roe": -7.58,
+      "res_fin_sobre_pn": -36.23,
       "roa": -0.81,
       "margen_neto": -10.72,
       "margen_tecnico": 34.56,
@@ -85496,6 +86030,7 @@
       "cesion_ratio": 49.45,
       "densidad_inversiones": 42.49,
       "roe": 7.25,
+      "res_fin_sobre_pn": 0.08,
       "roa": 2.65,
       "margen_neto": 17.57,
       "margen_tecnico": 19.61,
@@ -85846,6 +86381,7 @@
       "cesion_ratio": 3.51,
       "densidad_inversiones": 6.98,
       "roe": -50.62,
+      "res_fin_sobre_pn": -0.33,
       "roa": -15.36,
       "margen_neto": -118.25,
       "margen_tecnico": -91.99,
@@ -86169,6 +86705,7 @@
       "cesion_ratio": 1.35,
       "densidad_inversiones": 64.25,
       "roe": 4.11,
+      "res_fin_sobre_pn": -2.02,
       "roa": 2.43,
       "margen_neto": 20.52,
       "margen_tecnico": 38.14,
@@ -86436,6 +86973,7 @@
       "cesion_ratio": 9.06,
       "densidad_inversiones": 55.68,
       "roe": -1.5,
+      "res_fin_sobre_pn": -3.48,
       "roa": -0.5,
       "margen_neto": -2.0,
       "margen_tecnico": 2.46,
@@ -86973,6 +87511,7 @@
       "cesion_ratio": 2.32,
       "densidad_inversiones": 72.58,
       "roe": 0.43,
+      "res_fin_sobre_pn": 11.4,
       "roa": 0.13,
       "margen_neto": 0.77,
       "margen_tecnico": -19.58,
@@ -87462,6 +88001,7 @@
       "cesion_ratio": 1.28,
       "densidad_inversiones": 66.84,
       "roe": -7.31,
+      "res_fin_sobre_pn": -9.81,
       "roa": -1.54,
       "margen_neto": -4.78,
       "margen_tecnico": -0.45,
@@ -87854,6 +88394,7 @@
       "cesion_ratio": 2.06,
       "densidad_inversiones": 75.57,
       "roe": -5.29,
+      "res_fin_sobre_pn": 0.73,
       "roa": -1.61,
       "margen_neto": -7.87,
       "margen_tecnico": -11.95,
@@ -88395,6 +88936,7 @@
       "cesion_ratio": 5.81,
       "densidad_inversiones": 56.18,
       "roe": -8.21,
+      "res_fin_sobre_pn": -1.19,
       "roa": -2.56,
       "margen_neto": -13.08,
       "margen_tecnico": -14.0,
@@ -88878,6 +89420,7 @@
       "cesion_ratio": 2.26,
       "densidad_inversiones": 61.69,
       "roe": -0.6,
+      "res_fin_sobre_pn": -0.33,
       "roa": -0.23,
       "margen_neto": -0.91,
       "margen_tecnico": -3.96,
@@ -89302,6 +89845,7 @@
       "cesion_ratio": 10.86,
       "densidad_inversiones": 80.31,
       "roe": 13.14,
+      "res_fin_sobre_pn": -50.08,
       "roa": 2.15,
       "margen_neto": 8.41,
       "margen_tecnico": 34.91,
@@ -89745,6 +90289,7 @@
       "cesion_ratio": 0.17,
       "densidad_inversiones": 87.65,
       "roe": 10.12,
+      "res_fin_sobre_pn": -3.42,
       "roa": 1.02,
       "margen_neto": 5.15,
       "margen_tecnico": 5.7,
@@ -90009,6 +90554,7 @@
       "cesion_ratio": 3.6,
       "densidad_inversiones": 60.9,
       "roe": 2.65,
+      "res_fin_sobre_pn": -6.0,
       "roa": 0.42,
       "margen_neto": 1.35,
       "margen_tecnico": 5.62,
@@ -90427,6 +90973,7 @@
       "cesion_ratio": 0.72,
       "densidad_inversiones": 70.66,
       "roe": -4.95,
+      "res_fin_sobre_pn": 0.67,
       "roa": -3.32,
       "margen_neto": -19.75,
       "margen_tecnico": -22.41,
@@ -90809,6 +91356,7 @@
       "cesion_ratio": 8.57,
       "densidad_inversiones": 51.02,
       "roe": -7.06,
+      "res_fin_sobre_pn": -6.37,
       "roa": -1.97,
       "margen_neto": -7.47,
       "margen_tecnico": -2.72,
@@ -91352,6 +91900,7 @@
       "cesion_ratio": 5.65,
       "densidad_inversiones": 73.9,
       "roe": 1.98,
+      "res_fin_sobre_pn": -11.88,
       "roa": 0.34,
       "margen_neto": 1.59,
       "margen_tecnico": 10.53,
@@ -91845,6 +92394,7 @@
       "cesion_ratio": 10.22,
       "densidad_inversiones": 92.65,
       "roe": -7.58,
+      "res_fin_sobre_pn": -36.23,
       "roa": -0.81,
       "margen_neto": -10.72,
       "margen_tecnico": 34.56,
@@ -92261,6 +92811,7 @@
       "cesion_ratio": 23.78,
       "densidad_inversiones": 83.61,
       "roe": -2.16,
+      "res_fin_sobre_pn": -4.51,
       "roa": -0.97,
       "margen_neto": -13.9,
       "margen_tecnico": 8.63,
@@ -92719,6 +93270,7 @@
       "cesion_ratio": 1.35,
       "densidad_inversiones": 64.25,
       "roe": 4.11,
+      "res_fin_sobre_pn": -2.02,
       "roa": 2.43,
       "margen_neto": 20.52,
       "margen_tecnico": 38.14,
@@ -92940,6 +93492,7 @@
       "cesion_ratio": 49.45,
       "densidad_inversiones": 42.49,
       "roe": 7.25,
+      "res_fin_sobre_pn": 0.08,
       "roa": 2.65,
       "margen_neto": 17.57,
       "margen_tecnico": 19.61,
@@ -93290,6 +93843,7 @@
       "cesion_ratio": 3.51,
       "densidad_inversiones": 6.98,
       "roe": -50.62,
+      "res_fin_sobre_pn": -0.33,
       "roa": -15.36,
       "margen_neto": -118.25,
       "margen_tecnico": -91.99,
@@ -553565,6 +554119,12 @@
       balSearchQuery: '',
       sankeyScope: 'market',
       sankeyDetailed: true,
+      dynRankLevel: 'companies',
+      dynRankSegment: 'Todos',
+      dynRankCriterion: 'patrimonio_neto',
+      dynRankSortDir: 'desc',
+      dynRankSearch: '',
+      dynRankShowAll: true,
       balExpandedNodes: new Set([
         '1.00.00.00.00.00.00.00', '2.00.00.00.00.00.00.00', '3.00.00.00.00.00.00.00',
         '4.00.00.00.00.00.00.00', '5.00.00.00.00.00.00.00',
@@ -554266,7 +554826,7 @@
 
     function switchTab(tabId) {
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'comparativo-mercado', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances', 'flujo-sankey'].forEach(id => {
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'comparativo-mercado', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances', 'flujo-sankey', 'rankings-dinamicos'].forEach(id => {
         const el = document.getElementById(`tab-${id}`);
         const btn = document.getElementById(`tabBtn-${id}`);
         if (!el || !btn) return;
@@ -554299,6 +554859,7 @@
       renderManagementTab();
       renderBalancesTab();
       renderSankeyTab();
+      renderDynamicRankingsTab();
     }
 
     // ----------------------------------------------------
@@ -560017,6 +560578,905 @@
     window.renderBalancesTab = renderBalancesTab;
     window.renderBalanceTree = renderBalanceTree;
     window.exportBalanceCSV = exportBalanceCSV;
+
+    // ========================================================
+    // TAB 12: RANKINGS DINÁMICOS MULTICRITERIO
+    // ========================================================
+    const getDynSinResc = x => (x.siniestros || 0) + (x.rescates || 0);
+    const getDynGtosOp = x => (x.gtos_operativos !== undefined ? x.gtos_operativos : ((x.gtos_produccion || 0) + (x.gtos_explotacion || 0)));
+
+    const DYN_RANKING_CRITERIA = [
+      {
+        id: 'patrimonio_neto',
+        label: 'Patrimonio Neto',
+        shortLabel: 'Patrimonio Neto',
+        formula: 'Capítulo 3.00 — Patrimonio Neto (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.patrimonio_neto ?? 0),
+        extraCols: [
+          { label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Pasivos (2.00)', get: x => Number(x.pasivo ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }
+        ]
+      },
+      {
+        id: 'resultado_neto',
+        label: 'Resultado Total',
+        shortLabel: 'Resultado Total',
+        formula: 'Resultado Neto Final = Cap. 5.00 − Cap. 4.00 (consolidación RT 21 en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_neto ?? 0),
+        extraCols: [
+          { label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }
+        ]
+      },
+      {
+        id: 'resultado_tecnico',
+        label: 'Resultado Estructura Técnica',
+        shortLabel: 'Res. Est. Técnica',
+        formula: 'Estructura Técnica = Ingresos Técnicos (5.01) − Egresos Técnicos (4.01)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_tecnico ?? 0),
+        extraCols: [
+          { label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Ratio Combinado', get: x => Number(x.combined_ratio ?? 0), fmt: 'pct', color: 'inv100', naCheck: x => !!x.sin_base_primas, naTxt: 'S/P' },
+          { label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }
+        ]
+      },
+      {
+        id: 'resultado_financiero',
+        label: 'Resultado Estructura Financiera',
+        shortLabel: 'Res. Est. Financiera',
+        formula: 'Estructura Financiera = Ganancias Fin. (5.02) − Pérdidas Fin. (4.02) (RT 21 en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_financiero ?? 0),
+        extraCols: [
+          { label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Res. Fin. / Patrimonio', get: x => Number(x.res_fin_sobre_pn ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' },
+          { label: 'ROI s/ Inversiones', get: x => Number(x.roi_inversiones ?? 0), fmt: 'pct', color: 'signed' },
+          { label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }
+        ]
+      },
+      {
+        id: 'activo',
+        label: 'Activos',
+        shortLabel: 'Activos',
+        formula: 'Capítulo 1.00 — Activo Total (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.activo ?? 0),
+        extraCols: [
+          { label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Inversiones / Activo', get: x => Number(x.densidad_inversiones ?? 0), fmt: 'pct', color: 'neutral' },
+          { label: 'Pasivos (2.00)', get: x => Number(x.pasivo ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' }
+        ]
+      },
+      {
+        id: 'pasivo',
+        label: 'Pasivos',
+        shortLabel: 'Pasivos',
+        formula: 'Capítulo 2.00 — Pasivo Total (Deudas + Compromisos Técnicos + Previsiones + Part. Terceros)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.pasivo ?? 0),
+        extraCols: [
+          { label: 'Compromisos Técnicos', get: x => Number(x.compromisos_tecnicos ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Cobertura Reservas', get: x => Number(x.cobertura_reservas ?? 0), fmt: 'mult', color: 'cob', naCheck: x => !!x.sin_compromisos_tecnicos, naTxt: 'S/CT' }
+        ]
+      },
+      {
+        id: 'loss_ratio',
+        label: 'Siniestros Devengados / Prima Devengada',
+        shortLabel: 'Siniestros / Prima Dev.',
+        formula: '(Siniestros Devengados Netos + Rescates/Rentas) / Prima Devengada × 100 (Menor es mejor #1)',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'asc',
+        higherIsBetter: false,
+        isNA: x => !!x.sin_base_primas,
+        naLabel: 'S/P',
+        getValue: x => Number(x.loss_ratio ?? 0),
+        extraCols: [
+          { label: 'Siniestros + Rescates', get: x => getDynSinResc(x), fmt: 'ars', color: 'neutral' },
+          { label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Ratio Combinado', get: x => Number(x.combined_ratio ?? 0), fmt: 'pct', color: 'inv100', naCheck: x => !!x.sin_base_primas, naTxt: 'S/P' },
+          { label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }
+        ]
+      },
+      {
+        id: 'combined_ratio',
+        label: '(Siniestros Devengados + Gastos de Producción y Explotación) / Prima Devengada',
+        shortLabel: '(Sin. + Gtos) / Prima Dev.',
+        formula: '(Siniestros Devengados + Rescates + Gastos Prod. y Explotación) / Prima Devengada × 100 (Menor es mejor #1)',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'asc',
+        higherIsBetter: false,
+        isNA: x => !!x.sin_base_primas,
+        naLabel: 'S/P',
+        getValue: x => Number(x.combined_ratio ?? 0),
+        extraCols: [
+          { label: 'Siniestros + Rescates', get: x => getDynSinResc(x), fmt: 'ars', color: 'neutral' },
+          { label: 'Gastos Prod. y Expl.', get: x => getDynGtosOp(x), fmt: 'ars', color: 'neutral' },
+          { label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }
+        ]
+      },
+      {
+        id: 'roe',
+        label: 'Resultado / Patrimonio',
+        shortLabel: 'Resultado / Patrimonio',
+        formula: 'Resultado Total (5.00 − 4.00) / Patrimonio Neto (3.00) × 100 (ROE del período)',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: x => !!x.patrimonio_negativo || (Number(x.patrimonio_neto ?? 0) <= 0),
+        naLabel: 'PN Neg.',
+        getValue: x => Number(x.roe ?? 0),
+        extraCols: [
+          { label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Res. Fin. / Patrimonio', get: x => Number(x.res_fin_sobre_pn ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' },
+          { label: 'ROA (Res. / Activo)', get: x => Number(x.roa ?? 0), fmt: 'pct', color: 'signed' }
+        ]
+      },
+      {
+        id: 'densidad_inversiones',
+        label: 'Inversiones / Activo Total',
+        shortLabel: 'Inversiones / Activo',
+        formula: 'Total Inversiones (1.02) / Activo Total (1.00) × 100',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: x => Number(x.activo ?? 0) <= 0,
+        naLabel: 'S/D',
+        getValue: x => Number(x.densidad_inversiones ?? 0),
+        extraCols: [
+          { label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' },
+          { label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'ROI Inversiones', get: x => Number(x.roi_inversiones ?? 0), fmt: 'pct', color: 'signed' }
+        ]
+      },
+      {
+        id: 'res_fin_sobre_pn',
+        label: 'Resultado Estructura Financiera / Patrimonio',
+        shortLabel: 'Res. Fin. / Patrimonio',
+        formula: 'Resultado Estructura Financiera (5.02 − 4.02) / Patrimonio Neto (3.00) × 100',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: x => !!x.patrimonio_negativo || (Number(x.patrimonio_neto ?? 0) <= 0),
+        naLabel: 'PN Neg.',
+        getValue: x => Number(x.res_fin_sobre_pn ?? 0),
+        extraCols: [
+          { label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' },
+          { label: 'Resultado / Patrimonio', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }
+        ]
+      }
+    ];
+
+    const DYN_CRITERIA_MAP = Object.fromEntries(DYN_RANKING_CRITERIA.map(c => [c.id, c]));
+
+    function setDynRankLevel(level) {
+      state.dynRankLevel = level;
+      state.dynRankSearch = '';
+      const searchEl = document.getElementById('drSearchInput');
+      if (searchEl) searchEl.value = '';
+      renderDynamicRankingsTab();
+    }
+
+    function setDynSegmentFilter(seg) {
+      state.dynRankSegment = seg;
+      renderDynamicRankingsTab();
+    }
+
+    function setDynCriterion(critId) {
+      const crit = DYN_CRITERIA_MAP[critId];
+      if (!crit) return;
+      state.dynRankCriterion = critId;
+      state.dynRankSortDir = crit.defaultSort;
+      renderDynamicRankingsTab();
+    }
+
+    function toggleDynSortDir() {
+      state.dynRankSortDir = (state.dynRankSortDir === 'desc') ? 'asc' : 'desc';
+      renderDynamicRankingsTab();
+    }
+
+    function setDynSearchQuery(q) {
+      state.dynRankSearch = (q || '').trim().toLowerCase();
+      renderDynRankingTableOnly();
+    }
+
+    function toggleDynShowAll() {
+      state.dynRankShowAll = !state.dynRankShowAll;
+      renderDynRankingTableOnly();
+    }
+
+    let currentDynRankData = null;
+
+    function computeDynamicRankingData() {
+      const data = window.DATA_SINENSUP;
+      if (!data) return null;
+
+      const crit = DYN_CRITERIA_MAP[state.dynRankCriterion] || DYN_RANKING_CRITERIA[0];
+      const level = state.dynRankLevel || 'companies';
+      const seg = state.dynRankSegment || 'Todos';
+      const isLSCode = cd => ['0117', '0317', '0436', '0618'].includes(cd);
+
+      let items = [];
+      let benchmark = null;
+      let benchLabel = 'Total Mercado';
+
+      if (level === 'companies') {
+        const src = (seg === 'Todos')
+          ? (data.companies || [])
+          : (data.companies || []).filter(c => c.tipo_entidad === seg);
+        items = src.map(c => ({
+          ...c,
+          _id: c.cod_cia,
+          _name: c.razon_social,
+          _sub: c.tipo_entidad,
+          _isLS: isLSCode(c.cod_cia) || (c.razon_social || '').toUpperCase().includes('SEGUNDA')
+        }));
+        if (seg === 'Todos') {
+          benchmark = data.market_benchmarks || null;
+          benchLabel = `TOTAL MERCADO (${items.length} Cías)`;
+        } else {
+          benchmark = (data.segment_benchmarks && data.segment_benchmarks[seg]) || null;
+          benchLabel = `CONSOL. ${seg.toUpperCase()} (${items.length} Cías)`;
+        }
+      } else if (level === 'groups') {
+        const allGroups = data.groups || [];
+        const src = (seg === 'Todos')
+          ? allGroups
+          : allGroups.filter(g => (g.members || []).some(m => ((data.companies_by_code && data.companies_by_code[m.cod_cia]) || {}).tipo_entidad === seg));
+        items = src.map(g => ({
+          ...g,
+          _id: g.id,
+          _name: g.name,
+          _sub: `${g.entities_count} Cías`,
+          _isLS: g.id === 'la_segunda'
+        }));
+
+        // Weighted/consolidated summary across displayed groups (RT 21 ex intra-group VPP)
+        const sumFn = fn => items.reduce((a, x) => a + (fn(x) || 0), 0);
+        const totEmit = sumFn(x => x.primas_emitidas);
+        const totDev = sumFn(x => x.primas_devengadas);
+        const basePrimas = totDev > 0 ? totDev : totEmit;
+        const totSin = sumFn(x => getDynSinResc(x));
+        const totGtosOp = sumFn(x => getDynGtosOp(x));
+        const totAct = sumFn(x => x.activo);
+        const totPas = sumFn(x => x.pasivo);
+        const totPN = sumFn(x => x.patrimonio_neto);
+        const totInv = sumFn(x => x.inversiones);
+        const totRT = sumFn(x => x.resultado_tecnico);
+        const totRF = sumFn(x => x.resultado_financiero);
+        const totRN = sumFn(x => x.resultado_neto);
+        const totCT = sumFn(x => x.compromisos_tecnicos);
+        const totInm = sumFn(x => x.inmuebles);
+        const totDisp = sumFn(x => x.disponibilidades);
+
+        benchmark = {
+          primas_emitidas: totEmit,
+          primas_devengadas: totDev,
+          siniestros: sumFn(x => x.siniestros),
+          rescates: sumFn(x => x.rescates),
+          gtos_operativos: totGtosOp,
+          activo: totAct,
+          pasivo: totPas,
+          patrimonio_neto: totPN,
+          inversiones: totInv,
+          compromisos_tecnicos: totCT,
+          resultado_tecnico: totRT,
+          resultado_financiero: totRF,
+          resultado_neto: totRN,
+          loss_ratio: basePrimas > 0 ? (totSin / basePrimas * 100) : 0,
+          combined_ratio: basePrimas > 0 ? ((totSin + totGtosOp) / basePrimas * 100) : 0,
+          roe: totPN > 0 ? (totRN / totPN * 100) : 0,
+          roa: totAct > 0 ? (totRN / totAct * 100) : 0,
+          roi_inversiones: totInv > 0 ? (totRF / totInv * 100) : 0,
+          densidad_inversiones: totAct > 0 ? (totInv / totAct * 100) : 0,
+          res_fin_sobre_pn: totPN > 0 ? (totRF / totPN * 100) : 0,
+          cobertura_reservas: totCT > 0 ? ((totInv + totInm + totDisp) / totCT) : 0
+        };
+        benchLabel = seg === 'Todos'
+          ? `CONSOLIDADO RT 21 (${items.length} GRUPOS)`
+          : `GRUPOS CON ${seg.toUpperCase()} (${items.length})`;
+      } else {
+        // level === 'segments' (Conjuntos de Empresas / Segmentos SSN)
+        const segOrder = data.segmentos || ['Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'];
+        const sbMap = data.segment_benchmarks || {};
+        items = segOrder.filter(s => sbMap[s]).map(s => {
+          const sb = sbMap[s];
+          const pasivoVal = (sb.pasivo !== undefined) ? sb.pasivo : ((sb.activo || 0) - (sb.patrimonio_neto || 0));
+          const gtosOpVal = (sb.gtos_operativos !== undefined) ? sb.gtos_operativos : ((sb.gtos_produccion || 0) + (sb.gtos_explotacion || 0));
+          const rfPnVal = (sb.res_fin_sobre_pn !== undefined) ? sb.res_fin_sobre_pn : ((sb.patrimonio_neto || 0) > 0 ? ((sb.resultado_financiero || 0) / sb.patrimonio_neto * 100) : 0);
+          return {
+            ...sb,
+            pasivo: pasivoVal,
+            gtos_operativos: gtosOpVal,
+            res_fin_sobre_pn: rfPnVal,
+            _id: s,
+            _name: s,
+            _sub: `${sb.entidades || 0} Cías`,
+            _isLS: false
+          };
+        });
+        benchmark = data.market_benchmarks || null;
+        benchLabel = `MERCADO TOTAL (4 Conjuntos / ${(benchmark && benchmark.entidades) || 178} Cías)`;
+      }
+
+      const rows = items.map(item => {
+        const na = crit.isNA(item);
+        const val = crit.getValue(item);
+        return {
+          ...item,
+          _na: na,
+          _val: val
+        };
+      });
+
+      const dirMult = (state.dynRankSortDir === 'asc') ? 1 : -1;
+      rows.sort((a, b) => {
+        if (a._na !== b._na) return a._na ? 1 : -1;
+        if (a._val !== b._val) return (a._val - b._val) * dirMult;
+        return (b.primas_emitidas || 0) - (a.primas_emitidas || 0);
+      });
+
+      let rankCursor = 0;
+      rows.forEach(r => {
+        if (!r._na) {
+          rankCursor++;
+          r._rank = rankCursor;
+        } else {
+          r._rank = null;
+        }
+      });
+
+      return { crit, level, seg, rows, benchmark, benchLabel };
+    }
+
+    function formatDynCell(val, colSpec, row) {
+      if (colSpec.naCheck && colSpec.naCheck(row)) {
+        return colSpec.naTxt || 'S/D';
+      }
+      if (colSpec.fmt === 'ars') return formatARS(val);
+      if (colSpec.fmt === 'pct') return formatPercent(val);
+      if (colSpec.fmt === 'mult') return (val || 0).toFixed(2) + 'x';
+      return String(val);
+    }
+
+    function getDynValColor(val, colorMode, critId) {
+      if (colorMode === 'signed') return val >= 0 ? 'text-emerald-400' : 'text-rose-400';
+      if (colorMode === 'inv100') return val <= 100.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (colorMode === 'inv65') return val <= 65.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (colorMode === 'cob') return val >= 1.0 ? 'text-emerald-400' : 'text-rose-400';
+      return 'text-slate-200';
+    }
+
+    function getDynPrimaryColor(val, crit, na) {
+      if (na) return 'text-slate-400';
+      if (crit.id === 'loss_ratio') return val <= 65.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (crit.id === 'combined_ratio') return val <= 100.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (crit.id === 'densidad_inversiones') return 'text-amber-300';
+      if (crit.higherIsBetter === null) return 'text-sky-300';
+      return val >= 0 ? 'text-emerald-400' : 'text-rose-400';
+    }
+
+    function renderDynamicRankingsTab() {
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const level = state.dynRankLevel || 'companies';
+      const seg = state.dynRankSegment || 'Todos';
+      const crit = DYN_CRITERIA_MAP[state.dynRankCriterion] || DYN_RANKING_CRITERIA[0];
+
+      // 1. Update Level Buttons
+      ['companies', 'groups', 'segments'].forEach(lv => {
+        const btn = document.getElementById(`drLevelBtn-${lv}`);
+        if (btn) {
+          btn.className = (level === lv)
+            ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-red text-white shadow-md shadow-brand-red/30 transition-all cursor-pointer'
+            : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer';
+        }
+      });
+
+      // 2. Toggle & Update Segment Filter Buttons
+      const segRow = document.getElementById('drSegmentFilterRow');
+      if (segRow) {
+        if (level === 'segments') segRow.classList.add('hidden');
+        else segRow.classList.remove('hidden');
+      }
+      ['Todos', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'].forEach(s => {
+        const btn = document.getElementById(`drSegBtn-${s}`);
+        if (btn) {
+          btn.className = (seg === s)
+            ? 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-sm cursor-pointer'
+            : 'px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer';
+        }
+      });
+
+      // 3. Render 11 Criteria Pills (ARS Magnitudes + % Ratios)
+      const arsContainer = document.getElementById('drCriteriaArsButtons');
+      const pctContainer = document.getElementById('drCriteriaPctButtons');
+      if (arsContainer) {
+        const arsList = DYN_RANKING_CRITERIA.filter(c => c.category === 'ars');
+        arsContainer.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Magnitudes (ARS):</span>` + arsList.map(c => {
+          const active = (crit.id === c.id);
+          return `<button type="button" onclick="setDynCriterion('${c.id}')" id="drCritBtn-${c.id}" class="px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${active ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 font-semibold'}">${c.label}</button>`;
+        }).join('');
+      }
+      if (pctContainer) {
+        const pctList = DYN_RANKING_CRITERIA.filter(c => c.category === 'pct');
+        pctContainer.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Ratios (%):</span>` + pctList.map(c => {
+          const active = (crit.id === c.id);
+          return `<button type="button" onclick="setDynCriterion('${c.id}')" id="drCritBtn-${c.id}" class="px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${active ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 font-semibold'}">${c.label}</button>`;
+        }).join('');
+      }
+
+      // 4. Compute Ranking
+      const res = computeDynamicRankingData();
+      if (!res) return;
+      currentDynRankData = res;
+
+      // 5. Update Header & Sort Button
+      const levelNames = {
+        companies: seg === 'Todos' ? 'Aseguradoras del Mercado' : `Conjunto: ${seg}`,
+        groups: seg === 'Todos' ? 'Grupos Económicos Consolidados (RT 21)' : `Grupos en ${seg} (RT 21)`,
+        segments: 'Conjuntos de Empresas (Segmentos SSN)'
+      };
+      const titleEl = document.getElementById('drHeaderTitle');
+      const badgeEl = document.getElementById('drHeaderBadge');
+      const formulaEl = document.getElementById('drFormulaBadge');
+      const sortBtnEl = document.getElementById('drSortDirBtn');
+      if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-trophy text-amber-400"></i> Ranking por ${crit.label}`;
+      if (badgeEl) badgeEl.innerText = `${levelNames[level]} • ${res.rows.length} Registros`;
+      if (formulaEl) formulaEl.innerText = `Fórmula: ${crit.formula}`;
+      if (sortBtnEl) {
+        const isDesc = (state.dynRankSortDir === 'desc');
+        sortBtnEl.innerHTML = isDesc
+          ? '<i class="fa-solid fa-arrow-down-wide-short"></i> Mayor a Menor'
+          : '<i class="fa-solid fa-arrow-up-short-wide"></i> Menor a Mayor';
+      }
+
+      // 6. Render 4 KPI Cards
+      const validRows = res.rows.filter(r => !r._na);
+      const leader = validRows.length > 0 ? validRows[0] : null;
+      const fmtVal = (v, r) => {
+        if (r && r._na) return crit.naLabel;
+        return crit.unit === 'ars' ? formatARS(v) : formatPercent(v);
+      };
+      const benchVal = res.benchmark ? crit.getValue(res.benchmark) : 0;
+      const benchStr = crit.unit === 'ars' ? formatARS(benchVal) : formatPercent(benchVal);
+
+      // Compute median cleanly
+      let medianStr = '—';
+      if (validRows.length > 0) {
+        const sortedVals = validRows.map(r => r._val).sort((a, b) => a - b);
+        const mid = Math.floor(sortedVals.length / 2);
+        const med = (sortedVals.length % 2 !== 0) ? sortedVals[mid] : ((sortedVals[mid - 1] + sortedVals[mid]) / 2);
+        medianStr = crit.unit === 'ars' ? formatARS(med) : formatPercent(med);
+      }
+
+      let favorableCount = 0;
+      if (crit.id === 'loss_ratio') favorableCount = validRows.filter(r => r._val <= 65.0).length;
+      else if (crit.id === 'combined_ratio') favorableCount = validRows.filter(r => r._val <= 100.0).length;
+      else favorableCount = validRows.filter(r => r._val >= 0).length;
+
+      // La Segunda KPI block
+      let lsCardTitle = '★ POSICIÓN LA SEGUNDA';
+      let lsCardMain = 'Sin presencia';
+      let lsCardSub = 'No opera en este filtro';
+      const lsRows = validRows.filter(r => r._isLS);
+      if (level === 'segments') {
+        const bottom = validRows.length > 0 ? validRows[validRows.length - 1] : null;
+        lsCardTitle = 'AMPLITUD ENTRE CONJUNTOS';
+        lsCardMain = (leader && bottom) ? `${leader._name.split(' ')[0]}: ${fmtVal(leader._val, leader)}` : '—';
+        lsCardSub = bottom ? `Último: ${bottom._name.split(' ')[0]} (${fmtVal(bottom._val, bottom)})` : '4 Segmentos';
+      } else if (lsRows.length > 0) {
+        const bestLS = lsRows[0];
+        lsCardMain = `#${bestLS._rank} · ${fmtVal(bestLS._val, bestLS)}`;
+        if (level === 'groups') {
+          lsCardSub = bestLS.consolidation_mode === 'vpp_parent'
+            ? `Grupo La Segunda (RT 21 neto s/ VPP)`
+            : `Grupo La Segunda (de ${validRows.length} válidos)`;
+        } else {
+          lsCardSub = lsRows.map(r => `#${r._rank} ${r._id}: ${fmtVal(r._val, r)}`).join(' · ');
+        }
+      } else if (res.rows.some(r => r._isLS)) {
+        const naLS = res.rows.find(r => r._isLS);
+        lsCardMain = `${crit.naLabel} (${naLS._id})`;
+        lsCardSub = 'Sin base positiva para el ratio';
+      }
+
+      const kpiBanner = document.getElementById('drKpiBanner');
+      if (kpiBanner) {
+        kpiBanner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
+            <div class="text-[11px] font-semibold uppercase text-slate-400">${crit.category === 'ars' ? 'TOTAL CONSOLIDADO UNIVERSO' : 'PROMEDIO PONDERADO UNIVERSO'}</div>
+            <div class="text-base font-bold font-mono text-white mt-1">${benchStr}</div>
+            <div class="text-[10px] text-amber-400 font-semibold mt-1 truncate" title="${res.benchLabel}">${res.benchLabel}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+            <div class="text-[11px] font-semibold uppercase text-slate-400">#1 LÍDER DEL RANKING</div>
+            <div class="text-base font-bold font-mono text-emerald-400 mt-1">${leader ? fmtVal(leader._val, leader) : 'S/D'}</div>
+            <div class="text-[10px] text-slate-300 font-semibold mt-1 truncate" title="${leader ? leader._name : ''}">${leader ? leader._name : 'Sin registros válidos'}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-red">
+            <div class="text-[11px] font-semibold uppercase text-rose-300">${lsCardTitle}</div>
+            <div class="text-base font-bold font-mono text-white mt-1 truncate">${lsCardMain}</div>
+            <div class="text-[10px] text-slate-400 mt-1 truncate" title="${lsCardSub}">${lsCardSub}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-sky-500">
+            <div class="text-[11px] font-semibold uppercase text-slate-400">MEDIANA Y COBERTURA</div>
+            <div class="text-base font-bold font-mono text-sky-400 mt-1">${medianStr}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${validRows.length} válidos · ${favorableCount} ${crit.id === 'combined_ratio' ? '≤ 100%' : (crit.id === 'loss_ratio' ? '≤ 65%' : (crit.higherIsBetter === null ? 'positivos' : '≥ 0'))}</div>
+          </div>
+        `;
+      }
+
+      // 7. Render Bar Chart & Table
+      renderDynRankingBarChart(res, benchVal);
+      renderDynRankingTableOnly();
+    }
+
+    function renderDynRankingBarChart(res, benchVal) {
+      const chartEl = document.getElementById('dynRankingBarChart');
+      const titleEl = document.getElementById('drChartTitle');
+      const subEl = document.getElementById('drChartSubtitle');
+      if (!chartEl) return;
+
+      const { crit, level, rows } = res;
+      const validRows = rows.filter(r => !r._na);
+
+      if (titleEl) {
+        titleEl.innerHTML = `<i class="fa-solid fa-chart-bar text-amber-400"></i> ${level === 'companies' ? 'Top 20' : (level === 'groups' ? 'Grupos Económicos' : 'Comparativa Conjuntos')}: ${crit.shortLabel}`;
+      }
+      if (subEl) {
+        subEl.innerText = level === 'companies'
+          ? 'Barras horizontales ordenadas según criterio (★ entidades de La Segunda fijadas para comparación). Clic en barra para ver Ficha.'
+          : (level === 'groups'
+              ? 'Grupos consolidados bajo RT 21 sin doble cómputo de VPP intra-grupo. Clic en barra para abrir detalle societario.'
+              : 'Comparación consolidada entre los 4 grandes conjuntos de empresas SSN. Clic en barra para filtrar compañías del conjunto.');
+      }
+
+      if (validRows.length === 0) {
+        chartEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs py-16">No hay registros válidos para graficar en este criterio</div>';
+        return;
+      }
+
+      let selected = (level === 'companies') ? validRows.slice(0, 20) : [...validRows];
+      if (level === 'companies') {
+        validRows.slice(20).forEach(r => {
+          if (r._isLS && !selected.some(s => s._id === r._id)) selected.push(r);
+        });
+      }
+
+      const plotItems = [...selected].reverse();
+      const yLabels = plotItems.map(r => {
+        const clean = (r._name || '').replace(/\s+SOCIEDAD ANONIMA.*/i, ' S.A.').replace(/\s+COOPERATIVA LIMITADA.*/i, ' Coop.');
+        const shortN = clean.length > 28 ? clean.slice(0, 26) + '…' : clean;
+        return `${r._isLS ? '★ ' : ''}#${r._rank} ${shortN}`;
+      });
+      const xVals = plotItems.map(r => r._val);
+      const textVals = plotItems.map(r => crit.unit === 'ars' ? formatARS(r._val) : formatPercent(r._val));
+
+      const barColors = plotItems.map(r => {
+        if (r._isLS) return '#F59E0B';
+        if (crit.id === 'loss_ratio') return r._val <= 65.0 ? '#10B981' : '#EF4444';
+        if (crit.id === 'combined_ratio') return r._val <= 100.0 ? '#10B981' : '#EF4444';
+        if (crit.id === 'densidad_inversiones') return '#38BDF8';
+        if (crit.higherIsBetter === null) return '#0EA5E9';
+        return r._val >= 0 ? '#10B981' : '#EF4444';
+      });
+
+      const lineColors = plotItems.map(r => r._isLS ? '#FFFFFF' : 'transparent');
+      const minX = Math.min(0, ...xVals);
+      const maxX = Math.max(0, ...xVals);
+      const spanX = Math.max(maxX - minX, 1);
+      const xRange = [minX < 0 ? minX - spanX * 0.14 : 0, maxX > 0 ? maxX + spanX * 0.16 : 0];
+
+      const dynHeight = Math.max(320, plotItems.length * 32 + 90);
+      chartEl.style.height = dynHeight + 'px';
+
+      const trace = {
+        type: 'bar',
+        orientation: 'h',
+        x: xVals,
+        y: yLabels,
+        text: textVals,
+        textposition: 'outside',
+        cliponaxis: false,
+        customdata: plotItems.map(r => ({ id: r._id, name: r._name, valStr: crit.unit === 'ars' ? formatARS(r._val) : formatPercent(r._val), rank: r._rank, sub: r._sub })),
+        marker: {
+          color: barColors,
+          line: { color: lineColors, width: plotItems.map(r => r._isLS ? 1.5 : 0) }
+        },
+        hovertemplate: '<b>#%{customdata.rank} %{customdata.name}</b> (%{customdata.sub})<br>' + crit.label + ': <b>%{customdata.valStr}</b><extra></extra>'
+      };
+
+      const pTheme = getPlotlyTheme();
+      const xAxisCfg = {
+        title: crit.unit === 'ars' ? `${crit.shortLabel} (ARS)` : `${crit.shortLabel} (%)`,
+        color: pTheme.textColor,
+        gridcolor: pTheme.gridColor,
+        zerolinecolor: pTheme.zerolineColor,
+        range: xRange
+      };
+
+      if (crit.unit === 'ars') {
+        const tickCount = 5;
+        const tVals = [];
+        const tTexts = [];
+        for (let i = 0; i <= tickCount; i++) {
+          const v = xRange[0] + ((xRange[1] - xRange[0]) / tickCount) * i;
+          tVals.push(v);
+          tTexts.push(formatARS(v));
+        }
+        xAxisCfg.tickmode = 'array';
+        xAxisCfg.tickvals = tVals;
+        xAxisCfg.ticktext = tTexts;
+      } else {
+        xAxisCfg.ticksuffix = '%';
+      }
+
+      const shapes = [];
+      const annotations = [];
+      if (crit.unit === 'pct' && benchVal !== undefined && !isNaN(benchVal) && benchVal >= xRange[0] && benchVal <= xRange[1]) {
+        shapes.push({
+          type: 'line',
+          x0: benchVal,
+          x1: benchVal,
+          y0: -0.5,
+          y1: plotItems.length - 0.5,
+          line: { color: '#38BDF8', width: 2, dash: 'dash' }
+        });
+        annotations.push({
+          x: benchVal,
+          y: plotItems.length - 0.5,
+          text: `Promedio Ponderado: ${formatPercent(benchVal)}`,
+          showarrow: false,
+          yshift: 14,
+          font: { size: 10, color: '#38BDF8', family: 'JetBrains Mono' },
+          bgcolor: pTheme.isDark ? '#0F172A' : '#FFFFFF',
+          bordercolor: '#38BDF8',
+          borderwidth: 1
+        });
+      }
+
+      const layout = {
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
+        height: dynHeight,
+        margin: { t: 28, b: 45, l: 235, r: 95 },
+        xaxis: xAxisCfg,
+        yaxis: {
+          automargin: true,
+          tickfont: { size: 10, color: pTheme.legendColor, family: 'Sora, sans-serif' }
+        },
+        shapes: shapes,
+        annotations: annotations,
+        font: { color: pTheme.textColor, family: 'Sora, sans-serif' }
+      };
+
+      Plotly.newPlot('dynRankingBarChart', [trace], layout, { responsive: true, displayModeBar: false }).then(() => {
+        const plotEl = document.getElementById('dynRankingBarChart');
+        if (plotEl) {
+          plotEl.on('plotly_click', (ev) => {
+            if (ev && ev.points && ev.points.length > 0 && ev.points[0].customdata) {
+              const itemId = ev.points[0].customdata.id;
+              if (!itemId) return;
+              if (level === 'companies') selectCompany(itemId);
+              else if (level === 'groups') openGroupModal(itemId);
+              else {
+                state.dynRankSegment = itemId;
+                setDynRankLevel('companies');
+              }
+            }
+          });
+        }
+      });
+    }
+
+    function renderDynRankingTableOnly() {
+      if (!currentDynRankData) return;
+      const { crit, level, seg, rows, benchmark, benchLabel } = currentDynRankData;
+      const thead = document.getElementById('dynRankingTableHead');
+      const tbody = document.getElementById('dynRankingTableBody');
+      const tfoot = document.getElementById('dynRankingTableFoot');
+      const countEl = document.getElementById('drTableCount');
+      const limitBtn = document.getElementById('drLimitBtn');
+
+      const q = (state.dynRankSearch || '').toLowerCase();
+      const filtered = q
+        ? rows.filter(r => (r._name || '').toLowerCase().includes(q) || (r._id || '').toLowerCase().includes(q) || (r._sub || '').toLowerCase().includes(q))
+        : rows;
+
+      const displayRows = (!state.dynRankShowAll && !q) ? filtered.slice(0, 25) : filtered;
+      if (countEl) countEl.innerText = filtered.length;
+      if (limitBtn) {
+        limitBtn.innerText = state.dynRankShowAll ? `Mostrando Todas (${filtered.length})` : `Top 25 de ${filtered.length}`;
+      }
+
+      const entityColTitle = level === 'companies' ? 'Aseguradora' : (level === 'groups' ? 'Grupo Económico' : 'Conjunto / Segmento SSN');
+      const extraHeaders = crit.extraCols.map(c => `<th class="py-2.5 px-2 text-right whitespace-nowrap">${c.label}</th>`).join('');
+      if (thead) {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-2.5 px-2 text-center w-10">#</th>
+            <th class="py-2.5 px-2 text-left min-w-[220px]">${entityColTitle}</th>
+            <th class="py-2.5 px-2 text-center w-24">${level === 'companies' ? 'Tipo' : 'Alcance'}</th>
+            <th class="py-2.5 px-2 text-right font-bold text-amber-300 whitespace-nowrap">${crit.shortLabel} (Criterio)</th>
+            ${extraHeaders}
+            <th class="py-2.5 px-2 text-center w-20">Acción</th>
+          </tr>
+        `;
+      }
+
+      if (tbody) {
+        if (displayRows.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="${5 + crit.extraCols.length}" class="py-8 text-center text-slate-500 text-xs font-sans">No se encontraron registros para el filtro actual</td></tr>`;
+        } else {
+          tbody.innerHTML = displayRows.map(r => {
+            const rankDisp = r._na ? '—' : `#${r._rank}`;
+            const primaryStr = r._na ? crit.naLabel : (crit.unit === 'ars' ? formatARS(r._val) : formatPercent(r._val));
+            const primaryColor = getDynPrimaryColor(r._val, crit, r._na);
+            const isNegDevBase = (crit.id === 'loss_ratio' || crit.id === 'combined_ratio') && !r._na && (r.primas_devengadas <= 0) && (r.primas_emitidas > 0);
+            const rowCls = r._isLS
+              ? 'bg-amber-500/10 border-l-4 border-l-amber-400 font-semibold hover:bg-amber-500/20'
+              : 'hover:bg-slate-800/60';
+            const onclickAction = level === 'companies'
+              ? `selectCompany('${r._id}')`
+              : (level === 'groups' ? `openGroupModal('${r._id}')` : `state.dynRankSegment='${r._id}'; setDynRankLevel('companies');`);
+            const btnLabel = level === 'companies' ? 'Ficha' : (level === 'groups' ? 'Ver Grupo' : 'Ver Cías');
+            const badgeHtml = level === 'companies'
+              ? getTipoBadge(r._sub)
+              : `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 border border-slate-700 text-slate-300">${r._sub}</span>`;
+
+            const extraCells = crit.extraCols.map(c => {
+              const v = c.get(r);
+              const isNaCell = c.naCheck && c.naCheck(r);
+              const txt = formatDynCell(v, c, r);
+              const cls = isNaCell ? 'text-slate-400' : getDynValColor(v, c.color, crit.id);
+              const negBaseTitle = (c.label === 'Primas Devengadas' && isNaCell === false && (r.primas_devengadas || 0) <= 0 && (r.primas_emitidas || 0) > 0)
+                ? ` title="Base cálculo del ratio: Primas Emitidas (${formatARS(r.primas_emitidas)}) por devengamiento negativo"`
+                : '';
+              return `<td class="py-2 px-2 text-right ${cls} whitespace-nowrap"${negBaseTitle}>${txt}</td>`;
+            }).join('');
+
+            const isRt21Group = level === 'groups' && (r.consolidation_mode === 'vpp_parent' || r.consolidation_mode === 'sister_cross_vpp') && (Math.abs(r.vpp_eliminado_resultado || 0) >= 1000 || Math.abs(r.vpp_eliminado_activo || 0) >= 1000);
+            const namePrefix = level === 'companies' ? `<span class="text-slate-400 text-[10px] mr-1">[${r._id}]</span>` : '';
+            const lsBadge = r._isLS ? '<span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : '';
+            const rt21Badge = (isRt21Group && ['patrimonio_neto', 'resultado_neto', 'resultado_financiero', 'activo', 'roe', 'res_fin_sobre_pn', 'densidad_inversiones'].includes(crit.id))
+              ? `<span class="block text-[8px] font-normal text-emerald-400">✓ RT 21 s/ VPP</span>`
+              : '';
+
+            return `
+              <tr onclick="${onclickAction}" class="${rowCls} cursor-pointer transition-colors">
+                <td class="py-2 px-2 text-center font-bold ${r._na ? 'text-slate-500' : 'text-slate-400'}">${rankDisp}</td>
+                <td class="py-2 px-2 font-sans">
+                  <div class="font-bold text-white flex items-center gap-1 truncate max-w-[270px]" title="${r._name}">
+                    ${namePrefix}<span class="truncate">${r._name}</span>${lsBadge}
+                  </div>
+                </td>
+                <td class="py-2 px-2 text-center">${badgeHtml}</td>
+                <td class="py-2 px-2 text-right font-bold ${primaryColor} whitespace-nowrap" title="${isNegDevBase ? 'Base emisión positiva por primas devengadas negativas' : crit.label}">
+                  ${primaryStr}${rt21Badge}
+                </td>
+                ${extraCells}
+                <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+                  <button type="button" onclick="${onclickAction}" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold cursor-pointer">${btnLabel}</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      if (tfoot && benchmark) {
+        const bmVal = crit.getValue(benchmark);
+        const bmStr = crit.unit === 'ars' ? formatARS(bmVal) : formatPercent(bmVal);
+        const bmColor = getDynPrimaryColor(bmVal, crit, false);
+        const bmExtras = crit.extraCols.map(c => {
+          const v = c.get(benchmark);
+          const txt = formatDynCell(v, c, benchmark);
+          const cls = getDynValColor(v, c.color, crit.id);
+          return `<td class="py-2.5 px-2 text-right ${cls} whitespace-nowrap">${txt}</td>`;
+        }).join('');
+        tfoot.innerHTML = `
+          <tr class="bg-slate-950 text-white font-bold border-t-2 border-slate-700">
+            <td class="py-2.5 px-2 text-center text-slate-400">Σ</td>
+            <td class="py-2.5 px-2 text-left text-amber-300 uppercase tracking-wider font-sans" colspan="2">${benchLabel}</td>
+            <td class="py-2.5 px-2 text-right ${bmColor} whitespace-nowrap">${bmStr}</td>
+            ${bmExtras}
+            <td class="py-2.5 px-2 text-center text-slate-400">—</td>
+          </tr>
+        `;
+      }
+    }
+
+    function exportDynRankingCSV() {
+      if (!currentDynRankData) return;
+      const { crit, level, seg, rows } = currentDynRankData;
+      const headers = ['rank', 'codigo_id', 'nombre', 'tipo_alcance', crit.label, ...crit.extraCols.map(c => c.label)];
+      const lines = [headers.map(h => `"${String(h).replace(/"/g, '""')}"`).join(',')];
+      rows.forEach(r => {
+        const rankOut = r._na ? r._id ? crit.naLabel : 'S/D' : r._rank;
+        const mainOut = r._na ? crit.naLabel : (crit.unit === 'ars' ? r._val.toFixed(2) : `${r._val.toFixed(2)}%`);
+        const extrasOut = crit.extraCols.map(c => {
+          if (c.naCheck && c.naCheck(r)) return `"${c.naTxt || 'S/D'}"`;
+          const v = c.get(r);
+          return c.fmt === 'pct' ? `${v.toFixed(2)}%` : v.toFixed(2);
+        });
+        lines.push([
+          `"${rankOut}"`,
+          `"${String(r._id).replace(/"/g, '""')}"`,
+          `"${String(r._name).replace(/"/g, '""')}"`,
+          `"${String(r._sub).replace(/"/g, '""')}"`,
+          `"${mainOut}"`,
+          ...extrasOut
+        ].join(','));
+      });
+      const blob = new Blob(['\uFEFF' + lines.join(String.fromCharCode(10))], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ranking_dinamico_${level}_${crit.id}_${seg.toLowerCase().replace(/[^a-z0-9]+/g, '_')}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.setDynRankLevel = setDynRankLevel;
+    window.setDynSegmentFilter = setDynSegmentFilter;
+    window.setDynCriterion = setDynCriterion;
+    window.toggleDynSortDir = toggleDynSortDir;
+    window.setDynSearchQuery = setDynSearchQuery;
+    window.toggleDynShowAll = toggleDynShowAll;
+    window.renderDynamicRankingsTab = renderDynamicRankingsTab;
+    window.exportDynRankingCSV = exportDynRankingCSV;
   </script>
 </body>
 </html>
