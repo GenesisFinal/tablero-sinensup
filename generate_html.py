@@ -868,6 +868,9 @@ def generate_html():
       <button onclick="switchTab('flujo-sankey')" id="tabBtn-flujo-sankey" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
         <i class="fa-solid fa-diagram-project text-indigo-400"></i> 11. Flujo de Resultados
       </button>
+      <button onclick="switchTab('rankings-dinamicos')" id="tabBtn-rankings-dinamicos" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-trophy text-amber-400"></i> 12. Rankings Dinámicos
+      </button>
     </div>
   </header>
 
@@ -1120,14 +1123,19 @@ def generate_html():
             <p class="text-xs text-slate-400">Compara el liderazgo de mercado por Grupos Económicos Consolidados o por Aseguradoras Individuales</p>
           </div>
           
-          <!-- Mode Switch: Grupos vs Aseguradoras -->
-          <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
-            <button type="button" onclick="setRankingMode('groups')" id="rankingModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
-              <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores (Top 17)
+          <!-- Mode Switch: Grupos vs Aseguradoras + Acceso Rankings Dinámicos -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="switchTab('rankings-dinamicos')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 transition-all flex items-center gap-1.5 cursor-pointer" title="Abrir constructor de Rankings Dinámicos por 11 criterios contables y financieros">
+              <i class="fa-solid fa-sliders text-amber-400"></i> Rankings Dinámicos (11 Criterios)
             </button>
-            <button type="button" onclick="setRankingMode('companies')" id="rankingModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
-              <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
-            </button>
+            <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
+              <button type="button" onclick="setRankingMode('groups')" id="rankingModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
+                <i class="fa-solid fa-building-columns"></i> 🏛️ Grupos Aseguradores (Top 17)
+              </button>
+              <button type="button" onclick="setRankingMode('companies')" id="rankingModeBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-building"></i> 🏢 Aseguradoras Individuales
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2970,6 +2978,137 @@ def generate_html():
 
     </section>
 
+    <!-- ======================================================== -->
+    <!-- TAB 12: RANKINGS DINÁMICOS MULTICRITERIO                 -->
+    <!-- ======================================================== -->
+    <section id="tab-rankings-dinamicos" class="hidden space-y-6">
+
+      <!-- Control Header -->
+      <div class="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 id="drHeaderTitle" class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-trophy text-amber-400"></i> Rankings Dinámicos Multicriterio
+              </h2>
+              <span id="drHeaderBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">...</span>
+            </div>
+            <p id="drFormulaBadge" class="text-xs text-slate-400 mt-1 font-mono">Fórmula contable SSN</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="toggleDynSortDir()" id="drSortDirBtn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer" title="Invertir sentido del ordenamiento">
+              <i class="fa-solid fa-arrow-down-wide-short"></i> Mayor a Menor
+            </button>
+            <button type="button" onclick="exportDynRankingCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Level Selector + Segment Filter -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 pt-3 border-t border-slate-800/80">
+          <div class="lg:col-span-5 space-y-1.5">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-brand-red"></i> 1. Nivel de Agrupación
+            </div>
+            <div id="drLevelButtons" class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="setDynRankLevel('companies')" id="drLevelBtn-companies" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-red text-white shadow-md shadow-brand-red/30 transition-all cursor-pointer">
+                🏢 Aseguradoras ({total_entidades})
+              </button>
+              <button type="button" onclick="setDynRankLevel('groups')" id="drLevelBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🏛️ Grupos Económicos (17)
+              </button>
+              <button type="button" onclick="setDynRankLevel('segments')" id="drLevelBtn-segments" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                📂 Conjuntos / Segmentos (4)
+              </button>
+            </div>
+          </div>
+
+          <div id="drSegmentFilterRow" class="lg:col-span-7 space-y-1.5">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-filter text-sky-400"></i> 2. Filtrar Conjunto de Empresas
+            </div>
+            <div id="drSegmentButtons" class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="setDynSegmentFilter('Todos')" id="drSegBtn-Todos" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all cursor-pointer">
+                🌐 Mercado Completo
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Patrimoniales y Mixtas')" id="drSegBtn-Patrimoniales y Mixtas" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🚗 Patrimoniales y Mixtas ({patrim_cnt})
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Riesgos del Trabajo (ART)')" id="drSegBtn-Riesgos del Trabajo (ART)" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🦺 ART ({art_cnt})
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Seguros de Personas')" id="drSegBtn-Seguros de Personas" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                ❤️ Personas ({pers_cnt})
+              </button>
+              <button type="button" onclick="setDynSegmentFilter('Seguros de Retiro')" id="drSegBtn-Seguros de Retiro" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer">
+                🏦 Retiro ({ret_cnt})
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 11 Criteria Selector -->
+        <div class="pt-3 border-t border-slate-800/80 space-y-2.5" id="drCriteriaContainer">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders text-amber-400"></i> 3. Seleccionar Criterio de Ranking (11 Indicadores)
+          </div>
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaArsButtons"></div>
+            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaPctButtons"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Executive KPI Cards -->
+      <div id="drKpiBanner" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+      <!-- Horizontal Bar Chart -->
+      <div class="glass-card p-5 rounded-xl">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h3 id="drChartTitle" class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-bar text-amber-400"></i> Visualización Comparativa del Ranking
+            </h3>
+            <p id="drChartSubtitle" class="text-xs text-slate-400">...</p>
+          </div>
+          <button type="button" onclick="downloadPlotAsPNG('dynRankingBarChart', 'ranking_dinamico_sinensup')" data-plot-target="dynRankingBarChart" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border border-slate-700 shadow-sm cursor-pointer" title="Descargar gráfico como PNG">
+            <i class="fa-solid fa-camera text-sky-400"></i> <span class="hidden sm:inline">PNG</span>
+          </button>
+        </div>
+        <div id="dynRankingBarChart" class="w-full min-h-[440px]"></div>
+      </div>
+
+      <!-- Full Auditable Ranking Table -->
+      <div class="glass-card p-5 rounded-xl w-full">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-brand-blue"></i> Ranking Detallado (<span id="drTableCount">0</span> Registros)
+            </h3>
+            <p class="text-xs text-slate-400">Haz clic en cualquier fila para explorar su ficha individual, modal de grupo o conjunto de empresas</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input type="text" id="drSearchInput" oninput="setDynSearchQuery(this.value)" placeholder="Buscar entidad, grupo o código..." class="px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 w-56">
+            <button type="button" onclick="toggleDynShowAll()" id="drLimitBtn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors cursor-pointer">
+              Mostrando Todas
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full overflow-x-auto max-h-[640px]">
+          <table class="w-full text-left text-xs border-collapse table-auto">
+            <thead id="dynRankingTableHead" class="text-slate-400 bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-[11px]"></thead>
+            <tbody id="dynRankingTableBody" class="divide-y divide-slate-800 font-mono text-[11px]"></tbody>
+            <tfoot id="dynRankingTableFoot" class="font-mono text-[11px]"></tfoot>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
     <!-- Modal / Drawer: Detalle Societario del Grupo Asegurador (Universal) -->
     <div id="groupDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -3144,6 +3283,12 @@ def generate_html():
       balSearchQuery: '',
       sankeyScope: 'market',
       sankeyDetailed: true,
+      dynRankLevel: 'companies',
+      dynRankSegment: 'Todos',
+      dynRankCriterion: 'patrimonio_neto',
+      dynRankSortDir: 'desc',
+      dynRankSearch: '',
+      dynRankShowAll: true,
       balExpandedNodes: new Set([
         '1.00.00.00.00.00.00.00', '2.00.00.00.00.00.00.00', '3.00.00.00.00.00.00.00',
         '4.00.00.00.00.00.00.00', '5.00.00.00.00.00.00.00',
@@ -3845,7 +3990,7 @@ def generate_html():
 
     function switchTab(tabId) {{
       state.currentTab = tabId;
-      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'comparativo-mercado', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances', 'flujo-sankey'].forEach(id => {{
+      ['vision-mercado', 'ficha-compania', 'ramos-suscripcion', 'rankings-ramos', 'analisis-ramo', 'comparativo-mercado', 'inversiones-finanzas', 'solvencia-ratios', 'ratios-gestion', 'balances', 'flujo-sankey', 'rankings-dinamicos'].forEach(id => {{
         const el = document.getElementById(`tab-${{id}}`);
         const btn = document.getElementById(`tabBtn-${{id}}`);
         if (!el || !btn) return;
@@ -3878,6 +4023,7 @@ def generate_html():
       renderManagementTab();
       renderBalancesTab();
       renderSankeyTab();
+      renderDynamicRankingsTab();
     }}
 
     // ----------------------------------------------------
@@ -9596,6 +9742,905 @@ def generate_html():
     window.renderBalancesTab = renderBalancesTab;
     window.renderBalanceTree = renderBalanceTree;
     window.exportBalanceCSV = exportBalanceCSV;
+
+    // ========================================================
+    // TAB 12: RANKINGS DINÁMICOS MULTICRITERIO
+    // ========================================================
+    const getDynSinResc = x => (x.siniestros || 0) + (x.rescates || 0);
+    const getDynGtosOp = x => (x.gtos_operativos !== undefined ? x.gtos_operativos : ((x.gtos_produccion || 0) + (x.gtos_explotacion || 0)));
+
+    const DYN_RANKING_CRITERIA = [
+      {{
+        id: 'patrimonio_neto',
+        label: 'Patrimonio Neto',
+        shortLabel: 'Patrimonio Neto',
+        formula: 'Capítulo 3.00 — Patrimonio Neto (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.patrimonio_neto ?? 0),
+        extraCols: [
+          {{ label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Pasivos (2.00)', get: x => Number(x.pasivo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+        ]
+      }},
+      {{
+        id: 'resultado_neto',
+        label: 'Resultado Total',
+        shortLabel: 'Resultado Total',
+        formula: 'Resultado Neto Final = Cap. 5.00 − Cap. 4.00 (consolidación RT 21 en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_neto ?? 0),
+        extraCols: [
+          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+        ]
+      }},
+      {{
+        id: 'resultado_tecnico',
+        label: 'Resultado Estructura Técnica',
+        shortLabel: 'Res. Est. Técnica',
+        formula: 'Estructura Técnica = Ingresos Técnicos (5.01) − Egresos Técnicos (4.01)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_tecnico ?? 0),
+        extraCols: [
+          {{ label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Ratio Combinado', get: x => Number(x.combined_ratio ?? 0), fmt: 'pct', color: 'inv100', naCheck: x => !!x.sin_base_primas, naTxt: 'S/P' }},
+          {{ label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'resultado_financiero',
+        label: 'Resultado Estructura Financiera',
+        shortLabel: 'Res. Est. Financiera',
+        formula: 'Estructura Financiera = Ganancias Fin. (5.02) − Pérdidas Fin. (4.02) (RT 21 en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_financiero ?? 0),
+        extraCols: [
+          {{ label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Res. Fin. / Patrimonio', get: x => Number(x.res_fin_sobre_pn ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }},
+          {{ label: 'ROI s/ Inversiones', get: x => Number(x.roi_inversiones ?? 0), fmt: 'pct', color: 'signed' }},
+          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'activo',
+        label: 'Activos',
+        shortLabel: 'Activos',
+        formula: 'Capítulo 1.00 — Activo Total (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.activo ?? 0),
+        extraCols: [
+          {{ label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Inversiones / Activo', get: x => Number(x.densidad_inversiones ?? 0), fmt: 'pct', color: 'neutral' }},
+          {{ label: 'Pasivos (2.00)', get: x => Number(x.pasivo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'pasivo',
+        label: 'Pasivos',
+        shortLabel: 'Pasivos',
+        formula: 'Capítulo 2.00 — Pasivo Total (Deudas + Compromisos Técnicos + Previsiones + Part. Terceros)',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.pasivo ?? 0),
+        extraCols: [
+          {{ label: 'Compromisos Técnicos', get: x => Number(x.compromisos_tecnicos ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Cobertura Reservas', get: x => Number(x.cobertura_reservas ?? 0), fmt: 'mult', color: 'cob', naCheck: x => !!x.sin_compromisos_tecnicos, naTxt: 'S/CT' }}
+        ]
+      }},
+      {{
+        id: 'loss_ratio',
+        label: 'Siniestros Devengados / Prima Devengada',
+        shortLabel: 'Siniestros / Prima Dev.',
+        formula: '(Siniestros Devengados Netos + Rescates/Rentas) / Prima Devengada × 100 (Menor es mejor #1)',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'asc',
+        higherIsBetter: false,
+        isNA: x => !!x.sin_base_primas,
+        naLabel: 'S/P',
+        getValue: x => Number(x.loss_ratio ?? 0),
+        extraCols: [
+          {{ label: 'Siniestros + Rescates', get: x => getDynSinResc(x), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Ratio Combinado', get: x => Number(x.combined_ratio ?? 0), fmt: 'pct', color: 'inv100', naCheck: x => !!x.sin_base_primas, naTxt: 'S/P' }},
+          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'combined_ratio',
+        label: '(Siniestros Devengados + Gastos de Producción y Explotación) / Prima Devengada',
+        shortLabel: '(Sin. + Gtos) / Prima Dev.',
+        formula: '(Siniestros Devengados + Rescates + Gastos Prod. y Explotación) / Prima Devengada × 100 (Menor es mejor #1)',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'asc',
+        higherIsBetter: false,
+        isNA: x => !!x.sin_base_primas,
+        naLabel: 'S/P',
+        getValue: x => Number(x.combined_ratio ?? 0),
+        extraCols: [
+          {{ label: 'Siniestros + Rescates', get: x => getDynSinResc(x), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Gastos Prod. y Expl.', get: x => getDynGtosOp(x), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'roe',
+        label: 'Resultado / Patrimonio',
+        shortLabel: 'Resultado / Patrimonio',
+        formula: 'Resultado Total (5.00 − 4.00) / Patrimonio Neto (3.00) × 100 (ROE del período)',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: x => !!x.patrimonio_negativo || (Number(x.patrimonio_neto ?? 0) <= 0),
+        naLabel: 'PN Neg.',
+        getValue: x => Number(x.roe ?? 0),
+        extraCols: [
+          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Res. Fin. / Patrimonio', get: x => Number(x.res_fin_sobre_pn ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }},
+          {{ label: 'ROA (Res. / Activo)', get: x => Number(x.roa ?? 0), fmt: 'pct', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'densidad_inversiones',
+        label: 'Inversiones / Activo Total',
+        shortLabel: 'Inversiones / Activo',
+        formula: 'Total Inversiones (1.02) / Activo Total (1.00) × 100',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: x => Number(x.activo ?? 0) <= 0,
+        naLabel: 'S/D',
+        getValue: x => Number(x.densidad_inversiones ?? 0),
+        extraCols: [
+          {{ label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'ROI Inversiones', get: x => Number(x.roi_inversiones ?? 0), fmt: 'pct', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'res_fin_sobre_pn',
+        label: 'Resultado Estructura Financiera / Patrimonio',
+        shortLabel: 'Res. Fin. / Patrimonio',
+        formula: 'Resultado Estructura Financiera (5.02 − 4.02) / Patrimonio Neto (3.00) × 100',
+        category: 'pct',
+        unit: 'pct',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: x => !!x.patrimonio_negativo || (Number(x.patrimonio_neto ?? 0) <= 0),
+        naLabel: 'PN Neg.',
+        getValue: x => Number(x.res_fin_sobre_pn ?? 0),
+        extraCols: [
+          {{ label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Resultado / Patrimonio', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+        ]
+      }}
+    ];
+
+    const DYN_CRITERIA_MAP = Object.fromEntries(DYN_RANKING_CRITERIA.map(c => [c.id, c]));
+
+    function setDynRankLevel(level) {{
+      state.dynRankLevel = level;
+      state.dynRankSearch = '';
+      const searchEl = document.getElementById('drSearchInput');
+      if (searchEl) searchEl.value = '';
+      renderDynamicRankingsTab();
+    }}
+
+    function setDynSegmentFilter(seg) {{
+      state.dynRankSegment = seg;
+      renderDynamicRankingsTab();
+    }}
+
+    function setDynCriterion(critId) {{
+      const crit = DYN_CRITERIA_MAP[critId];
+      if (!crit) return;
+      state.dynRankCriterion = critId;
+      state.dynRankSortDir = crit.defaultSort;
+      renderDynamicRankingsTab();
+    }}
+
+    function toggleDynSortDir() {{
+      state.dynRankSortDir = (state.dynRankSortDir === 'desc') ? 'asc' : 'desc';
+      renderDynamicRankingsTab();
+    }}
+
+    function setDynSearchQuery(q) {{
+      state.dynRankSearch = (q || '').trim().toLowerCase();
+      renderDynRankingTableOnly();
+    }}
+
+    function toggleDynShowAll() {{
+      state.dynRankShowAll = !state.dynRankShowAll;
+      renderDynRankingTableOnly();
+    }}
+
+    let currentDynRankData = null;
+
+    function computeDynamicRankingData() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return null;
+
+      const crit = DYN_CRITERIA_MAP[state.dynRankCriterion] || DYN_RANKING_CRITERIA[0];
+      const level = state.dynRankLevel || 'companies';
+      const seg = state.dynRankSegment || 'Todos';
+      const isLSCode = cd => ['0117', '0317', '0436', '0618'].includes(cd);
+
+      let items = [];
+      let benchmark = null;
+      let benchLabel = 'Total Mercado';
+
+      if (level === 'companies') {{
+        const src = (seg === 'Todos')
+          ? (data.companies || [])
+          : (data.companies || []).filter(c => c.tipo_entidad === seg);
+        items = src.map(c => ({{
+          ...c,
+          _id: c.cod_cia,
+          _name: c.razon_social,
+          _sub: c.tipo_entidad,
+          _isLS: isLSCode(c.cod_cia) || (c.razon_social || '').toUpperCase().includes('SEGUNDA')
+        }}));
+        if (seg === 'Todos') {{
+          benchmark = data.market_benchmarks || null;
+          benchLabel = `TOTAL MERCADO (${{items.length}} Cías)`;
+        }} else {{
+          benchmark = (data.segment_benchmarks && data.segment_benchmarks[seg]) || null;
+          benchLabel = `CONSOL. ${{seg.toUpperCase()}} (${{items.length}} Cías)`;
+        }}
+      }} else if (level === 'groups') {{
+        const allGroups = data.groups || [];
+        const src = (seg === 'Todos')
+          ? allGroups
+          : allGroups.filter(g => (g.members || []).some(m => ((data.companies_by_code && data.companies_by_code[m.cod_cia]) || {{}}).tipo_entidad === seg));
+        items = src.map(g => ({{
+          ...g,
+          _id: g.id,
+          _name: g.name,
+          _sub: `${{g.entities_count}} Cías`,
+          _isLS: g.id === 'la_segunda'
+        }}));
+
+        // Weighted/consolidated summary across displayed groups (RT 21 ex intra-group VPP)
+        const sumFn = fn => items.reduce((a, x) => a + (fn(x) || 0), 0);
+        const totEmit = sumFn(x => x.primas_emitidas);
+        const totDev = sumFn(x => x.primas_devengadas);
+        const basePrimas = totDev > 0 ? totDev : totEmit;
+        const totSin = sumFn(x => getDynSinResc(x));
+        const totGtosOp = sumFn(x => getDynGtosOp(x));
+        const totAct = sumFn(x => x.activo);
+        const totPas = sumFn(x => x.pasivo);
+        const totPN = sumFn(x => x.patrimonio_neto);
+        const totInv = sumFn(x => x.inversiones);
+        const totRT = sumFn(x => x.resultado_tecnico);
+        const totRF = sumFn(x => x.resultado_financiero);
+        const totRN = sumFn(x => x.resultado_neto);
+        const totCT = sumFn(x => x.compromisos_tecnicos);
+        const totInm = sumFn(x => x.inmuebles);
+        const totDisp = sumFn(x => x.disponibilidades);
+
+        benchmark = {{
+          primas_emitidas: totEmit,
+          primas_devengadas: totDev,
+          siniestros: sumFn(x => x.siniestros),
+          rescates: sumFn(x => x.rescates),
+          gtos_operativos: totGtosOp,
+          activo: totAct,
+          pasivo: totPas,
+          patrimonio_neto: totPN,
+          inversiones: totInv,
+          compromisos_tecnicos: totCT,
+          resultado_tecnico: totRT,
+          resultado_financiero: totRF,
+          resultado_neto: totRN,
+          loss_ratio: basePrimas > 0 ? (totSin / basePrimas * 100) : 0,
+          combined_ratio: basePrimas > 0 ? ((totSin + totGtosOp) / basePrimas * 100) : 0,
+          roe: totPN > 0 ? (totRN / totPN * 100) : 0,
+          roa: totAct > 0 ? (totRN / totAct * 100) : 0,
+          roi_inversiones: totInv > 0 ? (totRF / totInv * 100) : 0,
+          densidad_inversiones: totAct > 0 ? (totInv / totAct * 100) : 0,
+          res_fin_sobre_pn: totPN > 0 ? (totRF / totPN * 100) : 0,
+          cobertura_reservas: totCT > 0 ? ((totInv + totInm + totDisp) / totCT) : 0
+        }};
+        benchLabel = seg === 'Todos'
+          ? `CONSOLIDADO RT 21 (${{items.length}} GRUPOS)`
+          : `GRUPOS CON ${{seg.toUpperCase()}} (${{items.length}})`;
+      }} else {{
+        // level === 'segments' (Conjuntos de Empresas / Segmentos SSN)
+        const segOrder = data.segmentos || ['Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'];
+        const sbMap = data.segment_benchmarks || {{}};
+        items = segOrder.filter(s => sbMap[s]).map(s => {{
+          const sb = sbMap[s];
+          const pasivoVal = (sb.pasivo !== undefined) ? sb.pasivo : ((sb.activo || 0) - (sb.patrimonio_neto || 0));
+          const gtosOpVal = (sb.gtos_operativos !== undefined) ? sb.gtos_operativos : ((sb.gtos_produccion || 0) + (sb.gtos_explotacion || 0));
+          const rfPnVal = (sb.res_fin_sobre_pn !== undefined) ? sb.res_fin_sobre_pn : ((sb.patrimonio_neto || 0) > 0 ? ((sb.resultado_financiero || 0) / sb.patrimonio_neto * 100) : 0);
+          return {{
+            ...sb,
+            pasivo: pasivoVal,
+            gtos_operativos: gtosOpVal,
+            res_fin_sobre_pn: rfPnVal,
+            _id: s,
+            _name: s,
+            _sub: `${{sb.entidades || 0}} Cías`,
+            _isLS: false
+          }};
+        }});
+        benchmark = data.market_benchmarks || null;
+        benchLabel = `MERCADO TOTAL (4 Conjuntos / ${{(benchmark && benchmark.entidades) || {total_entidades}}} Cías)`;
+      }}
+
+      const rows = items.map(item => {{
+        const na = crit.isNA(item);
+        const val = crit.getValue(item);
+        return {{
+          ...item,
+          _na: na,
+          _val: val
+        }};
+      }});
+
+      const dirMult = (state.dynRankSortDir === 'asc') ? 1 : -1;
+      rows.sort((a, b) => {{
+        if (a._na !== b._na) return a._na ? 1 : -1;
+        if (a._val !== b._val) return (a._val - b._val) * dirMult;
+        return (b.primas_emitidas || 0) - (a.primas_emitidas || 0);
+      }});
+
+      let rankCursor = 0;
+      rows.forEach(r => {{
+        if (!r._na) {{
+          rankCursor++;
+          r._rank = rankCursor;
+        }} else {{
+          r._rank = null;
+        }}
+      }});
+
+      return {{ crit, level, seg, rows, benchmark, benchLabel }};
+    }}
+
+    function formatDynCell(val, colSpec, row) {{
+      if (colSpec.naCheck && colSpec.naCheck(row)) {{
+        return colSpec.naTxt || 'S/D';
+      }}
+      if (colSpec.fmt === 'ars') return formatARS(val);
+      if (colSpec.fmt === 'pct') return formatPercent(val);
+      if (colSpec.fmt === 'mult') return (val || 0).toFixed(2) + 'x';
+      return String(val);
+    }}
+
+    function getDynValColor(val, colorMode, critId) {{
+      if (colorMode === 'signed') return val >= 0 ? 'text-emerald-400' : 'text-rose-400';
+      if (colorMode === 'inv100') return val <= 100.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (colorMode === 'inv65') return val <= 65.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (colorMode === 'cob') return val >= 1.0 ? 'text-emerald-400' : 'text-rose-400';
+      return 'text-slate-200';
+    }}
+
+    function getDynPrimaryColor(val, crit, na) {{
+      if (na) return 'text-slate-400';
+      if (crit.id === 'loss_ratio') return val <= 65.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (crit.id === 'combined_ratio') return val <= 100.0 ? 'text-emerald-400' : 'text-rose-400';
+      if (crit.id === 'densidad_inversiones') return 'text-amber-300';
+      if (crit.higherIsBetter === null) return 'text-sky-300';
+      return val >= 0 ? 'text-emerald-400' : 'text-rose-400';
+    }}
+
+    function renderDynamicRankingsTab() {{
+      const data = window.DATA_SINENSUP;
+      if (!data) return;
+
+      const level = state.dynRankLevel || 'companies';
+      const seg = state.dynRankSegment || 'Todos';
+      const crit = DYN_CRITERIA_MAP[state.dynRankCriterion] || DYN_RANKING_CRITERIA[0];
+
+      // 1. Update Level Buttons
+      ['companies', 'groups', 'segments'].forEach(lv => {{
+        const btn = document.getElementById(`drLevelBtn-${{lv}}`);
+        if (btn) {{
+          btn.className = (level === lv)
+            ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-red text-white shadow-md shadow-brand-red/30 transition-all cursor-pointer'
+            : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer';
+        }}
+      }});
+
+      // 2. Toggle & Update Segment Filter Buttons
+      const segRow = document.getElementById('drSegmentFilterRow');
+      if (segRow) {{
+        if (level === 'segments') segRow.classList.add('hidden');
+        else segRow.classList.remove('hidden');
+      }}
+      ['Todos', 'Patrimoniales y Mixtas', 'Riesgos del Trabajo (ART)', 'Seguros de Personas', 'Seguros de Retiro'].forEach(s => {{
+        const btn = document.getElementById(`drSegBtn-${{s}}`);
+        if (btn) {{
+          btn.className = (seg === s)
+            ? 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-sm cursor-pointer'
+            : 'px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all cursor-pointer';
+        }}
+      }});
+
+      // 3. Render 11 Criteria Pills (ARS Magnitudes + % Ratios)
+      const arsContainer = document.getElementById('drCriteriaArsButtons');
+      const pctContainer = document.getElementById('drCriteriaPctButtons');
+      if (arsContainer) {{
+        const arsList = DYN_RANKING_CRITERIA.filter(c => c.category === 'ars');
+        arsContainer.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Magnitudes (ARS):</span>` + arsList.map(c => {{
+          const active = (crit.id === c.id);
+          return `<button type="button" onclick="setDynCriterion('${{c.id}}')" id="drCritBtn-${{c.id}}" class="px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${{active ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 font-semibold'}}">${{c.label}}</button>`;
+        }}).join('');
+      }}
+      if (pctContainer) {{
+        const pctList = DYN_RANKING_CRITERIA.filter(c => c.category === 'pct');
+        pctContainer.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Ratios (%):</span>` + pctList.map(c => {{
+          const active = (crit.id === c.id);
+          return `<button type="button" onclick="setDynCriterion('${{c.id}}')" id="drCritBtn-${{c.id}}" class="px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${{active ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 font-semibold'}}">${{c.label}}</button>`;
+        }}).join('');
+      }}
+
+      // 4. Compute Ranking
+      const res = computeDynamicRankingData();
+      if (!res) return;
+      currentDynRankData = res;
+
+      // 5. Update Header & Sort Button
+      const levelNames = {{
+        companies: seg === 'Todos' ? 'Aseguradoras del Mercado' : `Conjunto: ${{seg}}`,
+        groups: seg === 'Todos' ? 'Grupos Económicos Consolidados (RT 21)' : `Grupos en ${{seg}} (RT 21)`,
+        segments: 'Conjuntos de Empresas (Segmentos SSN)'
+      }};
+      const titleEl = document.getElementById('drHeaderTitle');
+      const badgeEl = document.getElementById('drHeaderBadge');
+      const formulaEl = document.getElementById('drFormulaBadge');
+      const sortBtnEl = document.getElementById('drSortDirBtn');
+      if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-trophy text-amber-400"></i> Ranking por ${{crit.label}}`;
+      if (badgeEl) badgeEl.innerText = `${{levelNames[level]}} • ${{res.rows.length}} Registros`;
+      if (formulaEl) formulaEl.innerText = `Fórmula: ${{crit.formula}}`;
+      if (sortBtnEl) {{
+        const isDesc = (state.dynRankSortDir === 'desc');
+        sortBtnEl.innerHTML = isDesc
+          ? '<i class="fa-solid fa-arrow-down-wide-short"></i> Mayor a Menor'
+          : '<i class="fa-solid fa-arrow-up-short-wide"></i> Menor a Mayor';
+      }}
+
+      // 6. Render 4 KPI Cards
+      const validRows = res.rows.filter(r => !r._na);
+      const leader = validRows.length > 0 ? validRows[0] : null;
+      const fmtVal = (v, r) => {{
+        if (r && r._na) return crit.naLabel;
+        return crit.unit === 'ars' ? formatARS(v) : formatPercent(v);
+      }};
+      const benchVal = res.benchmark ? crit.getValue(res.benchmark) : 0;
+      const benchStr = crit.unit === 'ars' ? formatARS(benchVal) : formatPercent(benchVal);
+
+      // Compute median cleanly
+      let medianStr = '—';
+      if (validRows.length > 0) {{
+        const sortedVals = validRows.map(r => r._val).sort((a, b) => a - b);
+        const mid = Math.floor(sortedVals.length / 2);
+        const med = (sortedVals.length % 2 !== 0) ? sortedVals[mid] : ((sortedVals[mid - 1] + sortedVals[mid]) / 2);
+        medianStr = crit.unit === 'ars' ? formatARS(med) : formatPercent(med);
+      }}
+
+      let favorableCount = 0;
+      if (crit.id === 'loss_ratio') favorableCount = validRows.filter(r => r._val <= 65.0).length;
+      else if (crit.id === 'combined_ratio') favorableCount = validRows.filter(r => r._val <= 100.0).length;
+      else favorableCount = validRows.filter(r => r._val >= 0).length;
+
+      // La Segunda KPI block
+      let lsCardTitle = '★ POSICIÓN LA SEGUNDA';
+      let lsCardMain = 'Sin presencia';
+      let lsCardSub = 'No opera en este filtro';
+      const lsRows = validRows.filter(r => r._isLS);
+      if (level === 'segments') {{
+        const bottom = validRows.length > 0 ? validRows[validRows.length - 1] : null;
+        lsCardTitle = 'AMPLITUD ENTRE CONJUNTOS';
+        lsCardMain = (leader && bottom) ? `${{leader._name.split(' ')[0]}}: ${{fmtVal(leader._val, leader)}}` : '—';
+        lsCardSub = bottom ? `Último: ${{bottom._name.split(' ')[0]}} (${{fmtVal(bottom._val, bottom)}})` : '4 Segmentos';
+      }} else if (lsRows.length > 0) {{
+        const bestLS = lsRows[0];
+        lsCardMain = `#${{bestLS._rank}} · ${{fmtVal(bestLS._val, bestLS)}}`;
+        if (level === 'groups') {{
+          lsCardSub = bestLS.consolidation_mode === 'vpp_parent'
+            ? `Grupo La Segunda (RT 21 neto s/ VPP)`
+            : `Grupo La Segunda (de ${{validRows.length}} válidos)`;
+        }} else {{
+          lsCardSub = lsRows.map(r => `#${{r._rank}} ${{r._id}}: ${{fmtVal(r._val, r)}}`).join(' · ');
+        }}
+      }} else if (res.rows.some(r => r._isLS)) {{
+        const naLS = res.rows.find(r => r._isLS);
+        lsCardMain = `${{crit.naLabel}} (${{naLS._id}})`;
+        lsCardSub = 'Sin base positiva para el ratio';
+      }}
+
+      const kpiBanner = document.getElementById('drKpiBanner');
+      if (kpiBanner) {{
+        kpiBanner.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500">
+            <div class="text-[11px] font-semibold uppercase text-slate-400">${{crit.category === 'ars' ? 'TOTAL CONSOLIDADO UNIVERSO' : 'PROMEDIO PONDERADO UNIVERSO'}}</div>
+            <div class="text-base font-bold font-mono text-white mt-1">${{benchStr}}</div>
+            <div class="text-[10px] text-amber-400 font-semibold mt-1 truncate" title="${{res.benchLabel}}">${{res.benchLabel}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-emerald-500">
+            <div class="text-[11px] font-semibold uppercase text-slate-400">#1 LÍDER DEL RANKING</div>
+            <div class="text-base font-bold font-mono text-emerald-400 mt-1">${{leader ? fmtVal(leader._val, leader) : 'S/D'}}</div>
+            <div class="text-[10px] text-slate-300 font-semibold mt-1 truncate" title="${{leader ? leader._name : ''}}">${{leader ? leader._name : 'Sin registros válidos'}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-brand-red">
+            <div class="text-[11px] font-semibold uppercase text-rose-300">${{lsCardTitle}}</div>
+            <div class="text-base font-bold font-mono text-white mt-1 truncate">${{lsCardMain}}</div>
+            <div class="text-[10px] text-slate-400 mt-1 truncate" title="${{lsCardSub}}">${{lsCardSub}}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border-l-4 border-l-sky-500">
+            <div class="text-[11px] font-semibold uppercase text-slate-400">MEDIANA Y COBERTURA</div>
+            <div class="text-base font-bold font-mono text-sky-400 mt-1">${{medianStr}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{validRows.length}} válidos · ${{favorableCount}} ${{crit.id === 'combined_ratio' ? '≤ 100%' : (crit.id === 'loss_ratio' ? '≤ 65%' : (crit.higherIsBetter === null ? 'positivos' : '≥ 0'))}}</div>
+          </div>
+        `;
+      }}
+
+      // 7. Render Bar Chart & Table
+      renderDynRankingBarChart(res, benchVal);
+      renderDynRankingTableOnly();
+    }}
+
+    function renderDynRankingBarChart(res, benchVal) {{
+      const chartEl = document.getElementById('dynRankingBarChart');
+      const titleEl = document.getElementById('drChartTitle');
+      const subEl = document.getElementById('drChartSubtitle');
+      if (!chartEl) return;
+
+      const {{ crit, level, rows }} = res;
+      const validRows = rows.filter(r => !r._na);
+
+      if (titleEl) {{
+        titleEl.innerHTML = `<i class="fa-solid fa-chart-bar text-amber-400"></i> ${{level === 'companies' ? 'Top 20' : (level === 'groups' ? 'Grupos Económicos' : 'Comparativa Conjuntos')}}: ${{crit.shortLabel}}`;
+      }}
+      if (subEl) {{
+        subEl.innerText = level === 'companies'
+          ? 'Barras horizontales ordenadas según criterio (★ entidades de La Segunda fijadas para comparación). Clic en barra para ver Ficha.'
+          : (level === 'groups'
+              ? 'Grupos consolidados bajo RT 21 sin doble cómputo de VPP intra-grupo. Clic en barra para abrir detalle societario.'
+              : 'Comparación consolidada entre los 4 grandes conjuntos de empresas SSN. Clic en barra para filtrar compañías del conjunto.');
+      }}
+
+      if (validRows.length === 0) {{
+        chartEl.innerHTML = '<div class="h-full flex items-center justify-center text-slate-500 text-xs py-16">No hay registros válidos para graficar en este criterio</div>';
+        return;
+      }}
+
+      let selected = (level === 'companies') ? validRows.slice(0, 20) : [...validRows];
+      if (level === 'companies') {{
+        validRows.slice(20).forEach(r => {{
+          if (r._isLS && !selected.some(s => s._id === r._id)) selected.push(r);
+        }});
+      }}
+
+      const plotItems = [...selected].reverse();
+      const yLabels = plotItems.map(r => {{
+        const clean = (r._name || '').replace(/\\s+SOCIEDAD ANONIMA.*/i, ' S.A.').replace(/\\s+COOPERATIVA LIMITADA.*/i, ' Coop.');
+        const shortN = clean.length > 28 ? clean.slice(0, 26) + '…' : clean;
+        return `${{r._isLS ? '★ ' : ''}}#${{r._rank}} ${{shortN}}`;
+      }});
+      const xVals = plotItems.map(r => r._val);
+      const textVals = plotItems.map(r => crit.unit === 'ars' ? formatARS(r._val) : formatPercent(r._val));
+
+      const barColors = plotItems.map(r => {{
+        if (r._isLS) return '#F59E0B';
+        if (crit.id === 'loss_ratio') return r._val <= 65.0 ? '#10B981' : '#EF4444';
+        if (crit.id === 'combined_ratio') return r._val <= 100.0 ? '#10B981' : '#EF4444';
+        if (crit.id === 'densidad_inversiones') return '#38BDF8';
+        if (crit.higherIsBetter === null) return '#0EA5E9';
+        return r._val >= 0 ? '#10B981' : '#EF4444';
+      }});
+
+      const lineColors = plotItems.map(r => r._isLS ? '#FFFFFF' : 'transparent');
+      const minX = Math.min(0, ...xVals);
+      const maxX = Math.max(0, ...xVals);
+      const spanX = Math.max(maxX - minX, 1);
+      const xRange = [minX < 0 ? minX - spanX * 0.14 : 0, maxX > 0 ? maxX + spanX * 0.16 : 0];
+
+      const dynHeight = Math.max(320, plotItems.length * 32 + 90);
+      chartEl.style.height = dynHeight + 'px';
+
+      const trace = {{
+        type: 'bar',
+        orientation: 'h',
+        x: xVals,
+        y: yLabels,
+        text: textVals,
+        textposition: 'outside',
+        cliponaxis: false,
+        customdata: plotItems.map(r => ({{ id: r._id, name: r._name, valStr: crit.unit === 'ars' ? formatARS(r._val) : formatPercent(r._val), rank: r._rank, sub: r._sub }})),
+        marker: {{
+          color: barColors,
+          line: {{ color: lineColors, width: plotItems.map(r => r._isLS ? 1.5 : 0) }}
+        }},
+        hovertemplate: '<b>#%{{customdata.rank}} %{{customdata.name}}</b> (%{{customdata.sub}})<br>' + crit.label + ': <b>%{{customdata.valStr}}</b><extra></extra>'
+      }};
+
+      const pTheme = getPlotlyTheme();
+      const xAxisCfg = {{
+        title: crit.unit === 'ars' ? `${{crit.shortLabel}} (ARS)` : `${{crit.shortLabel}} (%)`,
+        color: pTheme.textColor,
+        gridcolor: pTheme.gridColor,
+        zerolinecolor: pTheme.zerolineColor,
+        range: xRange
+      }};
+
+      if (crit.unit === 'ars') {{
+        const tickCount = 5;
+        const tVals = [];
+        const tTexts = [];
+        for (let i = 0; i <= tickCount; i++) {{
+          const v = xRange[0] + ((xRange[1] - xRange[0]) / tickCount) * i;
+          tVals.push(v);
+          tTexts.push(formatARS(v));
+        }}
+        xAxisCfg.tickmode = 'array';
+        xAxisCfg.tickvals = tVals;
+        xAxisCfg.ticktext = tTexts;
+      }} else {{
+        xAxisCfg.ticksuffix = '%';
+      }}
+
+      const shapes = [];
+      const annotations = [];
+      if (crit.unit === 'pct' && benchVal !== undefined && !isNaN(benchVal) && benchVal >= xRange[0] && benchVal <= xRange[1]) {{
+        shapes.push({{
+          type: 'line',
+          x0: benchVal,
+          x1: benchVal,
+          y0: -0.5,
+          y1: plotItems.length - 0.5,
+          line: {{ color: '#38BDF8', width: 2, dash: 'dash' }}
+        }});
+        annotations.push({{
+          x: benchVal,
+          y: plotItems.length - 0.5,
+          text: `Promedio Ponderado: ${{formatPercent(benchVal)}}`,
+          showarrow: false,
+          yshift: 14,
+          font: {{ size: 10, color: '#38BDF8', family: 'JetBrains Mono' }},
+          bgcolor: pTheme.isDark ? '#0F172A' : '#FFFFFF',
+          bordercolor: '#38BDF8',
+          borderwidth: 1
+        }});
+      }}
+
+      const layout = {{
+        paper_bgcolor: pTheme.paper_bgcolor,
+        plot_bgcolor: pTheme.plot_bgcolor,
+        height: dynHeight,
+        margin: {{ t: 28, b: 45, l: 235, r: 95 }},
+        xaxis: xAxisCfg,
+        yaxis: {{
+          automargin: true,
+          tickfont: {{ size: 10, color: pTheme.legendColor, family: 'Sora, sans-serif' }}
+        }},
+        shapes: shapes,
+        annotations: annotations,
+        font: {{ color: pTheme.textColor, family: 'Sora, sans-serif' }}
+      }};
+
+      Plotly.newPlot('dynRankingBarChart', [trace], layout, {{ responsive: true, displayModeBar: false }}).then(() => {{
+        const plotEl = document.getElementById('dynRankingBarChart');
+        if (plotEl) {{
+          plotEl.on('plotly_click', (ev) => {{
+            if (ev && ev.points && ev.points.length > 0 && ev.points[0].customdata) {{
+              const itemId = ev.points[0].customdata.id;
+              if (!itemId) return;
+              if (level === 'companies') selectCompany(itemId);
+              else if (level === 'groups') openGroupModal(itemId);
+              else {{
+                state.dynRankSegment = itemId;
+                setDynRankLevel('companies');
+              }}
+            }}
+          }});
+        }}
+      }});
+    }}
+
+    function renderDynRankingTableOnly() {{
+      if (!currentDynRankData) return;
+      const {{ crit, level, seg, rows, benchmark, benchLabel }} = currentDynRankData;
+      const thead = document.getElementById('dynRankingTableHead');
+      const tbody = document.getElementById('dynRankingTableBody');
+      const tfoot = document.getElementById('dynRankingTableFoot');
+      const countEl = document.getElementById('drTableCount');
+      const limitBtn = document.getElementById('drLimitBtn');
+
+      const q = (state.dynRankSearch || '').toLowerCase();
+      const filtered = q
+        ? rows.filter(r => (r._name || '').toLowerCase().includes(q) || (r._id || '').toLowerCase().includes(q) || (r._sub || '').toLowerCase().includes(q))
+        : rows;
+
+      const displayRows = (!state.dynRankShowAll && !q) ? filtered.slice(0, 25) : filtered;
+      if (countEl) countEl.innerText = filtered.length;
+      if (limitBtn) {{
+        limitBtn.innerText = state.dynRankShowAll ? `Mostrando Todas (${{filtered.length}})` : `Top 25 de ${{filtered.length}}`;
+      }}
+
+      const entityColTitle = level === 'companies' ? 'Aseguradora' : (level === 'groups' ? 'Grupo Económico' : 'Conjunto / Segmento SSN');
+      const extraHeaders = crit.extraCols.map(c => `<th class="py-2.5 px-2 text-right whitespace-nowrap">${{c.label}}</th>`).join('');
+      if (thead) {{
+        thead.innerHTML = `
+          <tr>
+            <th class="py-2.5 px-2 text-center w-10">#</th>
+            <th class="py-2.5 px-2 text-left min-w-[220px]">${{entityColTitle}}</th>
+            <th class="py-2.5 px-2 text-center w-24">${{level === 'companies' ? 'Tipo' : 'Alcance'}}</th>
+            <th class="py-2.5 px-2 text-right font-bold text-amber-300 whitespace-nowrap">${{crit.shortLabel}} (Criterio)</th>
+            ${{extraHeaders}}
+            <th class="py-2.5 px-2 text-center w-20">Acción</th>
+          </tr>
+        `;
+      }}
+
+      if (tbody) {{
+        if (displayRows.length === 0) {{
+          tbody.innerHTML = `<tr><td colspan="${{5 + crit.extraCols.length}}" class="py-8 text-center text-slate-500 text-xs font-sans">No se encontraron registros para el filtro actual</td></tr>`;
+        }} else {{
+          tbody.innerHTML = displayRows.map(r => {{
+            const rankDisp = r._na ? '—' : `#${{r._rank}}`;
+            const primaryStr = r._na ? crit.naLabel : (crit.unit === 'ars' ? formatARS(r._val) : formatPercent(r._val));
+            const primaryColor = getDynPrimaryColor(r._val, crit, r._na);
+            const isNegDevBase = (crit.id === 'loss_ratio' || crit.id === 'combined_ratio') && !r._na && (r.primas_devengadas <= 0) && (r.primas_emitidas > 0);
+            const rowCls = r._isLS
+              ? 'bg-amber-500/10 border-l-4 border-l-amber-400 font-semibold hover:bg-amber-500/20'
+              : 'hover:bg-slate-800/60';
+            const onclickAction = level === 'companies'
+              ? `selectCompany('${{r._id}}')`
+              : (level === 'groups' ? `openGroupModal('${{r._id}}')` : `state.dynRankSegment='${{r._id}}'; setDynRankLevel('companies');`);
+            const btnLabel = level === 'companies' ? 'Ficha' : (level === 'groups' ? 'Ver Grupo' : 'Ver Cías');
+            const badgeHtml = level === 'companies'
+              ? getTipoBadge(r._sub)
+              : `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 border border-slate-700 text-slate-300">${{r._sub}}</span>`;
+
+            const extraCells = crit.extraCols.map(c => {{
+              const v = c.get(r);
+              const isNaCell = c.naCheck && c.naCheck(r);
+              const txt = formatDynCell(v, c, r);
+              const cls = isNaCell ? 'text-slate-400' : getDynValColor(v, c.color, crit.id);
+              const negBaseTitle = (c.label === 'Primas Devengadas' && isNaCell === false && (r.primas_devengadas || 0) <= 0 && (r.primas_emitidas || 0) > 0)
+                ? ` title="Base cálculo del ratio: Primas Emitidas (${{formatARS(r.primas_emitidas)}}) por devengamiento negativo"`
+                : '';
+              return `<td class="py-2 px-2 text-right ${{cls}} whitespace-nowrap"${{negBaseTitle}}>${{txt}}</td>`;
+            }}).join('');
+
+            const isRt21Group = level === 'groups' && (r.consolidation_mode === 'vpp_parent' || r.consolidation_mode === 'sister_cross_vpp') && (Math.abs(r.vpp_eliminado_resultado || 0) >= 1000 || Math.abs(r.vpp_eliminado_activo || 0) >= 1000);
+            const namePrefix = level === 'companies' ? `<span class="text-slate-400 text-[10px] mr-1">[${{r._id}}]</span>` : '';
+            const lsBadge = r._isLS ? '<span class="ml-1 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">★ LS</span>' : '';
+            const rt21Badge = (isRt21Group && ['patrimonio_neto', 'resultado_neto', 'resultado_financiero', 'activo', 'roe', 'res_fin_sobre_pn', 'densidad_inversiones'].includes(crit.id))
+              ? `<span class="block text-[8px] font-normal text-emerald-400">✓ RT 21 s/ VPP</span>`
+              : '';
+
+            return `
+              <tr onclick="${{onclickAction}}" class="${{rowCls}} cursor-pointer transition-colors">
+                <td class="py-2 px-2 text-center font-bold ${{r._na ? 'text-slate-500' : 'text-slate-400'}}">${{rankDisp}}</td>
+                <td class="py-2 px-2 font-sans">
+                  <div class="font-bold text-white flex items-center gap-1 truncate max-w-[270px]" title="${{r._name}}">
+                    ${{namePrefix}}<span class="truncate">${{r._name}}</span>${{lsBadge}}
+                  </div>
+                </td>
+                <td class="py-2 px-2 text-center">${{badgeHtml}}</td>
+                <td class="py-2 px-2 text-right font-bold ${{primaryColor}} whitespace-nowrap" title="${{isNegDevBase ? 'Base emisión positiva por primas devengadas negativas' : crit.label}}">
+                  ${{primaryStr}}${{rt21Badge}}
+                </td>
+                ${{extraCells}}
+                <td class="py-2 px-2 text-center" onclick="event.stopPropagation()">
+                  <button type="button" onclick="${{onclickAction}}" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors text-[9px] font-bold cursor-pointer">${{btnLabel}}</button>
+                </td>
+              </tr>
+            `;
+          }}).join('');
+        }}
+      }}
+
+      if (tfoot && benchmark) {{
+        const bmVal = crit.getValue(benchmark);
+        const bmStr = crit.unit === 'ars' ? formatARS(bmVal) : formatPercent(bmVal);
+        const bmColor = getDynPrimaryColor(bmVal, crit, false);
+        const bmExtras = crit.extraCols.map(c => {{
+          const v = c.get(benchmark);
+          const txt = formatDynCell(v, c, benchmark);
+          const cls = getDynValColor(v, c.color, crit.id);
+          return `<td class="py-2.5 px-2 text-right ${{cls}} whitespace-nowrap">${{txt}}</td>`;
+        }}).join('');
+        tfoot.innerHTML = `
+          <tr class="bg-slate-950 text-white font-bold border-t-2 border-slate-700">
+            <td class="py-2.5 px-2 text-center text-slate-400">Σ</td>
+            <td class="py-2.5 px-2 text-left text-amber-300 uppercase tracking-wider font-sans" colspan="2">${{benchLabel}}</td>
+            <td class="py-2.5 px-2 text-right ${{bmColor}} whitespace-nowrap">${{bmStr}}</td>
+            ${{bmExtras}}
+            <td class="py-2.5 px-2 text-center text-slate-400">—</td>
+          </tr>
+        `;
+      }}
+    }}
+
+    function exportDynRankingCSV() {{
+      if (!currentDynRankData) return;
+      const {{ crit, level, seg, rows }} = currentDynRankData;
+      const headers = ['rank', 'codigo_id', 'nombre', 'tipo_alcance', crit.label, ...crit.extraCols.map(c => c.label)];
+      const lines = [headers.map(h => `"${{String(h).replace(/"/g, '""')}}"`).join(',')];
+      rows.forEach(r => {{
+        const rankOut = r._na ? r._id ? crit.naLabel : 'S/D' : r._rank;
+        const mainOut = r._na ? crit.naLabel : (crit.unit === 'ars' ? r._val.toFixed(2) : `${{r._val.toFixed(2)}}%`);
+        const extrasOut = crit.extraCols.map(c => {{
+          if (c.naCheck && c.naCheck(r)) return `"${{c.naTxt || 'S/D'}}"`;
+          const v = c.get(r);
+          return c.fmt === 'pct' ? `${{v.toFixed(2)}}%` : v.toFixed(2);
+        }});
+        lines.push([
+          `"${{rankOut}}"`,
+          `"${{String(r._id).replace(/"/g, '""')}}"`,
+          `"${{String(r._name).replace(/"/g, '""')}}"`,
+          `"${{String(r._sub).replace(/"/g, '""')}}"`,
+          `"${{mainOut}}"`,
+          ...extrasOut
+        ].join(','));
+      }});
+      const blob = new Blob(['\\uFEFF' + lines.join(String.fromCharCode(10))], {{ type: 'text/csv;charset=utf-8;' }});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ranking_dinamico_${{level}}_${{crit.id}}_${{seg.toLowerCase().replace(/[^a-z0-9]+/g, '_')}}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }}
+
+    window.setDynRankLevel = setDynRankLevel;
+    window.setDynSegmentFilter = setDynSegmentFilter;
+    window.setDynCriterion = setDynCriterion;
+    window.toggleDynSortDir = toggleDynSortDir;
+    window.setDynSearchQuery = setDynSearchQuery;
+    window.toggleDynShowAll = toggleDynShowAll;
+    window.renderDynamicRankingsTab = renderDynamicRankingsTab;
+    window.exportDynRankingCSV = exportDynRankingCSV;
   </script>
 </body>
 </html>
