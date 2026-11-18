@@ -35,7 +35,7 @@ python3 -m streamlit run app.py
 
 * **`db_engine.py`**: Motor multiplataforma (`macOS` con `access_parser` parcheado / `Windows` con `pyodbc` + PowerShell) para extraer tablas Access `.mdb` de SSN con caché Parquet (`balance_cache.parquet`) validado por período y fecha de modificación.
 * **`insurance_kpis.py`**: Motor contable bajo normas RGAA de la SSN con cuadre exacto (`0.00` pesos) de Primas Devengadas, Siniestros Devengados, Rescates/Rentas, Gastos, Resultado Técnico y Resultado Neto, anualización de ratios stock/flujo según trimestre fiscal, desglose de Inversiones (`1.02`) y subramos.
-* **`build_data.py`**: Genera `data_sinensup.json` consolidando las compañías individuales, 17 grupos aseguradores, benchmarks de mercado y segmentos, árbol completo del Plan de Cuentas SSN y comparativo interanual (`2026-3` vs `2025-3`) con IPC INDEC de referencia.
+* **`build_data.py`**: Genera `data_sinensup.json` consolidando las compañías individuales, 17 grupos aseguradores con consolidación RT 21 y eliminación de VPP intra-grupo (sin doble cómputo de resultados ni patrimonio), benchmarks de mercado y segmentos, árbol completo del Plan de Cuentas SSN y comparativo interanual (`2026-3` vs `2025-3`) con IPC INDEC de referencia.
 * **`generate_html.py`**: Compila `index.html` autocontenido con las 11 pestañas interactivas, Modo Claro / Modo Oscuro y exportaciones CSV/PNG.
 * **`ssn_updater.py` / `deploy_to_github.py`**: Descarga nuevos períodos trimestrales `.mdb` desde SSN SINENSUP y publica el tablero actualizado en GitHub Pages.
 * **`app.py` / `charts.py`**: Versión interactiva en Streamlit y sus gráficos Plotly.
