@@ -242,16 +242,28 @@ def compute_all_companies_summary(df):
         densidad_inversiones = (inv / activo_tot * 100.0) if activo_tot > 0 else 0.0
 
         # VPP (Valor Patrimonial Proporcional / Acciones Grupo Económico y Otras Participaciones)
+        vpp_activo_sin = get_account_value(df_c, '1.02.01.02.02.02.00.00', exact=True)
+        vpp_activo_con = get_account_value(df_c, '1.02.01.02.01.02.00.00', exact=True)
+        vpp_activo_ext = get_account_value(df_c, '1.02.02.01.02.02.00.00', exact=True)
+        vpp_activo = vpp_activo_sin + vpp_activo_con + vpp_activo_ext
+
+        mkt_acciones = (
+            get_account_value(df_c, '1.02.01.02.01.01.00.00', exact=True) +
+            get_account_value(df_c, '1.02.01.02.02.01.00.00', exact=True) +
+            get_account_value(df_c, '1.02.02.01.02.01.00.00', exact=True)
+        )
+
         vpp_tenencia_acc = get_account_value(df_c, '5.02.03.03.01.02.00.00', exact=True)
         vpp_tenencia_otr = get_account_value(df_c, '5.02.03.03.02.01.00.00', exact=True)
         vpp_realizacion_acc = get_account_value(df_c, '5.02.02.02.01.02.00.00', exact=True)
-        vpp_resultado = vpp_tenencia_acc + vpp_tenencia_otr + vpp_realizacion_acc
-        if abs(vpp_resultado) < 1000.0:
-            vpp_resultado = 0.0
 
-        vpp_activo_sin = get_account_value(df_c, '1.02.01.02.02.02.00.00', exact=True)
-        vpp_activo_con = get_account_value(df_c, '1.02.01.02.01.02.00.00', exact=True)
-        vpp_activo = vpp_activo_sin + vpp_activo_con
+        if vpp_activo <= 0 or (vpp_activo < 100_000_000.0 and vpp_activo < 0.05 * mkt_acciones):
+            vpp_resultado = 0.0
+        else:
+            equity_share_ge = (vpp_activo / (vpp_activo + mkt_acciones)) if (vpp_activo + mkt_acciones) > 0 else 1.0
+            vpp_resultado = (vpp_tenencia_acc + vpp_realizacion_acc) * equity_share_ge + vpp_tenencia_otr
+            if abs(vpp_resultado) < 1000.0:
+                vpp_resultado = 0.0
 
         vpp_pct_neto = round((vpp_resultado / res_neto * 100.0), 1) if (vpp_resultado != 0 and res_neto != 0) else 0.0
         vpp_pct_fin = round((vpp_resultado / res_fin * 100.0), 1) if (vpp_resultado != 0 and res_fin != 0) else 0.0
