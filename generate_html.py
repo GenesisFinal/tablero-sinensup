@@ -1125,8 +1125,8 @@ def generate_html():
           
           <!-- Mode Switch: Grupos vs Aseguradoras + Acceso Rankings Dinámicos -->
           <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick="switchTab('rankings-dinamicos')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 transition-all flex items-center gap-1.5 cursor-pointer" title="Abrir constructor de Rankings Dinámicos por 11 criterios contables y financieros">
-              <i class="fa-solid fa-sliders text-amber-400"></i> Rankings Dinámicos (11 Criterios)
+            <button type="button" onclick="switchTab('rankings-dinamicos')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 transition-all flex items-center gap-1.5 cursor-pointer" title="Abrir constructor de Rankings Dinámicos por 19 criterios contables y financieros">
+              <i class="fa-solid fa-sliders text-amber-400"></i> Rankings Dinámicos (19 Criterios)
             </button>
             <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-700">
               <button type="button" onclick="setRankingMode('groups')" id="rankingModeBtn-groups" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
@@ -3049,13 +3049,14 @@ def generate_html():
           </div>
         </div>
 
-        <!-- 11 Criteria Selector -->
+        <!-- 19 Criteria Selector -->
         <div class="pt-3 border-t border-slate-800/80 space-y-2.5" id="drCriteriaContainer">
           <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <i class="fa-solid fa-sliders text-amber-400"></i> 3. Seleccionar Criterio de Ranking (11 Indicadores)
+            <i class="fa-solid fa-sliders text-amber-400"></i> 3. Seleccionar Criterio de Ranking (19 Indicadores)
           </div>
           <div class="space-y-2">
-            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaArsButtons"></div>
+            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaFlowButtons"></div>
+            <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaPatrimButtons"></div>
             <div class="flex flex-wrap items-center gap-1.5" id="drCriteriaPctButtons"></div>
           </div>
         </div>
@@ -9750,42 +9751,65 @@ def generate_html():
     const getDynGtosOp = x => (x.gtos_operativos !== undefined ? x.gtos_operativos : ((x.gtos_produccion || 0) + (x.gtos_explotacion || 0)));
 
     const DYN_RANKING_CRITERIA = [
+      // --- FILA 1: FLUJOS Y RESULTADOS (ARS) ---
       {{
-        id: 'patrimonio_neto',
-        label: 'Patrimonio Neto',
-        shortLabel: 'Patrimonio Neto',
-        formula: 'Capítulo 3.00 — Patrimonio Neto (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        id: 'primas_emitidas',
+        label: 'Primas Emitidas',
+        shortLabel: 'Primas Emitidas',
+        formula: 'Emisión Directa Neta Total = Primas Directas + Derechos + Recargos − Anulaciones (5.01.01 − 4.01.04)',
+        groupRow: 'flow',
         category: 'ars',
         unit: 'ars',
         defaultSort: 'desc',
-        higherIsBetter: true,
+        higherIsBetter: null,
         isNA: () => false,
         naLabel: 'S/D',
-        getValue: x => Number(x.patrimonio_neto ?? 0),
+        getValue: x => Number(x.primas_emitidas ?? 0),
         extraCols: [
-          {{ label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' }},
-          {{ label: 'Pasivos (2.00)', get: x => Number(x.pasivo ?? 0), fmt: 'ars', color: 'neutral' }},
-          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }},
-          {{ label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+          {{ label: 'Share Mercado Total', get: x => (Number(x.primas_emitidas ?? 0) / ((window.DATA_SINENSUP && window.DATA_SINENSUP.market_benchmarks && window.DATA_SINENSUP.market_benchmarks.primas_emitidas) || 1)) * 100, fmt: 'pct', color: 'neutral' }},
+          {{ label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Retención Reaseg.', get: x => Number(x.retencion_ratio ?? 0), fmt: 'pct', color: 'neutral', naCheck: x => Number(x.primas_emitidas ?? 0) <= 0, naTxt: 'S/E' }},
+          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }}
         ]
       }},
       {{
-        id: 'resultado_neto',
-        label: 'Resultado Total',
-        shortLabel: 'Resultado Total',
-        formula: 'Resultado Neto Final = Cap. 5.00 − Cap. 4.00 (consolidación RT 21 en grupos)',
+        id: 'primas_devengadas',
+        label: 'Primas Devengadas',
+        shortLabel: 'Primas Devengadas',
+        formula: 'Primas Devengadas = Emisión Directa Neta + Reaseguro Activo Neto − Cesión Neta − Variación Compromisos Técnicos',
+        groupRow: 'flow',
         category: 'ars',
         unit: 'ars',
         defaultSort: 'desc',
-        higherIsBetter: true,
+        higherIsBetter: null,
         isNA: () => false,
         naLabel: 'S/D',
-        getValue: x => Number(x.resultado_neto ?? 0),
+        getValue: x => Number(x.primas_devengadas ?? 0),
         extraCols: [
-          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }},
-          {{ label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' }},
-          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'neutral' }},
-          {{ label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+          {{ label: 'Primas Emitidas', get: x => Number(x.primas_emitidas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Siniestros Devengados', get: x => Number(x.siniestros ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Ratio Combinado', get: x => Number(x.combined_ratio ?? 0), fmt: 'pct', color: 'inv100', naCheck: x => !!x.sin_base_primas, naTxt: 'S/P' }},
+          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }}
+        ]
+      }},
+      {{
+        id: 'siniestros_devengados',
+        label: 'Siniestros Devengados',
+        shortLabel: 'Siniestros Devengados',
+        formula: 'Siniestros Devengados Netos = Siniestros Pagados y Variación RSP/IBNR (4.01.01) − Recuperos Reaseguro (5.01.04)',
+        groupRow: 'flow',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.siniestros ?? 0),
+        extraCols: [
+          {{ label: 'Rescates y Rentas (4.01.02)', get: x => Number(x.rescates ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Siniestros / Prima Dev.', get: x => Number(x.loss_ratio ?? 0), fmt: 'pct', color: 'inv65', naCheck: x => !!x.sin_base_primas, naTxt: 'S/P' }},
+          {{ label: 'Reserva Stros. Pend.', get: x => Number(x.reserva_siniestros_pendientes ?? 0), fmt: 'ars', color: 'neutral' }}
         ]
       }},
       {{
@@ -9793,6 +9817,7 @@ def generate_html():
         label: 'Resultado Estructura Técnica',
         shortLabel: 'Res. Est. Técnica',
         formula: 'Estructura Técnica = Ingresos Técnicos (5.01) − Egresos Técnicos (4.01)',
+        groupRow: 'flow',
         category: 'ars',
         unit: 'ars',
         defaultSort: 'desc',
@@ -9812,6 +9837,7 @@ def generate_html():
         label: 'Resultado Estructura Financiera',
         shortLabel: 'Res. Est. Financiera',
         formula: 'Estructura Financiera = Ganancias Fin. (5.02) − Pérdidas Fin. (4.02) (RT 21 en grupos)',
+        groupRow: 'flow',
         category: 'ars',
         unit: 'ars',
         defaultSort: 'desc',
@@ -9827,10 +9853,52 @@ def generate_html():
         ]
       }},
       {{
+        id: 'resultado_neto',
+        label: 'Resultado Total',
+        shortLabel: 'Resultado Total',
+        formula: 'Resultado Neto Final = Cap. 5.00 − Cap. 4.00 (consolidación RT 21 en grupos)',
+        groupRow: 'flow',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.resultado_neto ?? 0),
+        extraCols: [
+          {{ label: 'Res. Est. Técnica', get: x => Number(x.resultado_tecnico ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Res. Est. Financiera', get: x => Number(x.resultado_financiero ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'Patrimonio Neto', get: x => Number(x.patrimonio_neto ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+        ]
+      }},
+      // --- FILA 2: PATRIMONIO Y RESERVAS (ARS) ---
+      {{
+        id: 'patrimonio_neto',
+        label: 'Patrimonio Neto',
+        shortLabel: 'Patrimonio Neto',
+        formula: 'Capítulo 3.00 — Patrimonio Neto (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        groupRow: 'patrim',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: true,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.patrimonio_neto ?? 0),
+        extraCols: [
+          {{ label: 'Activos (1.00)', get: x => Number(x.activo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Pasivos (2.00)', get: x => Number(x.pasivo ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Resultado Total', get: x => Number(x.resultado_neto ?? 0), fmt: 'ars', color: 'signed' }},
+          {{ label: 'ROE (Res. / PN)', get: x => Number(x.roe ?? 0), fmt: 'pct', color: 'signed', naCheck: x => !!x.patrimonio_negativo || (x.patrimonio_neto || 0) <= 0, naTxt: 'PN Neg.' }}
+        ]
+      }},
+      {{
         id: 'activo',
         label: 'Activos',
         shortLabel: 'Activos',
         formula: 'Capítulo 1.00 — Activo Total (consolidación RT 21 sin VPP intra-grupo en grupos)',
+        groupRow: 'patrim',
         category: 'ars',
         unit: 'ars',
         defaultSort: 'desc',
@@ -9850,6 +9918,7 @@ def generate_html():
         label: 'Pasivos',
         shortLabel: 'Pasivos',
         formula: 'Capítulo 2.00 — Pasivo Total (Deudas + Compromisos Técnicos + Previsiones + Part. Terceros)',
+        groupRow: 'patrim',
         category: 'ars',
         unit: 'ars',
         defaultSort: 'desc',
@@ -9865,10 +9934,112 @@ def generate_html():
         ]
       }},
       {{
+        id: 'deudas_asegurados',
+        label: 'Deudas con Asegurados',
+        shortLabel: 'Deudas c/ Asegurados',
+        formula: 'Rubro 2.01.01 — Deudas con Asegurados (Reserva Siniestros Pendientes + IBNR + Otras Deudas c/ Asegurados)',
+        groupRow: 'patrim',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.deudas_asegurados ?? 0),
+        extraCols: [
+          {{ label: 'Reserva Stros. Pend.', get: x => Number(x.reserva_siniestros_pendientes ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'IBNR (Neto)', get: x => Number(x.ibnr ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Reserva de Juicios', get: x => Number(x.reserva_juicios ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: '% s/ Pasivo Total', get: x => Number(x.pasivo ?? 0) > 0 ? (Number(x.deudas_asegurados ?? 0) / Number(x.pasivo) * 100) : 0, fmt: 'pct', color: 'neutral', naCheck: x => Number(x.pasivo ?? 0) <= 0, naTxt: 'S/D' }}
+        ]
+      }},
+      {{
+        id: 'reserva_siniestros_pendientes',
+        label: 'Reserva de Siniestros Pendientes',
+        shortLabel: 'Reserva Stros. Pend.',
+        formula: 'Siniestros Denunciados Pendientes Netos (Admin. + Juicios + Mediaciones + SLAP + SPL + ILT/Esp. − Reaseg./FFEP − Dif.)',
+        groupRow: 'patrim',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.reserva_siniestros_pendientes ?? 0),
+        extraCols: [
+          {{ label: 'Reserva de Juicios', get: x => Number(x.reserva_juicios ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'IBNR (Neto)', get: x => Number(x.ibnr ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Deudas c/ Asegurados', get: x => Number(x.deudas_asegurados ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: '% Juicios / Stros. Pend.', get: x => Number(x.reserva_siniestros_pendientes ?? 0) > 0 ? (Number(x.reserva_juicios ?? 0) / Number(x.reserva_siniestros_pendientes) * 100) : 0, fmt: 'pct', color: 'neutral', naCheck: x => Number(x.reserva_siniestros_pendientes ?? 0) <= 0, naTxt: 'S/RSP' }}
+        ]
+      }},
+      {{
+        id: 'reserva_juicios',
+        label: 'Reserva de Juicios',
+        shortLabel: 'Reserva de Juicios',
+        formula: 'Siniestros Pendientes en Juicio Netos (Seg. Directos 2.01.01..02 + ART 2.01.01..18.02/.03 + Futuros .29 − a/c FFEP)',
+        groupRow: 'patrim',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.reserva_juicios ?? 0),
+        extraCols: [
+          {{ label: 'En Mediación', get: x => Number(x.reserva_mediaciones ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Reserva Stros. Pend.', get: x => Number(x.reserva_siniestros_pendientes ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: '% Juicios / Stros. Pend.', get: x => Number(x.reserva_siniestros_pendientes ?? 0) > 0 ? (Number(x.reserva_juicios ?? 0) / Number(x.reserva_siniestros_pendientes) * 100) : 0, fmt: 'pct', color: 'neutral', naCheck: x => Number(x.reserva_siniestros_pendientes ?? 0) <= 0, naTxt: 'S/RSP' }},
+          {{ label: '% Juicios / Patrimonio', get: x => Number(x.patrimonio_neto ?? 0) > 0 ? (Number(x.reserva_juicios ?? 0) / Number(x.patrimonio_neto) * 100) : 0, fmt: 'pct', color: 'neutral', naCheck: x => !!x.patrimonio_negativo || Number(x.patrimonio_neto ?? 0) <= 0, naTxt: 'PN Neg.' }}
+        ]
+      }},
+      {{
+        id: 'ibnr',
+        label: 'IBNR',
+        shortLabel: 'IBNR',
+        formula: 'Reserva Siniestros Ocurridos y No Reportados Neta (2.01.01..08 + .09 + .25 − a/c Reaseguro .10 − FFEP .28.13)',
+        groupRow: 'patrim',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.ibnr ?? 0),
+        extraCols: [
+          {{ label: 'Reserva Stros. Pend.', get: x => Number(x.reserva_siniestros_pendientes ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Deudas c/ Asegurados', get: x => Number(x.deudas_asegurados ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: '% IBNR / Deudas Aseg.', get: x => Number(x.deudas_asegurados ?? 0) > 0 ? (Number(x.ibnr ?? 0) / Number(x.deudas_asegurados) * 100) : 0, fmt: 'pct', color: 'neutral', naCheck: x => Number(x.deudas_asegurados ?? 0) <= 0, naTxt: 'S/DA' }},
+          {{ label: 'Primas Devengadas', get: x => Number(x.primas_devengadas ?? 0), fmt: 'ars', color: 'neutral' }}
+        ]
+      }},
+      {{
+        id: 'compromisos_tecnicos',
+        label: 'Compromisos Técnicos',
+        shortLabel: 'Compromisos Técnicos',
+        formula: 'Rubro 2.02.00 — Compromisos Técnicos (Riesgos en Curso y Similares 2.02..02 + Reservas Matemáticas 2.02..03)',
+        groupRow: 'patrim',
+        category: 'ars',
+        unit: 'ars',
+        defaultSort: 'desc',
+        higherIsBetter: null,
+        isNA: () => false,
+        naLabel: 'S/D',
+        getValue: x => Number(x.compromisos_tecnicos ?? 0),
+        extraCols: [
+          {{ label: 'Riesgos en Curso', get: x => Number(x.riesgos_en_curso ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Reservas Matemáticas', get: x => Number(x.reservas_matematicas ?? 0), fmt: 'ars', color: 'neutral' }},
+          {{ label: 'Cobertura Reservas', get: x => Number(x.cobertura_reservas ?? 0), fmt: 'mult', color: 'cob', naCheck: x => !!x.sin_compromisos_tecnicos, naTxt: 'S/CT' }},
+          {{ label: 'Inversiones (1.02)', get: x => Number(x.inversiones ?? 0), fmt: 'ars', color: 'neutral' }}
+        ]
+      }},
+      // --- FILA 3: RATIOS (%) ---
+      {{
         id: 'loss_ratio',
         label: 'Siniestros Devengados / Prima Devengada',
         shortLabel: 'Siniestros / Prima Dev.',
         formula: '(Siniestros Devengados Netos + Rescates/Rentas) / Prima Devengada × 100 (Menor es mejor #1)',
+        groupRow: 'pct',
         category: 'pct',
         unit: 'pct',
         defaultSort: 'asc',
@@ -9888,6 +10059,7 @@ def generate_html():
         label: '(Siniestros Devengados + Gastos de Producción y Explotación) / Prima Devengada',
         shortLabel: '(Sin. + Gtos) / Prima Dev.',
         formula: '(Siniestros Devengados + Rescates + Gastos Prod. y Explotación) / Prima Devengada × 100 (Menor es mejor #1)',
+        groupRow: 'pct',
         category: 'pct',
         unit: 'pct',
         defaultSort: 'asc',
@@ -9907,6 +10079,7 @@ def generate_html():
         label: 'Resultado / Patrimonio',
         shortLabel: 'Resultado / Patrimonio',
         formula: 'Resultado Total (5.00 − 4.00) / Patrimonio Neto (3.00) × 100 (ROE del período)',
+        groupRow: 'pct',
         category: 'pct',
         unit: 'pct',
         defaultSort: 'desc',
@@ -9926,6 +10099,7 @@ def generate_html():
         label: 'Inversiones / Activo Total',
         shortLabel: 'Inversiones / Activo',
         formula: 'Total Inversiones (1.02) / Activo Total (1.00) × 100',
+        groupRow: 'pct',
         category: 'pct',
         unit: 'pct',
         defaultSort: 'desc',
@@ -9945,6 +10119,7 @@ def generate_html():
         label: 'Resultado Estructura Financiera / Patrimonio',
         shortLabel: 'Res. Fin. / Patrimonio',
         formula: 'Resultado Estructura Financiera (5.02 − 4.02) / Patrimonio Neto (3.00) × 100',
+        groupRow: 'pct',
         category: 'pct',
         unit: 'pct',
         defaultSort: 'desc',
@@ -10060,12 +10235,21 @@ def generate_html():
         const totRF = sumFn(x => x.resultado_financiero);
         const totRN = sumFn(x => x.resultado_neto);
         const totCT = sumFn(x => x.compromisos_tecnicos);
+        const totRiesgosCurso = sumFn(x => x.riesgos_en_curso);
+        const totResMat = sumFn(x => x.reservas_matematicas);
+        const totDeudasAseg = sumFn(x => x.deudas_asegurados);
+        const totRSP = sumFn(x => x.reserva_siniestros_pendientes);
+        const totIBNR = sumFn(x => x.ibnr);
+        const totJuicios = sumFn(x => x.reserva_juicios);
+        const totMed = sumFn(x => x.reserva_mediaciones);
+        const totCedidas = sumFn(x => x.primas_cedidas);
         const totInm = sumFn(x => x.inmuebles);
         const totDisp = sumFn(x => x.disponibilidades);
 
         benchmark = {{
           primas_emitidas: totEmit,
           primas_devengadas: totDev,
+          primas_cedidas: totCedidas,
           siniestros: sumFn(x => x.siniestros),
           rescates: sumFn(x => x.rescates),
           gtos_operativos: totGtosOp,
@@ -10073,18 +10257,29 @@ def generate_html():
           pasivo: totPas,
           patrimonio_neto: totPN,
           inversiones: totInv,
+          deudas_asegurados: totDeudasAseg,
+          reserva_siniestros_pendientes: totRSP,
+          ibnr: totIBNR,
+          reserva_juicios: totJuicios,
+          reserva_mediaciones: totMed,
           compromisos_tecnicos: totCT,
+          riesgos_en_curso: totRiesgosCurso,
+          reservas_matematicas: totResMat,
           resultado_tecnico: totRT,
           resultado_financiero: totRF,
           resultado_neto: totRN,
           loss_ratio: basePrimas > 0 ? (totSin / basePrimas * 100) : 0,
           combined_ratio: basePrimas > 0 ? ((totSin + totGtosOp) / basePrimas * 100) : 0,
+          retencion_ratio: totEmit > 0 ? Math.max(0, Math.min(100, (totEmit - totCedidas) / totEmit * 100)) : 100,
           roe: totPN > 0 ? (totRN / totPN * 100) : 0,
           roa: totAct > 0 ? (totRN / totAct * 100) : 0,
           roi_inversiones: totInv > 0 ? (totRF / totInv * 100) : 0,
           densidad_inversiones: totAct > 0 ? (totInv / totAct * 100) : 0,
           res_fin_sobre_pn: totPN > 0 ? (totRF / totPN * 100) : 0,
-          cobertura_reservas: totCT > 0 ? ((totInv + totInm + totDisp) / totCT) : 0
+          cobertura_reservas: totCT > 0 ? ((totInv + totInm + totDisp) / totCT) : 0,
+          sin_base_primas: basePrimas <= 0,
+          patrimonio_negativo: totPN <= 0,
+          sin_compromisos_tecnicos: totCT <= 0
         }};
         benchLabel = seg === 'Todos'
           ? `CONSOLIDADO RT 21 (${{items.length}} GRUPOS)`
@@ -10166,7 +10361,7 @@ def generate_html():
       if (crit.id === 'loss_ratio') return val <= 65.0 ? 'text-emerald-400' : 'text-rose-400';
       if (crit.id === 'combined_ratio') return val <= 100.0 ? 'text-emerald-400' : 'text-rose-400';
       if (crit.id === 'densidad_inversiones') return 'text-amber-300';
-      if (crit.higherIsBetter === null) return 'text-sky-300';
+      if (crit.higherIsBetter === null) return val < 0 ? 'text-rose-400' : 'text-sky-300';
       return val >= 0 ? 'text-emerald-400' : 'text-rose-400';
     }}
 
@@ -10203,23 +10398,21 @@ def generate_html():
         }}
       }});
 
-      // 3. Render 11 Criteria Pills (ARS Magnitudes + % Ratios)
-      const arsContainer = document.getElementById('drCriteriaArsButtons');
-      const pctContainer = document.getElementById('drCriteriaPctButtons');
-      if (arsContainer) {{
-        const arsList = DYN_RANKING_CRITERIA.filter(c => c.category === 'ars');
-        arsContainer.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Magnitudes (ARS):</span>` + arsList.map(c => {{
+      // 3. Render 19 Criteria Pills (Flujos/Resultados ARS, Patrimonio/Reservas ARS, Ratios %)
+      const critRows = [
+        {{ elId: 'drCriteriaFlowButtons', key: 'flow', title: 'Flujos y Resultados (ARS):' }},
+        {{ elId: 'drCriteriaPatrimButtons', key: 'patrim', title: 'Patrimonio y Reservas (ARS):' }},
+        {{ elId: 'drCriteriaPctButtons', key: 'pct', title: 'Ratios (%):' }}
+      ];
+      critRows.forEach(rowCfg => {{
+        const container = document.getElementById(rowCfg.elId);
+        if (!container) return;
+        const list = DYN_RANKING_CRITERIA.filter(c => c.groupRow === rowCfg.key);
+        container.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">${{rowCfg.title}}</span>` + list.map(c => {{
           const active = (crit.id === c.id);
           return `<button type="button" onclick="setDynCriterion('${{c.id}}')" id="drCritBtn-${{c.id}}" class="px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${{active ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 font-semibold'}}">${{c.label}}</button>`;
         }}).join('');
-      }}
-      if (pctContainer) {{
-        const pctList = DYN_RANKING_CRITERIA.filter(c => c.category === 'pct');
-        pctContainer.innerHTML = `<span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Ratios (%):</span>` + pctList.map(c => {{
-          const active = (crit.id === c.id);
-          return `<button type="button" onclick="setDynCriterion('${{c.id}}')" id="drCritBtn-${{c.id}}" class="px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer ${{active ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 font-semibold'}}">${{c.label}}</button>`;
-        }}).join('');
-      }}
+      }});
 
       // 4. Compute Ranking
       const res = computeDynamicRankingData();
@@ -10268,6 +10461,7 @@ def generate_html():
       let favorableCount = 0;
       if (crit.id === 'loss_ratio') favorableCount = validRows.filter(r => r._val <= 65.0).length;
       else if (crit.id === 'combined_ratio') favorableCount = validRows.filter(r => r._val <= 100.0).length;
+      else if (crit.higherIsBetter === null) favorableCount = validRows.filter(r => r._val > 0).length;
       else favorableCount = validRows.filter(r => r._val >= 0).length;
 
       // La Segunda KPI block
@@ -10317,7 +10511,7 @@ def generate_html():
           <div class="glass-card p-4 rounded-xl border-l-4 border-l-sky-500">
             <div class="text-[11px] font-semibold uppercase text-slate-400">MEDIANA Y COBERTURA</div>
             <div class="text-base font-bold font-mono text-sky-400 mt-1">${{medianStr}}</div>
-            <div class="text-[10px] text-slate-400 mt-1">${{validRows.length}} válidos · ${{favorableCount}} ${{crit.id === 'combined_ratio' ? '≤ 100%' : (crit.id === 'loss_ratio' ? '≤ 65%' : (crit.higherIsBetter === null ? 'positivos' : '≥ 0'))}}</div>
+            <div class="text-[10px] text-slate-400 mt-1">${{validRows.length}} válidos · ${{favorableCount}} ${{crit.id === 'combined_ratio' ? '≤ 100%' : (crit.id === 'loss_ratio' ? '≤ 65%' : (crit.higherIsBetter === null ? 'con saldo > 0' : '≥ 0'))}}</div>
           </div>
         `;
       }}
@@ -10373,7 +10567,7 @@ def generate_html():
         if (crit.id === 'loss_ratio') return r._val <= 65.0 ? '#10B981' : '#EF4444';
         if (crit.id === 'combined_ratio') return r._val <= 100.0 ? '#10B981' : '#EF4444';
         if (crit.id === 'densidad_inversiones') return '#38BDF8';
-        if (crit.higherIsBetter === null) return '#0EA5E9';
+        if (crit.higherIsBetter === null) return r._val < 0 ? '#EF4444' : '#0EA5E9';
         return r._val >= 0 ? '#10B981' : '#EF4444';
       }});
 
@@ -10496,7 +10690,7 @@ def generate_html():
 
       const q = (state.dynRankSearch || '').toLowerCase();
       const filtered = q
-        ? rows.filter(r => (r._name || '').toLowerCase().includes(q) || (r._id || '').toLowerCase().includes(q) || (r._sub || '').toLowerCase().includes(q))
+        ? rows.filter(r => (r._name || '').toLowerCase().includes(q) || (r._id || '').toLowerCase().includes(q) || (r._sub || '').toLowerCase().includes(q) || (r.description || '').toLowerCase().includes(q))
         : rows;
 
       const displayRows = (!state.dynRankShowAll && !q) ? filtered.slice(0, 25) : filtered;
@@ -10565,6 +10759,7 @@ def generate_html():
                   <div class="font-bold text-white flex items-center gap-1 truncate max-w-[270px]" title="${{r._name}}">
                     ${{namePrefix}}<span class="truncate">${{r._name}}</span>${{lsBadge}}
                   </div>
+                  ${{(level === 'groups' && r.description) ? `<div class="text-[10px] text-slate-400 truncate max-w-[270px]" title="${{r.description}}">${{r.description}}</div>` : ''}}
                 </td>
                 <td class="py-2 px-2 text-center">${{badgeHtml}}</td>
                 <td class="py-2 px-2 text-right font-bold ${{primaryColor}} whitespace-nowrap" title="${{isNegDevBase ? 'Base emisión positiva por primas devengadas negativas' : crit.label}}">
