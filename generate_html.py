@@ -622,12 +622,12 @@ def generate_html():
     html:not(.dark) #arScorecardCard .text-slate-300,
     html:not(.dark) #groupDetailModal .text-slate-400,
     html:not(.dark) #groupDetailModal .text-slate-300,
-    html:not(.dark) #arScorecardGrid > div div:first-child,
-    html:not(.dark) #arScorecardGrid > div div:last-child,
-    html:not(.dark) .dark-kpi-tile div:first-child,
-    html:not(.dark) .dark-kpi-tile div:last-child,
-    html:not(.dark) #groupModalKpis > div div:first-child,
-    html:not(.dark) #groupModalKpis > div div:last-child {{
+    html:not(.dark) #arScorecardGrid > div div:first-of-type,
+    html:not(.dark) #arScorecardGrid > div div:last-of-type,
+    html:not(.dark) .dark-kpi-tile div:first-of-type,
+    html:not(.dark) .dark-kpi-tile div:last-of-type,
+    html:not(.dark) #groupModalKpis > div div:first-of-type,
+    html:not(.dark) #groupModalKpis > div div:last-of-type {{
       color: #94A3B8 !important;
     }}
 
@@ -789,6 +789,577 @@ def generate_html():
     html:not(.dark)::-webkit-scrollbar-thumb:hover {{
       background: #64748B;
     }}
+
+    /* ======================================================== */
+    /* EXECUTIVE PDF DECK BUILDER (100% OFFLINE & VECTOR 16:9)  */
+    /* ======================================================== */
+    .deck-kpi-host {{
+      position: relative !important;
+    }}
+    .deck-kpi-plus-btn {{
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      z-index: 18;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0.55;
+      background: rgba(15, 23, 42, 0.78);
+      color: #F8FAFC;
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      transition: all 0.16s ease;
+      padding: 0;
+    }}
+    .deck-kpi-host:hover .deck-kpi-plus-btn,
+    .deck-kpi-plus-btn:hover,
+    .deck-kpi-plus-btn:focus-visible {{
+      opacity: 1;
+      background: #BE002F !important;
+      color: #FFFFFF !important;
+      border-color: #FB7185 !important;
+      transform: scale(1.06);
+      box-shadow: 0 2px 8px rgba(190, 0, 47, 0.4);
+    }}
+    html:not(.dark) .deck-kpi-plus-btn {{
+      background: rgba(241, 245, 249, 0.92);
+      color: #0F172A;
+      border-color: #94A3B8;
+    }}
+    html:not(.dark) .dark-kpi-tile .deck-kpi-plus-btn,
+    html:not(.dark) #arScorecardGrid .deck-kpi-plus-btn,
+    html:not(.dark) #groupModalKpis .deck-kpi-plus-btn {{
+      background: rgba(30, 41, 59, 0.9);
+      color: #F8FAFC;
+      border-color: #475569;
+    }}
+
+    .deck-inline-plus-btn {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      background: rgba(30, 41, 59, 0.9);
+      color: #F8FAFC;
+      border: 1px solid #475569;
+      transition: all 0.16s ease;
+      flex-shrink: 0;
+    }}
+    .deck-inline-plus-btn:hover {{
+      background: #BE002F !important;
+      color: #FFFFFF !important;
+      border-color: #FB7185 !important;
+      box-shadow: 0 2px 8px rgba(190, 0, 47, 0.35);
+    }}
+    html:not(.dark) .deck-inline-plus-btn {{
+      background: #F1F5F9;
+      color: #0F172A;
+      border-color: #CBD5E1;
+    }}
+    html:not(.dark) .deck-inline-plus-btn:hover {{
+      background: #BE002F !important;
+      color: #FFFFFF !important;
+      border-color: #BE002F !important;
+    }}
+
+    .deck-panel-add-btn {{
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(30, 41, 59, 0.85);
+      color: #E2E8F0;
+      border: 1px solid rgba(100, 116, 139, 0.45);
+      transition: all 0.16s ease;
+      white-space: nowrap;
+    }}
+    .deck-panel-add-btn:hover {{
+      background: #BE002F !important;
+      color: #FFFFFF !important;
+      border-color: #FB7185 !important;
+      box-shadow: 0 2px 8px rgba(190, 0, 47, 0.3);
+    }}
+    html:not(.dark) .deck-panel-add-btn {{
+      background: #F1F5F9;
+      color: #1E293B;
+      border-color: #CBD5E1;
+    }}
+    html:not(.dark) #arScorecardCard .deck-panel-add-btn,
+    html:not(.dark) #groupDetailModal .deck-panel-add-btn {{
+      background: #1E293B;
+      color: #F1F5F9;
+      border-color: #475569;
+    }}
+    html:not(.dark) .deck-panel-add-btn:hover {{
+      background: #BE002F !important;
+      color: #FFFFFF !important;
+      border-color: #BE002F !important;
+    }}
+
+    .deck-captured-flash {{
+      background: #059669 !important;
+      color: #FFFFFF !important;
+      border-color: #34D399 !important;
+      opacity: 1 !important;
+    }}
+
+    /* Drawer & Drag-and-Drop */
+    .deck-drawer-item {{
+      transition: transform 0.14s ease, border-color 0.14s ease, background-color 0.14s ease;
+    }}
+    .deck-drawer-item.deck-dragging {{
+      opacity: 0.45;
+      border-color: #F59E0B !important;
+    }}
+    .deck-drawer-item.deck-drag-over {{
+      border-top: 3px solid #BE002F !important;
+      background-color: rgba(190, 0, 47, 0.08) !important;
+    }}
+
+    /* ======================================================== */
+    /* 16:9 SLIDE ENGINE (SHARED BY PREVIEW & VECTOR PRINT PDF) */
+    /* Exact A4-width 16:9: 297mm x 167mm = 1122.52px x 631.18px*/
+    /* Scoped classes immune to html:not(.dark) overrides!      */
+    /* ======================================================== */
+    #deckPrintContainer {{
+      display: none;
+    }}
+
+    .deck-slide-canvas {{
+      width: 1122.52px;
+      height: 631.18px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      user-select: text;
+    }}
+
+    /* Cover Slide (Slide 1) */
+    .deck-cover-slide {{
+      background: linear-gradient(135deg, #070D19 0%, #0F172A 56%, #1E162B 100%) !important;
+      color: #F8FAFC !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 58px 72px;
+    }}
+    .deck-cover-accent-top {{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, #BE002F 0%, #E20039 42%, #0284C7 100%) !important;
+    }}
+    .deck-cover-orb {{
+      position: absolute;
+      right: -120px;
+      bottom: -140px;
+      width: 520px;
+      height: 520px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(226, 0, 57, 0.18) 0%, rgba(2, 132, 199, 0.06) 52%, transparent 72%) !important;
+      pointer-events: none;
+    }}
+    .deck-cover-brand {{
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+    }}
+    .deck-cover-brand-text {{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }}
+    .deck-cover-org {{
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #FDA4AF !important;
+    }}
+    .deck-cover-sys {{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #94A3B8 !important;
+    }}
+    .deck-cover-center {{
+      position: relative;
+      z-index: 2;
+      max-width: 920px;
+      margin: auto 0;
+    }}
+    .deck-cover-rule {{
+      width: 84px;
+      height: 5px;
+      border-radius: 4px;
+      background: #E20039 !important;
+      margin-bottom: 24px;
+    }}
+    .deck-cover-title {{
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1.16;
+      letter-spacing: -0.02em;
+      color: #FFFFFF !important;
+      margin: 0 0 18px 0;
+      word-break: break-word;
+    }}
+    .deck-cover-subtitle {{
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: #CBD5E1 !important;
+      margin: 0;
+      max-width: 840px;
+      word-break: break-word;
+    }}
+    .deck-cover-bottom {{
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid rgba(148, 163, 184, 0.22);
+      padding-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #94A3B8 !important;
+    }}
+
+    /* Interior Slides (Clean: Logo + Title ONLY, no subtitle, no filter pills) */
+    .deck-interior-slide {{
+      background: #FFFFFF !important;
+      color: #0F172A !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 38px 18px 38px;
+    }}
+    .deck-slide-header {{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 11px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid #E2E8F0;
+      position: relative;
+      flex-shrink: 0;
+    }}
+    .deck-slide-header::after {{
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 140px;
+      height: 2px;
+      background: #BE002F !important;
+    }}
+    .deck-slide-title {{
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.22;
+      color: #0F172A !important;
+      margin: 0;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }}
+    .deck-slide-body {{
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }}
+    .deck-slide-note {{
+      flex-shrink: 0;
+      margin-top: 10px;
+      padding: 8px 14px;
+      border-left: 4px solid #BE002F;
+      background: #F8FAFC !important;
+      border-radius: 0 8px 8px 0;
+      font-size: 12.5px;
+      line-height: 1.38;
+      color: #1E293B !important;
+      max-height: 54px;
+      overflow: hidden;
+    }}
+    .deck-slide-footer {{
+      flex-shrink: 0;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #64748B !important;
+    }}
+    .deck-slide-pagenum {{
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: #334155 !important;
+    }}
+
+    /* KPI Layouts on 16:9 Slide (Max 4 per slide: 1x1, 1x2, or 2x2) */
+    .deck-kpi-stage {{
+      width: 100%;
+      height: 100%;
+      display: grid;
+      gap: 20px;
+      align-items: stretch;
+    }}
+    .deck-kpi-stage.deck-kpi-count-1 {{
+      grid-template-columns: minmax(0, 760px);
+      grid-template-rows: 1fr;
+      justify-content: center;
+    }}
+    .deck-kpi-stage.deck-kpi-count-2 {{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: 1fr;
+    }}
+    .deck-kpi-stage.deck-kpi-count-3,
+    .deck-kpi-stage.deck-kpi-count-4 {{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+    }}
+    .deck-kpi-stage.deck-kpi-count-3 > .deck-kpi-card-slide:nth-child(3) {{
+      grid-column: 1 / -1;
+      width: calc(50% - 10px);
+      justify-self: center;
+    }}
+
+    .deck-kpi-card-slide {{
+      border-radius: 16px;
+      padding: 26px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }}
+    .deck-kpi-count-1 .deck-kpi-card-slide {{
+      padding: 42px 48px;
+    }}
+    .deck-kpi-count-2 .deck-kpi-card-slide {{
+      padding: 34px 38px;
+    }}
+    .deck-kpi-card-label {{
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+    }}
+    .deck-kpi-count-1 .deck-kpi-card-label {{
+      font-size: 18px;
+    }}
+    .deck-kpi-count-2 .deck-kpi-card-label {{
+      font-size: 16px;
+    }}
+    .deck-kpi-card-valrow {{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }}
+    .deck-kpi-card-val {{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }}
+    .deck-kpi-count-1 .deck-kpi-card-val {{
+      font-size: 58px;
+    }}
+    .deck-kpi-count-2 .deck-kpi-card-val {{
+      font-size: 46px;
+    }}
+    .deck-kpi-card-badge {{
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }}
+    .deck-kpi-card-sub {{
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.35;
+    }}
+    .deck-kpi-count-1 .deck-kpi-card-sub,
+    .deck-kpi-count-2 .deck-kpi-card-sub {{
+      font-size: 15.5px;
+    }}
+
+    /* Chart Slide Stage */
+    .deck-chart-stage {{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }}
+    .deck-chart-stage img {{
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
+      display: block;
+    }}
+
+    /* Vector Table Stage on 16:9 Slide */
+    .deck-table-stage {{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow: hidden;
+    }}
+    .deck-slide-table {{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.6px;
+      line-height: 1.23;
+      table-layout: auto;
+    }}
+    .deck-slide-table thead {{
+      background: #0F172A !important;
+    }}
+    .deck-slide-table thead th {{
+      color: #F8FAFC !important;
+      font-weight: 700;
+      padding: 6.5px 8px;
+      border-bottom: 2px solid #BE002F;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }}
+    .deck-slide-table tbody tr {{
+      border-bottom: 1px solid #E2E8F0;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }}
+    .deck-slide-table tbody tr:nth-child(even) {{
+      background-color: #F8FAFC;
+    }}
+    .deck-slide-table tbody td {{
+      padding: 4.6px 8px;
+      color: #0F172A;
+      vertical-align: middle;
+    }}
+    .deck-slide-table tfoot tr {{
+      background: #0F172A !important;
+      border-top: 2px solid #BE002F;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }}
+    .deck-slide-table tfoot td,
+    .deck-slide-table tfoot th {{
+      padding: 6.5px 8px;
+      color: #FFFFFF !important;
+      font-weight: 700;
+    }}
+
+    /* Dedicated @media print Native Vector 16:9 Stylesheet */
+    @page {{
+      size: 297mm 167mm;
+      margin: 0;
+    }}
+    @media print {{
+      html, body {{
+        width: 297mm !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #FFFFFF !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        overflow: visible !important;
+      }}
+      body > *:not(#deckPrintContainer) {{
+        display: none !important;
+      }}
+      #deckPrintContainer {{
+        display: block !important;
+        position: static !important;
+        width: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #FFFFFF !important;
+      }}
+      .deck-print-page {{
+        width: 297mm !important;
+        height: 167mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        position: relative !important;
+      }}
+      .deck-print-page:last-child {{
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }}
+      .deck-print-page > .deck-slide-canvas {{
+        width: 297mm !important;
+        height: 167mm !important;
+      }}
+      .deck-slide-table thead {{
+        display: table-header-group !important;
+      }}
+      .deck-slide-table tfoot {{
+        display: table-footer-group !important;
+      }}
+      .deck-slide-table tr {{
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }}
+    }}
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -822,6 +1393,12 @@ def generate_html():
         
         <button onclick="exportToCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-semibold text-slate-200 transition-colors flex items-center gap-2">
           <i class="fa-solid fa-file-csv text-brand-green"></i> Exportar CSV
+        </button>
+
+        <!-- Executive PDF Deck Builder Button (Always Visible) -->
+        <button type="button" id="deckBuilderOpenBtn" onclick="openDeckDrawer()" class="px-3 py-1.5 bg-brand-red hover:bg-rose-700 border border-rose-500/40 rounded-lg text-xs font-bold text-white shadow-md shadow-brand-red/25 transition-all flex items-center gap-2 cursor-pointer" title="Abrir Armador de Presentaciones Ejecutivas en PDF (16:9)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          <span>Presentación (<span id="deckCountBadge">0</span>)</span>
         </button>
 
         <!-- Light/Dark Mode Toggle -->
@@ -3156,6 +3733,119 @@ def generate_html():
     </div>
 
   </main>
+
+  <!-- ======================================================== -->
+  <!-- EXECUTIVE PDF DECK BUILDER: TOAST, DRAWER, PREVIEW, PRINT-->
+  <!-- ======================================================== -->
+  <style>
+    html:not(.dark) #deckBuilderDrawer textarea {{
+      background-color: #FFFFFF !important;
+      border-color: #94A3B8 !important;
+      color: #020617 !important;
+    }}
+    html:not(.dark) #deckBuilderDrawer textarea::placeholder {{
+      color: #64748B !important;
+    }}
+  </style>
+
+  <!-- Subtle Capture Toast (Bottom-Left so it never overlaps Right Drawer actions) -->
+  <div id="deckToast" class="hidden fixed bottom-5 left-5 z-[140] px-4 py-2.5 rounded-xl shadow-2xl border text-xs font-semibold flex items-center gap-2.5 transition-all" style="background:#0F172A; color:#F8FAFC; border-color:#334155;">
+    <span style="display:inline-flex;width:18px;height:18px;border-radius:9999px;background:#10B981;color:#022C22;align-items:center;justify-content:center;font-weight:900;">✓</span>
+    <span id="deckToastText">Elemento agregado a la presentación</span>
+  </div>
+
+  <!-- Right-Side Drawer Backdrop -->
+  <div id="deckDrawerBackdrop" onclick="closeDeckDrawer()" class="hidden fixed inset-0 z-[115] backdrop-blur-[2px] transition-opacity" style="background:rgba(2, 6, 23, 0.65);"></div>
+
+  <!-- Right-Side Editable Deck Builder Drawer -->
+  <aside id="deckBuilderDrawer" class="hidden fixed inset-y-0 right-0 z-[120] w-full max-w-lg bg-slate-900 border-l border-slate-700 shadow-2xl flex flex-col">
+    <!-- Drawer Header -->
+    <div class="px-5 py-4 border-b border-slate-800 bg-slate-950/80 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-lg bg-brand-red flex items-center justify-center shadow-md shadow-brand-red/30" style="color:#FFFFFF;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </span>
+        <div>
+          <h3 class="text-sm font-bold text-white leading-tight">Armador de Presentación Ejecutiva</h3>
+          <p id="deckDrawerSummary" class="text-[11px] text-slate-400 font-mono mt-0.5">0 capturas • Formato 16:9 Vectorial</p>
+        </div>
+      </div>
+      <button type="button" onclick="closeDeckDrawer()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold cursor-pointer" title="Cerrar panel">✕</button>
+    </div>
+
+    <!-- Cover Slide & Grouping Settings -->
+    <div class="px-5 py-3.5 border-b border-slate-800 bg-slate-900/70 space-y-2.5">
+      <div class="flex items-center justify-between gap-2">
+        <label class="flex items-center gap-2 text-xs font-bold text-white cursor-pointer select-none">
+          <input type="checkbox" id="deckCoverEnabledInput" onchange="updateDeckCoverConfig()" class="rounded border-slate-600 accent-[#BE002F] w-3.5 h-3.5 cursor-pointer" checked>
+          <span>Incluir Portada Institucional (16:9)</span>
+        </label>
+        <label class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300 cursor-pointer select-none" title="Combina tarjetas KPI individuales consecutivas en cuadrícula 2x2 o 1x2 (hasta 4 por diapositiva)">
+          <input type="checkbox" id="deckGroupKpisInput" onchange="updateDeckCoverConfig()" class="rounded border-slate-600 accent-[#BE002F] w-3.5 h-3.5 cursor-pointer" checked>
+          <span>Agrupar KPIs sueltos</span>
+        </label>
+      </div>
+      <div id="deckCoverFieldsBox" class="grid grid-cols-1 gap-2 pt-1">
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Título de Portada</label>
+          <input type="text" id="deckCoverTitleInput" oninput="updateDeckCoverConfig()" placeholder="Título de la presentación..." class="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-brand-red">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Subtítulo de Portada</label>
+          <input type="text" id="deckCoverSubtitleInput" oninput="updateDeckCoverConfig()" placeholder="Subtítulo institucional..." class="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-brand-red">
+        </div>
+      </div>
+    </div>
+
+    <!-- Captured Snapshots Editable List -->
+    <div id="deckItemsList" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="px-5 py-3.5 border-t border-slate-800 bg-slate-950/90 flex flex-wrap items-center justify-between gap-2">
+      <button type="button" id="deckClearBtn" onclick="clearDeckItems()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/40 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-rose-300 transition-colors cursor-pointer">
+        Vaciar
+      </button>
+      <div class="flex items-center gap-2">
+        <button type="button" id="deckPreviewBtn" onclick="openDeckPreview()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-white transition-all flex items-center gap-1.5 cursor-pointer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Vista Previa</span>
+        </button>
+        <button type="button" id="deckExportPdfBtn" onclick="exportDeckToPDF()" class="px-4 py-1.5 rounded-lg bg-brand-red hover:bg-rose-700 text-xs font-bold shadow-md shadow-brand-red/30 transition-all flex items-center gap-1.5 cursor-pointer" style="color:#FFFFFF;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span style="color:#FFFFFF;">Exportar / Generar PDF</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Full-Screen Interactive 16:9 Preview Modal -->
+  <div id="deckPreviewModal" class="hidden fixed inset-0 z-[130] flex flex-col" style="background:rgba(2, 6, 23, 0.95); color:#F8FAFC;">
+    <!-- Top Theater Control Bar -->
+    <div class="px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b" style="background:#0B1120; border-color:#1E293B;">
+      <div class="flex items-center gap-3">
+        <span class="px-2.5 py-1 rounded-md text-[11px] font-bold font-mono" style="background:rgba(190,0,47,0.22); color:#FDA4AF; border:1px solid rgba(251,113,133,0.35);">VISTA PREVIA 16:9</span>
+        <span id="deckPreviewCounter" class="text-xs font-mono font-bold" style="color:#F8FAFC;">Diapositiva 1 / 1</span>
+        <span class="text-[11px] hidden sm:inline" style="color:#94A3B8;">Usa las teclas ← / → para navegar y Esc para salir</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="stepDeckPreview(-1)" id="deckPrevSlideBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-opacity" style="background:#1E293B; color:#F8FAFC; border:1px solid #334155;">← Anterior</button>
+        <button type="button" onclick="stepDeckPreview(1)" id="deckNextSlideBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-opacity" style="background:#1E293B; color:#F8FAFC; border:1px solid #334155;">Siguiente →</button>
+        <button type="button" onclick="exportDeckToPDF()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5" style="background:#BE002F; color:#FFFFFF; border:1px solid #FB7185;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span style="color:#FFFFFF;">Exportar / Generar PDF</span>
+        </button>
+        <button type="button" onclick="closeDeckPreview()" class="px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer" style="background:#1E293B; color:#CBD5E1; border:1px solid #334155;">Cerrar (Esc)</button>
+      </div>
+    </div>
+
+    <!-- Scaled 16:9 Slide Viewport -->
+    <div id="deckPreviewViewport" class="flex-1 flex items-center justify-center overflow-hidden p-4 sm:p-6 relative">
+      <div id="deckPreviewScaleBox" style="transform-origin:center center; box-shadow:0 25px 60px rgba(0,0,0,0.75); border-radius:4px; overflow:hidden;"></div>
+    </div>
+  </div>
+
+  <!-- Dedicated Native Vector 16:9 Print Container -->
+  <div id="deckPrintContainer" aria-hidden="true"></div>
   <!-- FOOTER -->
   <footer class="bg-slate-950 border-t border-slate-800/80 py-4 mt-auto">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
@@ -3432,7 +4122,8 @@ def generate_html():
     document.addEventListener('DOMContentLoaded', () => {{
       initTheme();
       initDashboard();
-      lucide.createIcons();
+      if (typeof initDeckBuilder === 'function') initDeckBuilder();
+      if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
     }});
 
     function initDashboard() {{
@@ -10836,6 +11527,1889 @@ def generate_html():
     window.toggleDynShowAll = toggleDynShowAll;
     window.renderDynamicRankingsTab = renderDynamicRankingsTab;
     window.exportDynRankingCSV = exportDynRankingCSV;
+
+    // ========================================================
+    // EXECUTIVE PDF DECK BUILDER ENGINE (100% OFFLINE & VECTOR)
+    // ========================================================
+    const DECK_STORAGE_KEY = 'sinensup_deck_builder_v1';
+    let deckPreviewIndex = 0;
+    let deckDragSrcIdx = null;
+    let deckToastTimer = null;
+
+    function getDeckDefaultSubtitle() {{
+      const per = (window.DATA_SINENSUP && window.DATA_SINENSUP.periodo) ? window.DATA_SINENSUP.periodo : '{periodo_actual}';
+      return `Análisis Técnico, Patrimonial y Financiero — Base Oficial SSN SINENSUP (Período ${{per}})`;
+    }}
+
+    const deckState = {{
+      coverEnabled: true,
+      coverTitle: 'Informe Ejecutivo • Mercado Asegurador Argentino',
+      coverSubtitle: getDeckDefaultSubtitle(),
+      groupConsecutiveKpis: true,
+      items: []
+    }};
+
+    function escapeDeckHtml(str) {{
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }}
+
+    function renderDeckLogoSvg(sizePx, uid) {{
+      const gradId = `deckLogoGrad_${{uid}}`;
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="${{sizePx}}" height="${{sizePx}}" style="flex-shrink:0;display:block;">
+        <defs>
+          <linearGradient id="${{gradId}}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E20039"/>
+            <stop offset="100%" stop-color="#9F1239"/>
+          </linearGradient>
+        </defs>
+        <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#${{gradId}})"/>
+        <g transform="translate(106, 86) scale(0.586)" fill="#FFFFFF">
+          <path d="M256 0c4.6 0 9.2 1 13.4 2.9L469.4 92.9c28.5 12.7 46.6 40.8 46.6 72.1 0 178.6-118.8 333.6-260 347-141.2-13.4-260-168.4-260-347 0-31.3 18.1-59.4 46.6-72.1L242.6 2.9C246.8 1 251.4 0 256 0zm0 64.3L78.6 142.9C68.9 147.2 64 157.3 64 168c0 144.1 94.6 269.1 192 280.9V64.3z"/>
+          <path d="M256 64.3v384.6c97.4-11.8 192-136.8 192-280.9 0-10.7-4.9-20.8-14.6-25.1L256 64.3z" fill-opacity="0.4"/>
+        </g>
+      </svg>`;
+    }}
+
+    function showDeckToast(msg, isWarn) {{
+      const el = document.getElementById('deckToast');
+      const txt = document.getElementById('deckToastText');
+      if (!el || !txt) return;
+      txt.textContent = msg;
+      el.style.borderColor = isWarn ? '#F59E0B' : '#10B981';
+      el.classList.remove('hidden');
+      if (deckToastTimer) clearTimeout(deckToastTimer);
+      deckToastTimer = setTimeout(() => {{
+        el.classList.add('hidden');
+      }}, 2400);
+    }}
+
+    function flashCaptureButton(btnEl) {{
+      if (!btnEl) return;
+      btnEl.classList.add('deck-captured-flash');
+      const prevTxt = btnEl.dataset.origLabel || btnEl.innerHTML;
+      if (!btnEl.dataset.origLabel) btnEl.dataset.origLabel = prevTxt;
+      if (btnEl.classList.contains('deck-panel-add-btn')) {{
+        btnEl.innerHTML = '<span>✓ Panel agregado</span>';
+      }} else {{
+        btnEl.textContent = '✓';
+      }}
+      setTimeout(() => {{
+        btnEl.classList.remove('deck-captured-flash');
+        if (btnEl.dataset.origLabel) {{
+          btnEl.innerHTML = btnEl.dataset.origLabel;
+          delete btnEl.dataset.origLabel;
+        }}
+      }}, 1100);
+    }}
+
+    function loadDeckState() {{
+      try {{
+        const raw = localStorage.getItem(DECK_STORAGE_KEY);
+        if (raw) {{
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {{
+            if (typeof parsed.coverEnabled === 'boolean') deckState.coverEnabled = parsed.coverEnabled;
+            if (typeof parsed.coverTitle === 'string') deckState.coverTitle = parsed.coverTitle;
+            if (typeof parsed.coverSubtitle === 'string') deckState.coverSubtitle = parsed.coverSubtitle;
+            if (typeof parsed.groupConsecutiveKpis === 'boolean') deckState.groupConsecutiveKpis = parsed.groupConsecutiveKpis;
+            if (Array.isArray(parsed.items)) deckState.items = parsed.items;
+          }}
+        }}
+      }} catch (err) {{
+        console.warn('DeckBuilder localStorage read warning:', err);
+      }}
+      syncDeckCoverInputs();
+      refreshDeckCounters();
+    }}
+
+    function saveDeckState() {{
+      try {{
+        localStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(deckState));
+      }} catch (err) {{
+        console.warn('DeckBuilder localStorage quota warning:', err);
+        showDeckToast('Memoria local casi llena: la presentación sigue activa en sesión', true);
+      }}
+      refreshDeckCounters();
+    }}
+
+    function syncDeckCoverInputs() {{
+      const chk = document.getElementById('deckCoverEnabledInput');
+      const grpChk = document.getElementById('deckGroupKpisInput');
+      const tIn = document.getElementById('deckCoverTitleInput');
+      const sIn = document.getElementById('deckCoverSubtitleInput');
+      const box = document.getElementById('deckCoverFieldsBox');
+      if (chk) chk.checked = !!deckState.coverEnabled;
+      if (grpChk) grpChk.checked = !!deckState.groupConsecutiveKpis;
+      if (tIn && tIn.value !== deckState.coverTitle) tIn.value = deckState.coverTitle;
+      if (sIn && sIn.value !== deckState.coverSubtitle) sIn.value = deckState.coverSubtitle;
+      if (box) box.style.opacity = deckState.coverEnabled ? '1' : '0.45';
+    }}
+
+    function updateDeckCoverConfig() {{
+      const chk = document.getElementById('deckCoverEnabledInput');
+      const grpChk = document.getElementById('deckGroupKpisInput');
+      const tIn = document.getElementById('deckCoverTitleInput');
+      const sIn = document.getElementById('deckCoverSubtitleInput');
+      const box = document.getElementById('deckCoverFieldsBox');
+      if (chk) deckState.coverEnabled = !!chk.checked;
+      if (grpChk) deckState.groupConsecutiveKpis = !!grpChk.checked;
+      if (tIn) deckState.coverTitle = tIn.value;
+      if (sIn) deckState.coverSubtitle = sIn.value;
+      if (box) box.style.opacity = deckState.coverEnabled ? '1' : '0.45';
+      saveDeckState();
+    }}
+
+    function refreshDeckCounters() {{
+      const badge = document.getElementById('deckCountBadge');
+      if (badge) badge.textContent = String(deckState.items.length);
+      const summary = document.getElementById('deckDrawerSummary');
+      if (summary) {{
+        const slides = buildDeckSlides();
+        summary.textContent = `${{deckState.items.length}} captura${{deckState.items.length === 1 ? '' : 's'}} • ${{slides.length}} diapositiva${{slides.length === 1 ? '' : 's'}} (16:9)`;
+      }}
+    }}
+
+    // ----------------------------------------------------
+    // CONTEXTUAL TITLE RESOLVER
+    // ----------------------------------------------------
+    function cleanHeadingText(str) {{
+      return String(str || '')
+        .replace(/\\+\\s*Agregar panel KPI a presentación/gi, '')
+        .replace(/¿Cómo leer\\?/gi, '')
+        .replace(/\\s+/g, ' ')
+        .replace(/\\(\\s+/g, '(')
+        .replace(/\\s+\\)/g, ')')
+        .trim();
+    }}
+
+    function resolveDeckContextSuffix(el) {{
+      if (!el) return '';
+      const modal = el.closest('#groupDetailModal');
+      if (modal) {{
+        const gt = document.getElementById('groupModalTitle');
+        return gt ? cleanHeadingText(gt.innerText) : '';
+      }}
+      const sec = el.closest('section[id^="tab-"]');
+      if (!sec) return '';
+      const tid = sec.id;
+      if (tid === 'tab-vision-mercado') {{
+        return (state.selectedSegment && state.selectedSegment !== 'Todos') ? state.selectedSegment : 'Mercado Total';
+      }}
+      if (tid === 'tab-ficha-compania') {{
+        return cleanHeadingText(document.getElementById('selectedCiaTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-ramos-suscripcion') {{
+        return cleanHeadingText(document.getElementById('ramosSelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-rankings-ramos') {{
+        return cleanHeadingText(document.getElementById('rrSelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-analisis-ramo') {{
+        return cleanHeadingText(document.getElementById('arSelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-comparativo-mercado') {{
+        const ct = cleanHeadingText(document.getElementById('compTableTitle')?.innerText || '');
+        return ct || 'Comparativo Interanual';
+      }}
+      if (tid === 'tab-inversiones-finanzas') {{
+        return cleanHeadingText(document.getElementById('invSelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-solvencia-ratios') {{
+        return cleanHeadingText(document.getElementById('solvSelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-ratios-gestion') {{
+        return cleanHeadingText(document.getElementById('gestSelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-balances') {{
+        const bt = cleanHeadingText(document.getElementById('balSelectedTitle')?.innerText || '');
+        const stmtMap = {{ patrimonial: 'Estado Patrimonial', edr: 'Estado de Resultados', tec: 'Estructura Técnica', fin: 'Estructura Financiera', ramo: 'Técnico por Ramo' }};
+        const stName = stmtMap[state.balStatement] || '';
+        return [bt, stName].filter(Boolean).join(' • ');
+      }}
+      if (tid === 'tab-flujo-sankey') {{
+        return cleanHeadingText(document.getElementById('sankeySelectedTitle')?.innerText || '');
+      }}
+      if (tid === 'tab-rankings-dinamicos') {{
+        const ht = cleanHeadingText(document.getElementById('drHeaderTitle')?.innerText || '');
+        return ht;
+      }}
+      return '';
+    }}
+
+    function buildDefaultSlideTitle(el, baseTitle) {{
+      const base = cleanHeadingText(baseTitle) || 'Indicador del Mercado Asegurador';
+      const ctx = resolveDeckContextSuffix(el);
+      if (!ctx) return base;
+      if (base.toLowerCase().includes(ctx.toLowerCase()) || ctx.toLowerCase().includes(base.toLowerCase())) {{
+        return base.length >= ctx.length ? base : ctx;
+      }}
+      return `${{base}} — ${{ctx}}`;
+    }}
+
+    // ----------------------------------------------------
+    // COLOR & STYLE HELPERS FOR FROZEN SNAPSHOTS
+    // ----------------------------------------------------
+    function parseRgbTuple(cssColor) {{
+      if (!cssColor) return null;
+      const m = String(cssColor).match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/i);
+      if (!m) return null;
+      return {{
+        r: parseInt(m[1], 10),
+        g: parseInt(m[2], 10),
+        b: parseInt(m[3], 10),
+        a: m[4] !== undefined ? parseFloat(m[4]) : 1
+      }};
+    }}
+
+    function resolveEffectiveBgColor(el) {{
+      let cur = el;
+      while (cur && cur !== document.documentElement) {{
+        const bg = window.getComputedStyle(cur).backgroundColor;
+        const parsed = parseRgbTuple(bg);
+        if (parsed && parsed.a > 0.08) {{
+          if (parsed.a < 0.92) {{
+            return isDarkMode() ? '#1E293B' : '#FFFFFF';
+          }}
+          return `rgb(${{parsed.r}}, ${{parsed.g}}, ${{parsed.b}})`;
+        }}
+        cur = cur.parentElement;
+      }}
+      return isDarkMode() ? '#0F172A' : '#FFFFFF';
+    }}
+
+    function isColorDark(cssColor) {{
+      const p = parseRgbTuple(cssColor);
+      if (!p) {{
+        const hex = String(cssColor || '').trim();
+        if (hex.startsWith('#') && (hex.length === 7 || hex.length === 4)) {{
+          const r = hex.length === 7 ? parseInt(hex.slice(1, 3), 16) : parseInt(hex[1] + hex[1], 16);
+          const g = hex.length === 7 ? parseInt(hex.slice(3, 5), 16) : parseInt(hex[2] + hex[2], 16);
+          const b = hex.length === 7 ? parseInt(hex.slice(5, 7), 16) : parseInt(hex[3] + hex[3], 16);
+          return (r * 0.299 + g * 0.587 + b * 0.114) < 135;
+        }}
+        return false;
+      }}
+      return (p.r * 0.299 + p.g * 0.587 + p.b * 0.114) < 135;
+    }}
+
+    function adaptTextColorForWhiteSlide(cssColor) {{
+      const p = parseRgbTuple(cssColor);
+      if (!p) return '#0F172A';
+      const maxC = Math.max(p.r, p.g, p.b);
+      const minC = Math.min(p.r, p.g, p.b);
+      const sat = maxC - minC;
+      const lum = p.r * 0.299 + p.g * 0.587 + p.b * 0.114;
+      // Low saturation light/white/slate text -> crisp dark slate/navy
+      if (sat < 32) {{
+        if (lum > 185) return '#0F172A';
+        if (lum > 130) return '#475569';
+        return `rgb(${{p.r}}, ${{p.g}}, ${{p.b}})`;
+      }}
+      // Semantic hues: ensure high contrast (>4.5:1) against white table row
+      if (p.g > p.r + 25 && p.g > p.b) return '#047857'; // Emerald
+      if (p.r > p.g + 35 && p.r > p.b + 15) return '#BE002F'; // Rose / Red
+      if (p.r > 180 && p.g > 110 && p.b < 90) return '#B45309'; // Amber / Gold
+      if (p.b > p.r + 25 && p.g >= p.r) return '#0369A1'; // Sky / Cyan / Blue
+      if (p.b > 160 && p.r > 110 && p.r > p.g) return '#6D28D9'; // Purple / Indigo
+      return `rgb(${{p.r}}, ${{p.g}}, ${{p.b}})`;
+    }}
+
+    function adaptTextColorForDarkFoot(cssColor) {{
+      const p = parseRgbTuple(cssColor);
+      if (!p) return '#FFFFFF';
+      const maxC = Math.max(p.r, p.g, p.b);
+      const minC = Math.min(p.r, p.g, p.b);
+      const sat = maxC - minC;
+      if (sat < 35) return '#FFFFFF';
+      if (p.g > p.r + 20 && p.g > p.b) return '#34D399';
+      if (p.r > p.g + 35 && p.r > p.b + 15) return '#FDA4AF';
+      if (p.r > 160 && p.g > 80 && p.b < 90) return '#FCD34D';
+      if (p.b > p.r + 20 && p.g >= p.r) return '#38BDF8';
+      return '#FFFFFF';
+    }}
+
+    // ----------------------------------------------------
+    // 1. KPI CARD & KPI PANEL SNAPSHOT CAPTURE
+    // ----------------------------------------------------
+    function extractKpiCardSnapshot(cardEl) {{
+      const cs = window.getComputedStyle(cardEl);
+      const bgColor = resolveEffectiveBgColor(cardEl);
+      const darkCard = isColorDark(bgColor);
+      const blw = parseFloat(cs.borderLeftWidth) || 0;
+      let accentColor = '#0284C7';
+      if (blw >= 2.5 && cs.borderLeftColor && cs.borderLeftColor !== 'rgba(0, 0, 0, 0)') {{
+        accentColor = cs.borderLeftColor;
+      }} else if (cs.borderTopColor && cs.borderTopColor !== 'rgba(0, 0, 0, 0)') {{
+        const pBorder = parseRgbTuple(cs.borderTopColor);
+        if (pBorder && Math.max(pBorder.r, pBorder.g, pBorder.b) - Math.min(pBorder.r, pBorder.g, pBorder.b) > 25) {{
+          accentColor = cs.borderTopColor;
+        }}
+      }}
+      const borderColor = darkCard ? '#334155' : '#CBD5E1';
+
+      // Check if narrative/diagnostic card (contains paragraphs or lists)
+      if (cardEl.querySelectorAll('p, ul, li').length > 0) {{
+        const clone = cardEl.cloneNode(true);
+        clone.querySelectorAll('.deck-no-capture, button, input, select').forEach(n => n.remove());
+        const srcNodes = [cardEl, ...Array.from(cardEl.querySelectorAll('*')).filter(n => !n.closest('.deck-no-capture') && !['BUTTON', 'INPUT', 'SELECT'].includes(n.tagName))];
+        const dstNodes = [clone, ...Array.from(clone.querySelectorAll('*'))];
+        const lim = Math.min(srcNodes.length, dstNodes.length);
+        for (let i = 1; i < lim; i++) {{
+          const sc = window.getComputedStyle(srcNodes[i]);
+          const dn = dstNodes[i];
+          dn.removeAttribute('class');
+          dn.style.color = sc.color;
+          dn.style.fontWeight = sc.fontWeight;
+          if (dn.tagName === 'SPAN' && parseRgbTuple(sc.backgroundColor)?.a > 0.05) {{
+            dn.style.backgroundColor = sc.backgroundColor;
+            dn.style.padding = '2px 8px';
+            dn.style.borderRadius = '9999px';
+            dn.style.fontSize = '12px';
+          }}
+          if (dn.tagName === 'P') {{
+            dn.style.fontSize = '14.5px';
+            dn.style.lineHeight = '1.48';
+            dn.style.marginTop = '8px';
+          }}
+        }}
+        const headingEl = cardEl.querySelector('h4, h5, span.font-bold, div.font-bold');
+        const cardTitle = headingEl ? cleanHeadingText(headingEl.innerText) : 'Diagnóstico Ejecutivo';
+        return {{
+          kind: 'rich',
+          label: cardTitle,
+          value: '',
+          bgColor,
+          borderColor,
+          accentColor,
+          darkCard,
+          richHtml: clone.innerHTML
+        }};
+      }}
+
+      // Standard / Scorecard / Banner KPI card
+      const kids = Array.from(cardEl.children).filter(ch => {{
+        if (ch.classList.contains('deck-no-capture') || ch.tagName === 'BUTTON') return false;
+        const d = window.getComputedStyle(ch).display;
+        return d !== 'none';
+      }});
+
+      let label = '';
+      let labelColor = darkCard ? '#94A3B8' : '#475569';
+      let value = '';
+      let valueColor = darkCard ? '#FFFFFF' : '#0F172A';
+      let badge = null;
+      const subLines = [];
+
+      if (kids.length > 0) {{
+        const k0 = kids[0];
+        const k0Clone = k0.cloneNode(true);
+        k0Clone.querySelectorAll('.opacity-0, .deck-no-capture, button').forEach(n => n.remove());
+        label = cleanHeadingText(k0Clone.innerText);
+        labelColor = window.getComputedStyle(k0).color || labelColor;
+      }}
+
+      if (kids.length > 1) {{
+        const k1 = kids[1];
+        const k1Spans = Array.from(k1.children).filter(s => !s.classList.contains('deck-no-capture') && window.getComputedStyle(s).display !== 'none');
+        if (k1Spans.length >= 2) {{
+          const vEl = k1Spans[0];
+          const bEl = k1Spans[1];
+          value = cleanHeadingText(vEl.innerText);
+          valueColor = window.getComputedStyle(vEl).color || valueColor;
+          const bTxt = cleanHeadingText(bEl.innerText);
+          if (bTxt) {{
+            const bCs = window.getComputedStyle(bEl);
+            badge = {{
+              text: bTxt,
+              color: bCs.color,
+              bg: bCs.backgroundColor,
+              border: bCs.borderColor
+            }};
+          }}
+        }} else {{
+          value = cleanHeadingText(k1.innerText);
+          valueColor = window.getComputedStyle(k1).color || valueColor;
+        }}
+      }}
+
+      for (let i = 2; i < kids.length; i++) {{
+        const ki = kids[i];
+        const txt = cleanHeadingText(ki.innerText);
+        if (txt) {{
+          const kiCs = window.getComputedStyle(ki);
+          subLines.push({{
+            text: txt,
+            color: kiCs.color || (darkCard ? '#94A3B8' : '#475569'),
+            weight: kiCs.fontWeight || '500'
+          }});
+        }}
+      }}
+
+      if (accentColor === '#0284C7') {{
+        const vp = parseRgbTuple(valueColor);
+        if (vp && Math.max(vp.r, vp.g, vp.b) - Math.min(vp.r, vp.g, vp.b) > 30) {{
+          accentColor = valueColor;
+        }}
+      }}
+
+      return {{
+        kind: 'metric',
+        label: label || 'Indicador',
+        labelColor,
+        value: value || '—',
+        valueColor,
+        badge,
+        subLines,
+        bgColor,
+        borderColor,
+        accentColor,
+        darkCard
+      }};
+    }}
+
+    function captureSingleKpiCard(cardEl, sectionTitle, btnEl) {{
+      if (!cardEl) return;
+      const snap = extractKpiCardSnapshot(cardEl);
+      const secFullTitle = buildDefaultSlideTitle(cardEl, sectionTitle || 'Indicadores Clave');
+      const cardTitle = buildDefaultSlideTitle(cardEl, snap.label || sectionTitle || 'Indicador KPI');
+      deckState.items.push({{
+        id: 'kpi_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        type: 'kpi',
+        title: cardTitle,
+        autoTitle: cardTitle,
+        sectionTitle: secFullTitle,
+        note: '',
+        card: snap
+      }});
+      saveDeckState();
+      if (!document.getElementById('deckBuilderDrawer')?.classList.contains('hidden')) {{
+        renderDeckDrawerList();
+      }}
+      flashCaptureButton(btnEl);
+      showDeckToast(`KPI agregado a Presentación (${{deckState.items.length}})`);
+    }}
+
+    function captureKpiPanel(gridEl, panelBaseTitle, btnEl) {{
+      if (!gridEl) return;
+      const cards = Array.from(gridEl.children)
+        .filter(ch => !ch.classList.contains('deck-no-capture') && ch.tagName !== 'BUTTON' && window.getComputedStyle(ch).display !== 'none')
+        .map(ch => extractKpiCardSnapshot(ch));
+      if (cards.length === 0) {{
+        showDeckToast('No hay tarjetas KPI visibles en este panel', true);
+        return;
+      }}
+      const fullTitle = buildDefaultSlideTitle(gridEl, panelBaseTitle || 'Panel de Indicadores KPI');
+      deckState.items.push({{
+        id: 'kpipanel_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        type: 'kpi-panel',
+        title: fullTitle,
+        note: '',
+        cards
+      }});
+      saveDeckState();
+      if (!document.getElementById('deckBuilderDrawer')?.classList.contains('hidden')) {{
+        renderDeckDrawerList();
+      }}
+      flashCaptureButton(btnEl);
+      const pagesCount = Math.ceil(cards.length / 4);
+      showDeckToast(`Panel KPI (${{cards.length}} tarjetas → ${{pagesCount}} slide${{pagesCount > 1 ? 's' : ''}}) agregado`);
+    }}
+
+    // ----------------------------------------------------
+    // 2. HIGH-DEFINITION 2X CHART SNAPSHOT CAPTURE
+    // ----------------------------------------------------
+    function extractVisibleChartNotes(cardEl, plotEl) {{
+      if (!cardEl) return [];
+      const notes = [];
+      // Subtitle paragraph under chart header
+      cardEl.querySelectorAll('p').forEach(p => {{
+        if (p.closest('.hidden') || p.closest('#arRadarGuideBox') || p.closest('.combobox-dropdown-menu')) return;
+        if (window.getComputedStyle(p).display === 'none') return;
+        const t = cleanHeadingText(p.innerText);
+        if (t && t !== '...' && t.length > 3) notes.push(t);
+      }});
+      // Quadrant legend or inline note strips inside chart card
+      if (plotEl && plotEl.id === 'marketScatterPlot') {{
+        notes.push('Q1: Ganadoras Integrales (Téc+ / Fin+) • Q2: Dependencia Financiera (Téc− / Fin+) • Q3: Técnicas Puras (Téc+ / Fin−) • Q4: En Riesgo Operativo (Téc− / Fin−)');
+      }} else if (plotEl && plotEl.id === 'analisisRamosStackedChart') {{
+        notes.push('Referencias: Siniestros % • Comisiones % • Gastos Admin % • Línea Roja = Equilibrio Técnico 100%');
+      }} else if (plotEl && plotEl.id === 'sankeyPlot') {{
+        notes.push('Conservación exacta de flujo SSN: Primas Devengadas → Siniestros, Gastos y Resultado Técnico + Resultado Financiero → Resultado Neto');
+      }} else if (plotEl && plotEl.id === 'investmentsDonutChart') {{
+        const sub = document.getElementById('invDonutSubtitle');
+        if (sub && cleanHeadingText(sub.innerText) && cleanHeadingText(sub.innerText) !== '...') {{
+          notes.push(`Cartera total (1.02): ${{cleanHeadingText(sub.innerText)}}`);
+        }}
+      }}
+      return Array.from(new Set(notes)).slice(0, 2);
+    }}
+
+    function wrapCanvasTextLines(ctx, text, maxWidth) {{
+      const words = String(text || '').split(/\\s+/).filter(Boolean);
+      const lines = [];
+      let cur = '';
+      for (let i = 0; i < words.length; i++) {{
+        const test = cur ? (cur + ' ' + words[i]) : words[i];
+        if (ctx.measureText(test).width > maxWidth && cur) {{
+          lines.push(cur);
+          cur = words[i];
+        }} else {{
+          cur = test;
+        }}
+      }}
+      if (cur) lines.push(cur);
+      return lines;
+    }}
+
+    function composeHighDefChartPNG(rawDataUrl, chartTitle, notesList, solidBg) {{
+      return new Promise((resolve, reject) => {{
+        const img = new Image();
+        img.onload = () => {{
+          const dark = isColorDark(solidBg);
+          const padX = 52;
+          const headerH = chartTitle ? 82 : 24;
+          const notesText = (notesList || []).join('  |  ');
+          const footerH = notesText ? 74 : 20;
+          const cw = img.width;
+          const ch = img.height + headerH + footerH;
+          const canvas = document.createElement('canvas');
+          canvas.width = cw;
+          canvas.height = ch;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = solidBg;
+          ctx.fillRect(0, 0, cw, ch);
+
+          if (chartTitle) {{
+            ctx.font = '700 30px Sora, -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillStyle = dark ? '#F8FAFC' : '#0F172A';
+            ctx.textBaseline = 'middle';
+            const titleLines = wrapCanvasTextLines(ctx, chartTitle, cw - padX * 2);
+            ctx.fillText(titleLines[0] || chartTitle, padX, 44);
+            ctx.strokeStyle = dark ? 'rgba(148, 163, 184, 0.25)' : '#E2E8F0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padX, headerH - 8);
+            ctx.lineTo(cw - padX, headerH - 8);
+            ctx.stroke();
+          }}
+
+          ctx.drawImage(img, 0, headerH);
+
+          if (notesText) {{
+            ctx.font = '500 21px Sora, -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillStyle = dark ? '#94A3B8' : '#475569';
+            ctx.textBaseline = 'top';
+            const wrapped = wrapCanvasTextLines(ctx, notesText, cw - padX * 2).slice(0, 2);
+            wrapped.forEach((ln, idx) => {{
+              ctx.fillText(ln, padX, headerH + img.height + 12 + idx * 27);
+            }});
+          }}
+
+          resolve(canvas.toDataURL('image/png'));
+        }};
+        img.onerror = err => reject(err);
+        img.src = rawDataUrl;
+      }});
+    }}
+
+    async function captureChartSnapshot(plotId, btnEl) {{
+      const plotEl = typeof plotId === 'string' ? document.getElementById(plotId) : plotId;
+      if (!plotEl) return;
+      const cardEl = plotEl.closest('.glass-card') || plotEl.parentElement;
+      const hEl = cardEl ? cardEl.querySelector('h3, h4, h2') : null;
+      const rawTitle = hEl ? cleanHeadingText(hEl.innerText) : 'Gráfico Analítico';
+      const slideTitle = buildDefaultSlideTitle(plotEl, rawTitle);
+      const notesList = extractVisibleChartNotes(cardEl, plotEl);
+      const solidBg = isDarkMode() ? '#0F172A' : '#FFFFFF';
+
+      if (btnEl) {{
+        btnEl.disabled = true;
+        btnEl.textContent = '…';
+      }}
+
+      try {{
+        let rawPng = '';
+        if (window.Plotly && plotEl.data && plotEl.layout) {{
+          const origPaper = plotEl.layout.paper_bgcolor || 'transparent';
+          const origPlot = plotEl.layout.plot_bgcolor || 'transparent';
+          await Plotly.relayout(plotEl, {{ paper_bgcolor: solidBg, plot_bgcolor: solidBg }});
+          try {{
+            rawPng = await Plotly.toImage(plotEl, {{
+              format: 'png',
+              width: 1360,
+              height: 600,
+              scale: 2
+            }});
+          }} finally {{
+            await Plotly.relayout(plotEl, {{ paper_bgcolor: origPaper, plot_bgcolor: origPlot }});
+          }}
+        }} else {{
+          const srcCanvas = plotEl.tagName === 'CANVAS' ? plotEl : plotEl.querySelector('canvas');
+          if (!srcCanvas) throw new Error('No se encontró lienzo gráfico activo');
+          const off = document.createElement('canvas');
+          const w = Math.max(srcCanvas.width || srcCanvas.clientWidth || 800, 400);
+          const h = Math.max(srcCanvas.height || srcCanvas.clientHeight || 400, 240);
+          off.width = w * 2;
+          off.height = h * 2;
+          const octx = off.getContext('2d');
+          octx.fillStyle = solidBg;
+          octx.fillRect(0, 0, off.width, off.height);
+          octx.drawImage(srcCanvas, 0, 0, off.width, off.height);
+          rawPng = off.toDataURL('image/png');
+        }}
+
+        const hdPng = await composeHighDefChartPNG(rawPng, rawTitle, notesList, solidBg);
+        deckState.items.push({{
+          id: 'chart_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          type: 'chart',
+          title: slideTitle,
+          note: '',
+          imageDataUrl: hdPng,
+          bgColor: solidBg
+        }});
+        saveDeckState();
+        if (!document.getElementById('deckBuilderDrawer')?.classList.contains('hidden')) {{
+          renderDeckDrawerList();
+        }}
+        if (btnEl) btnEl.textContent = '+';
+        flashCaptureButton(btnEl);
+        showDeckToast(`Gráfico 2× HD agregado a Presentación (${{deckState.items.length}})`);
+      }} catch (err) {{
+        console.error('Error capturando gráfico para presentación:', err);
+        if (btnEl) btnEl.textContent = '+';
+        showDeckToast('No se pudo capturar el gráfico visible', true);
+      }} finally {{
+        if (btnEl) btnEl.disabled = false;
+      }}
+    }}
+
+    // ----------------------------------------------------
+    // 3. CLEAN VECTOR TABLE SNAPSHOT CAPTURE
+    // ----------------------------------------------------
+    function extractCellAlignment(cellEl) {{
+      const cls = cellEl.className || '';
+      if (cls.includes('text-right')) return 'right';
+      if (cls.includes('text-center')) return 'center';
+      const ta = window.getComputedStyle(cellEl).textAlign;
+      if (ta === 'right' || ta === 'end') return 'right';
+      if (ta === 'center') return 'center';
+      return 'left';
+    }}
+
+    function serializeCleanTableCell(cellEl, isDarkRow) {{
+      const clone = cellEl.cloneNode(true);
+      clone.querySelectorAll('button, input, select, textarea, .deck-no-capture').forEach(n => n.remove());
+
+      const srcAll = Array.from(cellEl.querySelectorAll('*')).filter(n => !n.closest('button, input, select, textarea, .deck-no-capture') && !['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'].includes(n.tagName));
+      const dstAll = Array.from(clone.querySelectorAll('*'));
+      const lim = Math.min(srcAll.length, dstAll.length);
+
+      for (let i = 0; i < lim; i++) {{
+        const sn = srcAll[i];
+        const dn = dstAll[i];
+        const sc = window.getComputedStyle(sn);
+        const bgP = parseRgbTuple(sc.backgroundColor);
+        const hasBadgeBg = bgP && bgP.a > 0.06 && (dn.tagName === 'SPAN' || dn.tagName === 'DIV');
+        const isBlockSub = dn.tagName === 'DIV' && sn !== cellEl.firstElementChild;
+        dn.removeAttribute('class');
+        dn.removeAttribute('onclick');
+        if (hasBadgeBg) {{
+          dn.style.display = 'inline-block';
+          dn.style.padding = '1px 6px';
+          dn.style.borderRadius = '4px';
+          dn.style.fontSize = '9.5px';
+          dn.style.fontWeight = '700';
+          dn.style.backgroundColor = isDarkRow ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.07)';
+          dn.style.color = isDarkRow ? adaptTextColorForDarkFoot(sc.color) : adaptTextColorForWhiteSlide(sc.color);
+          dn.style.marginLeft = '3px';
+        }} else {{
+          dn.style.color = isDarkRow ? adaptTextColorForDarkFoot(sc.color) : adaptTextColorForWhiteSlide(sc.color);
+          if (parseInt(sc.fontWeight, 10) >= 600 || sc.fontWeight === 'bold') {{
+            dn.style.fontWeight = sc.fontWeight;
+          }}
+          if (isBlockSub) {{
+            dn.style.fontSize = '9.2px';
+            dn.style.color = isDarkRow ? '#CBD5E1' : '#64748B';
+            dn.style.marginTop = '1px';
+          }}
+        }}
+      }}
+
+      const cellCs = window.getComputedStyle(cellEl);
+      const align = extractCellAlignment(cellEl);
+      const cellColor = isDarkRow ? adaptTextColorForDarkFoot(cellCs.color) : adaptTextColorForWhiteSlide(cellCs.color);
+      const isMono = (cellEl.className || '').includes('font-mono') || (cellEl.closest('tbody')?.className || '').includes('font-mono') || align === 'right';
+      const fw = (parseInt(cellCs.fontWeight, 10) >= 600 || cellCs.fontWeight === 'bold') ? '700' : '500';
+      const inner = clone.innerHTML.trim();
+      const plain = cleanHeadingText(clone.innerText);
+      const blockCount = clone.querySelectorAll('div, br').length;
+      const extraWrapLines = Math.max(0, Math.ceil(plain.length / 44) - 1) + blockCount;
+      const rowWeight = Math.max(0.95, 0.9 + extraWrapLines * 0.28);
+
+      return {{
+        html: inner || escapeDeckHtml(plain),
+        text: plain,
+        align,
+        color: cellColor,
+        mono: isMono,
+        weight: fw,
+        multiline: blockCount >= 2 || plain.length > 48,
+        rowWeight
+      }};
+    }}
+
+    function extractTableSnapshot(tableEl) {{
+      if (!tableEl) return null;
+      const theadRow = tableEl.querySelector('thead tr');
+      if (!theadRow) return null;
+
+      // Identify utility/control columns to strip (Acción, Desglose, Abrir)
+      const skipCols = new Set();
+      const rawHeaders = [];
+      let hColCursor = 0;
+      Array.from(theadRow.cells).forEach(th => {{
+        const span = Math.max(1, parseInt(th.getAttribute('colspan') || '1', 10));
+        const label = cleanHeadingText(th.innerText);
+        const norm = label.toLowerCase();
+        const isControlCol = ['acción', 'accion', 'acciones', 'desglose', 'abrir'].includes(norm);
+        if (isControlCol) {{
+          for (let k = 0; k < span; k++) skipCols.add(hColCursor + k);
+        }} else {{
+          rawHeaders.push({{
+            label,
+            align: extractCellAlignment(th),
+            colspan: span,
+            startCol: hColCursor
+          }});
+        }}
+        hColCursor += span;
+      }});
+
+      const headers = rawHeaders.map(h => {{
+        let kept = 0;
+        for (let k = 0; k < h.colspan; k++) {{
+          if (!skipCols.has(h.startCol + k)) kept++;
+        }}
+        return {{ label: h.label, align: h.align, colspan: Math.max(1, kept) }};
+      }});
+
+      function processRowList(trElements, forceDarkRow) {{
+        const out = [];
+        trElements.forEach(tr => {{
+          if (tr.classList.contains('hidden') || window.getComputedStyle(tr).display === 'none') return;
+          const trText = cleanHeadingText(tr.innerText);
+          if (!trText) return;
+          const trCls = tr.className || '';
+          const isHighlightLS = trCls.includes('amber-500') || trCls.includes('border-l-amber');
+          const isTotalInBody = /^total\\b|^consolidado\\b|^Σ\\b/i.test(trText);
+          const isDark = !!forceDarkRow;
+
+          let colPos = 0;
+          const cells = [];
+          let rowMultiline = false;
+          let maxRowWeight = 0.96;
+          Array.from(tr.cells).forEach(td => {{
+            const span = Math.max(1, parseInt(td.getAttribute('colspan') || '1', 10));
+            let keptSpan = 0;
+            for (let k = 0; k < span; k++) {{
+              if (!skipCols.has(colPos + k)) keptSpan++;
+            }}
+            colPos += span;
+            if (keptSpan <= 0) return;
+            const serialized = serializeCleanTableCell(td, isDark);
+            serialized.colspan = keptSpan;
+            if (serialized.multiline) rowMultiline = true;
+            if ((serialized.rowWeight || 1.0) > maxRowWeight) maxRowWeight = serialized.rowWeight;
+            cells.push(serialized);
+          }});
+
+          if (cells.length > 0) {{
+            out.push({{
+              cells,
+              highlightLS: isHighlightLS,
+              isTotalRow: isTotalInBody || forceDarkRow,
+              multiline: rowMultiline,
+              weight: Number(maxRowWeight.toFixed(2))
+            }});
+          }}
+        }});
+        return out;
+      }}
+
+      const tbodyRows = [];
+      tableEl.querySelectorAll('tbody').forEach(tb => {{
+        if (window.getComputedStyle(tb).display === 'none') return;
+        tbodyRows.push(...processRowList(Array.from(tb.rows), false));
+      }});
+
+      const footRows = [];
+      tableEl.querySelectorAll('tfoot').forEach(tf => {{
+        if (window.getComputedStyle(tf).display === 'none') return;
+        footRows.push(...processRowList(Array.from(tf.rows), true));
+      }});
+
+      return {{ headers, rows: tbodyRows, footRows }};
+    }}
+
+    function captureTableCard(resolveTableFn, baseTitle, anchorEl, btnEl) {{
+      const tableEl = resolveTableFn();
+      if (!tableEl) {{
+        showDeckToast('No se encontró la tabla activa para capturar', true);
+        return;
+      }}
+      const snap = extractTableSnapshot(tableEl);
+      if (!snap || (snap.rows.length === 0 && snap.footRows.length === 0)) {{
+        showDeckToast('La tabla no tiene filas visibles con el filtro actual', true);
+        return;
+      }}
+      let dynTitle = baseTitle;
+      if (anchorEl) {{
+        const card = anchorEl.closest('.glass-card');
+        const hEl = card ? card.querySelector('h3, h4, h2') : null;
+        if (hEl) dynTitle = cleanHeadingText(hEl.innerText);
+      }}
+      const fullTitle = buildDefaultSlideTitle(tableEl, dynTitle);
+      deckState.items.push({{
+        id: 'tbl_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        type: 'table',
+        title: fullTitle,
+        note: '',
+        headers: snap.headers,
+        rows: snap.rows,
+        footRows: snap.footRows
+      }});
+      saveDeckState();
+      if (!document.getElementById('deckBuilderDrawer')?.classList.contains('hidden')) {{
+        renderDeckDrawerList();
+      }}
+      flashCaptureButton(btnEl);
+      showDeckToast(`Tabla (${{snap.rows.length}} filas visibles) agregada a Presentación`);
+    }}
+
+    // ----------------------------------------------------
+    // 4. SLIDE COMPILATION & AUTOMATIC 16:9 PAGINATION
+    // ----------------------------------------------------
+    const deckTablePageCache = new Map();
+
+    function getDeckMeasureProbe() {{
+      if (!document.body) return null;
+      let probe = document.getElementById('deckMeasureProbe');
+      if (!probe) {{
+        probe = document.createElement('div');
+        probe.id = 'deckMeasureProbe';
+        probe.setAttribute('aria-hidden', 'true');
+        probe.style.cssText = 'position:fixed;left:-20000px;top:0;width:1122.52px;height:631.18px;visibility:hidden;pointer-events:none;z-index:-9999;overflow:hidden;';
+        document.body.appendChild(probe);
+      }}
+      return probe;
+    }}
+
+    function paginateTableSlides(item) {{
+      const rows = Array.isArray(item.rows) ? item.rows : [];
+      const footRows = Array.isArray(item.footRows) ? item.footRows : [];
+      const headers = item.headers || [];
+      const slideTitle = item.title || 'Tabla de Datos';
+      const slideNote = (item.note || '').trim();
+      const hasNote = !!slideNote;
+
+      if (rows.length === 0) {{
+        return [{{
+          kind: 'table',
+          title: slideTitle,
+          note: slideNote,
+          headers,
+          rows: [],
+          footRows
+        }}];
+      }}
+
+      const cacheKey = `${{item.id || ''}}||${{slideTitle}}||${{slideNote}}||${{rows.length}}||${{footRows.length}}`;
+      if (deckTablePageCache.has(cacheKey)) {{
+        return deckTablePageCache.get(cacheKey);
+      }}
+
+      const probe = getDeckMeasureProbe();
+      if (probe) {{
+        probe.innerHTML = renderSlideHTML({{
+          kind: 'table',
+          title: slideTitle,
+          note: '',
+          headers,
+          rows,
+          footRows
+        }}, 0, 1, 'probe');
+
+        const stageNoNote = probe.querySelector('.deck-table-stage');
+        const theadEl = probe.querySelector('.deck-slide-table thead');
+        const tbodyEl = probe.querySelector('.deck-slide-table tbody');
+        const tfootEl = probe.querySelector('.deck-slide-table tfoot');
+        const stageNoNoteH = stageNoNote ? stageNoNote.clientHeight : 0;
+
+        if (stageNoNoteH > 120 && tbodyEl && tbodyEl.rows.length === rows.length) {{
+          const theadH = theadEl ? theadEl.offsetHeight : 32;
+          const tfootH = tfootEl ? tfootEl.offsetHeight : 0;
+          const rowHeights = Array.from(tbodyEl.rows).map(tr => Math.max(18, tr.offsetHeight));
+
+          let stageWithNoteH = stageNoNoteH;
+          if (hasNote) {{
+            probe.innerHTML = renderSlideHTML({{
+              kind: 'table',
+              title: slideTitle,
+              note: slideNote,
+              headers,
+              rows: rows.slice(0, 1),
+              footRows
+            }}, 0, 1, 'probe_n');
+            const stN = probe.querySelector('.deck-table-stage');
+            if (stN && stN.clientHeight > 80) stageWithNoteH = stN.clientHeight;
+          }}
+
+          const safetyPx = 6;
+          const availMid = Math.max(80, stageNoNoteH - theadH - safetyPx);
+          const availLast = Math.max(60, (hasNote ? stageWithNoteH : stageNoNoteH) - theadH - tfootH - safetyPx);
+
+          const chunks = [];
+          let cur = [];
+          let curH = 0;
+          for (let rIdx = 0; rIdx < rows.length; rIdx++) {{
+            const rh = rowHeights[rIdx];
+            if (cur.length > 0 && (curH + rh) > availMid) {{
+              chunks.push(cur);
+              cur = [rows[rIdx]];
+              curH = rh;
+            }} else {{
+              cur.push(rows[rIdx]);
+              curH += rh;
+            }}
+          }}
+          if (cur.length > 0) chunks.push(cur);
+
+          // Exact per-chunk DOM verification pass (guarantees zero row clipping even under auto column width shifts)
+          let cIdx = 0;
+          while (cIdx < chunks.length) {{
+            let isLast = (cIdx === chunks.length - 1);
+            probe.innerHTML = renderSlideHTML({{
+              kind: 'table',
+              title: slideTitle,
+              note: isLast ? slideNote : '',
+              headers,
+              rows: chunks[cIdx],
+              footRows: isLast ? footRows : []
+            }}, cIdx, chunks.length, 'probe_v');
+
+            let stEl = probe.querySelector('.deck-table-stage');
+            let tbEl = probe.querySelector('.deck-slide-table');
+            while (chunks[cIdx].length > 1 && stEl && tbEl && tbEl.offsetHeight > (stEl.clientHeight - 2)) {{
+              const movedRow = chunks[cIdx].pop();
+              if (cIdx + 1 < chunks.length) {{
+                chunks[cIdx + 1].unshift(movedRow);
+              }} else {{
+                chunks.push([movedRow]);
+              }}
+              isLast = (cIdx === chunks.length - 1);
+              probe.innerHTML = renderSlideHTML({{
+                kind: 'table',
+                title: slideTitle,
+                note: isLast ? slideNote : '',
+                headers,
+                rows: chunks[cIdx],
+                footRows: isLast ? footRows : []
+              }}, cIdx, chunks.length, 'probe_v');
+              stEl = probe.querySelector('.deck-table-stage');
+              tbEl = probe.querySelector('.deck-slide-table');
+            }}
+            cIdx++;
+          }}
+
+          probe.innerHTML = '';
+          const result = chunks.map((chRows, idx) => {{
+            const isLast = idx === chunks.length - 1;
+            return {{
+              kind: 'table',
+              title: slideTitle,
+              note: isLast ? slideNote : '',
+              headers,
+              rows: chRows,
+              footRows: isLast ? footRows : []
+            }};
+          }});
+
+          if (deckTablePageCache.size > 64) deckTablePageCache.clear();
+          deckTablePageCache.set(cacheKey, result);
+          return result;
+        }}
+        probe.innerHTML = '';
+      }}
+
+      // Fallback unit-weight pagination
+      const MAX_UNITS = 12.2;
+      const footUnits = footRows.length * 1.3;
+      const noteUnits = hasNote ? 2.1 : 0.0;
+      const rowW = r => r.weight || (r.multiline ? 1.45 : 0.96);
+      const chunks = [];
+      let curRows = [];
+      let curUnits = 0;
+
+      rows.forEach(r => {{
+        const w = rowW(r);
+        if (curRows.length > 0 && (curUnits + w) > MAX_UNITS) {{
+          chunks.push({{ rows: curRows, units: curUnits }});
+          curRows = [r];
+          curUnits = w;
+        }} else {{
+          curRows.push(r);
+          curUnits += w;
+        }}
+      }});
+      if (curRows.length > 0) chunks.push({{ rows: curRows, units: curUnits }});
+
+      const last = chunks[chunks.length - 1];
+      if (last && (last.units + footUnits + noteUnits) > MAX_UNITS && last.rows.length > 1) {{
+        const overflowRows = [];
+        while (last.rows.length > 1 && (last.units + footUnits + noteUnits) > MAX_UNITS) {{
+          const popped = last.rows.pop();
+          last.units -= rowW(popped);
+          overflowRows.unshift(popped);
+        }}
+        if (overflowRows.length > 0) {{
+          chunks.push({{ rows: overflowRows, units: overflowRows.reduce((a, x) => a + rowW(x), 0) }});
+        }}
+      }}
+
+      return chunks.map((ch, idx) => {{
+        const isLast = idx === chunks.length - 1;
+        return {{
+          kind: 'table',
+          title: slideTitle,
+          note: isLast ? slideNote : '',
+          headers,
+          rows: ch.rows,
+          footRows: isLast ? footRows : []
+        }};
+      }});
+    }}
+
+    function buildDeckSlides() {{
+      const slides = [];
+      if (deckState.coverEnabled) {{
+        slides.push({{
+          kind: 'cover',
+          title: (deckState.coverTitle || '').trim() || 'Informe Ejecutivo • Mercado Asegurador Argentino',
+          subtitle: (deckState.coverSubtitle || '').trim()
+        }});
+      }}
+
+      const items = deckState.items || [];
+      let i = 0;
+      while (i < items.length) {{
+        const it = items[i];
+        if (!it) {{
+          i++;
+          continue;
+        }}
+
+        // Consecutive loose KPI cards -> group up to 4 per slide when enabled
+        if (it.type === 'kpi' && deckState.groupConsecutiveKpis) {{
+          const run = [];
+          while (i < items.length && items[i] && items[i].type === 'kpi') {{
+            run.push(items[i]);
+            i++;
+          }}
+          for (let k = 0; k < run.length; k += 4) {{
+            const batch = run.slice(k, k + 4);
+            let batchTitle = batch[0].title || 'Indicadores Clave';
+            if (batch.length > 1) {{
+              const firstEdited = batch[0].autoTitle && batch[0].title !== batch[0].autoTitle;
+              batchTitle = firstEdited ? batch[0].title : (batch[0].sectionTitle || batch[0].title || 'Indicadores Clave Seleccionados');
+            }}
+            const combinedNote = batch.map(b => (b.note || '').trim()).filter(Boolean).join(' • ');
+            slides.push({{
+              kind: 'kpi',
+              title: batchTitle,
+              note: combinedNote,
+              cards: batch.map(b => b.card)
+            }});
+          }}
+          continue;
+        }}
+
+        if (it.type === 'kpi') {{
+          slides.push({{
+            kind: 'kpi',
+            title: it.title || 'Indicador KPI',
+            note: it.note || '',
+            cards: [it.card]
+          }});
+          i++;
+          continue;
+        }}
+
+        // KPI Panel: automatically split >4 cards into consecutive slides of max 4 (e.g. 6->4+2, 7->4+3, 8->4+4)
+        if (it.type === 'kpi-panel') {{
+          const allCards = Array.isArray(it.cards) ? it.cards : [];
+          for (let k = 0; k < allCards.length; k += 4) {{
+            slides.push({{
+              kind: 'kpi',
+              title: it.title || 'Panel de Indicadores KPI',
+              note: k === 0 ? (it.note || '') : '',
+              cards: allCards.slice(k, k + 4)
+            }});
+          }}
+          i++;
+          continue;
+        }}
+
+        if (it.type === 'chart') {{
+          slides.push({{
+            kind: 'chart',
+            title: it.title || 'Gráfico Analítico',
+            note: it.note || '',
+            imageDataUrl: it.imageDataUrl,
+            bgColor: it.bgColor || '#0F172A'
+          }});
+          i++;
+          continue;
+        }}
+
+        if (it.type === 'table') {{
+          const tblSlides = paginateTableSlides(it);
+          slides.push(...tblSlides);
+          i++;
+          continue;
+        }}
+
+        i++;
+      }}
+
+      return slides;
+    }}
+
+    // ----------------------------------------------------
+    // 5. VECTOR 16:9 SLIDE HTML RENDERER (PREVIEW & PRINT)
+    // ----------------------------------------------------
+    function renderKpiCardOnSlide(card) {{
+      if (!card) return '';
+      const bg = card.bgColor || '#F8FAFC';
+      const bdr = card.borderColor || '#CBD5E1';
+      const acc = card.accentColor || '#0284C7';
+      if (card.kind === 'rich') {{
+        return `<div class="deck-kpi-card-slide" style="background:${{bg}} !important; border:1px solid ${{bdr}}; border-left:6px solid ${{acc}};">
+          <div style="overflow:hidden;">${{card.richHtml || ''}}</div>
+        </div>`;
+      }}
+      const badgeHtml = card.badge
+        ? `<span class="deck-kpi-card-badge" style="color:${{card.badge.color}}; background:${{card.badge.bg}}; border:1px solid ${{card.badge.border || 'transparent'}};">${{escapeDeckHtml(card.badge.text)}}</span>`
+        : '';
+      const subsHtml = (card.subLines || []).map(s =>
+        `<div class="deck-kpi-card-sub" style="color:${{s.color}}; font-weight:${{s.weight || '500'}};">${{escapeDeckHtml(s.text)}}</div>`
+      ).join('');
+      return `<div class="deck-kpi-card-slide" style="background:${{bg}} !important; border:1px solid ${{bdr}}; border-left:6px solid ${{acc}};">
+        <div class="deck-kpi-card-label" style="color:${{card.labelColor || '#64748B'}};">${{escapeDeckHtml(card.label)}}</div>
+        <div class="deck-kpi-card-valrow">
+          <span class="deck-kpi-card-val" style="color:${{card.valueColor || '#0F172A'}};">${{escapeDeckHtml(card.value)}}</span>
+          ${{badgeHtml}}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px;">${{subsHtml}}</div>
+      </div>`;
+    }}
+
+    function renderTableOnSlide(slide) {{
+      const ths = (slide.headers || []).map(h =>
+        `<th colspan="${{h.colspan || 1}}" style="text-align:${{h.align || 'left'}};">${{escapeDeckHtml(h.label)}}</th>`
+      ).join('');
+      const trs = (slide.rows || []).map(r => {{
+        let rowBg = '';
+        if (r.highlightLS) rowBg = 'background-color:#FEF3C7 !important;';
+        else if (r.isTotalRow) rowBg = 'background-color:#E2E8F0 !important; font-weight:700;';
+        const tds = (r.cells || []).map(c => {{
+          const ff = c.mono ? "font-family:'JetBrains Mono',monospace;" : '';
+          return `<td colspan="${{c.colspan || 1}}" style="text-align:${{c.align || 'left'}}; color:${{c.color || '#0F172A'}}; font-weight:${{c.weight || '500'}}; ${{ff}}">${{c.html}}</td>`;
+        }}).join('');
+        return `<tr style="${{rowBg}}">${{tds}}</tr>`;
+      }}).join('');
+      const ftrs = (slide.footRows || []).map(r => {{
+        const tds = (r.cells || []).map(c => {{
+          const ff = c.mono ? "font-family:'JetBrains Mono',monospace;" : '';
+          return `<td colspan="${{c.colspan || 1}}" style="text-align:${{c.align || 'left'}}; ${{ff}}">${{c.html}}</td>`;
+        }}).join('');
+        return `<tr>${{tds}}</tr>`;
+      }}).join('');
+      return `<div class="deck-table-stage">
+        <table class="deck-slide-table">
+          <thead><tr>${{ths}}</tr></thead>
+          <tbody>${{trs}}</tbody>
+          ${{ftrs ? `<tfoot>${{ftrs}}</tfoot>` : ''}}
+        </table>
+      </div>`;
+    }}
+
+    function renderSlideHTML(slide, slideIdx, totalSlides, uidPrefix) {{
+      const per = (window.DATA_SINENSUP && window.DATA_SINENSUP.periodo) ? window.DATA_SINENSUP.periodo : '{periodo_actual}';
+      const uid = `${{uidPrefix || 'sl'}}_${{slideIdx}}`;
+
+      // Cover Slide (Slide 1): Logo + Title + Subtitle. Strictly NO slide count badge and NO "Generado: ..." date!
+      if (slide.kind === 'cover') {{
+        return `<div class="deck-slide-canvas deck-cover-slide">
+          <div class="deck-cover-accent-top"></div>
+          <div class="deck-cover-orb"></div>
+          <div class="deck-cover-brand">
+            ${{renderDeckLogoSvg(54, uid)}}
+            <div class="deck-cover-brand-text">
+              <span class="deck-cover-org">Mercado Asegurador Argentino</span>
+              <span class="deck-cover-sys">Superintendencia de Seguros de la Nación • Régimen SINENSUP</span>
+            </div>
+          </div>
+          <div class="deck-cover-center">
+            <div class="deck-cover-rule"></div>
+            <h1 class="deck-cover-title">${{escapeDeckHtml(slide.title)}}</h1>
+            ${{slide.subtitle ? `<p class="deck-cover-subtitle">${{escapeDeckHtml(slide.subtitle)}}</p>` : ''}}
+          </div>
+          <div class="deck-cover-bottom">
+            <span>Información Contable y Estadística Oficial • Normativa RGAA SSN</span>
+            <span style="font-family:'JetBrains Mono',monospace; color:#E2E8F0 !important;">Período ${{escapeDeckHtml(per)}}</span>
+          </div>
+        </div>`;
+      }}
+
+      // Interior Slides: Clean Header with Logo + ONLY Slide Title (no subtitles, no filter/context pills!)
+      let bodyHtml = '';
+      if (slide.kind === 'kpi') {{
+        const cards = (slide.cards || []).slice(0, 4);
+        const cnt = Math.max(1, cards.length);
+        bodyHtml = `<div class="deck-kpi-stage deck-kpi-count-${{cnt}}">
+          ${{cards.map(c => renderKpiCardOnSlide(c)).join('')}}
+        </div>`;
+      }} else if (slide.kind === 'chart') {{
+        const stageBg = slide.bgColor || '#0F172A';
+        const bdr = isColorDark(stageBg) ? '1px solid #1E293B' : '1px solid #CBD5E1';
+        bodyHtml = `<div class="deck-chart-stage" style="background:${{stageBg}} !important; border:${{bdr}};">
+          <img src="${{slide.imageDataUrl}}" alt="${{escapeDeckHtml(slide.title)}}" />
+        </div>`;
+      }} else if (slide.kind === 'table') {{
+        bodyHtml = renderTableOnSlide(slide);
+      }}
+
+      const noteHtml = (slide.note && slide.note.trim())
+        ? `<div class="deck-slide-note"><strong>Conclusión Ejecutiva:</strong> ${{escapeDeckHtml(slide.note.trim())}}</div>`
+        : '';
+
+      return `<div class="deck-slide-canvas deck-interior-slide">
+        <div class="deck-slide-header">
+          ${{renderDeckLogoSvg(34, uid)}}
+          <h2 class="deck-slide-title">${{escapeDeckHtml(slide.title)}}</h2>
+        </div>
+        <div class="deck-slide-body">${{bodyHtml}}</div>
+        ${{noteHtml}}
+        <div class="deck-slide-footer">
+          <span>Fuente: Balances Oficiales SSN SINENSUP • Período ${{escapeDeckHtml(per)}}</span>
+          <span class="deck-slide-pagenum">Diapositiva ${{slideIdx + 1}} / ${{totalSlides}}</span>
+        </div>
+      </div>`;
+    }}
+
+    // ----------------------------------------------------
+    // 6. DRAWER LIST WITH REAL VISUAL THUMBNAILS & REORDER
+    // ----------------------------------------------------
+    function renderItemThumbnailHtml(item) {{
+      if (item.type === 'chart' && item.imageDataUrl) {{
+        return `<div class="w-32 h-[72px] rounded-lg overflow-hidden border border-slate-700 flex items-center justify-center flex-shrink-0" style="background:${{item.bgColor || '#0F172A'}};">
+          <img src="${{item.imageDataUrl}}" alt="Miniatura gráfico" class="w-full h-full object-contain" />
+        </div>`;
+      }}
+      if (item.type === 'kpi' && item.card) {{
+        const c = item.card;
+        return `<div class="w-32 h-[72px] rounded-lg overflow-hidden border p-2 flex flex-col justify-between flex-shrink-0" style="background:${{c.bgColor || '#0F172A'}}; border-color:${{c.borderColor || '#334155'}}; border-left:4px solid ${{c.accentColor || '#0284C7'}};">
+          <div style="font-size:7.5px;font-weight:700;text-transform:uppercase;color:${{c.labelColor || '#94A3B8'}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{escapeDeckHtml(c.label)}}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:${{c.valueColor || '#FFFFFF'}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{escapeDeckHtml(c.value || 'Diagnóstico')}}</div>
+          <div style="font-size:7px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${{escapeDeckHtml((c.subLines && c.subLines[0] && c.subLines[0].text) || 'Tarjeta KPI')}}</div>
+        </div>`;
+      }}
+      if (item.type === 'kpi-panel') {{
+        const miniCards = (item.cards || []).slice(0, 4);
+        const cells = miniCards.map(c =>
+          `<div style="background:${{c.bgColor || '#0F172A'}}; border-left:2.5px solid ${{c.accentColor || '#0284C7'}}; border-radius:3px; padding:2px 4px; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:5.5px; color:${{c.labelColor || '#94A3B8'}}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${{escapeDeckHtml(c.label)}}</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:800; color:${{c.valueColor || '#FFFFFF'}}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${{escapeDeckHtml(c.value)}}</div>
+          </div>`
+        ).join('');
+        return `<div class="w-32 h-[72px] rounded-lg overflow-hidden border border-slate-700 p-1 grid grid-cols-2 grid-rows-2 gap-1 flex-shrink-0" style="background:#FFFFFF;">${{cells}}</div>`;
+      }}
+      if (item.type === 'table') {{
+        const cols = (item.headers || []).slice(0, 4);
+        const topRows = (item.rows || []).slice(0, 3);
+        const hCells = cols.map(h => `<th style="padding:1px 3px;font-size:5.5px;color:#F8FAFC;text-align:${{h.align || 'left'}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30px;">${{escapeDeckHtml(h.label)}}</th>`).join('');
+        const bRows = topRows.map(r => {{
+          const tds = (r.cells || []).slice(0, 4).map(c => `<td style="padding:1px 3px;font-size:5.5px;color:#0F172A;text-align:${{c.align || 'left'}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30px;">${{escapeDeckHtml(c.text)}}</td>`).join('');
+          return `<tr style="border-bottom:0.5px solid #E2E8F0;">${{tds}}</tr>`;
+        }}).join('');
+        return `<div class="w-32 h-[72px] rounded-lg overflow-hidden border border-slate-700 p-1 flex flex-col justify-between flex-shrink-0" style="background:#FFFFFF;">
+          <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+            <thead style="background:#0F172A;"><tr>${{hCells}}</tr></thead>
+            <tbody>${{bRows}}</tbody>
+          </table>
+          <div style="font-size:6.5px;font-family:'JetBrains Mono',monospace;color:#475569;text-align:right;">${{(item.rows || []).length}} filas</div>
+        </div>`;
+      }}
+      return '';
+    }}
+
+    function getDeckItemTypeBadge(item) {{
+      if (item.type === 'chart') return '<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Gráfico 2×</span>';
+      if (item.type === 'kpi') return '<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">KPI</span>';
+      if (item.type === 'kpi-panel') {{
+        const n = (item.cards || []).length;
+        const sl = Math.ceil(n / 4);
+        return `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Panel ${{n}} KPIs (${{sl}} sl.)</span>`;
+      }}
+      if (item.type === 'table') {{
+        const rCnt = (item.rows || []).length;
+        const sl = paginateTableSlides(item).length;
+        return `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">Tabla ${{rCnt}}f (${{sl}} sl.)</span>`;
+      }}
+      return '';
+    }}
+
+    function renderDeckDrawerList() {{
+      const listEl = document.getElementById('deckItemsList');
+      if (!listEl) return;
+      syncDeckCoverInputs();
+      refreshDeckCounters();
+
+      if (!deckState.items || deckState.items.length === 0) {{
+        listEl.innerHTML = `
+          <div class="h-full min-h-[260px] flex flex-col items-center justify-center text-center px-6 py-10 border border-dashed border-slate-700 rounded-xl bg-slate-950/40">
+            <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-amber-400 mb-3 font-mono text-xl font-bold">+</div>
+            <p class="text-xs font-bold text-white">Tu presentación está vacía</p>
+            <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+              Haz clic en el botón <b class="text-white font-mono">+</b> de cualquier tarjeta KPI, gráfico o tabla, o en <b class="text-white">+ Agregar panel KPI a presentación</b> para capturar instantáneas congeladas.
+            </p>
+          </div>
+        `;
+        return;
+      }}
+
+      listEl.innerHTML = deckState.items.map((item, idx) => {{
+        const isFirst = idx === 0;
+        const isLast = idx === deckState.items.length - 1;
+        return `
+          <div class="deck-drawer-item p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5"
+               draggable="true"
+               data-deck-idx="${{idx}}"
+               ondragstart="onDeckDragStart(event, ${{idx}})"
+               ondragover="onDeckDragOver(event)"
+               ondragleave="onDeckDragLeave(event)"
+               ondrop="onDeckDrop(event, ${{idx}})"
+               ondragend="onDeckDragEnd(event)">
+            <div class="flex items-start gap-3">
+              ${{renderItemThumbnailHtml(item)}}
+              <div class="flex-1 min-w-0 space-y-1.5">
+                <div class="flex items-center justify-between gap-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="cursor-grab text-slate-500 hover:text-slate-300 font-mono text-xs select-none" title="Arrastrar para reordenar">⋮⋮</span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-white font-mono text-[10px] font-bold">#${{idx + 1}}</span>
+                    ${{getDeckItemTypeBadge(item)}}
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button type="button" onclick="moveDeckItem(${{idx}}, -1)" ${{isFirst ? 'disabled' : ''}} class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-slate-200 text-xs font-bold cursor-pointer" title="Subir (↑)">↑</button>
+                    <button type="button" onclick="moveDeckItem(${{idx}}, 1)" ${{isLast ? 'disabled' : ''}} class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-slate-200 text-xs font-bold cursor-pointer" title="Bajar (↓)">↓</button>
+                    <button type="button" onclick="removeDeckItem(${{idx}})" class="w-6 h-6 rounded bg-slate-800 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-bold cursor-pointer" title="Quitar ítem">✕</button>
+                  </div>
+                </div>
+                <input type="text"
+                       value="${{escapeDeckHtml(item.title || '')}}"
+                       oninput="updateDeckItemTitle(${{idx}}, this.value)"
+                       placeholder="Título de la diapositiva..."
+                       draggable="false"
+                       ondragstart="event.stopPropagation(); event.preventDefault();"
+                       class="w-full px-2 py-1 bg-slate-900 border border-slate-700 rounded text-xs font-semibold text-white focus:outline-none focus:border-brand-red">
+              </div>
+            </div>
+            <div>
+              <textarea rows="2"
+                        oninput="updateDeckItemNote(${{idx}}, this.value)"
+                        placeholder="Nota o conclusión ejecutiva opcional para proyectar al pie..."
+                        draggable="false"
+                        ondragstart="event.stopPropagation(); event.preventDefault();"
+                        class="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-[11px] text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-red resize-none">${{escapeDeckHtml(item.note || '')}}</textarea>
+            </div>
+          </div>
+        `;
+      }}).join('');
+    }}
+
+    function updateDeckItemTitle(idx, val) {{
+      if (!deckState.items[idx]) return;
+      deckState.items[idx].title = val;
+      saveDeckState();
+    }}
+
+    function updateDeckItemNote(idx, val) {{
+      if (!deckState.items[idx]) return;
+      deckState.items[idx].note = val;
+      saveDeckState();
+    }}
+
+    function moveDeckItem(idx, delta) {{
+      const target = idx + delta;
+      if (target < 0 || target >= deckState.items.length) return;
+      const tmp = deckState.items[idx];
+      deckState.items[idx] = deckState.items[target];
+      deckState.items[target] = tmp;
+      saveDeckState();
+      renderDeckDrawerList();
+    }}
+
+    function removeDeckItem(idx) {{
+      if (idx < 0 || idx >= deckState.items.length) return;
+      deckState.items.splice(idx, 1);
+      saveDeckState();
+      renderDeckDrawerList();
+    }}
+
+    function clearDeckItems() {{
+      if (deckState.items.length === 0) return;
+      deckState.items = [];
+      saveDeckState();
+      renderDeckDrawerList();
+      showDeckToast('Lista de presentación vaciada');
+    }}
+
+    function onDeckDragStart(ev, idx) {{
+      const tag = ev.target && ev.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON') {{
+        ev.preventDefault();
+        return;
+      }}
+      deckDragSrcIdx = idx;
+      if (ev.dataTransfer) {{
+        ev.dataTransfer.effectAllowed = 'move';
+        ev.dataTransfer.setData('text/plain', String(idx));
+      }}
+      ev.currentTarget.classList.add('deck-dragging');
+    }}
+
+    function onDeckDragOver(ev) {{
+      ev.preventDefault();
+      if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move';
+      ev.currentTarget.classList.add('deck-drag-over');
+    }}
+
+    function onDeckDragLeave(ev) {{
+      ev.currentTarget.classList.remove('deck-drag-over');
+    }}
+
+    function onDeckDrop(ev, dropIdx) {{
+      ev.preventDefault();
+      ev.currentTarget.classList.remove('deck-drag-over');
+      const fromIdx = deckDragSrcIdx !== null ? deckDragSrcIdx : parseInt(ev.dataTransfer?.getData('text/plain') || '-1', 10);
+      deckDragSrcIdx = null;
+      if (isNaN(fromIdx) || fromIdx < 0 || fromIdx >= deckState.items.length || fromIdx === dropIdx) return;
+      const [moved] = deckState.items.splice(fromIdx, 1);
+      deckState.items.splice(dropIdx, 0, moved);
+      saveDeckState();
+      renderDeckDrawerList();
+    }}
+
+    function onDeckDragEnd(ev) {{
+      deckDragSrcIdx = null;
+      document.querySelectorAll('.deck-drawer-item').forEach(el => {{
+        el.classList.remove('deck-dragging', 'deck-drag-over');
+      }});
+    }}
+
+    function openDeckDrawer() {{
+      const dr = document.getElementById('deckBuilderDrawer');
+      const bd = document.getElementById('deckDrawerBackdrop');
+      if (!dr || !bd) return;
+      renderDeckDrawerList();
+      bd.classList.remove('hidden');
+      dr.classList.remove('hidden');
+    }}
+
+    function closeDeckDrawer() {{
+      document.getElementById('deckBuilderDrawer')?.classList.add('hidden');
+      document.getElementById('deckDrawerBackdrop')?.classList.add('hidden');
+    }}
+
+    // ----------------------------------------------------
+    // 7. FULL-SCREEN INTERACTIVE PREVIEW & NATIVE PRINT PDF
+    // ----------------------------------------------------
+    function fitDeckPreviewScale() {{
+      const vp = document.getElementById('deckPreviewViewport');
+      const box = document.getElementById('deckPreviewScaleBox');
+      if (!vp || !box || vp.offsetParent === null) return;
+      const availW = Math.max(320, vp.clientWidth - 40);
+      const availH = Math.max(200, vp.clientHeight - 32);
+      const scale = Math.min(availW / 1122.52, availH / 631.18, 1.35);
+      box.style.width = '1122.52px';
+      box.style.height = '631.18px';
+      box.style.transform = `scale(${{scale.toFixed(4)}})`;
+    }}
+
+    function renderDeckPreviewSlide() {{
+      const slides = buildDeckSlides();
+      const box = document.getElementById('deckPreviewScaleBox');
+      const ctr = document.getElementById('deckPreviewCounter');
+      const prevBtn = document.getElementById('deckPrevSlideBtn');
+      const nextBtn = document.getElementById('deckNextSlideBtn');
+      if (!box || slides.length === 0) return;
+
+      if (deckPreviewIndex < 0) deckPreviewIndex = 0;
+      if (deckPreviewIndex >= slides.length) deckPreviewIndex = slides.length - 1;
+
+      box.innerHTML = renderSlideHTML(slides[deckPreviewIndex], deckPreviewIndex, slides.length, 'prev');
+      if (ctr) ctr.textContent = `Diapositiva ${{deckPreviewIndex + 1}} / ${{slides.length}}`;
+      if (prevBtn) {{
+        prevBtn.disabled = deckPreviewIndex === 0;
+        prevBtn.style.opacity = deckPreviewIndex === 0 ? '0.4' : '1';
+      }}
+      if (nextBtn) {{
+        nextBtn.disabled = deckPreviewIndex === slides.length - 1;
+        nextBtn.style.opacity = deckPreviewIndex === slides.length - 1 ? '0.4' : '1';
+      }}
+      fitDeckPreviewScale();
+    }}
+
+    function openDeckPreview() {{
+      const slides = buildDeckSlides();
+      if (slides.length === 0) {{
+        showDeckToast('Agregá al menos un elemento o activá la portada para previsualizar', true);
+        return;
+      }}
+      deckPreviewIndex = 0;
+      const modal = document.getElementById('deckPreviewModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      renderDeckPreviewSlide();
+    }}
+
+    function closeDeckPreview() {{
+      document.getElementById('deckPreviewModal')?.classList.add('hidden');
+    }}
+
+    function stepDeckPreview(delta) {{
+      const slides = buildDeckSlides();
+      const next = deckPreviewIndex + delta;
+      if (next < 0 || next >= slides.length) return;
+      deckPreviewIndex = next;
+      renderDeckPreviewSlide();
+    }}
+
+    function populateDeckPrintContainer() {{
+      const container = document.getElementById('deckPrintContainer');
+      if (!container) return 0;
+      const slides = buildDeckSlides();
+      container.innerHTML = slides.map((sl, idx) =>
+        `<div class="deck-print-page">${{renderSlideHTML(sl, idx, slides.length, 'prt')}}</div>`
+      ).join('');
+      return slides.length;
+    }}
+
+    function exportDeckToPDF() {{
+      const count = populateDeckPrintContainer();
+      if (count === 0) {{
+        showDeckToast('Agregá al menos un elemento o activá la portada para exportar PDF', true);
+        return;
+      }}
+      // Allow any data-URL <img> inside print container to decode before triggering native print dialog
+      const imgs = Array.from(document.querySelectorAll('#deckPrintContainer img'));
+      const waitImgs = Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(res => {{
+        img.onload = res;
+        img.onerror = res;
+      }})));
+      waitImgs.then(() => {{
+        setTimeout(() => {{
+          window.print();
+        }}, 60);
+      }});
+    }}
+
+    // ----------------------------------------------------
+    // 8. AUTOMATIC DOM INSTRUMENTATION ACROSS ALL 12 TABS
+    // ----------------------------------------------------
+    function instrumentKpiGridCards(gridEl, panelTitle) {{
+      if (!gridEl) return;
+      Array.from(gridEl.children).forEach(cardEl => {{
+        if (cardEl.classList.contains('deck-no-capture') || cardEl.tagName === 'BUTTON') return;
+        cardEl.classList.add('deck-kpi-host');
+        if (cardEl.querySelector(':scope > .deck-kpi-plus-btn')) return;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'deck-kpi-plus-btn deck-no-capture';
+        btn.title = 'Agregar tarjeta KPI a la presentación';
+        btn.setAttribute('aria-label', 'Agregar tarjeta KPI a la presentación');
+        btn.textContent = '+';
+        btn.addEventListener('click', (ev) => {{
+          ev.stopPropagation();
+          ev.preventDefault();
+          captureSingleKpiCard(cardEl, panelTitle, btn);
+        }});
+        // Insert before lastElementChild when >=2 children so CSS :first-child / :last-child selectors stay untouched
+        if (cardEl.children.length >= 2) {{
+          cardEl.insertBefore(btn, cardEl.lastElementChild);
+        }} else {{
+          cardEl.appendChild(btn);
+        }}
+      }});
+    }}
+
+    function attachKpiPanelButton(gridEl, panelTitle, headerContainerEl) {{
+      if (!gridEl || gridEl.dataset.deckGridReady === '1') return;
+      gridEl.dataset.deckGridReady = '1';
+
+      const panelBtn = document.createElement('button');
+      panelBtn.type = 'button';
+      panelBtn.className = 'deck-panel-add-btn deck-no-capture';
+      panelBtn.title = 'Capturar todas las tarjetas de esta grilla KPI en la presentación';
+      panelBtn.innerHTML = '<span>+ Agregar panel KPI a presentación</span>';
+      panelBtn.addEventListener('click', (ev) => {{
+        ev.stopPropagation();
+        ev.preventDefault();
+        captureKpiPanel(gridEl, panelTitle, panelBtn);
+      }});
+
+      if (headerContainerEl) {{
+        headerContainerEl.appendChild(panelBtn);
+      }} else if (gridEl.parentElement) {{
+        const topBar = document.createElement('div');
+        topBar.className = 'flex items-center justify-end mb-1.5 deck-no-capture';
+        topBar.appendChild(panelBtn);
+        gridEl.parentElement.insertBefore(topBar, gridEl);
+      }}
+
+      instrumentKpiGridCards(gridEl, panelTitle);
+
+      const obs = new MutationObserver(() => {{
+        instrumentKpiGridCards(gridEl, panelTitle);
+      }});
+      obs.observe(gridEl, {{ childList: true }});
+    }}
+
+    function initDeckCaptureButtons() {{
+      // A. All KPI Grids across Tabs 1–12 & Group Modal
+      const kpiSpecs = [
+        {{ grid: document.querySelector('#bannerInstitucional > .grid'), title: 'Clasificación Institucional por Tipo de Aseguradora', header: document.querySelector('#bannerInstitucional > div:first-child') }},
+        {{ grid: document.querySelector('#bannerTecnico > .grid'), title: 'Clasificación Técnica por Línea Real de Producto', header: document.querySelector('#bannerTecnico > div:first-child') }},
+        {{ grid: document.getElementById('kpiPrimasDev')?.closest('.grid'), title: 'Indicadores Macro del Mercado Asegurador' }},
+        {{ grid: document.getElementById('ciaKpiPrimasEmit')?.closest('.grid'), title: 'Scorecard de la Aseguradora / Grupo' }},
+        {{ grid: document.getElementById('rrKpiBanner'), title: 'Resumen KPI de la Rama' }},
+        {{ grid: document.getElementById('arScorecardGrid'), title: 'Scorecard Técnico del Ramo', header: document.querySelector('#arScorecardCard > div:first-child') }},
+        {{ grid: document.getElementById('arRadarBreakdown'), title: 'Desglose Ejes del Radar de Suscripción' }},
+        {{ grid: document.getElementById('compKpiBanner'), title: 'Resumen Comparativo Interanual' }},
+        {{ grid: document.getElementById('invTotalVal')?.closest('.grid'), title: 'Indicadores de Cartera e Inversiones' }},
+        {{ grid: document.getElementById('solvCoberturaVal')?.closest('.grid'), title: 'Indicadores de Solvencia y Cobertura SSN' }},
+        {{ grid: document.getElementById('gKpiCombinedVal')?.closest('.grid'), title: 'Suscripción y Eficiencia Operativa', header: document.getElementById('gKpiCombinedVal')?.closest('.glass-card')?.querySelector(':scope > div:first-child') }},
+        {{ grid: document.getElementById('gKpiRoiVal')?.closest('.grid'), title: 'Rendimiento Financiero e Inversiones', header: document.getElementById('gKpiRoiVal')?.closest('.glass-card')?.querySelector(':scope > div:first-child') }},
+        {{ grid: document.getElementById('gKpiCobVal')?.closest('.grid'), title: 'Solvencia, Liquidez y Cobranzas', header: document.getElementById('gKpiCobVal')?.closest('.glass-card')?.querySelector(':scope > div:first-child') }},
+        {{ grid: document.getElementById('gKpiRoeVal')?.closest('.grid'), title: 'Rentabilidad Final y Creación de Valor', header: document.getElementById('gKpiRoeVal')?.closest('.glass-card')?.querySelector(':scope > div:first-child') }},
+        {{ grid: document.getElementById('radarAxesBreakdown'), title: 'Desglose de Rendimiento por Eje', header: document.getElementById('radarAxesBreakdown')?.previousElementSibling }},
+        {{ grid: document.getElementById('execDiagnosticContent'), title: 'Diagnóstico Ejecutivo Automatizado', header: document.getElementById('execDiagnosticContent')?.previousElementSibling }},
+        {{ grid: document.getElementById('balKpiBanner'), title: 'Resumen Contable del Estado Seleccionado' }},
+        {{ grid: document.getElementById('sankeyKpiPrimasDev')?.closest('.grid'), title: 'Scorecard Flujo de Resultados' }},
+        {{ grid: document.getElementById('sankeyDiagnosisGrid'), title: 'Diagnóstico Técnico y Financiero del Ejercicio', header: document.querySelector('#sankeyDiagnosisCard > div:first-child') }},
+        {{ grid: document.getElementById('drKpiBanner'), title: 'Indicadores del Ranking Dinámico' }},
+        {{ grid: document.getElementById('groupModalKpis'), title: 'Resumen Consolidado del Grupo Económico' }}
+      ];
+      kpiSpecs.forEach(s => {{
+        if (s.grid) attachKpiPanelButton(s.grid, s.title, s.header || null);
+      }});
+
+      // B. All Charts (15 Plotly charts + any canvas charts) — discrete '+' next to existing chart buttons
+      document.querySelectorAll('button[data-plot-target]').forEach(pngBtn => {{
+        const plotId = pngBtn.getAttribute('data-plot-target');
+        if (!plotId || pngBtn.dataset.deckChartWired === '1') return;
+        pngBtn.dataset.deckChartWired = '1';
+        const plusBtn = document.createElement('button');
+        plusBtn.type = 'button';
+        plusBtn.className = 'deck-inline-plus-btn deck-no-capture';
+        plusBtn.dataset.deckChartTarget = plotId;
+        plusBtn.title = 'Agregar gráfico (2× HD) a la presentación';
+        plusBtn.setAttribute('aria-label', 'Agregar gráfico a la presentación');
+        plusBtn.textContent = '+';
+        plusBtn.addEventListener('click', (ev) => {{
+          ev.stopPropagation();
+          ev.preventDefault();
+          captureChartSnapshot(plotId, plusBtn);
+        }});
+        // Ensure parent keeps buttons inline
+        const parent = pngBtn.parentElement;
+        if (parent) {{
+          const pDisp = window.getComputedStyle(parent).display;
+          if (!pDisp.includes('flex')) {{
+            const wrap = document.createElement('div');
+            wrap.className = 'flex items-center gap-1.5';
+            parent.insertBefore(wrap, pngBtn);
+            wrap.appendChild(pngBtn);
+            wrap.appendChild(plusBtn);
+          }} else {{
+            pngBtn.insertAdjacentElement('afterend', plusBtn);
+          }}
+        }}
+      }});
+
+      // C. All 12 Table Cards across Tabs 1–12
+      const tableSpecs = [
+        {{
+          anchor: document.getElementById('groupsRankingContainer'),
+          title: 'Ranking de Producción y Concentración del Mercado',
+          headerTarget: document.getElementById('groupsRankingContainer')?.closest('.glass-card')?.querySelector(':scope > div:first-child > div:last-child'),
+          resolve: () => {{
+            const gBox = document.getElementById('groupsRankingContainer');
+            if (gBox && !gBox.classList.contains('hidden')) return gBox.querySelector('table');
+            return document.querySelector('#companiesRankingContainer table');
+          }}
+        }},
+        {{
+          anchor: document.getElementById('marketFullTableBody'),
+          title: 'Base Consolidada del Mercado Asegurador',
+          headerTarget: document.getElementById('marketTableFilter')?.parentElement
+        }},
+        {{
+          anchor: document.getElementById('subramosTableBody'),
+          title: 'Detalle Numérico Completo por Subramo',
+          headerTarget: document.getElementById('subramosTableBody')?.closest('.glass-card')?.querySelector('h3')
+        }},
+        {{
+          anchor: document.getElementById('investmentsListBody'),
+          title: 'Desglose por Instrumento Financiero (1.02)',
+          headerTarget: document.getElementById('investmentsListBody')?.closest('.glass-card')?.querySelector(':scope > div:first-child')
+        }},
+        {{
+          anchor: document.getElementById('invTopRankingTableBody'),
+          title: 'Rankings Financieros: Top 20 Aseguradoras',
+          headerTarget: document.getElementById('invTopRankingTableBody')?.closest('.glass-card')?.querySelector(':scope > div:first-child')
+        }},
+        {{
+          anchor: document.getElementById('solvencyRankingTableBody'),
+          title: 'Tabla Comparativa de Solvencia y Ratios SSN',
+          headerTarget: document.getElementById('solvencyRankingTableBody')?.closest('.glass-card')?.querySelector(':scope > div:first-child')
+        }},
+        {{
+          anchor: document.getElementById('managementTableBody'),
+          title: 'Matriz General de Ratios de Gestión y Semáforos',
+          headerTarget: document.getElementById('managementTableBody')?.closest('.glass-card')?.querySelector(':scope > div:first-child')
+        }},
+        {{
+          anchor: document.getElementById('balanceTreeTableBody'),
+          title: 'Plan de Cuentas Oficial SSN',
+          headerTarget: document.getElementById('balAccountSearchInput')?.parentElement?.parentElement
+        }},
+        {{
+          anchor: document.getElementById('rrTableBody'),
+          title: 'Ranking Completo en la Rama',
+          headerTarget: document.getElementById('rrTableFilter')?.parentElement
+        }},
+        {{
+          anchor: document.getElementById('arTableBody'),
+          title: 'Tabla Integral de Suscripción y Ratios en el Ramo',
+          headerTarget: document.getElementById('arTableSearch')?.parentElement?.parentElement
+        }},
+        {{
+          anchor: document.getElementById('compTableBody'),
+          title: 'Comparativo de Mercado Interanual',
+          headerTarget: document.getElementById('compTableSearch')?.parentElement
+        }},
+        {{
+          anchor: document.getElementById('dynRankingTableBody'),
+          title: 'Ranking Dinámico Detallado',
+          headerTarget: document.getElementById('drSearchInput')?.parentElement
+        }}
+      ];
+
+      tableSpecs.forEach(spec => {{
+        if (!spec.anchor || spec.anchor.dataset.deckTableWired === '1') return;
+        spec.anchor.dataset.deckTableWired = '1';
+        const resolveFn = spec.resolve || (() => spec.anchor.closest('table'));
+        const plusBtn = document.createElement('button');
+        plusBtn.type = 'button';
+        plusBtn.className = 'deck-inline-plus-btn deck-no-capture';
+        plusBtn.dataset.deckTableBtn = spec.anchor.id || 'table';
+        plusBtn.title = 'Agregar filas visibles de esta tabla a la presentación';
+        plusBtn.setAttribute('aria-label', 'Agregar tabla a la presentación');
+        plusBtn.textContent = '+';
+        plusBtn.addEventListener('click', (ev) => {{
+          ev.stopPropagation();
+          ev.preventDefault();
+          captureTableCard(resolveFn, spec.title, spec.anchor, plusBtn);
+        }});
+
+        if (spec.headerTarget) {{
+          if (spec.headerTarget.tagName === 'H3') {{
+            spec.headerTarget.classList.add('justify-between', 'w-full');
+            const leftSpan = document.createElement('span');
+            leftSpan.className = 'flex items-center gap-2';
+            while (spec.headerTarget.firstChild) {{
+              leftSpan.appendChild(spec.headerTarget.firstChild);
+            }}
+            spec.headerTarget.appendChild(leftSpan);
+            spec.headerTarget.appendChild(plusBtn);
+          }} else {{
+            spec.headerTarget.appendChild(plusBtn);
+          }}
+        }}
+      }});
+    }}
+
+    function initDeckBuilder() {{
+      loadDeckState();
+      initDeckCaptureButtons();
+
+      window.addEventListener('resize', () => {{
+        fitDeckPreviewScale();
+      }});
+
+      window.addEventListener('beforeprint', () => {{
+        populateDeckPrintContainer();
+      }});
+
+      document.addEventListener('keydown', (ev) => {{
+        const prevModal = document.getElementById('deckPreviewModal');
+        const prevOpen = prevModal && !prevModal.classList.contains('hidden');
+        if (prevOpen) {{
+          if (ev.key === 'ArrowRight') {{
+            ev.preventDefault();
+            stepDeckPreview(1);
+          }} else if (ev.key === 'ArrowLeft') {{
+            ev.preventDefault();
+            stepDeckPreview(-1);
+          }} else if (ev.key === 'Escape') {{
+            ev.preventDefault();
+            closeDeckPreview();
+          }}
+          return;
+        }}
+        const drawer = document.getElementById('deckBuilderDrawer');
+        if (drawer && !drawer.classList.contains('hidden') && ev.key === 'Escape') {{
+          ev.preventDefault();
+          closeDeckDrawer();
+        }}
+      }});
+    }}
+
+    window.initDeckBuilder = initDeckBuilder;
+    window.openDeckDrawer = openDeckDrawer;
+    window.closeDeckDrawer = closeDeckDrawer;
+    window.openDeckPreview = openDeckPreview;
+    window.closeDeckPreview = closeDeckPreview;
+    window.stepDeckPreview = stepDeckPreview;
+    window.exportDeckToPDF = exportDeckToPDF;
+    window.clearDeckItems = clearDeckItems;
+    window.moveDeckItem = moveDeckItem;
+    window.removeDeckItem = removeDeckItem;
+    window.updateDeckItemTitle = updateDeckItemTitle;
+    window.updateDeckItemNote = updateDeckItemNote;
+    window.updateDeckCoverConfig = updateDeckCoverConfig;
+    window.onDeckDragStart = onDeckDragStart;
+    window.onDeckDragOver = onDeckDragOver;
+    window.onDeckDragLeave = onDeckDragLeave;
+    window.onDeckDrop = onDeckDrop;
+    window.onDeckDragEnd = onDeckDragEnd;
+    window.buildDeckSlides = buildDeckSlides;
   </script>
 </body>
 </html>
